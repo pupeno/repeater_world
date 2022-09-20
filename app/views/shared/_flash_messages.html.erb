@@ -1,0 +1,83 @@
+<%# Show flash messages, only once in the page. %>
+
+<%# This partial can be called in many different pages, but only one will successfully show the flash messages, so we
+    can be liberal with all the places in which we call them and since templates are rendered inside out, generally we
+    end up with flash messages show in the most specific location.%>
+
+<% if !@flash_messages_shown %>
+
+  <%# Notice message %>
+  <% if flash.key? :notice %>
+    <div class="bg-green-100 border-l-4 border-green-700 p-4 my-4"
+         data-controller="flash-message"
+         data-flash-message-target="flashMessage">
+      <div class="flex">
+        <%# Icon %>
+        <div class="flex-shrink-0">
+          <i class="fa-solid fa-circle-info text-green-700 text-3xl"></i>
+        </div>
+
+        <%# Message %>
+        <div class="ml-3">
+          <p class="text-sm text-green-800">
+            <%= flash.notice %>
+          </p>
+        </div>
+
+        <%# Close button %>
+        <div class="ml-auto pl-3">
+          <div class="-mx-1.5 -my-1.5">
+            <button class="inline-flex p-1.5
+                           bg-green-100 rounded-md
+                           items-center justify-center
+                           text-green-500
+                           hover:bg-green-200
+                           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-100 focus:ring-green-600"
+                    data-action="click->flash-message#close">
+              <span class="sr-only">Dismiss</span>
+              <i class="fa-solid fa-times text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Alert message %>
+  <% if flash.key? :alert %>
+    <div class="bg-red-100 border-l-4 border-red-700 p-4 my-4"
+         data-controller="flash-message"
+         data-flash-message-target="flashMessage">
+      <div class="flex">
+        <%# Icon %>
+        <div class="flex-shrink-0">
+          <i class="fa-solid fa-circle-exclamation text-red-700 text-3xl"></i>
+        </div>
+
+        <%# Message %>
+        <div class="ml-3">
+          <p class="text-sm text-red-800">
+            <%= flash.alert %>
+          </p>
+        </div>
+
+        <%# Close button %>
+        <div class="ml-auto pl-3">
+          <div class="-mx-1.5 -my-1.5">
+            <button class="inline-flex p-1.5
+                           bg-red-100 rounded-md
+                           text-red-500
+                           hover:bg-red-200
+                           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-100 focus:ring-red-600"
+                    data-action="click->flash-message#close">
+              <span class="sr-only">Dismiss</span>
+              <i class="fa-solid fa-times text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<% @flash_messages_shown = true %>

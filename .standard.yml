@@ -1,0 +1,3 @@
+ignore:
+  - lib/sample_data_generator.rb:
+      - Style/GlobalVars
