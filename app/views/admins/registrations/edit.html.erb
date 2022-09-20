@@ -1,0 +1,42 @@
+<%= render "shared/page_header", title: "Change Password" %>
+
+<div class="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, "data-turbo": "false", class: "space-y-6" }) do |f| %>
+    <%= render "users/shared/error_messages", resource: resource %>
+
+    <div>
+      <%= f.label :current_password, class: "block text-sm font-medium text-gray-700" %>
+      <div class="mt-1">
+        <%= f.password_field :current_password, autocomplete: "current-password", class: ["field-text", resource.errors.where(:current_password).any? ? "field-text-invalid" : "field-text-valid"] %>
+        <% resource.errors.where(:current_password).each do |error| %>
+          <p class="mt-2 text-sm text-red-600"><%= error.full_message %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :password, class: "block text-sm font-medium text-gray-700" %>
+      <div class="mt-1">
+        <%= f.password_field :password, autocomplete: "new-password", class: ["field-text", resource.errors.where(:password).any? ? "field-text-invalid" : "field-text-valid"] %>
+        <% resource.errors.where(:password).each do |error| %>
+          <p class="mt-2 text-sm text-red-600"><%= error.full_message %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-700" %>
+      <div class="mt-1">
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: ["field-text", resource.errors.where(:password_confirmation).any? ? "field-text-invalid" : "field-text-valid"] %>
+        <% resource.errors.where(:password_confirmation).each do |error| %>
+          <p class="mt-2 text-sm text-red-600"><%= error.full_message %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.submit "Change password", class: "flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-fuchsia-600 hover:bg-fuchsia-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fuchsia-500" %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,30 @@
+{
+  "name": "repeater_world",
+  "repository": "https://github.com/flexpointtech/repeater_world",
+  "env": {
+    "RAILS_MASTER_KEY": {
+      "description": "Rails master encryption key.",
+      "required": true
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql"
+    },
+    {
+      "plan": "heroku-redis"
+    }
+  ],
+  "environments": {
+    "review": {
+      "scripts": {
+        "postdeploy": "bundle exec rails db:seed"
+      },
+      "env": {
+        "ALLOW_SAMPLE_DATA_GENERATION": {
+          "value": true
+        }
+      }
+    }
+  }
+}

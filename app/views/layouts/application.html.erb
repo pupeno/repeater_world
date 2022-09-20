@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>repeater_world</title>
+
+    <%# Security tags %>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%# Style, favicon and other look and feel aspects. %>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <%# JavaScript %>
+    <script>
+      const RAILS_ENV = <%= javascript_quoted_string_or_null(Rails.env) %>;
+      const IS_PULL_REQUEST = <%= javascript_quoted_string_or_null(ENV["IS_PULL_REQUEST"]) %>;
+      const RENDER = <%= javascript_quoted_string_or_null(ENV["RENDER"]) %>;
+      const RENDER_SERVICE_NAME = <%= javascript_quoted_string_or_null(ENV["RENDER_SERVICE_NAME"]) %>;
+      const SENTRY_DSN = <%= javascript_quoted_string_or_null(ENV["SENTRY_DSN_FE"]) %>;
+    </script>
+    <%= javascript_importmap_tags %>
+
+    <%# Fathom %>
+    <% if ENV["FATHOM_ID"].present? %>
+      <script src="https://cdn.usefathom.com/script.js" data-site="<%= ENV["FATHOM_ID"] %>" defer></script>
+    <% end %>
+
+    <%# Google analytics %>
+    <% if ENV["GOOGLE_ANALYTICS_ID"].present? %>
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= ENV["GOOGLE_ANALYTICS_ID"] %>"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', '<%= ENV["GOOGLE_ANALYTICS_ID"] %>');
+      </script>
+    <% end %>
+  </head>
+
+  <body>
+    <main>
+      <%= render "shared/flash_messages" %>
+      <%= yield %>
+    </main>
+
+    <% if ENV["HELPSCOUT_BEACON_ID"].present? %>
+      <script type="text/javascript">!function (e, t, n) {
+        function a() {
+          var e = t.getElementsByTagName("script")[0], n = t.createElement("script");
+          n.type = "text/javascript", n.async = !0, n.src = "https://beacon-v2.helpscout.net", e.parentNode.insertBefore(n, e)
+        }
+
+        if (e.Beacon = n = function (t, n, a) {
+          e.Beacon.readyQueue.push({method: t, options: n, data: a})
+        }, n.readyQueue = [], "complete" === t.readyState) return a();
+        e.attachEvent ? e.attachEvent("onload", a) : e.addEventListener("load", a, !1)
+      }(window, document, window.Beacon || function () {
+      });</script>
+      <script type="text/javascript">window.Beacon('init', '<%= ENV["HELPSCOUT_BEACON_ID"] %>')</script>
+    <% end %>
+  </body>
+</html>

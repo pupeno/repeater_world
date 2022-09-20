@@ -1,0 +1,64 @@
+previewsEnabled: true
+previewsExpireAfterDays: 1
+databases:
+  - name: repeater_world-db
+    databaseName: repeater_world
+    user: repeater_world
+    postgresMajorVersion: 14
+    plan: starter
+    previewPlan: starter
+
+services:
+  - type: web
+    name: repeater_world-web
+    plan: starter
+    env: ruby
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    previewPlan: starter
+    initialDeployHook: bundle exec rake db:seed
+    domains:
+      - repeater_world.com
+    envVars:
+      - fromGroup: repeater_world
+      - key: DATABASE_URL
+        fromDatabase:
+          name: repeater_world-db
+          property: connectionString
+      # Uncomment this when starting to use proper background jobs.
+      #- key: REDIS_URL
+      #  fromService:
+      #    type: redis
+      #    name: repeater_world-redis
+      #    property: connectionString
+      - key: DELIVER_EMAILS
+        value: true
+        previewValue: false
+      - key: SAFE_EMAIL_DEST
+        value: "staging@repeater_world"
+      - key: ALLOW_SAMPLE_DATA_GENERATION
+        value: false
+        previewValue: true
+      - key: SENTRY_DSN
+        value:
+      - key: SENTRY_DSN_FE
+        value:
+      - key: HELPSCOUT_BEACON_ID
+        value:
+      - key: FATHOM_ID
+        value:
+      - key: GOOGLE_ANALYTICS_ID
+        value:
+# Uncomment this when starting to use proper background jobs.
+#  - type: worker
+#    name: repeater_world-background
+#    env: ruby
+#    buildCommand: "bundle install"
+#    startCommand: "bundle exec sidekiq"
+#    previewPlan: starter
+#      envVars:
+#        TODO: copy them from repeater_world-web
+# Uncomment this when starting to use proper background jobs.
+#  - type: redis
+#    name: repeater_world-redis
+#    ipAllowList: []

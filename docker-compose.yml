@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - "10401:5432"
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: repeater_world_development
+      POSTGRES_PASSWORD: te6ahng1phi1uizaeGhahMof1
+# Uncomment this when starting to use proper background jobs.
+#  redis:
+#    image: redis:6.2-alpine
+#    ports:
+#      - "10402:6379"
