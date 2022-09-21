@@ -1,6 +1,10 @@
 class UkrepeatersImporter
   def import
-    download_all_files
+    # download_all_files
+
+    voice_repeater_list = CSV.table("./tmp/ukrepeaters/voice_repeater_list.csv")
+    assert_fields(voice_repeater_list, [:repeater, :band, :channel, :tx, :rx, :mode, :qthr, :where, :region, :code, :keeper, :lat, :lon, nil])
+
   end
 
   private
@@ -25,6 +29,12 @@ class UkrepeatersImporter
     if !File.exist?(dest)
       puts "  Downloading #{url}"
       IO.copy_stream(URI.parse(url).open, dest)
+    end
+  end
+
+  def assert_fields(table, fields)
+    if table.headers != fields
+      raise "The fields for voice_repeater_list.csv changed, so we can't process it.\n  Expected: #{fields.inspect}\n  Received: #{voice_repeater_list.headers.inspect}"
     end
   end
 end
