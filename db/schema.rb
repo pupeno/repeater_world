@@ -57,12 +57,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
     t.string "channel"
     t.decimal "tx_frequency"
     t.decimal "rx_frequency"
+    t.string "keeper"
     t.string "grid_square"
     t.decimal "latitude"
     t.decimal "longitude"
-    t.string "keeper"
+    t.uuid "country_id"
+    t.string "region_1"
+    t.string "region_2"
+    t.string "region_3"
+    t.string "region_4"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["country_id"], name: "index_repeaters_on_country_id"
   end
 
+  add_foreign_key "repeaters", "countries"
 end
