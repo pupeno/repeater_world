@@ -25,6 +25,9 @@ class CreateRepeaters < ActiveRecord::Migration[7.0]
 
       t.boolean :nxdn
 
+      t.boolean :operational
+
+      t.text :notes
 
       t.string :grid_square
       t.decimal :latitude

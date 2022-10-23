@@ -66,6 +66,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
     t.boolean "dstar"
     t.boolean "fusion"
     t.boolean "nxdn"
+    t.boolean "operational"
+    t.text "notes"
     t.string "grid_square"
     t.decimal "latitude"
     t.decimal "longitude"

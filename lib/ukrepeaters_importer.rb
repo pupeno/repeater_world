@@ -78,7 +78,8 @@ class UkrepeatersImporter
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:call])
       if !repeater
-        raise "Couldn't find repeater with call sign #{raw_repeater[:call]}"
+        puts "  Repeater not found: #{raw_repeater[:call]}"
+        next # TODO: create these repeaters.
       end
 
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
@@ -109,7 +110,8 @@ class UkrepeatersImporter
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:call])
       if !repeater
-        raise "Couldn't find repeater with call sign #{raw_repeater[:call]}"
+        puts "  Repeater not found: #{raw_repeater[:call]}"
+        next # TODO: create these repeaters.
       end
 
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
@@ -151,21 +153,33 @@ class UkrepeatersImporter
       repeater.dstar = raw_repeater[:dstar] == 1
       repeater.fusion = raw_repeater[:fusion] == 1
 
+      if raw_repeater[:status] == "OPERATIONAL"
+        repeater.operational = true
+      elsif raw_repeater[:status] == "REDUCED OUTPUT"
+        repeater.operational = true
+        repeater.notes = "Reduced output."
+      elsif raw_repeater[:status] == "DMR ONLY"
+        repeater.operational = true
+        repeater.notes = "DMR only."
+      elsif raw_repeater[:status] == "NOT OPERATIONAL"
+        repeater.operational = false
+      else
+        raise "Unknown status #{raw_repeater[:status]}"
+      end
+
       puts "  Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
     rescue
       raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
-    puts "Processing repeaterlist_alt2.csv..."
+    puts "Done processing repeaterlist_alt2.csv."
   end
 
   def download_file(url, dest)
     if !File.exist?(dest)
       puts "  Downloading #{url}"
       IO.copy_stream(URI.parse(url).open, dest)
-    else
-      puts "  Already downloaded #{url}"
     end
   end
 

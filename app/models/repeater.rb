@@ -37,7 +37,9 @@ end
 #  latitude      :decimal(, )
 #  longitude     :decimal(, )
 #  name          :string
+#  notes         :text
 #  nxdn          :boolean
+#  operational   :boolean
 #  region_1      :string
 #  region_2      :string
 #  region_3      :string
