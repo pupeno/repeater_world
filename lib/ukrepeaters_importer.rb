@@ -5,7 +5,8 @@ class UkrepeatersImporter
 
     Repeater.transaction do
       create_repeaters(files)
-      enhance_dv_modes(files)
+      enrich_dv_modes(files)
+      enrich_all_modes(files)
     end
   end
 
@@ -64,10 +65,11 @@ class UkrepeatersImporter
     repeater
   end
 
-  def enhance_dv_modes(files)
-    puts "Enhancing DV modes..."
+  def enrich_dv_modes(files)
+    puts "Enrich DV modes..."
     dv_modes_only = CSV.table(files[:dv_modes_only][:local_file_name])
     assert_fields(files[:dv_modes_only], dv_modes_only, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :loc, :where, :dmr, :dstar, :fusion, :nxdn, nil])
+
     dv_modes_only.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:call])
       if !repeater
@@ -80,12 +82,36 @@ class UkrepeatersImporter
       repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
       repeater.nxdn = true if raw_repeater[:nxdn]&.strip == "Y"
 
-      puts "  Enhanced #{repeater}."
+      puts "  Enriched #{repeater}."
       repeater.save!
     rescue
       raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
-    puts "Done enhancing DV modes."
+    puts "Done enriching DV modes."
+  end
+
+  def enrich_all_modes(files)
+    puts "Enrich all modes"
+    all_modes = CSV.table(files[:all_modes][:local_file_name])
+    assert_fields(files[:all_modes], all_modes, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :loc, :where, :analog, :dmr, :dstar, :fusion, nil])
+    all_modes.each_with_index do |raw_repeater, line_number|
+      repeater = Repeater.find_by(call_sign: raw_repeater[:call])
+      if !repeater
+        raise "Couldn't find repeater with call sign #{raw_repeater[:call]}"
+      end
+
+      # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
+      repeater.fm = true if raw_repeater[:analog]&.strip == "Y"
+      repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
+      repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"
+      repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
+
+      puts "  Enriched #{repeater}."
+      repeater.save!
+    rescue
+      raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+    end
+    puts "Done enriching all modes."
   end
 
   def download_all_files
@@ -99,8 +125,12 @@ class UkrepeatersImporter
     # result[:alternative_voice_repeater_list] =  download_file("https://ukrepeater.net/csvcreate2.php", "./tmp/ukrepeaters/alternative_voice_repeater_list.csv")
     result[:voice_repeaters_including_gateways] = download_file("https://ukrepeater.net/csvcreate3.php", "./tmp/ukrepeaters/voice_repeaters_including_gateways.csv")
 
+    # These two files contain the modes supported by each repeater. We need to import both because:
+    # * dv_modes_only: contains dmr, dstar, fusion and nxdn but not fm.
+    # * all_modes: contains fm, dmr, dstar and fusion but not nxdn.
     result[:dv_modes_only] = download_file("https://ukrepeater.net/csvcreate_dv.php", "./tmp/ukrepeaters/dv_modes_only.csv")
-    # download_file("https://ukrepeater.net/csvcreate_all.php", "./tmp/ukrepeaters/all_modes.csv")
+    result[:all_modes] = download_file("https://ukrepeater.net/csvcreate_all.php", "./tmp/ukrepeaters/all_modes.csv")
+
     # download_file("https://ukrepeater.net/repeaterlist-alt.php", "./tmp/ukrepeaters/repeaters_up_to_uhf.csv")
     # download_file("https://ukrepeater.net/csvcreate4.php", "./tmp/ukrepeaters/packet_list.csv")
     # download_file("https://ukrepeater.net/csvcreatewithstatus.php", "./tmp/ukrepeaters/voice_repeaters_including_status.csv")
