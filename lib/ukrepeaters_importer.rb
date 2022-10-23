@@ -16,9 +16,17 @@ class UkrepeatersImporter
         repeater.name = raw_repeater[:where].titleize
         repeater.band = raw_repeater[:band].downcase
         repeater.channel = raw_repeater[:channel]
+        repeater.keeper = raw_repeater[:keeper]
+
         repeater.tx_frequency = raw_repeater[:tx].to_f * 10 ** 6
         repeater.rx_frequency = raw_repeater[:rx].to_f * 10 ** 6
-        repeater.keeper = raw_repeater[:keeper]
+        if raw_repeater[:code].present?
+          repeater.access_method = Repeater::CTCSS
+          repeater.ctcss_tone = raw_repeater[:code]
+          repeater.tone_sql = false # TODO: how do we know when this should be true?
+        else
+          repeater.access_method = Repeater::TONE_BURST
+        end
 
         repeater.grid_square = raw_repeater[:qthr].upcase
         repeater.latitude = raw_repeater[:lat]
