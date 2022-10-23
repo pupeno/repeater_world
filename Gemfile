@@ -5,6 +5,7 @@ ruby "3.1.1"
 
 gem "babosa", "~> 2.0.0"
 gem "bootsnap", require: false # Reduces boot times through caching; required in config/boot.rb
+gem "countries", "~> 5.1"
 gem "devise", "~> 4.8.1"
 gem "devise-async", "~> 1.0.0"
 gem "factory_bot_rails", "~> 6" # To be able to generate sample data in staging (which is production).
@@ -16,12 +17,12 @@ gem "puma", "~> 5.0" # Use the Puma web server [https://github.com/puma/puma]
 gem "rails", "~> 7.0.2", ">= 7.0.2.2" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails_admin", "~> 3.0.0.rc3"
 gem "sassc-rails", "~> 2.1.2" # Asked by rails_admin... but it's not a dependency??? the world is complicated.
+gem "sentry-rails", "~> 5.3"
+gem "sentry-ruby", "~> 5.3"
 gem "sprockets-rails" # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "stimulus-rails" # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "tailwindcss-rails" # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
 gem "turbo-rails" # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-gem "sentry-ruby", "~> 5.3"
-gem "sentry-rails", "~> 5.3"
 # gem "sidekiq", "~> 6.4" # Uncomment this when starting to use proper background jobs.
 # # gem "sentry-sidekiq", "~> 5.3" # Uncomment this when starting to use proper background jobs.
 # gem "bcrypt", "~> 3.1.7" # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
