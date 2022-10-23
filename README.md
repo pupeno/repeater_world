@@ -1,24 +1,16 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a new web application to mantain a list of repeaters all over the world and export it in the format required to
+various different radios.
 
-Things you may want to cover:
+## Why does this exist?
 
-* Ruby version
+Because I couldn't find anything that quite did what I want and I found myself massaging data in spreadsheets way too
+much. This should be easier and should be easier for everybody.
 
-* System dependencies
+I also believe that some information should be, so this project will be open source. I'll maintain it and host it, I'll
+review the PRs, but anybody can make new PRs and request changes. Things anybody can do include:
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+ * Add new sources of repeaters that get imported periodically.
+ * Add new export formats so that we can support every radio that exists.
+ * Add new features.
