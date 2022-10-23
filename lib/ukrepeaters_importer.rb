@@ -5,6 +5,8 @@ class UkrepeatersImporter
       process_repeaterlist_dv_csv
       process_repeaterlist_all_csv
       process_repeaterlist_alt2_csv
+      # TODO: process packetlist: https://ukrepeater.net/csvfiles.html https://ukrepeater.net/csvcreate4.php
+      process_repeaterlist_status_csv
     end
   end
 
@@ -174,6 +176,46 @@ class UkrepeatersImporter
       raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
     puts "Done processing repeaterlist_alt2.csv."
+  end
+
+  def process_repeaterlist_status_csv
+    puts "Processing repeaterlist_status.csv..."
+
+    url = "https://ukrepeater.net/csvcreatewithstatus.php"
+    file_name = "./tmp/ukrepeaters/repeaterlist_status.csv"
+
+    download_file(url, file_name)
+    csv_file = CSV.table(file_name)
+    assert_fields(csv_file, [:repeater, :band, :channel, :tx, :rx, :mode, :qthr, :where, :region, :code, :keeper, :status, nil], url, file_name)
+
+    csv_file.each_with_index do |raw_repeater, line_number|
+      repeater = Repeater.find_by(call_sign: raw_repeater[:repeater])
+      if !repeater
+        puts "  Repeater not found: #{raw_repeater[:repeater]}"
+        next # TODO: create these repeaters.
+      end
+
+      if raw_repeater[:status] == "OPERATIONAL"
+        repeater.operational = true
+      elsif raw_repeater[:status] == "REDUCED OUTPUT"
+        repeater.operational = true
+        repeater.notes = "Reduced output."
+      elsif raw_repeater[:status] == "DMR ONLY"
+        repeater.operational = true
+        repeater.notes = "DMR only."
+      elsif raw_repeater[:status] == "NOT OPERATIONAL"
+        repeater.operational = false
+      else
+        raise "Unknown status #{raw_repeater[:status]}"
+      end
+
+      puts "  Enriched #{repeater}." if repeater.changed?
+
+      repeater.save!
+    rescue
+      raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+    end
+    puts "Done processing repeaterlist_status.csv."
   end
 
   def download_file(url, dest)
