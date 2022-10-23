@@ -41,12 +41,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
     t.index ["unlock_token"], name: "index_admins_on_unlock_token", unique: true
   end
 
-  create_table "countries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "code", null: false
+  create_table "countries", id: :string, force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["code"], name: "index_countries_on_code", unique: true
     t.index ["name"], name: "index_countries_on_name", unique: true
   end
 
@@ -61,13 +59,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
     t.string "grid_square"
     t.decimal "latitude"
     t.decimal "longitude"
-    t.uuid "country_id"
+    t.string "country_id"
     t.string "region_1"
     t.string "region_2"
     t.string "region_3"
     t.string "region_4"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["country_id"], name: "index_repeaters_on_country_id"
   end
 

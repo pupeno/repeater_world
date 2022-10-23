@@ -1,4 +1,11 @@
 class Repeater < ApplicationRecord
+  validates :name, presence: true
+  validates :band, presence: true, inclusion: %w{10m 6m 2m 70cm 23cm}
+  # TODO: validate the frequency is within the band.
+
+  def to_s(extra = nil)
+    super("#{name}:#{call_sign}")
+  end
 end
 
 # == Schema Information
@@ -22,10 +29,11 @@ end
 #  tx_frequency :decimal(, )
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
-#  country_id   :uuid
+#  country_id   :string
 #
 # Indexes
 #
+#  index_repeaters_on_call_sign   (call_sign)
 #  index_repeaters_on_country_id  (country_id)
 #
 # Foreign Keys

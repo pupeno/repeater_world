@@ -25,10 +25,11 @@ end
 #  tx_frequency :decimal(, )
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
-#  country_id   :uuid
+#  country_id   :string
 #
 # Indexes
 #
+#  index_repeaters_on_call_sign   (call_sign)
 #  index_repeaters_on_country_id  (country_id)
 #
 # Foreign Keys
