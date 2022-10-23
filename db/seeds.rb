@@ -1,0 +1,1 @@
+Country.create_all

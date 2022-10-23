@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_03_03_161649) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -41,4 +41,46 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_03_161649) do
     t.index ["unlock_token"], name: "index_admins_on_unlock_token", unique: true
   end
 
+  create_table "countries", id: :string, force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_countries_on_name", unique: true
+  end
+
+  create_table "repeaters", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "call_sign"
+    t.string "band"
+    t.string "channel"
+    t.string "keeper"
+    t.decimal "tx_frequency"
+    t.decimal "rx_frequency"
+    t.string "access_method"
+    t.decimal "ctcss_tone"
+    t.boolean "tone_sql"
+    t.boolean "fm"
+    t.boolean "dmr"
+    t.integer "dmr_cc"
+    t.string "dmr_con"
+    t.boolean "dstar"
+    t.boolean "fusion"
+    t.boolean "nxdn"
+    t.boolean "operational"
+    t.text "notes"
+    t.string "grid_square"
+    t.decimal "latitude"
+    t.decimal "longitude"
+    t.string "country_id"
+    t.string "region_1"
+    t.string "region_2"
+    t.string "region_3"
+    t.string "region_4"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["call_sign"], name: "index_repeaters_on_call_sign"
+    t.index ["country_id"], name: "index_repeaters_on_country_id"
+  end
+
+  add_foreign_key "repeaters", "countries"
 end
