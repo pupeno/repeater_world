@@ -5,7 +5,7 @@ class Repeater < ApplicationRecord
   ]
 
   validates :name, presence: true
-  validates :band, presence: true, inclusion: %w{10m 6m 2m 70cm 23cm}
+  validates :band, presence: true, inclusion: %w{10m 6m 4m 2m 70cm 23cm}
   validates :tx_frequency, presence: true # TODO: validate the frequency is within the band.
   validates :rx_frequency, presence: true # TODO: validate the frequency is within the band.
   validates :access_method, inclusion: ACCESS_METHODS

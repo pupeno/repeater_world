@@ -3,21 +3,21 @@ class UkrepeatersImporter
     # TODO: uncomment this
     files = download_all_files
 
-    puts "Creating repeaters..."
     Repeater.transaction do
-      voice_repeater_list = CSV.table(files[:voice_repeater_list][:local_file_name])
-      assert_fields(files[:voice_repeater_list], voice_repeater_list, [:repeater, :band, :channel, :tx, :rx, :mode, :qthr, :where, :region, :code, :keeper, :lat, :lon, nil])
 
-      voice_repeater_list.each_with_index do |raw_repeater, line_number|
+      puts "Creating repeaters from voice_repeaters_including_gateways.csv..."
+      voice_repeaters_including_gateways = CSV.table(files[:voice_repeaters_including_gateways][:local_file_name])
+      assert_fields(files[:voice_repeaters_including_gateways], voice_repeaters_including_gateways, [:callsign, :band, :channel, :tx, :rx, :mode, :qthr, :where, :postcode, :region, :code, :keeper, :lat, :lon, nil])
+      voice_repeaters_including_gateways.each_with_index do |raw_repeater, line_number|
         create_repeater(raw_repeater)
       rescue
-        raise StandardError.new("Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}") # Line numbers start at 1, not 0, and there's a header, hence the +2
+        raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
       end
+      puts "Done creating repeaters."
 
       dv_modes_only = CSV.table(files[:dv_modes_only][:local_file_name])
       assert_fields(files[:voice_repeater_list], dv_modes_only, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :loc, :where, :dmr, :dstar, :fusion, :nxdn, nil])
     end
-    puts "Done creating repeaters."
   end
 
   private
@@ -25,11 +25,11 @@ class UkrepeatersImporter
   # Create repeater from a record in voice_repeater_list.csv
   def create_repeater(raw_repeater)
     # For the UK, we treat the call sign as unique and the identifier of the repeater.
-    repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[:repeater].upcase)
+    repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[:callsign].upcase)
     already_existed = !repeater.new_record?
 
     # Some metadata.
-    repeater.name = raw_repeater[:where].titleize
+    repeater.name = "#{raw_repeater[:where].titleize} #{repeater.call_sign}"
     repeater.band = raw_repeater[:band].downcase
     repeater.channel = raw_repeater[:channel]
     repeater.keeper = raw_repeater[:keeper]
@@ -51,6 +51,8 @@ class UkrepeatersImporter
     repeater.longitude = raw_repeater[:lon]
     repeater.country_id = "gb"
     repeater.region_1 = raw_repeater[:region]
+    repeater.region_2 = raw_repeater[:postcode]
+    repeater.region_3 = raw_repeater[:where].titleize
 
     repeater.save!
 
@@ -66,9 +68,13 @@ class UkrepeatersImporter
     puts "Downloading files..."
     # TODO: use temp file names https://ruby-doc.org/stdlib-2.5.3/libdoc/tempfile/rdoc/Tempfile.html
     result = {}
-    result[:voice_repeater_list] = download_file("https://ukrepeater.net/csvcreate1.php", "./tmp/ukrepeaters/voice_repeater_list.csv")
-    # download_file("https://ukrepeater.net/csvcreate2.php", "./tmp/ukrepeaters/alternative_voice_repeater_list.csv")
+
+    # voice_repeaters_including_gateways.csv contains everything voice_repeater_list.csv and
+    # alternative_voice_repeater_list.csv plus some more, so we only download voice_repeaters_including_gateways.csv
+    # result[:voice_repeater_list] = download_file("https://ukrepeater.net/csvcreate1.php", "./tmp/ukrepeaters/voice_repeater_list.csv")
+    # result[:alternative_voice_repeater_list] =  download_file("https://ukrepeater.net/csvcreate2.php", "./tmp/ukrepeaters/alternative_voice_repeater_list.csv")
     result[:voice_repeaters_including_gateways] = download_file("https://ukrepeater.net/csvcreate3.php", "./tmp/ukrepeaters/voice_repeaters_including_gateways.csv")
+
     result[:dv_modes_only] = download_file("https://ukrepeater.net/csvcreate_dv.php", "./tmp/ukrepeaters/dv_modes_only.csv")
     # download_file("https://ukrepeater.net/csvcreate_all.php", "./tmp/ukrepeaters/all_modes.csv")
     # download_file("https://ukrepeater.net/repeaterlist-alt.php", "./tmp/ukrepeaters/repeaters_up_to_uhf.csv")
