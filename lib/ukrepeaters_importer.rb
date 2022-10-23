@@ -4,42 +4,23 @@ class UkrepeatersImporter
     files = download_all_files
 
     Repeater.transaction do
-
-      puts "Creating repeaters from voice_repeaters_including_gateways.csv..."
-      voice_repeaters_ig = CSV.table(files[:voice_repeaters_including_gateways][:local_file_name])
-      assert_fields(files[:voice_repeaters_including_gateways], voice_repeaters_ig, [:callsign, :band, :channel, :tx, :rx, :mode, :qthr, :where, :postcode, :region, :code, :keeper, :lat, :lon, nil])
-      voice_repeaters_ig.each_with_index do |raw_repeater, line_number|
-        create_repeater(raw_repeater)
-      rescue
-        raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
-      end
-      puts "Done creating repeaters."
-
-      puts "Enhancing DV modes..."
-      dv_modes_only = CSV.table(files[:dv_modes_only][:local_file_name])
-      assert_fields(files[:dv_modes_only], dv_modes_only, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :loc, :where, :dmr, :dstar, :fusion, :nxdn, nil])
-      dv_modes_only.each_with_index do |raw_repeater, line_number|
-        repeater = Repeater.find_by(call_sign: raw_repeater[:call])
-        if !repeater
-          raise "Couldn't find repeater with call sign #{raw_repeater[:call]}"
-        end
-
-        # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
-        repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
-        repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"
-        repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
-        repeater.nxdn = true if raw_repeater[:nxdn]&.strip == "Y"
-
-        puts "  Enhanced #{repeater}."
-        repeater.save!
-      rescue
-        raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
-      end
-      puts "Done enhancing DV modes."
+      create_repeaters(files)
+      enhance_dv_modes(files)
     end
   end
 
   private
+  def create_repeaters(files)
+    puts "Creating repeaters from voice_repeaters_including_gateways.csv..."
+    voice_repeaters_ig = CSV.table(files[:voice_repeaters_including_gateways][:local_file_name])
+    assert_fields(files[:voice_repeaters_including_gateways], voice_repeaters_ig, [:callsign, :band, :channel, :tx, :rx, :mode, :qthr, :where, :postcode, :region, :code, :keeper, :lat, :lon, nil])
+    voice_repeaters_ig.each_with_index do |raw_repeater, line_number|
+      create_repeater(raw_repeater)
+    rescue
+      raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+    end
+    puts "Done creating repeaters."
+  end
 
   # Create repeater from a record in voice_repeater_list.csv
   def create_repeater(raw_repeater)
@@ -81,6 +62,30 @@ class UkrepeatersImporter
       puts "  Created #{repeater}."
     end
     repeater
+  end
+
+  def enhance_dv_modes(files)
+    puts "Enhancing DV modes..."
+    dv_modes_only = CSV.table(files[:dv_modes_only][:local_file_name])
+    assert_fields(files[:dv_modes_only], dv_modes_only, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :loc, :where, :dmr, :dstar, :fusion, :nxdn, nil])
+    dv_modes_only.each_with_index do |raw_repeater, line_number|
+      repeater = Repeater.find_by(call_sign: raw_repeater[:call])
+      if !repeater
+        raise "Couldn't find repeater with call sign #{raw_repeater[:call]}"
+      end
+
+      # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
+      repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
+      repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"
+      repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
+      repeater.nxdn = true if raw_repeater[:nxdn]&.strip == "Y"
+
+      puts "  Enhanced #{repeater}."
+      repeater.save!
+    rescue
+      raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+    end
+    puts "Done enhancing DV modes."
   end
 
   def download_all_files
