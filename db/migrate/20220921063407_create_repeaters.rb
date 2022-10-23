@@ -9,9 +9,15 @@ class CreateRepeaters < ActiveRecord::Migration[7.0]
 
       t.decimal :tx_frequency
       t.decimal :rx_frequency
+      t.boolean :fm
+      t.boolean :dmr
+      t.boolean :dstar
+      t.boolean :fusion
+      t.boolean :nxdn
       t.string :access_method
       t.decimal :ctcss_tone
       t.boolean :tone_sql
+
 
       t.string :grid_square
       t.decimal :latitude

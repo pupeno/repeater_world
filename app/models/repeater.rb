@@ -26,11 +26,16 @@ end
 #  call_sign     :string
 #  channel       :string
 #  ctcss_tone    :decimal(, )
+#  dmr           :boolean
+#  dstar         :boolean
+#  fm            :boolean
+#  fusion        :boolean
 #  grid_square   :string
 #  keeper        :string
 #  latitude      :decimal(, )
 #  longitude     :decimal(, )
 #  name          :string
+#  nxdn          :boolean
 #  region_1      :string
 #  region_2      :string
 #  region_3      :string
