@@ -27,6 +27,8 @@ end
 #  channel       :string
 #  ctcss_tone    :decimal(, )
 #  dmr           :boolean
+#  dmr_cc        :integer
+#  dmr_con       :string
 #  dstar         :boolean
 #  fm            :boolean
 #  fusion        :boolean
