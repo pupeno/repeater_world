@@ -13,6 +13,8 @@ class Repeater < ApplicationRecord
     CTCSS = "ctcss"
   ]
 
+  belongs_to :country
+
   validates :name, presence: true
   validates :band, presence: true, inclusion: BANDS
   validates :tx_frequency, presence: true # TODO: validate the frequency is within the band.
