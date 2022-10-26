@@ -1,11 +1,20 @@
 class Repeater < ApplicationRecord
+  BANDS = [
+    BAND_10M = "10m",
+    BAND_6M = "6m",
+    BAND_4M = "4m",
+    BAND_2M = "2m",
+    BAND_70CM = "70cm",
+    BAND_23CM = "23cm"
+  ]
+
   ACCESS_METHODS = [
     TONE_BURST = "tone_burst",
     CTCSS = "ctcss"
   ]
 
   validates :name, presence: true
-  validates :band, presence: true, inclusion: %w{10m 6m 4m 2m 70cm 23cm}
+  validates :band, presence: true, inclusion: BANDS
   validates :tx_frequency, presence: true # TODO: validate the frequency is within the band.
   validates :rx_frequency, presence: true # TODO: validate the frequency is within the band.
   validates :access_method, inclusion: ACCESS_METHODS
