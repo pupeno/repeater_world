@@ -47,7 +47,11 @@ class UkrepeatersImporter
     repeater.rx_frequency = raw_repeater[:rx].to_f * 10 ** 6
     if raw_repeater[:code].present?
       repeater.access_method = Repeater::CTCSS
-      repeater.ctcss_tone = raw_repeater[:code]
+      if Repeater::CTCSS_CODES.include?(raw_repeater[:code].to_f)
+        repeater.ctcss_tone = raw_repeater[:code]
+      else
+        puts "  Ignoring invalid CTCSS #{raw_repeater[:code]} in #{raw_repeater}"
+      end
       repeater.tone_sql = false # TODO: how do we know when this should be true?
     else
       # repeater.access_method = Repeater::TONE_BURST
@@ -111,7 +115,7 @@ class UkrepeatersImporter
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:call])
       if !repeater
-        puts "  Repeater not found: #{raw_repeater[:call]}"
+        puts "  Repeater not found: #{raw_repeater[:call]} when importing #{raw_repeater}"
         next # TODO: create these repeaters.
       end
 
@@ -149,6 +153,10 @@ class UkrepeatersImporter
 
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
       repeater.fm = true if raw_repeater[:analog]&.strip == "Y"
+      if repeater.fm && raw_repeater[:ctcss].present? # This file contains some improvements on CTCSS code.
+        repeater.access_method = Repeater::CTCSS
+        repeater.ctcss_tone = raw_repeater[:ctcss]
+      end
       repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
       repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"
       repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
@@ -180,11 +188,14 @@ class UkrepeatersImporter
       end
 
       repeater.fm = raw_repeater[:analg] == 1
+
+      repeater.dstar = raw_repeater[:dstar] == 1
+
+      repeater.fusion = raw_repeater[:fusion] == 1
+
       repeater.dmr = raw_repeater[:dmr] == 1
       repeater.dmr_cc = raw_repeater[:dmrcc]
       repeater.dmr_con = raw_repeater[:dmrcon]
-      repeater.dstar = raw_repeater[:dstar] == 1
-      repeater.fusion = raw_repeater[:fusion] == 1
 
       if raw_repeater[:status] == "OPERATIONAL"
         repeater.operational = true
