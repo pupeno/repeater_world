@@ -38,7 +38,7 @@ class IcomId52Exporter < Exporter
         "No CTCSS"
       end)
 
-    call_sign = truncate(MAX_CALL_SIGN_LENGTH, repeater.call_sign.tr("-", " ")) # In the UK, some call signs have a hyphen, but ID-52 doesn't like that.
+    call_sign = truncate(MAX_CALL_SIGN_LENGTH, repeater.call_sign&.tr("-", " ")) # In the UK, some call signs have a hyphen, but ID-52 doesn't like that.
 
     [
       1, # TODO: do something smarter about groups.
