@@ -29,7 +29,7 @@ class IcomId52Exporter < Exporter
   MAX_GATEWAY_CALL_SIGN_LENGTH = 8
 
   def fm_repeater(repeater)
-    group_name = truncate(MAX_COUNTRY_NAME_LENGTH, repeater.country&.name) # TODO: do something smarter about groups.
+    group_name = truncate(MAX_COUNTRY_NAME_LENGTH, repeater.country.name) # TODO: do something smarter about groups.
     name = truncate(MAX_NAME_LENGTH, repeater.name)
     sub_name = truncate(MAX_SUB_NAME_LENGTH,
       if repeater.access_method.present?
@@ -73,7 +73,7 @@ class IcomId52Exporter < Exporter
 
   # Max lengths for each field is defined on page iv of the Icom ID-52 Advance Manual
   def dstar_repeater(repeater)
-    group_name = truncate(MAX_COUNTRY_NAME_LENGTH, repeater.country&.name) # TODO: do something smarter about groups.
+    group_name = truncate(MAX_COUNTRY_NAME_LENGTH, repeater.country.name) # TODO: do something smarter about groups.
     name = truncate(MAX_NAME_LENGTH, repeater.name)
     sub_name = truncate(MAX_SUB_NAME_LENGTH, repeater.region_1)
 
@@ -83,7 +83,7 @@ class IcomId52Exporter < Exporter
         add_dstar_port(call_sign_and_port.first, call_sign_and_port.second)
       else
         add_dstar_port(repeater.call_sign,
-          conventional_dstar_port(repeater.band, repeater.country&.id))
+          conventional_dstar_port(repeater.band, repeater.country.id))
 
       end)
 
