@@ -26,8 +26,7 @@ class Repeater < ApplicationRecord
   validates :access_method, inclusion: ACCESS_METHODS, allow_blank: true
   validates :ctcss_tone,
             presence: { if: lambda { |r| r.access_method == CTCSS } },
-            inclusion: { in: CTCSS_CODES, if: lambda { |r| r.access_method == CTCSS } },
-            allow_blank: true
+            inclusion: { in: CTCSS_CODES, if: lambda { |r| r.access_method == CTCSS } }
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")

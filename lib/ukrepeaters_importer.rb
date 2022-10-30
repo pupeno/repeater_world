@@ -46,13 +46,13 @@ class UkrepeatersImporter
     repeater.tx_frequency = raw_repeater[:tx].to_f * 10 ** 6
     repeater.rx_frequency = raw_repeater[:rx].to_f * 10 ** 6
     if raw_repeater[:code].present?
-      repeater.access_method = Repeater::CTCSS
       if Repeater::CTCSS_CODES.include?(raw_repeater[:code].to_f)
+        repeater.access_method = Repeater::CTCSS
         repeater.ctcss_tone = raw_repeater[:code]
+        repeater.tone_sql = false # TODO: how do we know when this should be true?
       else
         puts "  Ignoring invalid CTCSS #{raw_repeater[:code]} in #{raw_repeater}"
       end
-      repeater.tone_sql = false # TODO: how do we know when this should be true?
     else
       # repeater.access_method = Repeater::TONE_BURST
     end
