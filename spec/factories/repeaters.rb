@@ -1,7 +1,44 @@
 FactoryBot.define do
+  sequence(:call_sign) { |n| number_to_call_sign(n) }
+
   factory :repeater do
-    
+    call_sign
+    sequence(:name) { |n| "Repeater #{call_sign}" }
+    keeper { generate(:call_sign) }
+    band { Repeater::BAND_2M }
+
+    tx_frequency { 144962500 } # VHF, maybe dispatch on the band for different frequencies?
+    rx_frequency { tx_frequency - 600000 } # VHF, maybe dispatch on the band for different frequencies?
+    access_method { Repeater::TONE_BURST }
+
+    fm { true }
+    operational { true }
+
+    latitude { 51.74 }
+    longitude { -3.42 }
+    country_id { "gb" }
+    region_1 { "WM" }
+    grid_square { "IO81HR" }
   end
+end
+
+# This method counts in call sign, so base 26 for 3 characters, then base 10 for a number, and then base 26 for another
+# character. Sort of.
+def number_to_call_sign(n)
+  letters = ("A".."Z").to_a
+
+  call_sign = StringIO.new
+  call_sign << letters[n % 26]
+  n = n / 26
+  call_sign << letters[n % 26]
+  n = n / 26
+  call_sign << letters[n % 26]
+  n = n / 26
+  call_sign << n % 10
+  n = n / 10
+  call_sign << letters[n % 26]
+
+  call_sign.string.reverse
 end
 
 # == Schema Information
@@ -33,6 +70,7 @@ end
 #  region_3      :string
 #  region_4      :string
 #  rx_frequency  :decimal(, )
+#  source        :string
 #  tone_sql      :boolean
 #  tx_frequency  :decimal(, )
 #  created_at    :datetime         not null

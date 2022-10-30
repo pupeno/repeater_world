@@ -6,28 +6,26 @@ class CreateRepeaters < ActiveRecord::Migration[7.0]
       t.string :band
       t.string :channel
       t.string :keeper
+      t.boolean :operational
+      t.text :notes
 
       t.decimal :tx_frequency
       t.decimal :rx_frequency
+
+      t.boolean :fm
       t.string :access_method
       t.decimal :ctcss_tone
       t.boolean :tone_sql
-
-      t.boolean :fm
-
-      t.boolean :dmr
-      t.integer :dmr_cc
-      t.string :dmr_con
 
       t.boolean :dstar
 
       t.boolean :fusion
 
+      t.boolean :dmr
+      t.integer :dmr_cc
+      t.string :dmr_con
+
       t.boolean :nxdn
-
-      t.boolean :operational
-
-      t.text :notes
 
       t.string :grid_square
       t.decimal :latitude
@@ -37,6 +35,8 @@ class CreateRepeaters < ActiveRecord::Migration[7.0]
       t.string :region_2
       t.string :region_3
       t.string :region_4
+
+      t.string :source
 
       t.timestamps
     end

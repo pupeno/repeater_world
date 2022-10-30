@@ -99,4 +99,9 @@ RSpec.configure do |config|
   # test failures related to randomization by passing the same `--seed` value
   # as the one that triggered the failure.
   Kernel.srand config.seed
+
+  # Crappy way of dealing with countries in tests. Any better way?
+  config.before(:all) do
+    Country.create_all
+  end
 end
