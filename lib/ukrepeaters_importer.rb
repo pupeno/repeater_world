@@ -25,7 +25,7 @@ class UkrepeatersImporter
     csv_file.each_with_index do |raw_repeater, line_number|
       create_repeater(raw_repeater)
     rescue
-      raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
     puts "Done processing repeaterlist3.csv..."
   end
@@ -34,7 +34,6 @@ class UkrepeatersImporter
   def create_repeater(raw_repeater)
     # For the UK, we treat the call sign as unique and the identifier of the repeater.
     repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[:callsign].upcase)
-    already_existed = !repeater.new_record?
 
     # Some metadata.
     repeater.name = raw_repeater[:where].titleize
@@ -43,8 +42,8 @@ class UkrepeatersImporter
     repeater.keeper = raw_repeater[:keeper]
 
     # How to access the repeater.
-    repeater.tx_frequency = raw_repeater[:tx].to_f * 10 ** 6
-    repeater.rx_frequency = raw_repeater[:rx].to_f * 10 ** 6
+    repeater.tx_frequency = raw_repeater[:tx].to_f * 10**6
+    repeater.rx_frequency = raw_repeater[:rx].to_f * 10**6
     if raw_repeater[:code].present?
       if Repeater::CTCSS_CODES.include?(raw_repeater[:code].to_f)
         repeater.access_method = Repeater::CTCSS
@@ -53,8 +52,8 @@ class UkrepeatersImporter
       else
         puts "  Ignoring invalid CTCSS #{raw_repeater[:code]} in #{raw_repeater}"
       end
-    else
-      # repeater.access_method = Repeater::TONE_BURST
+      # else
+      #   repeater.access_method = Repeater::TONE_BURST
     end
 
     # The location of the repeater
@@ -63,37 +62,38 @@ class UkrepeatersImporter
     repeater.longitude = raw_repeater[:lon]
     repeater.country_id = "gb"
     repeater.region_1 = case raw_repeater[:region]
-                          when "SE", "SW", "NOR", "MIDL"
-                            "England"
-                          when "SCOT"
-                            "Scotland"
-                          when "WM"
-                            "Wales & Marches"
-                          when "NI"
-                            "Northern Ireland"
-                          else
-                            raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
-                        end
+    when "SE", "SW", "NOR", "MIDL"
+      "England"
+    when "SCOT"
+      "Scotland"
+    when "WM"
+      "Wales & Marches"
+    when "NI"
+      "Northern Ireland"
+    else
+      raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
+    end
     repeater.region_2 = case raw_repeater[:region]
-                          when "SE"
-                            "South East"
-                          when "SW"
-                            "South West"
-                          when "NOR"
-                            "North England"
-                          when "MIDL"
-                            "Midlands"
-                          when "SCOT"
-                            "Scotland"
-                          when "WM"
-                            "Wales & Marches"
-                          when "NI"
-                            "Northern Ireland"
-                          else
-                            raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
-                        end
+    when "SE"
+      "South East"
+    when "SW"
+      "South West"
+    when "NOR"
+      "North England"
+    when "MIDL"
+      "Midlands"
+    when "SCOT"
+      "Scotland"
+    when "WM"
+      "Wales & Marches"
+    when "NI"
+      "Northern Ireland"
+    else
+      raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
+    end
     repeater.region_3 = raw_repeater[:postcode]
     repeater.region_4 = raw_repeater[:where].titleize
+    repeater.utc_offset = "0:00"
 
     repeater.source = "ukrepeater.net"
 
@@ -129,7 +129,7 @@ class UkrepeatersImporter
 
       repeater.save!
     rescue
-      raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
     puts "Done processing repeaterlist_dv.csv."
   end
@@ -168,7 +168,7 @@ class UkrepeatersImporter
 
       repeater.save!
     rescue
-      raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
     puts "Done processing repeaterlist_all.csv."
   end
@@ -218,7 +218,7 @@ class UkrepeatersImporter
 
       repeater.save!
     rescue
-      raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
     puts "Done processing repeaterlist_alt2.csv."
   end
@@ -258,7 +258,7 @@ class UkrepeatersImporter
 
       repeater.save!
     rescue
-      raise "Failed to import record on #{line_number + 2}: #{raw_repeater.to_s}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
     puts "Done processing repeaterlist_status.csv."
   end
