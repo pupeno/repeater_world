@@ -29,13 +29,13 @@ def number_to_call_sign(n)
 
   call_sign = StringIO.new
   call_sign << letters[n % 26]
-  n = n / 26
+  n /= 26
   call_sign << letters[n % 26]
-  n = n / 26
+  n /= 26
   call_sign << letters[n % 26]
-  n = n / 26
+  n /= 26
   call_sign << n % 10
-  n = n / 10
+  n /= 10
   call_sign << letters[n % 26]
 
   call_sign.string.reverse
@@ -73,6 +73,7 @@ end
 #  source        :string
 #  tone_sql      :boolean
 #  tx_frequency  :decimal(, )
+#  utc_offset    :string
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  country_id    :string

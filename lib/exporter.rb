@@ -19,16 +19,14 @@ class Exporter
       else
         raise "Unexpected band #{band} in Japan"
       end
+    elsif band == Repeater::BAND_23CM
+      "A"
+    elsif band == Repeater::BAND_70CM
+      "B"
+    elsif band == Repeater::BAND_2M
+      "C"
     else
-      if band == Repeater::BAND_23CM
-        "A"
-      elsif band == Repeater::BAND_70CM
-        "B"
-      elsif band == Repeater::BAND_2M
-        "C"
-      else
-        raise "Unexpected band #{band}"
-      end
+      raise "Unexpected band #{band}"
     end
   end
 

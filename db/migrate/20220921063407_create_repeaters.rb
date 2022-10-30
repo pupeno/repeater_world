@@ -35,12 +35,11 @@ class CreateRepeaters < ActiveRecord::Migration[7.0]
       t.string :region_2
       t.string :region_3
       t.string :region_4
+      t.string :utc_offset
 
       t.string :source
 
       t.timestamps
     end
-
-
   end
 end

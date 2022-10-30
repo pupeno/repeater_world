@@ -1,5 +1,5 @@
 class Country < ApplicationRecord
-  validates :id, presence: true, uniqueness: { case_sensitive: false }, inclusion: ISO3166::Country.codes.map(&:downcase)
+  validates :id, presence: true, uniqueness: {case_sensitive: false}, inclusion: ISO3166::Country.codes.map(&:downcase)
   validates :name, presence: true
 
   def to_s(extra = nil)

@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Repeater, type: :model do
   context "A repeater" do
@@ -45,6 +45,7 @@ end
 #  source        :string
 #  tone_sql      :boolean
 #  tx_frequency  :decimal(, )
+#  utc_offset    :string
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  country_id    :string
