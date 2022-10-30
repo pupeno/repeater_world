@@ -67,7 +67,7 @@ class IcomId52Exporter < Exporter
       "Approximate", # TODO: why does the export have some "Exacts"
       "%.6f" % repeater.latitude,
       "%.6f" % repeater.longitude,
-      "--:--" # TODO: export UTC Offset.
+      repeater.utc_offset
     ]
   end
 
@@ -107,7 +107,7 @@ class IcomId52Exporter < Exporter
       "Approximate", # TODO: why does the export have some "Exacts"
       "%.6f" % repeater.latitude,
       "%.6f" % repeater.longitude,
-      "--:--" # TODO: export UTC Offset.
+      repeater.utc_offset
     ]
   end
 

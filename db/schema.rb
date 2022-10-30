@@ -76,6 +76,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
     t.string "region_2"
     t.string "region_3"
     t.string "region_4"
+    t.string "utc_offset"
     t.string "source"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

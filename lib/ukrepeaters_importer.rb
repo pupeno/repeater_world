@@ -93,6 +93,7 @@ class UkrepeatersImporter
     end
     repeater.region_3 = raw_repeater[:postcode]
     repeater.region_4 = raw_repeater[:where].titleize
+    repeater.utc_offset = "0:00"
 
     repeater.source = "ukrepeater.net"
 
