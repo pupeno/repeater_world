@@ -37,7 +37,7 @@ class UkrepeatersImporter
     already_existed = !repeater.new_record?
 
     # Some metadata.
-    repeater.name = "#{raw_repeater[:where].titleize} #{repeater.call_sign}"
+    repeater.name = raw_repeater[:where].titleize
     repeater.band = raw_repeater[:band].downcase
     repeater.channel = raw_repeater[:channel]
     repeater.keeper = raw_repeater[:keeper]
