@@ -37,7 +37,7 @@ class UkrepeatersImporter
     already_existed = !repeater.new_record?
 
     # Some metadata.
-    repeater.name = "#{raw_repeater[:where].titleize} #{repeater.call_sign}"
+    repeater.name = raw_repeater[:where].titleize
     repeater.band = raw_repeater[:band].downcase
     repeater.channel = raw_repeater[:channel]
     repeater.keeper = raw_repeater[:keeper]
@@ -46,11 +46,15 @@ class UkrepeatersImporter
     repeater.tx_frequency = raw_repeater[:tx].to_f * 10 ** 6
     repeater.rx_frequency = raw_repeater[:rx].to_f * 10 ** 6
     if raw_repeater[:code].present?
-      repeater.access_method = Repeater::CTCSS
-      repeater.ctcss_tone = raw_repeater[:code]
-      repeater.tone_sql = false # TODO: how do we know when this should be true?
+      if Repeater::CTCSS_CODES.include?(raw_repeater[:code].to_f)
+        repeater.access_method = Repeater::CTCSS
+        repeater.ctcss_tone = raw_repeater[:code]
+        repeater.tone_sql = false # TODO: how do we know when this should be true?
+      else
+        puts "  Ignoring invalid CTCSS #{raw_repeater[:code]} in #{raw_repeater}"
+      end
     else
-      repeater.access_method = Repeater::TONE_BURST
+      # repeater.access_method = Repeater::TONE_BURST
     end
 
     # The location of the repeater
@@ -58,9 +62,40 @@ class UkrepeatersImporter
     repeater.latitude = raw_repeater[:lat]
     repeater.longitude = raw_repeater[:lon]
     repeater.country_id = "gb"
-    repeater.region_1 = raw_repeater[:region]
-    repeater.region_2 = raw_repeater[:postcode]
-    repeater.region_3 = raw_repeater[:where].titleize
+    repeater.region_1 = case raw_repeater[:region]
+                          when "SE", "SW", "NOR", "MIDL"
+                            "England"
+                          when "SCOT"
+                            "Scotland"
+                          when "WM"
+                            "Wales & Marches"
+                          when "NI"
+                            "Northern Ireland"
+                          else
+                            raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
+                        end
+    repeater.region_2 = case raw_repeater[:region]
+                          when "SE"
+                            "South East"
+                          when "SW"
+                            "South West"
+                          when "NOR"
+                            "North England"
+                          when "MIDL"
+                            "Midlands"
+                          when "SCOT"
+                            "Scotland"
+                          when "WM"
+                            "Wales & Marches"
+                          when "NI"
+                            "Northern Ireland"
+                          else
+                            raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
+                        end
+    repeater.region_3 = raw_repeater[:postcode]
+    repeater.region_4 = raw_repeater[:where].titleize
+
+    repeater.source = "ukrepeater.net"
 
     puts "  Created #{repeater}." if repeater.new_record?
 
@@ -80,7 +115,7 @@ class UkrepeatersImporter
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:call])
       if !repeater
-        puts "  Repeater not found: #{raw_repeater[:call]}"
+        puts "  Repeater not found: #{raw_repeater[:call]} when importing #{raw_repeater}"
         next # TODO: create these repeaters.
       end
 
@@ -118,9 +153,16 @@ class UkrepeatersImporter
 
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
       repeater.fm = true if raw_repeater[:analog]&.strip == "Y"
-      repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
+      if repeater.fm && raw_repeater[:ctcss].present? # This file contains some improvements on CTCSS code.
+        repeater.access_method = Repeater::CTCSS
+        repeater.ctcss_tone = raw_repeater[:ctcss]
+      end
+
       repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"
+
       repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
+
+      repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
 
       puts "  Enriched #{repeater}." if repeater.changed?
 
@@ -149,11 +191,14 @@ class UkrepeatersImporter
       end
 
       repeater.fm = raw_repeater[:analg] == 1
+
+      repeater.dstar = raw_repeater[:dstar] == 1
+
+      repeater.fusion = raw_repeater[:fusion] == 1
+
       repeater.dmr = raw_repeater[:dmr] == 1
       repeater.dmr_cc = raw_repeater[:dmrcc]
       repeater.dmr_con = raw_repeater[:dmrcon]
-      repeater.dstar = raw_repeater[:dstar] == 1
-      repeater.fusion = raw_repeater[:fusion] == 1
 
       if raw_repeater[:status] == "OPERATIONAL"
         repeater.operational = true

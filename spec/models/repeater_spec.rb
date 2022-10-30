@@ -1,7 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe Repeater, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "A repeater" do
+    before { @repeater = create(:repeater) }
+
+    it "is readable" do
+      expect(@repeater.to_s).to include(@repeater.class.name)
+      expect(@repeater.to_s).to include(@repeater.id)
+      expect(@repeater.to_s).to include(@repeater.name)
+      expect(@repeater.to_s).to include(@repeater.call_sign)
+    end
+  end
 end
 
 # == Schema Information
@@ -33,6 +42,7 @@ end
 #  region_3      :string
 #  region_4      :string
 #  rx_frequency  :decimal(, )
+#  source        :string
 #  tone_sql      :boolean
 #  tx_frequency  :decimal(, )
 #  created_at    :datetime         not null
