@@ -19,7 +19,7 @@ class IcomId51AndId52Exporter < Exporter
     end
   end
 
-  private
+  protected
 
   # Max lengths for each field is defined on page iv of the Icom ID-52 Advance Manual. We are assuming it's the same for
   # the ID-51, but if not, this might need changing.
@@ -32,7 +32,7 @@ class IcomId51AndId52Exporter < Exporter
   def repeater(repeater)
     group_name = truncate(MAX_COUNTRY_NAME_LENGTH, repeater.country.name) # TODO: do something smarter about groups.
     name = truncate(MAX_NAME_LENGTH, repeater.name)
-    sub_name = repeater.region_1
+    sub_name = truncate(MAX_SUB_NAME_LENGTH, repeater.region_1)
 
     call_sign = truncate(MAX_CALL_SIGN_LENGTH, repeater.call_sign&.tr("-", " ")) # In the UK, some call signs have a hyphen, but ID-52 doesn't like that.
 
@@ -71,7 +71,7 @@ class IcomId51AndId52Exporter < Exporter
     when Repeater::CTCSS
       "#{repeater.ctcss_tone}Hz"
     else
-      "88.5Hz" # ID-52 insists on having some value here, even if it makes no sense and it's not used.
+      "88.5Hz" # ID-52 insists on having some value here, even if it makes no sense and it's not used. The ID-51 has a similar broken behaviour.
     end
 
     row
