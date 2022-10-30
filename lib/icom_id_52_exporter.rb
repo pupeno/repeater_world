@@ -34,6 +34,7 @@ class IcomId52Exporter < Exporter
   def fm_repeater(repeater)
     group_name = repeater.country&.name&.truncate(MAX_COUNTRY_NAME_LENGTH, omission: "")  # TODO: do something smarter about groups.
     name = repeater.name.truncate(MAX_NAME_LENGTH, omission: "")
+    sub_name = repeater.region_1.truncate(MAX_SUB_NAME_LENGTH, omission: "")
 
     call_sign = repeater.call_sign.truncate(MAX_CALL_SIGN_LENGTH, omission: "")
 
@@ -41,7 +42,7 @@ class IcomId52Exporter < Exporter
       1, # TODO: do something smarter about groups.
       group_name,
       name,
-      nil, # TODO: what's this?
+      sub_name,
       call_sign,
       nil, # FM repeaters don't have a gateway.
       "%.6f" % (repeater.tx_frequency.to_f / 10 ** 6),
@@ -67,6 +68,7 @@ class IcomId52Exporter < Exporter
   def dstar_repeater(repeater)
     group_name = repeater.country&.name&.truncate(MAX_COUNTRY_NAME_LENGTH, omission: "")  # TODO: do something smarter about groups.
     name = repeater.name.truncate(MAX_NAME_LENGTH, omission: "")
+    sub_name = repeater.region_1.truncate(MAX_SUB_NAME_LENGTH, omission: "")
 
     call_sign = add_dstar_port(repeater.call_sign, conventional_dstar_port(repeater.band, repeater.country&.id))
                   .truncate(MAX_CALL_SIGN_LENGTH, omission: "")
@@ -77,7 +79,7 @@ class IcomId52Exporter < Exporter
       1, # TODO: do something smarter about groups.
       group_name,
       name,
-      nil, # TODO: what's this?
+      sub_name,
       call_sign,
       gateway_call_sign,
       "%.6f" % (repeater.tx_frequency.to_f / 10 ** 6),
