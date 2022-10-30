@@ -58,9 +58,38 @@ class UkrepeatersImporter
     repeater.latitude = raw_repeater[:lat]
     repeater.longitude = raw_repeater[:lon]
     repeater.country_id = "gb"
-    repeater.region_1 = raw_repeater[:region]
-    repeater.region_2 = raw_repeater[:postcode]
-    repeater.region_3 = raw_repeater[:where].titleize
+    repeater.region_1 = case raw_repeater[:region]
+                          when "SE", "SW", "NOR", "MIDL"
+                            "England"
+                          when "SCOT"
+                            "Scotland"
+                          when "WM"
+                            "Wales & Marches"
+                          when "NI"
+                            "Northern Ireland"
+                          else
+                            raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
+                        end
+    repeater.region_2 = case raw_repeater[:region]
+                          when "SE"
+                            "South East"
+                          when "SW"
+                            "South West"
+                          when "NOR"
+                            "North England"
+                          when "MIDL"
+                            "Midlands"
+                          when "SCOT"
+                            "Scotland"
+                          when "WM"
+                            "Wales & Marches"
+                          when "NI"
+                            "Northern Ireland"
+                          else
+                            raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
+                        end
+    repeater.region_3 = raw_repeater[:postcode]
+    repeater.region_4 = raw_repeater[:where].titleize
 
     repeater.source = "ukrepeater.net"
 
