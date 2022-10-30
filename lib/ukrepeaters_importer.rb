@@ -157,9 +157,12 @@ class UkrepeatersImporter
         repeater.access_method = Repeater::CTCSS
         repeater.ctcss_tone = raw_repeater[:ctcss]
       end
-      repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
+
       repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"
+
       repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
+
+      repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
 
       puts "  Enriched #{repeater}." if repeater.changed?
 
