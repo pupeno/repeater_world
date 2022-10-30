@@ -42,6 +42,7 @@ RSpec.describe IcomId52Exporter do
     expect(exporter.export).to eq(<<~CSV)
       Group No,Group Name,Name,Sub Name,Repeater Call Sign,Gateway Call Sign,Frequency,Dup,Offset,Mode,TONE,Repeater Tone,RPT1USE,Position,Latitude,Longitude,UTC Offset
       1,United Kingdom,Derby,England,GB7DC,,430.875000,DUP+,7.600000,FM,TONE,71.9Hz,YES,Approximate,52.900000,-1.400000,--:--
+      1,United Kingdom,Derby,England,GB7DC  B,GB7DC  G,430.875000,DUP+,7.600000,DV,,,YES,Approximate,52.900000,-1.400000,--:--
       1,United Kingdom,Dufton,England,GB3VE  B,GB3VE  G,433.100000,DUP+,1.600000,DV,,,YES,Approximate,54.680000,-2.460000,--:--
       1,United Kingdom,Weymouth,No CTCSS,GB3DR,,145.737500,DUP-,0.600000,FM,OFF,88.5Hz,YES,Approximate,50.550000,-2.440000,--:--
     CSV

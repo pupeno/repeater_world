@@ -2,19 +2,18 @@ class IcomId52Exporter < Exporter
   def export
     CSV.generate do |csv|
       csv << ["Group No", "Group Name", "Name", "Sub Name", "Repeater Call Sign", "Gateway Call Sign", "Frequency",
-        "Dup", "Offset", "Mode", "TONE", "Repeater Tone", "RPT1USE", "Position", "Latitude", "Longitude",        "UTC Offset"]
+        "Dup", "Offset", "Mode", "TONE", "Repeater Tone", "RPT1USE", "Position", "Latitude", "Longitude", "UTC Offset"]
       @repeaters
         .where(band: [Repeater::BAND_2M, Repeater::BAND_70CM]) # ID-52 can only do VHF and UHF.
         .where.not(operational: false) # Skip repeaters known to not be operational.
         .where(fm: true).or(Repeater.where(dstar: true)) # ID-52 does FM and DStar only
         .order(:name, :call_sign)
         .each do |repeater|
-        if [Repeater::BAND_2M, Repeater::BAND_70CM].include? repeater.band
-          csv << if repeater.fm?
-            fm_repeater(repeater)
-          elsif repeater.dstar?
-            dstar_repeater(repeater)
-          end
+        if repeater.fm?
+          csv << fm_repeater(repeater)
+        end
+        if repeater.dstar?
+          csv << dstar_repeater(repeater)
         end
       end
     end
