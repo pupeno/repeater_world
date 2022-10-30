@@ -9,11 +9,11 @@ class CreateRepeaters < ActiveRecord::Migration[7.0]
 
       t.decimal :tx_frequency
       t.decimal :rx_frequency
+
+      t.boolean :fm
       t.string :access_method
       t.decimal :ctcss_tone
       t.boolean :tone_sql
-
-      t.boolean :fm
 
       t.boolean :dmr
       t.integer :dmr_cc
@@ -37,6 +37,8 @@ class CreateRepeaters < ActiveRecord::Migration[7.0]
       t.string :region_2
       t.string :region_3
       t.string :region_4
+
+      t.string :source
 
       t.timestamps
     end

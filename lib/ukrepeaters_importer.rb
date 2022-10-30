@@ -50,7 +50,7 @@ class UkrepeatersImporter
       repeater.ctcss_tone = raw_repeater[:code]
       repeater.tone_sql = false # TODO: how do we know when this should be true?
     else
-      repeater.access_method = Repeater::TONE_BURST
+      # repeater.access_method = Repeater::TONE_BURST
     end
 
     # The location of the repeater
@@ -61,6 +61,8 @@ class UkrepeatersImporter
     repeater.region_1 = raw_repeater[:region]
     repeater.region_2 = raw_repeater[:postcode]
     repeater.region_3 = raw_repeater[:where].titleize
+
+    repeater.source = "ukrepeater.net"
 
     puts "  Created #{repeater}." if repeater.new_record?
 

@@ -42,6 +42,7 @@ end
 #  region_3      :string
 #  region_4      :string
 #  rx_frequency  :decimal(, )
+#  source        :string
 #  tone_sql      :boolean
 #  tx_frequency  :decimal(, )
 #  created_at    :datetime         not null

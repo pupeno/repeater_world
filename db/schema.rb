@@ -56,10 +56,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
     t.string "keeper"
     t.decimal "tx_frequency"
     t.decimal "rx_frequency"
+    t.boolean "fm"
     t.string "access_method"
     t.decimal "ctcss_tone"
     t.boolean "tone_sql"
-    t.boolean "fm"
     t.boolean "dmr"
     t.integer "dmr_cc"
     t.string "dmr_con"
@@ -76,6 +76,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
     t.string "region_2"
     t.string "region_3"
     t.string "region_4"
+    t.string "source"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"

@@ -19,7 +19,7 @@ class Repeater < ApplicationRecord
   validates :band, presence: true, inclusion: BANDS
   validates :tx_frequency, presence: true # TODO: validate the frequency is within the band.
   validates :rx_frequency, presence: true # TODO: validate the frequency is within the band.
-  validates :access_method, inclusion: ACCESS_METHODS
+  validates :access_method, inclusion: ACCESS_METHODS, allow_blank: true
   validates :ctcss_tone, presence: { if: lambda { |r| r.access_method == CTCSS } }
 
   def to_s(extra = nil)
@@ -56,6 +56,7 @@ end
 #  region_3      :string
 #  region_4      :string
 #  rx_frequency  :decimal(, )
+#  source        :string
 #  tone_sql      :boolean
 #  tx_frequency  :decimal(, )
 #  created_at    :datetime         not null
