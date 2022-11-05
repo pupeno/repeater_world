@@ -25,6 +25,8 @@ jobs:
         run: bin/rails db:migrate
       - name: Run tests
         run: bundle exec rspec
+      - name: SimpleCov+ Action
+        uses: joshmfrankel/simplecov-check-action@1.0.0
 
 #   lint:
 #     runs-on: ubuntu-latest
