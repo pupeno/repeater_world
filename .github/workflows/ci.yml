@@ -65,6 +65,8 @@ jobs:
           POSTGRES_USER: repeater_world_development
           POSTGRES_PASSWORD: te6ahng1phi1uizaeGhahMof1
           POSTGRES_DB: repeater_world_test
+    env:
+      RAILS_ENV: test
     steps:
       - uses: actions/checkout@v2
         with:
