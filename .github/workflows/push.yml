@@ -1,0 +1,50 @@
+name: Push
+on: push
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:14-alpine
+        ports:
+          - "10401:5432"
+        env:
+          POSTGRES_USER: repeater_world_development
+          POSTGRES_PASSWORD: te6ahng1phi1uizaeGhahMof1
+          POSTGRES_DB: repeater_world_test
+    env:
+      RAILS_ENV: test
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Ruby and Gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set Up Database Schema
+        run: bin/rails db:migrate
+
+      - name: Run Tests
+        run: bundle exec rspec
+
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Security audit application code
+        run: bundle exec brakeman -q -w2
+      - name: Lint Ruby files
+        run: rake standard
+      # TODO: do we want this when we have dependabot?
+#      - name: Security audit dependencies
+#        run: bin/bundler-audit --update
