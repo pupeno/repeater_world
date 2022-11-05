@@ -16,7 +16,7 @@ jobs:
       RAILS_ENV: test
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Ruby and Gems
         uses: ruby/setup-ruby@v1
@@ -74,7 +74,7 @@ jobs:
     env:
       RAILS_ENV: test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ## Here we do not checkout the current branch, but we checkout the base branch.
           ref: ${{ github.base_ref }}
@@ -123,7 +123,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
