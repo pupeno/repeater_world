@@ -1,4 +1,4 @@
-on: [push]
+on: [ push ]
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,30 +15,39 @@ jobs:
     env:
       RAILS_ENV: test
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Ruby and Gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set Up Database Schema
+        run: bin/rails db:migrate
+
+      - name: Run Tests
+        run: bundle exec rspec
+
+      - name: SimpleCov Check
+        uses: joshmfrankel/simplecov-check-action@1.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: Set up database schema
-        run: bin/rails db:migrate
-      - name: Run tests
-        run: bundle exec rspec
-
-#   lint:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-#       - name: Install Ruby and gems
-#         uses: ruby/setup-ruby@8f312efe1262fb463d906e9bf040319394c18d3e # v1.92
-#         with:
-#           bundler-cache: true
-#       # Add or replace any other lints here
-#       - name: Security audit dependencies
-#         run: bin/bundler-audit --update
-#       - name: Security audit application code
-#         run: bin/brakeman -q -w2
-#       - name: Lint Ruby files
-#         run: bin/rubocop --parallel
+      - name: Security audit application code
+        run: bundle exec brakeman -q -w2
+      - name: Lint Ruby files
+        run: rake standard
+      # TODO: do we want this when we have dependabot?
+#      - name: Security audit dependencies
+#        run: bin/bundler-audit --update
