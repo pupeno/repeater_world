@@ -17,19 +17,40 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.base_ref }}
+
+      - id: base-ref-commit
+        run: echo "::set-output name=revision::`git rev-parse HEAD`"
+
+      - name: simplecov resultset cache
+        id: simplecov-resultset
+        uses:  actions/cache@v2
+        with:
+          path: coverage/.resultset.json
+          key: simplecov-resultset-${{ steps.base-ref-commit.outputs.revision }}
+
       - name: Install Ruby and Gems
         uses: ruby/setup-ruby@v1
+        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
         with:
           bundler-cache: true
-      - name: Set Up Database Schema
-        run: bin/rails db:migrate
-      - name: Run Tests
-        run: bundle exec rspec --format json --out tmp/rspec_results.json --format progress
 
-      - name: Simplecov Report
-        uses: pi-chan/simplecov-report-group-action@v1
+      - name: Set Up Database Schema
+        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
+        run: bin/rails db:migrate
+
+      - name: Run Tests
+        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
+        run: bundle exec rspec
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          name: base-result
+          path: coverage/.resultset.json
+
 
 #      - name: RSpec Report
 #        uses: SonicGarden/rspec-report-action@v2
