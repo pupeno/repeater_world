@@ -112,7 +112,7 @@ jobs:
         with:
           name: head-result
 
-      - uses: kzkn/simplecov-resultset-diff-action
+      - uses: kzkn/simplecov-resultset-diff-action@v1
         with:
           base-resultset-path: ./base-result/.resultset.json
           head-resultset-path: ./head-result/.resultset.json
