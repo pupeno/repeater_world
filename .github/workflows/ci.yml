@@ -25,11 +25,11 @@ jobs:
         run: bin/rails db:migrate
       - name: Run Tests
         run: bundle exec rspec --format json --out tmp/rspec_results.json --format progress
+
       - name: Simplecov Report
-        uses: aki77/simplecov-report-action@v1
+        uses: pi-chan/simplecov-report-group-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
 
 #      - name: RSpec Report
 #        uses: SonicGarden/rspec-report-action@v2
