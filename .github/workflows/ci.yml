@@ -27,6 +27,8 @@ jobs:
         run: bundle exec rspec
       - name: SimpleCov+ Action
         uses: joshmfrankel/simplecov-check-action@1.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
 #   lint:
 #     runs-on: ubuntu-latest
