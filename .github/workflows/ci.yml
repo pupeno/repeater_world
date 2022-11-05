@@ -68,16 +68,16 @@ jobs:
           key: simplecov-resultset-${{ steps.base-ref-commit.outputs.revision }}
 
       - uses: ruby/setup-ruby@v1
-        if: steps.simplecov-resultset.outputs.cache-hit != "true"
+        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
         with:
           bundler-cache: true
 
       - name: Set Up Database Schema
-        if: steps.simplecov-resultset.outputs.cache-hit != "true"
+        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
         run: bin/rails db:migrate
 
       - name: Run Tests
-        if: steps.simplecov-resultset.outputs.cache-hit != "true"
+        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
         run: bundle exec rspec
 
       - name: Upload coverage report
