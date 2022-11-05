@@ -23,6 +23,11 @@ if !SimpleCov.running
     add_filter "app/mailers"
   end
 end
+if ENV["CI"]
+  puts "Running in CI mode"
+  require "simplecov-cobertura"
+  SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
+end
 
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|

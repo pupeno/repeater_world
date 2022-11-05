@@ -25,10 +25,17 @@ jobs:
         run: bin/rails db:migrate
       - name: Run tests
         run: bundle exec rspec
-      - name: SimpleCov+ Action
+      - name: simplecov
         uses: joshmfrankel/simplecov-check-action@1.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: coverage summary
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: coverage/coverage.xml
+          badge: true
+          indicators: true
+
 
   lint:
     runs-on: ubuntu-latest
