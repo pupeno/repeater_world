@@ -1,0 +1,112 @@
+name: Pull Request
+on: pull_request
+jobs:
+  test-head:
+    name: Test Head Branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:14-alpine
+        ports:
+          - "10401:5432"
+        env:
+          POSTGRES_USER: repeater_world_development
+          POSTGRES_PASSWORD: te6ahng1phi1uizaeGhahMof1
+          POSTGRES_DB: repeater_world_test
+    env:
+      RAILS_ENV: test
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Ruby and Gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set Up Database Schema
+        run: bin/rails db:migrate
+
+      - name: Run Tests
+        run: bundle exec rspec
+
+      - name: Upload Coverage
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: head-result
+          path: coverage/.resultset.json
+
+  test-base:
+    name: Test Base Branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:14-alpine
+        ports:
+          - "10401:5432"
+        env:
+          POSTGRES_USER: repeater_world_development
+          POSTGRES_PASSWORD: te6ahng1phi1uizaeGhahMof1
+          POSTGRES_DB: repeater_world_test
+    env:
+      RAILS_ENV: test
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ## Here we do not checkout the current branch, but we checkout the base branch.
+          ref: ${{ github.base_ref }}
+
+      - id: base-ref-commit
+        run: echo "revision=`git rev-parse HEAD`" >> $GITHUB_ENV
+
+      - name: simplecov resultset cache
+        id: simplecov-resultset
+        uses:  actions/cache@v3
+        with:
+          path: coverage/.resultset.json
+          key: simplecov-resultset-${{ env.revision }}
+
+      - uses: ruby/setup-ruby@v1
+        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
+        with:
+          bundler-cache: true
+
+      - name: Set Up Database Schema
+        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
+        run: bin/rails db:migrate
+
+      - name: Run Tests
+        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
+        run: bundle exec rspec
+
+      - name: Upload Coverage
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: base-result
+          path: coverage/.resultset.json
+
+  compare-coverage:
+    name: Compare Coverage
+    runs-on: ubuntu-latest
+    needs: [test-head, test-base]
+
+    steps:
+      - name: Download Base Coverage
+        uses: actions/download-artifact@v1
+        with:
+          name: base-result
+
+      - name: Download Current Coverage
+        uses: actions/download-artifact@v1
+        with:
+          name: head-result
+
+      - uses: flexpointtech/simplecov-resultset-diff-action@v1.2
+        with:
+          base-resultset-path: ./base-result/.resultset.json
+          head-resultset-path: ./head-result/.resultset.json
+          token: ${{ secrets.GITHUB_TOKEN }}

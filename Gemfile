@@ -49,4 +49,5 @@ end
 
 group :test do
   gem "simplecov", require: false
+  gem "simplecov-cobertura"
 end

@@ -1,6 +1,8 @@
-on: [ push ]
+name: Push
+on: push
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
     timeout-minutes: 10
     services:
@@ -28,11 +30,6 @@ jobs:
 
       - name: Run Tests
         run: bundle exec rspec
-
-      - name: SimpleCov Check
-        uses: joshmfrankel/simplecov-check-action@1.0.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   lint:
     name: "Lint"
