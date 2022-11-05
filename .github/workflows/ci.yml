@@ -60,9 +60,6 @@ jobs:
       - id: base-ref-commit
         run: echo "revision=`git rev-parse HEAD`" >> $GITHUB_ENV
 
-      - id: revision
-        run: echo "${{ env.revision }}"
-
       - name: simplecov resultset cache
         id: simplecov-resultset
         uses:  actions/cache@v3
