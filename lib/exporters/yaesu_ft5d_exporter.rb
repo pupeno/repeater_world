@@ -99,10 +99,10 @@ class YaesuFt5dExporter < Exporter
   def repeater(repeater)
     {
       PRIORITY_CH => OFF,
-      RX_FREQ => frequency_in_mhz(repeater.rx_frequency, precision: 5),
-      TX_FREQ => frequency_in_mhz(repeater.tx_frequency, precision: 5),
+      RX_FREQ => frequency_in_mhz(repeater.tx_frequency, precision: 5), # Yaesu seems to call TX RX...
+      TX_FREQ => frequency_in_mhz(repeater.rx_frequency, precision: 5), # ... and RX TX (or vice versa).
       OFFSET_FREQ => frequency_in_mhz((repeater.tx_frequency - repeater.rx_frequency).abs, precision: 5),
-      OFFSET_DIR => repeater.tx_frequency > repeater.rx_frequency ? "+RPT" : "-RPT",
+      OFFSET_DIR => repeater.tx_frequency > repeater.rx_frequency ? "-RPT" : "+RPT",
       AUTO_MODE => ON, # TODO: What's this?
       NAME => "#{truncate(MAX_NAME_LENGTH - repeater.call_sign.length - 1, repeater.name)} #{repeater.call_sign}",
       TONE_MODE => OFF, # Default.
