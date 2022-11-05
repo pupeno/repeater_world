@@ -19,6 +19,8 @@ class Repeater < ApplicationRecord
     225.7, 233.6, 241.8, 250.3
   ]
 
+  DMR_COLOR_CODES = (0..15).to_a
+
   belongs_to :country
 
   validates :name, presence: true

@@ -81,6 +81,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.13.0)
       msgpack (~> 1.2)
+    brakeman (5.3.1)
     builder (3.2.4)
     capybara (3.37.1)
       addressable
@@ -320,6 +321,7 @@ DEPENDENCIES
   annotate (~> 3.2.0)
   babosa (~> 2.0.0)
   bootsnap
+  brakeman (~> 5.3)
   capybara (~> 3.37)
   countries (~> 5.1)
   debug
