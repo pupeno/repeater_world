@@ -263,7 +263,7 @@ class UkrepeatersImporter
       @logger.info "  Downloading #{url}"
       dirname = File.dirname(dest)
       FileUtils.mkdir_p(dirname) if !File.directory?(dirname)
-      IO.copy_stream(URI.open(url), dest)
+      IO.copy_stream(URI.parse(url).open, dest)
     end
 
     dest

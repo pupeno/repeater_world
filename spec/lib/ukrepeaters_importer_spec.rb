@@ -2,16 +2,16 @@ require "rails_helper"
 
 RSpec.describe UkrepeatersImporter do
   it "should import" do
-    files = {"https://ukrepeater.net/csvcreate3.php" => "repeaterlist3.csv",
-             "https://ukrepeater.net/csvcreate_dv.php" => "repeaterlist_dv.csv",
-             "https://ukrepeater.net/csvcreate_all.php" => "repeaterlist_all.csv",
-             "https://ukrepeater.net/repeaterlist-alt.php" => "repeaterlist_alt2.csv",
-             "https://ukrepeater.net/csvcreatewithstatus.php" => "repeaterlist_status.csv"}
+    files = { "https://ukrepeater.net/csvcreate3.php" => "repeaterlist3.csv",
+              "https://ukrepeater.net/csvcreate_dv.php" => "repeaterlist_dv.csv",
+              "https://ukrepeater.net/csvcreate_all.php" => "repeaterlist_all.csv",
+              "https://ukrepeater.net/repeaterlist-alt.php" => "repeaterlist_alt2.csv",
+              "https://ukrepeater.net/csvcreatewithstatus.php" => "repeaterlist_status.csv" }
 
     files.each do |url, local_file|
-      expect(URI).to receive(:open)
-        .with(url)
-        .and_return(File.new(File.join(__dir__, "ukrepeaters_importer_spec_data", local_file)))
+      file = double("file")
+      expect(file).to receive(:open).and_return(File.new(File.join(__dir__, "ukrepeaters_importer_spec_data", local_file)))
+      expect(URI).to receive(:parse).with(url).and_return(file)
     end
 
     Dir.mktmpdir("ukrepeaters") do |dir|
