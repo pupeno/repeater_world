@@ -37,7 +37,7 @@ jobs:
           path: coverage/.resultset.json
 
   build-base:
-    name: 'Build base'
+    name: "Build base"
     runs-on: ubuntu-latest
     timeout-minutes: 10
     services:
@@ -68,16 +68,16 @@ jobs:
           key: simplecov-resultset-${{ steps.base-ref-commit.outputs.revision }}
 
       - uses: ruby/setup-ruby@v1
-        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
+        if: steps.simplecov-resultset.outputs.cache-hit != "true"
         with:
           bundler-cache: true
 
       - name: Set Up Database Schema
-        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
+        if: steps.simplecov-resultset.outputs.cache-hit != "true"
         run: bin/rails db:migrate
 
       - name: Run Tests
-        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
+        if: steps.simplecov-resultset.outputs.cache-hit != "true"
         run: bundle exec rspec
 
       - name: Upload coverage report
@@ -88,7 +88,7 @@ jobs:
           path: coverage/.resultset.json
 
   compare:
-    name: 'Compare base & head coverages'
+    name: "Compare base & head coverages"
     runs-on: ubuntu-latest
     needs: [build-base, build-head]
 
