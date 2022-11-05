@@ -5,22 +5,32 @@ class YaesuFt5dExporter < Exporter
       NAME, TONE_MODE, CTCSS_FREQ, DCS_CODE, DCS_POLARITY, USER_CTCSS, RX_DG_ID, TX_DG_ID, TX_POWER, SKIP, AUTO_STEP,
       STEP, MEMORY_MASK, ATT, S_METER_SQL, BELL, NARROW, CLOCK_SHIFT, BANK1, BANK2, BANK3, BANK4, BANK5, BANK6, BANK7,
       BANK8, BANK9, BANK10, BANK11, BANK12, BANK13, BANK14, BANK15, BANK16, BANK17, BANK18, BANK19, BANK20, BANK21,
-      BANK22, BANK23, BANK24, COMMENT
+      BANK22, BANK23, BANK24, COMMENT, LAST
     ]
 
+    channel_number = 1
     CSV.generate(headers: headers, write_headers: false) do |csv|
       @repeaters
         .where(band: [Repeater::BAND_2M, Repeater::BAND_70CM]) # TODO: can the FT5D do other bands?
         .where.not(operational: false) # Skip repeaters known to not be operational.
-        .where(fm: true).or(Repeater.where(fusion: true)) # FT5D does FM and Fusion
+        .merge(Repeater.where(fm: true).or(Repeater.where(fusion: true))) # FT5D does FM and Fusion
         .order(:name, :call_sign)
         .each do |repeater|
         if repeater.fm?
-          csv << fm_repeater(repeater)
+          csv << fm_repeater(repeater).merge({CHANNEL_NO => channel_number})
+          channel_number += 1 # TODO: maybe do something better with channel numbers.
         end
-        if repeater.fusion?
-          csv << fusion_repeater(repeater)
-        end
+        # break if channel_number == 76
+        # TODO: export Fusion repeaters.
+        # if repeater.fusion?
+        #   csv << fusion_repeater(repeater)
+        # end
+      end
+
+      # Are you serious Yaesu???? Without this, the file just doesn't import.
+      while channel_number <= 900 do
+        csv << {CHANNEL_NO => channel_number, LAST => 0}
+        channel_number += 1
       end
     end
   end
@@ -80,6 +90,7 @@ class YaesuFt5dExporter < Exporter
   BANK23 = "BANK23"
   BANK24 = "BANK24"
   COMMENT = "Comment"
+  LAST = "LAST" # There's a last field that's not on the UI, that's always 0, and without it, the file doesn't import.
 
   MAX_NAME_LENGTH = 16
   OFF = "OFF"
@@ -91,13 +102,13 @@ class YaesuFt5dExporter < Exporter
       RX_FREQ => frequency_in_mhz(repeater.rx_frequency, precision: 5),
       TX_FREQ => frequency_in_mhz(repeater.tx_frequency, precision: 5),
       OFFSET_FREQ => frequency_in_mhz((repeater.tx_frequency - repeater.rx_frequency).abs, precision: 5),
-      OFFSET_DIR => repeater.tx_frequency > repeater.rx_frequency ? "-RPT" : "+RPT",
+      OFFSET_DIR => repeater.tx_frequency > repeater.rx_frequency ? "+RPT" : "-RPT",
       AUTO_MODE => ON, # TODO: What's this?
-      TAG => ON, # TODO: What's this?"
       NAME => truncate(MAX_NAME_LENGTH, repeater.name),
       TONE_MODE => OFF, # Default.
       CTCSS_FREQ => "88.5 Hz", # Default
       DCS_CODE => "023", # TODO: What's this?
+      DCS_POLARITY => "RX Normal TX Normal", # TODO: What's this?
       USER_CTCSS => "1600 Hz", # TODO: What's this?
       RX_DG_ID => "RX 00", # TODO: What's this?
       TX_DG_ID => "TX 00", # TODO: What's this?
@@ -135,7 +146,8 @@ class YaesuFt5dExporter < Exporter
       BANK22 => OFF,
       BANK23 => OFF,
       BANK24 => OFF,
-      COMMENT => repeater.notes
+      COMMENT => repeater.notes,
+      LAST => 0
     }
   end
 
