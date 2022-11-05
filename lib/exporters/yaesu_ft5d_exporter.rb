@@ -28,7 +28,7 @@ class YaesuFt5dExporter < Exporter
       end
 
       # Are you serious Yaesu???? Without this, the file just doesn't import.
-      while channel_number <= 900 do
+      while channel_number <= 900
         csv << {CHANNEL_NO => channel_number, LAST => 0}
         channel_number += 1
       end
@@ -104,7 +104,7 @@ class YaesuFt5dExporter < Exporter
       OFFSET_FREQ => frequency_in_mhz((repeater.tx_frequency - repeater.rx_frequency).abs, precision: 5),
       OFFSET_DIR => repeater.tx_frequency > repeater.rx_frequency ? "+RPT" : "-RPT",
       AUTO_MODE => ON, # TODO: What's this?
-      NAME => truncate(MAX_NAME_LENGTH, repeater.name),
+      NAME => "#{truncate(MAX_NAME_LENGTH - repeater.call_sign.length - 1, repeater.name)} #{repeater.call_sign}",
       TONE_MODE => OFF, # Default.
       CTCSS_FREQ => "88.5 Hz", # Default
       DCS_CODE => "023", # TODO: What's this?
@@ -158,25 +158,23 @@ class YaesuFt5dExporter < Exporter
     row[DIG_ANALOG] = "FM"
 
     row[TONE_MODE] = case repeater.access_method
-                       when Repeater::CTCSS
-                         "TONE" # TODO: when do we use TSQL
-                       else
-                         OFF # Repeater::TONE_BURST or NULL is "OFF".
-                     end
+    when Repeater::CTCSS
+      "TONE" # TODO: when do we use TSQL
+    else
+      OFF # Repeater::TONE_BURST or NULL is "OFF".
+    end
 
     row[CTCSS_FREQ] = case repeater.access_method
-                        when Repeater::CTCSS
-                          "#{repeater.ctcss_tone} Hz"
-                        else
-                          "88.5 Hz" # FT5D insists on having some value here, even if it makes no sense and it's not used. The ID-51 has a similar broken behaviour.
-                      end
+    when Repeater::CTCSS
+      "#{repeater.ctcss_tone} Hz"
+    else
+      "88.5 Hz" # FT5D insists on having some value here, even if it makes no sense and it's not used. The ID-51 has a similar broken behaviour.
+    end
 
     row
   end
 
   def fusion_repeater(repeater)
-    row = repeater(repeater)
-
-    row
+    repeater(repeater)
   end
 end
