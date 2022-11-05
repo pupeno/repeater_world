@@ -62,7 +62,7 @@ jobs:
 
       - name: simplecov resultset cache
         id: simplecov-resultset
-        uses:  actions/cache@v2
+        uses:  actions/cache@v3
         with:
           path: coverage/.resultset.json
           key: simplecov-resultset-${REVISION}
