@@ -1,6 +1,7 @@
 on: [ push, pull_request ]
 jobs:
-  build-head:
+  test:
+    name: Test
     runs-on: ubuntu-latest
     timeout-minutes: 10
     services:
@@ -29,15 +30,15 @@ jobs:
       - name: Run Tests
         run: bundle exec rspec
 
-      - name: Upload coverage report
+      - name: Upload Coverage
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: head-result
           path: coverage/.resultset.json
 
-  build-base:
-    name: "Build base"
+  test-base:
+    name: Test Base Branch
     runs-on: ubuntu-latest
     timeout-minutes: 10
     services:
@@ -80,25 +81,25 @@ jobs:
         if: steps.simplecov-resultset.outputs.cache-hit != 'true'
         run: bundle exec rspec
 
-      - name: Upload coverage report
+      - name: Upload Coverage
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: base-result
           path: coverage/.resultset.json
 
-  compare:
-    name: "Compare base & head coverages"
+  compare-coverage:
+    name: Compare Coverage
     runs-on: ubuntu-latest
-    needs: [build-base, build-head]
+    needs: [test, test-base]
 
     steps:
-      - name: Download base artifact
+      - name: Download Base Coverage
         uses: actions/download-artifact@v1
         with:
           name: base-result
 
-      - name: Download head artifact
+      - name: Download Current Coverage
         uses: actions/download-artifact@v1
         with:
           name: head-result
