@@ -29,6 +29,12 @@ jobs:
       - name: Run Tests
         run: bundle exec rspec
 
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: head-result
+          path: coverage/.resultset.json
 
 #      - name: RSpec Report
 #        uses: SonicGarden/rspec-report-action@v2
