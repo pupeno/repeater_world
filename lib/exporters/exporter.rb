@@ -38,7 +38,7 @@ class Exporter
   end
 
   def frequency_in_mhz(freq, precision: 6)
-    "%.#{precision}f" % (freq / 10 ** 6)
+    "%.#{precision}f" % (freq / 10**6)
   end
 
   def truncate(length, value)
