@@ -49,8 +49,10 @@ class UkrepeatersImporter
         repeater.access_method = Repeater::CTCSS
         repeater.ctcss_tone = raw_repeater[:code]
         repeater.tone_sql = false # TODO: how do we know when this should be true?
+      elsif Repeater::DMR_COLOR_CODES.include?(raw_repeater[:code].to_f)
+        repeater.dmr_cc = raw_repeater[:code]
       else
-        puts "  Ignoring invalid CTCSS #{raw_repeater[:code]} in #{raw_repeater}"
+        puts "  Ignoring invalid code #{raw_repeater[:code]} in #{raw_repeater}"
       end
       # else
       #   repeater.access_method = Repeater::TONE_BURST
