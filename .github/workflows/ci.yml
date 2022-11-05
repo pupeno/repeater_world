@@ -103,7 +103,7 @@ jobs:
         with:
           name: head-result
 
-      - uses: flexpointtech/simplecov-resultset-diff-action@v1
+      - uses: flexpointtech/simplecov-resultset-diff-action@v1.1
         with:
           base-resultset-path: ./base-result/.resultset.json
           head-resultset-path: ./head-result/.resultset.json
