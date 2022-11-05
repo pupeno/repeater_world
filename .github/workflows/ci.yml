@@ -17,39 +17,17 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.base_ref }}
-
-      - id: base-ref-commit
-        run: echo "::set-output name=revision::`git rev-parse HEAD`"
-
-      - name: simplecov resultset cache
-        id: simplecov-resultset
-        uses:  actions/cache@v2
-        with:
-          path: coverage/.resultset.json
-          key: simplecov-resultset-${{ steps.base-ref-commit.outputs.revision }}
 
       - name: Install Ruby and Gems
         uses: ruby/setup-ruby@v1
-        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
         with:
           bundler-cache: true
 
       - name: Set Up Database Schema
-        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
         run: bin/rails db:migrate
 
       - name: Run Tests
-        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
         run: bundle exec rspec
-
-      - name: Upload coverage report
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: base-result
-          path: coverage/.resultset.json
 
 
 #      - name: RSpec Report
@@ -74,7 +52,61 @@ jobs:
 #          recreate: true
 #          path: code-coverage-results.md
 
+  build-base:
+    name: 'Build base'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ## Here we do not checkout the current branch, but we checkout the base branch.
+          ref: ${{ github.base_ref }}
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Install Ruby and Gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set Up Database Schema
+        run: bin/rails db:migrate
+
+      - name: Run Tests
+        run: bundle exec rspec
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: base-result
+          path: coverage/.resultset.json
+
+  compare:
+    name: 'Compare base & head coverages'
+    runs-on: ubuntu-latest
+    needs: [build-base, build-head]
+
+    steps:
+      - name: Download base artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: base-result
+
+      - name: Download head artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: head-result
+
+      - uses: kzkn/simplecov-resultset-diff-action@v1
+        with:
+          base-resultset-path: ./base-result/.resultset.json
+          head-resultset-path: ./head-result/.resultset.json
+          token: ${{ secrets.GITHUB_TOKEN }}
+
   lint:
+    name: "Lint"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
