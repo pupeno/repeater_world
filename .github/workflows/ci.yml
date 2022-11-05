@@ -55,6 +55,16 @@ jobs:
   build-base:
     name: 'Build base'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:14-alpine
+        ports:
+          - "10401:5432"
+        env:
+          POSTGRES_USER: repeater_world_development
+          POSTGRES_PASSWORD: te6ahng1phi1uizaeGhahMof1
+          POSTGRES_DB: repeater_world_test
     steps:
       - uses: actions/checkout@v2
         with:
@@ -62,11 +72,6 @@ jobs:
           ref: ${{ github.base_ref }}
 
       - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-      - name: Install Ruby and Gems
-        uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
 
