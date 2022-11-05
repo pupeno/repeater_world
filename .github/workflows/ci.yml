@@ -60,12 +60,15 @@ jobs:
       - id: base-ref-commit
         run: echo "REVISION=`git rev-parse HEAD`" >> $GITHUB_STATE
 
+      - id: REVISION
+        run: echo $REVISION
+
       - name: simplecov resultset cache
         id: simplecov-resultset
         uses:  actions/cache@v3
         with:
           path: coverage/.resultset.json
-          key: simplecov-resultset-${{REVISION}}
+          key: simplecov-resultset-${REVISION}
 
       - uses: ruby/setup-ruby@v1
         if: steps.simplecov-resultset.outputs.cache-hit != 'true'
