@@ -6,7 +6,7 @@ class IcomId51AndId52Exporter < Exporter
       @repeaters
         .where(band: [Repeater::BAND_2M, Repeater::BAND_70CM]) # ID-52 can only do VHF and UHF.
         .where.not(operational: false) # Skip repeaters known to not be operational.
-        .where(fm: true).or(Repeater.where(dstar: true)) # ID-52 does FM and DStar only
+        .merge(Repeater.where(fm: true).or(Repeater.where(dstar: true))) # ID-52 does FM and DStar only
         .order(:name, :call_sign)
         .each do |repeater|
         if repeater.fm?
