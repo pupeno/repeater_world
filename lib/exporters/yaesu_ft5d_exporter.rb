@@ -47,7 +47,7 @@ class YaesuFt5dExporter < Exporter
   OPERATING_MODE = "Operating Mode"
   DIG_ANALOG = "DIG/ANALOG"
   TAG = "TAG"
-  NAME = "Name"
+  NAME = "Name" # In the manual, this is call tag, in the radio it has no name, in the ADMS-14 UI this is called name, and there's another field called TAG which is a boolean (just before).
   TONE_MODE = "Tone Mode"
   CTCSS_FREQ = "CTCSS Frequency"
   DCS_CODE = "DCS Code"
@@ -92,7 +92,8 @@ class YaesuFt5dExporter < Exporter
   COMMENT = "Comment"
   LAST = "LAST" # There's a last field that's not on the UI, that's always 0, and without it, the file doesn't import.
 
-  MAX_NAME_LENGTH = 16
+  MAX_NAME_LENGTH = 16 # Specified on page 32 of the Operating Manual.
+
   OFF = "OFF"
   ON = "ON"
 
