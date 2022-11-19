@@ -337,7 +337,7 @@ DEPENDENCIES
   postmark-rails (~> 0.22.0)
   puma (~> 5.0)
   rails (~> 7.0.2, >= 7.0.2.2)
-  rails_admin (~> 3.0.0.rc3)
+  rails_admin (~> 3.0.0)
   rspec-rails (~> 5.1.0)
   sassc-rails (~> 2.1.2)
   sentry-rails (~> 5.3)
