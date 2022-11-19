@@ -74,7 +74,6 @@ RSpec.describe IcomId52Exporter do
       Group No,Group Name,Name,Sub Name,Repeater Call Sign,Gateway Call Sign,Frequency,Dup,Offset,Mode,TONE,Repeater Tone,RPT1USE,Position,Latitude,Longitude,UTC Offset
       1,United Kingdom,Derby,England,GB7DC,,430.875000,DUP+,7.600000,FM,TONE,71.9Hz,YES,Approximate,52.900000,-1.400000,--:--
       1,United Kingdom,Derby,England,GB7DC  B,GB7DC  G,430.875000,DUP+,7.600000,DV,,,YES,Approximate,52.900000,-1.400000,--:--
-      1,United Kingdom,Dufton,England,GB3VE  B,GB3VE  G,433.100000,DUP+,1.600000,DV,,,YES,Approximate,54.680000,-2.460000,0:00
       1,United Kingdom,Herne Bay,No CTCSS,GB7IC C,,145.662500,DUP-,0.600000,FM,OFF,88.5Hz,YES,Approximate,51.360000,1.150000,0:00
       1,United Kingdom,Herne Bay,England,GB7IC  C,GB7IC  G,145.662500,DUP-,0.600000,DV,,,YES,Approximate,51.360000,1.150000,0:00
       1,United Kingdom,Newcastle Emlyn,Wales &,GB3CN,,145.687500,DUP-,0.600000,FM,TONE,94.8Hz,YES,Approximate,51.990000,-4.400000,0:00
