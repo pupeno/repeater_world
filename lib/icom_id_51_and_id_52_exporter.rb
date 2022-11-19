@@ -42,7 +42,7 @@ class IcomId51AndId52Exporter < Exporter
      "Sub Name" => sub_name,
      "Repeater Call Sign" => call_sign,
      "Frequency" => "%.6f" % (repeater.tx_frequency / 10**6),
-     "Dup" => repeater.tx_frequency > repeater.rx_frequency ? "DUP-" : "DUP+",
+     "Dup" => (repeater.tx_frequency > repeater.rx_frequency) ? "DUP-" : "DUP+",
      "Offset" => "%.6f" % ((repeater.tx_frequency - repeater.rx_frequency).abs / 10**6),
      "RPT1USE" => "YES", # Yes, we want to use the repeater.
      "Position" => "Approximate", # TODO: why does the export have some "Exacts"
