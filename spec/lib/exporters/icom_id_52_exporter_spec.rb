@@ -76,7 +76,6 @@ RSpec.describe IcomId52Exporter do
       grid_square: "IO92GW", latitude: 52.9, longitude: -1.4, country_id: "gb", region_1: "England", region_2: "Midlands", region_3: "DE21", region_4: "Derby",
       utc_offset: nil,
       source: "ukrepeater.net")
-    create(:repeater, call_sign: nil, utc_offset: "12:00")
 
     # DMR + nxdn only repeater, so it shouldn't appear.
     create(:repeater,
@@ -108,6 +107,9 @@ RSpec.describe IcomId52Exporter do
       utc_offset: "0:00",
       source: "ukrepeater.net")
 
+    # Blank repeater, shouldn't crash.
+    create(:repeater, call_sign: nil, utc_offset: nil)
+
     exporter = IcomId52Exporter.new(Repeater.all)
 
     expect(exporter.export).to eq(<<~CSV)
@@ -117,7 +119,7 @@ RSpec.describe IcomId52Exporter do
       1,United Kingdom,Herne Bay,No CTCSS,GB7IC C,,145.662500,DUP-,0.600000,FM,OFF,88.5Hz,YES,Approximate,51.360000,1.150000,0:00
       1,United Kingdom,Herne Bay,England,GB7IC  C,GB7IC  G,145.662500,DUP-,0.600000,DV,,,YES,Approximate,51.360000,1.150000,0:00
       1,United Kingdom,Newcastle Emlyn,Wales &,GB3CN,,145.687500,DUP-,0.600000,FM,TONE,94.8Hz,YES,Approximate,51.990000,-4.400000,0:00
-      1,United Kingdom,Repeater,WM,,,144.962500,DUP-,0.600000,FM,OFF,88.5Hz,YES,Approximate,51.740000,-3.420000,12:00
+      1,United Kingdom,Repeater,WM,,,144.962500,DUP-,0.600000,FM,OFF,88.5Hz,YES,Approximate,51.740000,-3.420000,--:--
       1,United Kingdom,Weymouth,No CTCSS,GB3DR,,145.737500,DUP-,0.600000,FM,OFF,88.5Hz,YES,Approximate,50.550000,-2.440000,0:00
     CSV
   end
