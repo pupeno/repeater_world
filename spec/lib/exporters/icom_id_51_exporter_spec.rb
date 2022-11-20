@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.describe IcomId51Exporter do
   it "should export" do
+    # FM repeater that should be present, with CTCSS.
     create(:repeater,
       name: "Newcastle Emlyn", call_sign: "GB3CN", band: "2m", channel: "RV55", keeper: "GW6JSO",
       operational: true, notes: nil,
@@ -15,6 +16,8 @@ RSpec.describe IcomId51Exporter do
       country_id: "gb", region_1: "Wales & Marches", region_2: "Wales & Marches", region_3: "SA44", region_4: "Newcastle Emlyn",
       utc_offset: "0:00",
       source: "ukrepeater.net")
+
+    # FM repeater without CTCSS
     create(:repeater,
       name: "Weymouth", call_sign: "GB3DR", band: "2m", channel: "RV59", keeper: "G3VPF",
       operational: true, notes: nil,
@@ -28,6 +31,8 @@ RSpec.describe IcomId51Exporter do
       country_id: "gb", region_1: "England", region_2: "South West", region_3: "DT5", region_4: "Weymouth",
       utc_offset: "0:00",
       source: "ukrepeater.net")
+
+    # FM and D-Star repeater, so it should appear twice.
     create(:repeater,
       name: "Herne Bay", call_sign: "GB7IC-C", band: "2m", channel: "RV53", keeper: "G4TKR",
       operational: true, notes: nil,
@@ -41,6 +46,8 @@ RSpec.describe IcomId51Exporter do
       country_id: "gb", region_1: "England", region_2: "South East", region_3: "CT6", region_4: "Herne Bay",
       utc_offset: "0:00",
       source: "ukrepeater.net")
+
+    # D-Star repeater only, it should appear once.
     create(:repeater,
       name: "Dufton", call_sign: "GB3VE", band: "70cm", channel: "RB04", keeper: "G0TNF",
       operational: false, notes: nil,
@@ -54,6 +61,8 @@ RSpec.describe IcomId51Exporter do
       country_id: "gb", region_1: "England", region_2: "North England", region_3: "CA16", region_4: "Dufton",
       utc_offset: "0:00",
       source: "ukrepeater.net")
+
+    # FM and Fusion repeater, it should appear once.
     create(:repeater,
       name: "Derby", call_sign: "GB7DC", band: "70cm", channel: "RU70", keeper: "G7NPW",
       operational: true, notes: "Reduced output.",
@@ -65,8 +74,39 @@ RSpec.describe IcomId51Exporter do
       dmr: true, dmr_cc: 1, dmr_con: "BRANDMEISTER",
       nxdn: true,
       grid_square: "IO92GW", latitude: 52.9, longitude: -1.4, country_id: "gb", region_1: "England", region_2: "Midlands", region_3: "DE21", region_4: "Derby",
+      utc_offset: nil,
       source: "ukrepeater.net")
     create(:repeater, call_sign: nil, utc_offset: "12:00")
+
+    # DMR + nxdn only repeater, so it shouldn't appear.
+    create(:repeater,
+      name: "Cleobury North", call_sign: "GB3BX", band: "2m", channel: "RV54", keeper: "G4VZO",
+      operational: true, notes: "Reduced output.",
+      tx_frequency: 145675000,
+      rx_frequency: 145075000,
+      fm: false, access_method: nil, ctcss_tone: nil, tone_sql: nil,
+      dstar: false,
+      fusion: false,
+      dmr: true, dmr_cc: 13, dmr_con: "SALOP DMR",
+      nxdn: nil,
+      grid_square: "IO82QL", latitude: 52.5, longitude: -2.6, country_id: "gb", region_1: "Wales & Marches", region_2: "Wales & Marches", region_3: "SY7", region_4: "Cleobury North",
+      utc_offset: "0:00",
+      source: "ukrepeater.net")
+
+    # Non-2m-70cm repeater, so it shouldn't appear.
+    create(:repeater,
+      name: "Amersham", call_sign: "GB3AM", band: "6m", channel: "R50-13", keeper: "M0ZPU",
+      operational: true, notes: nil,
+      tx_frequency: 50840000,
+      rx_frequency: 51340000,
+      fm: true, access_method: "ctcss", ctcss_tone: 77, tone_sql: false,
+      dstar: false,
+      fusion: false,
+      dmr: false, dmr_cc: nil, dmr_con: nil,
+      nxdn: nil,
+      grid_square: "IO91QP", latitude: 51.65, longitude: -0.62, country_id: "gb", region_1: "England", region_2: "South West", region_3: "HP7", region_4: "Amersham",
+      utc_offset: "0:00",
+      source: "ukrepeater.net")
 
     exporter = IcomId51Exporter.new(Repeater.all)
 
