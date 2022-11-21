@@ -12,6 +12,7 @@ RSpec.describe IcomId51Exporter do
       1,United Kingdom,Derby,England,GB7DC  B,GB7DC  G,430.875000,DUP+,7.600000,DV,OFF,88.5Hz,YES,Approximate,52.900000,-1.400000,--:--
       1,United Kingdom,Herne Bay,No CTCSS,GB7IC C,,145.662500,DUP-,0.600000,FM,OFF,88.5Hz,YES,Approximate,51.360000,1.150000,0:00
       1,United Kingdom,Herne Bay,England,GB7IC  C,GB7IC  G,145.662500,DUP-,0.600000,DV,OFF,88.5Hz,YES,Approximate,51.360000,1.150000,0:00
+      1,Japan,Made up,WM,JP0AA  A,JP0AA  G,439.420000,DUP-,9.000000,DV,OFF,88.5Hz,YES,Approximate,51.740000,-3.420000,--:--
       1,United Kingdom,Marlborough,England,GB7AE  B,GB7AE  G,439.425000,DUP-,9.000000,DV,OFF,88.5Hz,YES,Approximate,51.420000,-1.760000,0:00
       1,United Kingdom,Newcastle Emlyn,Wales &,GB3CN,,145.687500,DUP-,0.600000,FM,TONE,94.8Hz,YES,Approximate,51.990000,-4.400000,0:00
       1,United Kingdom,Repeater,WM,,,144.962500,DUP-,0.600000,FM,OFF,88.5Hz,YES,Approximate,51.740000,-3.420000,--:--
