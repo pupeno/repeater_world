@@ -16,15 +16,8 @@ class YaesuFt5dExporter < Exporter
         .merge(Repeater.where(fm: true).or(Repeater.where(fusion: true))) # FT5D does FM and Fusion
         .order(:name, :call_sign)
         .each do |repeater|
-        if repeater.fm?
-          csv << fm_repeater(repeater).merge({CHANNEL_NO => channel_number})
-          channel_number += 1 # TODO: maybe do something better with channel numbers.
-        end
-        # break if channel_number == 76
-        # TODO: export Fusion repeaters.
-        # if repeater.fusion?
-        #   csv << fusion_repeater(repeater)
-        # end
+        csv << repeater(repeater).merge({CHANNEL_NO => channel_number})
+        channel_number += 1 # TODO: maybe do something better with channel numbers.
       end
 
       # Are you serious Yaesu???? Without this, the file just doesn't import.
@@ -98,16 +91,14 @@ class YaesuFt5dExporter < Exporter
   ON = "ON"
 
   def repeater(repeater)
-    {
+    row = {
       PRIORITY_CH => OFF,
       RX_FREQ => frequency_in_mhz(repeater.tx_frequency, precision: 5), # Yaesu seems to call TX RX...
       TX_FREQ => frequency_in_mhz(repeater.rx_frequency, precision: 5), # ... and RX TX (or vice versa).
       OFFSET_FREQ => frequency_in_mhz((repeater.tx_frequency - repeater.rx_frequency).abs, precision: 5),
       OFFSET_DIR => (repeater.tx_frequency > repeater.rx_frequency) ? "-RPT" : "+RPT",
       AUTO_MODE => ON, # TODO: What's this?
-      NAME => "#{truncate(MAX_NAME_LENGTH - (repeater.call_sign&.length || 1) - 1, repeater.name)} #{repeater.call_sign}",
-      TONE_MODE => OFF, # Default.
-      CTCSS_FREQ => "88.5 Hz", # Default
+      OPERATING_MODE => "FM", # Digital modes work over FM, I think, so this is always FM.
       DCS_CODE => "023", # TODO: What's this?
       DCS_POLARITY => "RX Normal TX Normal", # TODO: What's this?
       USER_CTCSS => "1600 Hz", # TODO: What's this?
@@ -150,13 +141,22 @@ class YaesuFt5dExporter < Exporter
       COMMENT => repeater.notes,
       LAST => 0
     }
-  end
 
-  def fm_repeater(repeater)
-    row = repeater(repeater)
+    row[NAME] = if repeater.call_sign.present?
+      "#{truncate(MAX_NAME_LENGTH - repeater.call_sign.length - 1, repeater.name)} #{repeater.call_sign}"
+    else
+      truncate(MAX_NAME_LENGTH, repeater.name).to_s
+    end
 
-    row[OPERATING_MODE] = "FM"
-    row[DIG_ANALOG] = "FM"
+    row[DIG_ANALOG] = if repeater.fm? && repeater.fusion?
+      "AMS" # Auto mode, FM or DN
+    elsif repeater.fm? && !repeater.fusion?
+      "FM"
+    elsif !repeater.fm? && repeater.fusion?
+      "DN"
+    else
+      raise "Unknown fm/fusion conditions for repeater #{repeater}"
+    end
 
     row[TONE_MODE] = case repeater.access_method
     when Repeater::CTCSS
@@ -173,9 +173,5 @@ class YaesuFt5dExporter < Exporter
     end
 
     row
-  end
-
-  def fusion_repeater(repeater)
-    repeater(repeater)
   end
 end

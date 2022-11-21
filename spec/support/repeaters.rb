@@ -72,6 +72,21 @@ RSpec.shared_context "repeaters" do
       grid_square: "IO92GW", latitude: 52.9, longitude: -1.4, country_id: "gb", region_1: "England", region_2: "Midlands", region_3: "DE21", region_4: "Derby",
       utc_offset: nil, source: "ukrepeater.net")
 
+    # Fusion only repeater.
+    create(:repeater,
+      name: "Perth", call_sign: "GB3SF", band: "2m", channel: "RV50", keeper: "GM3NFO",
+      operational: true, notes: nil,
+      tx_frequency: 145625000,
+      rx_frequency: 145025000,
+      fm: false, access_method: nil, ctcss_tone: nil, tone_sql: nil,
+      dstar: false,
+      fusion: true,
+      dmr: false, dmr_cc: nil, dmr_con: nil,
+      nxdn: nil,
+      grid_square: "IO86HK", latitude: 56.5, longitude: -3.4,
+      country_id: "gb", region_1: "Scotland", region_2: "Scotland", region_3: "PH2", region_4: "Perth",
+      utc_offset: "0:00", source: "ukrepeater.net")
+
     # DMR and nxdn repeater.
     create(:repeater,
       name: "Cleobury North", call_sign: "GB3BX", band: "2m", channel: "RV54", keeper: "G4VZO",
