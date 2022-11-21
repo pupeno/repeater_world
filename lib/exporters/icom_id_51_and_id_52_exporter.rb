@@ -6,7 +6,7 @@ class IcomId51AndId52Exporter < Exporter
       @repeaters
         .where(band: [Repeater::BAND_2M, Repeater::BAND_70CM]) # ID-52 can only do VHF and UHF.
         .where.not(operational: false) # Skip repeaters known to not be operational.
-        .where(fm: true).or(Repeater.where(dstar: true)) # ID-52 does FM and DStar only
+        .merge(Repeater.where(fm: true).or(Repeater.where(dstar: true))) # ID-52 does FM and DStar only
         .order(:name, :call_sign)
         .each do |repeater|
         if repeater.fm?
@@ -41,9 +41,9 @@ class IcomId51AndId52Exporter < Exporter
      "Name" => name,
      "Sub Name" => sub_name,
      "Repeater Call Sign" => call_sign,
-     "Frequency" => "%.6f" % (repeater.tx_frequency / 10**6),
+     "Frequency" => frequency_in_mhz(repeater.tx_frequency, precision: 6),
      "Dup" => (repeater.tx_frequency > repeater.rx_frequency) ? "DUP-" : "DUP+",
-     "Offset" => "%.6f" % ((repeater.tx_frequency - repeater.rx_frequency).abs / 10**6),
+     "Offset" => frequency_in_mhz((repeater.tx_frequency - repeater.rx_frequency).abs, precision: 6),
      "RPT1USE" => "YES", # Yes, we want to use the repeater.
      "Position" => "Approximate", # TODO: why does the export have some "Exacts"
      "Latitude" => "%.6f" % repeater.latitude,
@@ -57,7 +57,7 @@ class IcomId51AndId52Exporter < Exporter
     row["Mode"] = "FM"
 
     if !repeater.access_method.present?
-      row["Sub Name"] = "No CTCSS"
+      row["Sub Name"] = "No CTCSS" # We are missing the CTCSS here.
     end
 
     row["TONE"] = case repeater.access_method
@@ -97,9 +97,5 @@ class IcomId51AndId52Exporter < Exporter
       add_dstar_port(repeater.call_sign.split("-").first, "G")) # Always "G" according to page 5-30 of the ID-52 Advanced manual
 
     row
-  end
-
-  def truncate(length, value)
-    value&.truncate(length, omission: "")&.strip
   end
 end
