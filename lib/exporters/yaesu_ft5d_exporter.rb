@@ -11,13 +11,13 @@ class YaesuFt5dExporter < Exporter
     channel_number = 1
     CSV.generate(headers: headers, write_headers: false) do |csv|
       @repeaters
-        .where(band: [Repeater::BAND_2M, Repeater::BAND_70CM]) # TODO: can the FT5D do other bands?
+        .where(band: [Repeater::BAND_2M, Repeater::BAND_70CM]) # TODO: can the FT5D do other bands? https://github.com/pupeno/repeater_world/issues/24
         .where.not(operational: false) # Skip repeaters known to not be operational.
         .merge(Repeater.where(fm: true).or(Repeater.where(fusion: true))) # FT5D does FM and Fusion
         .order(:name, :call_sign)
         .each do |repeater|
         csv << repeater(repeater).merge({CHANNEL_NO => channel_number})
-        channel_number += 1 # TODO: maybe do something better with channel numbers.
+        channel_number += 1 # TODO: maybe do something better with channel numbers: https://github.com/pupeno/repeater_world/issues/25
       end
 
       # Are you serious Yaesu???? Without this, the file just doesn't import.
@@ -97,13 +97,13 @@ class YaesuFt5dExporter < Exporter
       TX_FREQ => frequency_in_mhz(repeater.rx_frequency, precision: 5), # ... and RX TX (or vice versa).
       OFFSET_FREQ => frequency_in_mhz((repeater.tx_frequency - repeater.rx_frequency).abs, precision: 5),
       OFFSET_DIR => (repeater.tx_frequency > repeater.rx_frequency) ? "-RPT" : "+RPT",
-      AUTO_MODE => ON, # TODO: What's this?
+      AUTO_MODE => ON, # TODO: What's this? https://github.com/pupeno/repeater_world/issues/26
       OPERATING_MODE => "FM", # Digital modes work over FM, I think, so this is always FM.
-      DCS_CODE => "023", # TODO: What's this?
-      DCS_POLARITY => "RX Normal TX Normal", # TODO: What's this?
-      USER_CTCSS => "1600 Hz", # TODO: What's this?
-      RX_DG_ID => "RX 00", # TODO: What's this?
-      TX_DG_ID => "TX 00", # TODO: What's this?
+      DCS_CODE => "023", # TODO: What's this? https://github.com/pupeno/repeater_world/issues/26
+      DCS_POLARITY => "RX Normal TX Normal", # TODO: What's this? https://github.com/pupeno/repeater_world/issues/26
+      USER_CTCSS => "1600 Hz", # TODO: What's this? https://github.com/pupeno/repeater_world/issues/26
+      RX_DG_ID => "RX 00", # TODO: What's this? https://github.com/pupeno/repeater_world/issues/26
+      TX_DG_ID => "TX 00", # TODO: What's this? https://github.com/pupeno/repeater_world/issues/26
       TX_POWER => "High (5W)",
       SKIP => OFF,
       AUTO_STEP => ON,
@@ -160,7 +160,7 @@ class YaesuFt5dExporter < Exporter
 
     row[TONE_MODE] = case repeater.access_method
     when Repeater::CTCSS
-      "TONE" # TODO: when do we use TSQL
+      "TONE" # TODO: when do we use TSQL: https://github.com/pupeno/repeater_world/issues/23
     else
       OFF # Repeater::TONE_BURST or NULL is "OFF".
     end

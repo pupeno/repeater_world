@@ -30,13 +30,13 @@ class IcomId51AndId52Exporter < Exporter
   MAX_GATEWAY_CALL_SIGN_LENGTH = 8
 
   def repeater(repeater)
-    group_name = truncate(MAX_COUNTRY_NAME_LENGTH, repeater.country.name) # TODO: do something smarter about groups.
+    group_name = truncate(MAX_COUNTRY_NAME_LENGTH, repeater.country.name) # TODO: do something smarter about groups: https://github.com/pupeno/repeater_world/issues/21
     name = truncate(MAX_NAME_LENGTH, repeater.name)
     sub_name = truncate(MAX_SUB_NAME_LENGTH, repeater.region_1)
 
     call_sign = truncate(MAX_CALL_SIGN_LENGTH, repeater.call_sign&.tr("-", " ")) # In the UK, some call signs have a hyphen, but ID-52 doesn't like that.
 
-    {"Group No" => 1, # TODO: do something smarter about groups.
+    {"Group No" => 1, # TODO: do something smarter about groups: https://github.com/pupeno/repeater_world/issues/21
      "Group Name" => group_name,
      "Name" => name,
      "Sub Name" => sub_name,
@@ -45,7 +45,7 @@ class IcomId51AndId52Exporter < Exporter
      "Dup" => (repeater.tx_frequency > repeater.rx_frequency) ? "DUP-" : "DUP+",
      "Offset" => frequency_in_mhz((repeater.tx_frequency - repeater.rx_frequency).abs, precision: 6),
      "RPT1USE" => "YES", # Yes, we want to use the repeater.
-     "Position" => "Approximate", # TODO: why does the export have some "Exacts"
+     "Position" => "Approximate", # TODO: define when to use Approximate and when to use Exact: https://github.com/pupeno/repeater_world/issues/22
      "Latitude" => "%.6f" % repeater.latitude,
      "Longitude" => "%.6f" % repeater.longitude,
      "UTC Offset" => repeater.utc_offset || "--:--"}
@@ -62,7 +62,7 @@ class IcomId51AndId52Exporter < Exporter
 
     row["TONE"] = case repeater.access_method
     when Repeater::CTCSS
-      "TONE" # TODO: when do we use TSQL
+      "TONE" # TODO: when do we use TSQL: https://github.com/pupeno/repeater_world/issues/23
     else
       "OFF" # Repeater::TONE_BURST or NULL is "OFF".
     end

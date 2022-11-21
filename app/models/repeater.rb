@@ -25,8 +25,8 @@ class Repeater < ApplicationRecord
 
   validates :name, presence: true
   validates :band, presence: true, inclusion: BANDS
-  validates :tx_frequency, presence: true # TODO: validate the frequency is within the band.
-  validates :rx_frequency, presence: true # TODO: validate the frequency is within the band.
+  validates :tx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
+  validates :rx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
   validates :access_method, inclusion: ACCESS_METHODS, allow_blank: true
   validates :ctcss_tone,
     presence: {if: lambda { |r| r.access_method == CTCSS }},

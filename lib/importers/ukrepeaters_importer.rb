@@ -52,7 +52,7 @@ class UkrepeatersImporter
       if Repeater::CTCSS_CODES.include?(raw_repeater[:code].to_f)
         repeater.access_method = Repeater::CTCSS
         repeater.ctcss_tone = raw_repeater[:code]
-        repeater.tone_sql = false # TODO: how do we know when this should be true?
+        repeater.tone_sql = false # TODO: how do we know when this should be true? https://github.com/pupeno/repeater_world/issues/23
       elsif Repeater::DMR_COLOR_CODES.include?(raw_repeater[:code].to_f)
         repeater.dmr_cc = raw_repeater[:code]
       else
