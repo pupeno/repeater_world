@@ -1,7 +1,7 @@
 class SampleDataGenerator
   include FactoryBot::Syntax::Methods
 
-  ADMINS = %w[pablo goran katie sarah].map { |name| "#{name}@flexpoint.tech" }
+  ADMINS = %w[admin].map { |name| "#{name}@example.com" }
   PASSWORD = "TeZlk27HIp403YwthqzrRTrs6"
 
   def initialize
