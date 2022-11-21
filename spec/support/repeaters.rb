@@ -129,6 +129,28 @@ RSpec.shared_context "repeaters" do
       country_id: "gb", region_1: "Scotland", region_2: "Scotland", region_3: "TD9", region_4: "Hawick",
       utc_offset: "0:00", source: "ukrepeater.net")
 
+    # Japanese D-Star repeaters.
+    create(:repeater,
+      name: "Made up", call_sign: "JP0AA", band: "70cm",
+      operational: true,
+      tx_frequency: 439420000,
+      rx_frequency: 430420000,
+      fm: false, access_method: nil, ctcss_tone: nil, tone_sql: nil,
+      dstar: true,
+      fusion: false,
+      dmr: false, dmr_cc: nil, dmr_con: nil, nxdn: nil,
+      country_id: "jp")
+    create(:repeater,
+      name: "Made up", call_sign: "JP0AA", band: "23cm",
+      operational: true,
+      tx_frequency: 1297900000,
+      rx_frequency: 1297900000,
+      fm: false, access_method: nil, ctcss_tone: nil, tone_sql: nil,
+      dstar: true,
+      fusion: false,
+      dmr: false, dmr_cc: nil, dmr_con: nil, nxdn: nil,
+      country_id: "jp")
+
     # Blank repeater
     create(:repeater, call_sign: nil)
   end
