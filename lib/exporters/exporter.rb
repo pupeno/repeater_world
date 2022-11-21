@@ -36,4 +36,12 @@ class Exporter
   def add_dstar_port(call_sign, port)
     "#{call_sign.ljust(6)} #{port}"
   end
+
+  def frequency_in_mhz(freq, precision: 6)
+    "%.#{precision}f" % (freq / 10**6)
+  end
+
+  def truncate(length, value)
+    value&.truncate(length, omission: "")&.strip
+  end
 end

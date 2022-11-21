@@ -65,3 +65,4 @@ end
 
 require "support/factory_bot" # https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md#rspec
 require "support/devise" # https://github.com/heartcombo/devise#controller-tests
+require "support/repeaters"
