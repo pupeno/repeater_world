@@ -105,7 +105,7 @@ class YaesuFt5dExporter < Exporter
       OFFSET_FREQ => frequency_in_mhz((repeater.tx_frequency - repeater.rx_frequency).abs, precision: 5),
       OFFSET_DIR => (repeater.tx_frequency > repeater.rx_frequency) ? "-RPT" : "+RPT",
       AUTO_MODE => ON, # TODO: What's this?
-      NAME => "#{truncate(MAX_NAME_LENGTH - repeater.call_sign.length - 1, repeater.name)} #{repeater.call_sign}",
+      NAME => "#{truncate(MAX_NAME_LENGTH - (repeater.call_sign&.length || 1) - 1, repeater.name)} #{repeater.call_sign}",
       TONE_MODE => OFF, # Default.
       CTCSS_FREQ => "88.5 Hz", # Default
       DCS_CODE => "023", # TODO: What's this?
