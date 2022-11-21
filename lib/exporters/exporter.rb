@@ -32,7 +32,6 @@ class Exporter
 
   # Adds the port according to D-Star to a call sign. The port should always be the 8th character and the call sign
   # should be blank space padded accordingly. See page 5-32 of the Icom ID-52 Advanced Manual.
-  # TODO:
   def add_dstar_port(call_sign, port)
     "#{call_sign.ljust(6)} #{port}"
   end
