@@ -35,7 +35,7 @@ group :development, :test do
   gem "capybara", "~> 3.37"
   gem "brakeman", "~> 5.3"
   gem "debug", platforms: %i[mri mingw x64_mingw] # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "rspec-rails", "~> 6.0.1"
+  gem "rspec-rails", "~> 5.1" # TODO: figure out how to make ~> 6.0 work in RubyMine.
   gem "standard", "~> 1.12"
   gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby] # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 end
