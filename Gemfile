@@ -9,7 +9,7 @@ gem "countries", "~> 5.1"
 gem "devise", "~> 4.8.1"
 gem "devise-async", "~> 1.0.0"
 gem "factory_bot_rails", "~> 6" # To be able to generate sample data in staging (which is production).
-gem "faker", "~> 2.21" # To be able to generate sample data in staging (which is production).
+gem "faker", "~> 3.0" # To be able to generate sample data in staging (which is production).
 gem "importmap-rails" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "pg", "~> 1.1" # Use postgresql as the database for Active Record
 gem "postmark-rails", "~> 0.22.0"
