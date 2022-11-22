@@ -9,13 +9,13 @@ gem "countries", "~> 5.1"
 gem "devise", "~> 4.8.1"
 gem "devise-async", "~> 1.0.0"
 gem "factory_bot_rails", "~> 6" # To be able to generate sample data in staging (which is production).
-gem "faker", "~> 2.21" # To be able to generate sample data in staging (which is production).
+gem "faker", "~> 3.0" # To be able to generate sample data in staging (which is production).
 gem "importmap-rails" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "pg", "~> 1.1" # Use postgresql as the database for Active Record
 gem "postmark-rails", "~> 0.22.0"
-gem "puma", "~> 5.0" # Use the Puma web server [https://github.com/puma/puma]
+gem "puma", "~> 6.0" # Use the Puma web server [https://github.com/puma/puma]
 gem "rails", "~> 7.0.2", ">= 7.0.2.2" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails_admin", "~> 3.0.0" # TODO: upgrade to 3.1: https://github.com/flexpointtech/repeater_world/issues/19
+gem "rails_admin", "~> 3.1.0"
 gem "sassc-rails", "~> 2.1.2" # Asked by rails_admin... but it's not a dependency??? the world is complicated.
 gem "sentry-rails", "~> 5.3"
 gem "sentry-ruby", "~> 5.3"
@@ -35,7 +35,7 @@ group :development, :test do
   gem "capybara", "~> 3.37"
   gem "brakeman", "~> 5.3"
   gem "debug", platforms: %i[mri mingw x64_mingw] # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "rspec-rails", "~> 5.1.0"
+  gem "rspec-rails", "~> 6.0.1"
   gem "standard", "~> 1.12"
   gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby] # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 end
