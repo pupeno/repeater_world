@@ -1,5 +1,5 @@
 RailsAdmin.config do |config|
-  config.main_app_name = ["Rails Template", "Admin"]
+  config.main_app_name = ["Repeater World", "Admin"]
 
   config.asset_source = :sprockets
 
