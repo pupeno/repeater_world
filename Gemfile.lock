@@ -176,7 +176,7 @@ GEM
       actionmailer (>= 3.0.0)
       postmark (>= 1.21.3, < 2.0)
     public_suffix (5.0.0)
-    puma (5.6.5)
+    puma (6.0.0)
       nio4r (~> 2.0)
     racc (1.6.0)
     rack (2.2.4)
@@ -335,7 +335,7 @@ DEPENDENCIES
   importmap-rails
   pg (~> 1.1)
   postmark-rails (~> 0.22.0)
-  puma (~> 5.0)
+  puma (~> 6.0)
   rails (~> 7.0.2, >= 7.0.2.2)
   rails_admin (~> 3.1.0)
   rspec-rails (~> 6.0.1)
