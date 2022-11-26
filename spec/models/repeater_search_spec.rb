@@ -1,7 +1,19 @@
 require "rails_helper"
 
 RSpec.describe RepeaterSearch, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "should always validate distance_to_coordinate fields" do
+    repeater_search = create(:repeater_search, distance_to_coordinates: false)
+    expect(repeater_search).to be_valid
+
+    repeater_search.distance = "hello" # this is always invalid, no matter the state of distance_to_cordinates
+    expect(repeater_search).to_not be_valid
+
+    repeater_search.distance = nil # this is valid when distance_to_coordinates is false...
+    expect(repeater_search).to be_valid
+
+    repeater_search.distance_to_coordinates = true # ...but not when it's true.
+    expect(repeater_search).to_not be_valid
+  end
 end
 
 # == Schema Information
