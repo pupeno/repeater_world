@@ -27,11 +27,15 @@
     <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :nxdn, label: "NXDN" } %>
   </div>
 
-  <div class="my-3">
-    <%= render partial: "shared/toggle_checkbox", locals: { form: form, name: :distance_to_coordinates } %>
+  <div class="my-3" data-controller="distance-to-coordinates">
+    <%= render partial: "shared/toggle_checkbox",
+               locals: { form: form,
+                         name: :distance_to_coordinates,
+                         check_box_html_options: { data: { distance_to_coordinates_target: "controller" } } } %>
 
-    Within
-    <div class="inline-block  relative mt-1 rounded-md shadow-sm w-36">
+    <span data-distance-to-coordinates-target="controlled">Within</span>
+    <div class="inline-block relative mt-1 rounded-md shadow-sm w-36"
+         data-distance-to-coordinates-target="controlled">
       <%= form.text_field :distance, class: "block w-full
                                              rounded-md border-gray-300
                                              pl-1 pr-20
@@ -47,21 +51,24 @@
       </div>
     </div>
 
-    of the coordinates:
-    <%= form.label :latitude, "latitude" %>
+    <span data-distance-to-coordinates-target="controlled">of the coordinates:</span>
+    <%= form.label :latitude, "latitude", data: { distance_to_coordinates_target: "controlled" } %>
     <%= form.text_field :latitude, class: "inline w-28
                                            rounded-md border-gray-300
                                            px-2
                                            focus:border-indigo-500 focus:ring-indigo-500
-                                           text-right sm:text-sm" %>
-    and
-    <%= form.label :longitude, "longitude" %>
+                                           text-right sm:text-sm",
+                        data: { distance_to_coordinates_target: "controlled" } %>
+    <span data-distance-to-coordinates-target="controlled">and</span>
+    <%= form.label :longitude, "longitude", data: { distance_to_coordinates_target: "controlled" } %>
     <%= form.text_field :longitude, class: "inline w-28
                                            rounded-md border-gray-300
                                            px-2
                                            focus:border-indigo-500 focus:ring-indigo-500
-                                           text-right sm:text-sm" %>.
+                                           text-right sm:text-sm", data: { distance_to_coordinates_target: "controlled" }
+    %><span data-distance-to-coordinates-target="controlled">.</span>
   </div>
+
   <div class="inline">
     <%= form.submit "Search", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
   </div>
