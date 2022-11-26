@@ -3,6 +3,8 @@ require "rails_helper"
 RSpec.describe Country, type: :model do
   it "create all" do
     Country.create_all
+    country = Country.first
+    expect(country.to_s).to include(country.id)
   end
 end
 
