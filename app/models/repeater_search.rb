@@ -4,10 +4,14 @@ class RepeaterSearch < ApplicationRecord
     MILES = "miles"
   ]
 
-  validates :distance, numericality: {greater_than: 0}, if: :distance_to_coordinates?
-  validates :distance_unit, inclusion: DISTANCE_UNITS, if: :distance_to_coordinates?
-  validates :latitude, numericality: true, if: :distance_to_coordinates?
-  validates :longitude, numericality: true, if: :distance_to_coordinates?
+  validates :distance, presence: true, if: :distance_to_coordinates?
+  validates :distance_unit, presence: true, if: :distance_to_coordinates?
+  validates :latitude, presence: true, if: :distance_to_coordinates?
+  validates :longitude, presence: true, if: :distance_to_coordinates?
+  validates :distance, numericality: { greater_than: 0 }, allow_blank: true
+  validates :distance_unit, inclusion: DISTANCE_UNITS, allow_blank: true
+  validates :latitude, numericality: true, allow_blank: true
+  validates :longitude, numericality: true, allow_blank: true
 end
 
 # == Schema Information

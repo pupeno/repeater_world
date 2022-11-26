@@ -1,16 +1,15 @@
 class RepeaterSearchesController < ApplicationController
   before_action :set_repeater_search, only: %i[show edit update destroy]
 
-  def index
-    @repeater_searches = RepeaterSearch.all
-  end
+  # TODO: implement
+  # def index
+  #   @repeater_searches = RepeaterSearch.all
+  # end
 
-  # GET /repeater_searches/new
   def new
     @repeater_search = RepeaterSearch.new(distance: 8, distance_unit: RepeaterSearch::KM)
   end
 
-  # POST /repeater_searches
   def create
     @repeater_search = RepeaterSearch.new(repeater_search_params)
 
@@ -40,18 +39,18 @@ class RepeaterSearchesController < ApplicationController
       distance = @repeater_search.distance * ((@repeater_search.distance_unit == RepeaterSearch::MILES) ? 1609.34 : 1000)
       @repeaters = @repeaters.where(
         "ST_DWithin(location, :point, :distance)",
-        { point: Geo.to_wkt(Geo.point(@repeater_search.latitude, @repeater_search.longitude)),
-          distance: distance }).all
+        {point: Geo.to_wkt(Geo.point(@repeater_search.latitude, @repeater_search.longitude)),
+         distance: distance}
+      ).all
     end
 
     @repeaters = @repeaters.all
   end
 
-  # GET /repeater_searches/1/edit
-  def edit
-  end
+  # TODO: implement
+  # def edit
+  # end
 
-  # PATCH/PUT /repeater_searches/1
   def update
     if @repeater_search.update(repeater_search_params)
       redirect_to @repeater_search
@@ -60,11 +59,11 @@ class RepeaterSearchesController < ApplicationController
     end
   end
 
-  # DELETE /repeater_searches/1
-  def destroy
-    @repeater_search.destroy
-    redirect_to repeater_searches_url, notice: "Repeater search was successfully destroyed."
-  end
+  # TODO: implement
+  # def destroy
+  #   @repeater_search.destroy
+  #   redirect_to repeater_searches_url, notice: "Repeater search was successfully destroyed."
+  # end
 
   private
 
@@ -78,6 +77,7 @@ class RepeaterSearchesController < ApplicationController
     params.fetch(:repeater_search, {}).permit(
       Repeater::BANDS.map { |b| :"band_#{b}" } +
         Repeater::MODES +
-        [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude])
+        [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude]
+    )
   end
 end
