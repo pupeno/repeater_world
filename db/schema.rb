@@ -61,10 +61,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_26_094614) do
     t.boolean "fusion"
     t.boolean "dmr"
     t.boolean "nxdn"
-    t.boolean "geo"
+    t.boolean "distance_to_coordinates"
     t.integer "distance"
     t.string "distance_unit"
-    t.boolean "coordinates"
     t.decimal "latitude"
     t.decimal "longitude"
     t.datetime "created_at", null: false

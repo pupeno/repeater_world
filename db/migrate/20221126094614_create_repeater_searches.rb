@@ -14,10 +14,9 @@ class CreateRepeaterSearches < ActiveRecord::Migration[7.0]
       t.boolean :dmr
       t.boolean :nxdn
 
-      t.boolean :geo
+      t.boolean :distance_to_coordinates
       t.integer :distance
       t.string :distance_unit
-      t.boolean :coordinates
       t.decimal :latitude
       t.decimal :longitude
 

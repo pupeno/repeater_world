@@ -8,6 +8,8 @@ class Repeater < ApplicationRecord
     BAND_23CM = "23cm"
   ]
 
+  MODES = %w[fm dstar fusion dmr nxdn]
+
   ACCESS_METHODS = [
     TONE_BURST = "tone_burst",
     CTCSS = "ctcss"

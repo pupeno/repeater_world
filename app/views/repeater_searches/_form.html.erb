@@ -33,6 +33,11 @@
     <%= form.label :nxdn, "NXDN" %>
   </div>
 
+  <div>
+    <%= form.check_box :distance_to_coordinates %>
+    Within <%= form.text_field :distance %><%= form.select :distance_unit, RepeaterSearch::DISTANCE_UNITS %> of
+    coordinates <%= form.text_field :latitude %> <%= form.text_field :longitude %>
+  </div>
   <div class="inline">
     <%= form.submit "Search", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
   </div>

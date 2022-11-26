@@ -7,27 +7,7 @@ class RepeaterSearchesController < ApplicationController
 
   # GET /repeater_searches/new
   def new
-    @repeater_search = RepeaterSearch.new
-  end
-
-  def show
-    @repeaters = Repeater
-
-    bands = Repeater::BANDS.filter {|band| @repeater_search.send(:"band_#{band}?")}
-    @repeaters = @repeaters.where(band: bands) if bands.present?
-
-    modes = [:fm, :dstar, :fusion, :dmr, :nxdn].filter { |mode| @repeater_search.send(:"#{mode}?") }
-    if modes.present?
-      cond = Repeater.where(modes.first => true)
-      modes[1..]&.each do |mode|
-        cond = cond.or(Repeater.where(mode => true))
-      end
-      @repeaters = @repeaters.merge(cond)
-    end
-  end
-
-  # GET /repeater_searches/1/edit
-  def edit
+    @repeater_search = RepeaterSearch.new(distance: 8, distance_unit: RepeaterSearch::KM)
   end
 
   # POST /repeater_searches
@@ -39,6 +19,36 @@ class RepeaterSearchesController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def show
+    @repeaters = Repeater
+
+    bands = Repeater::BANDS.filter { |band| @repeater_search.send(:"band_#{band}?") }
+    @repeaters = @repeaters.where(band: bands) if bands.present?
+
+    modes = Repeater::MODES.filter { |mode| @repeater_search.send(:"#{mode}?") }
+    if modes.present?
+      cond = Repeater.where(modes.first => true)
+      modes[1..]&.each do |mode|
+        cond = cond.or(Repeater.where(mode => true))
+      end
+      @repeaters = @repeaters.merge(cond)
+    end
+
+    if @repeater_search.distance_to_coordinates?
+      distance = @repeater_search.distance * ((@repeater_search.distance_unit == RepeaterSearch::MILES) ? 1609.34 : 1000)
+      @repeaters = @repeaters.where(
+        "ST_DWithin(location, :point, :distance)",
+        { point: Geo.to_wkt(Geo.point(@repeater_search.latitude, @repeater_search.longitude)),
+          distance: distance }).all
+    end
+
+    @repeaters = @repeaters.all
+  end
+
+  # GET /repeater_searches/1/edit
+  def edit
   end
 
   # PATCH/PUT /repeater_searches/1
@@ -65,6 +75,9 @@ class RepeaterSearchesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def repeater_search_params
-    params.fetch(:repeater_search, {}).permit(Repeater::BANDS.map { |b| :"band_#{b}" } + [:fm, :dstar, :fusion, :dmr, :nxdn])
+    params.fetch(:repeater_search, {}).permit(
+      Repeater::BANDS.map { |b| :"band_#{b}" } +
+        Repeater::MODES +
+        [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude])
   end
 end
