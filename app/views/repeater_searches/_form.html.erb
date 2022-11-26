@@ -18,7 +18,7 @@
     <% end %>
   </div>
 
-  <div>
+  <div class="my-3">
     Mode:
     <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :fm, label: "FM" } %>
     <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :dstar, label: "D-Star" } %>
@@ -27,11 +27,40 @@
     <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :nxdn, label: "NXDN" } %>
   </div>
 
-  <div>
-    <%= render partial: "shared/toggle_checkbox", locals: {form: form, name: :distance_to_coordinates} %>
+  <div class="my-3">
+    <%= render partial: "shared/toggle_checkbox", locals: { form: form, name: :distance_to_coordinates } %>
 
-    Within <%= form.text_field :distance %><%= form.select :distance_unit, RepeaterSearch::DISTANCE_UNITS %> of
-    coordinates <%= form.text_field :latitude %> <%= form.text_field :longitude %>
+    Within
+    <div class="inline-block  relative mt-1 rounded-md shadow-sm w-36">
+      <%= form.text_field :distance, class: "block w-full
+                                             rounded-md border-gray-300
+                                             pl-1 pr-20
+                                             focus:border-indigo-500 focus:ring-indigo-500
+                                             text-right sm:text-sm", placeholder: 0 %>
+      <div class="absolute inset-y-0 right-0 flex items-center">
+        <label for="currency" class="sr-only">Unit</label>
+        <%= form.select :distance_unit,
+                        RepeaterSearch::DISTANCE_UNITS, {}, {
+                          class: "h-full rounded-md border-transparent bg-transparent
+                                  py-0 pl-1 pr-7
+                                  focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" } %>
+      </div>
+    </div>
+
+    of the coordinates:
+    <%= form.label :latitude, "latitude" %>
+    <%= form.text_field :latitude, class: "inline w-28
+                                           rounded-md border-gray-300
+                                           px-2
+                                           focus:border-indigo-500 focus:ring-indigo-500
+                                           text-right sm:text-sm" %>
+    and
+    <%= form.label :longitude, "longitude" %>
+    <%= form.text_field :longitude, class: "inline w-28
+                                           rounded-md border-gray-300
+                                           px-2
+                                           focus:border-indigo-500 focus:ring-indigo-500
+                                           text-right sm:text-sm" %>.
   </div>
   <div class="inline">
     <%= form.submit "Search", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
