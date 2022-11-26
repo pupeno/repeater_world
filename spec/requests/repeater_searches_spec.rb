@@ -47,7 +47,7 @@ RSpec.describe "/repeater_searches", type: :request do
     context "with invalid parameters" do
       it "does not create a new RepeaterSearch" do
         expect {
-          post repeater_searches_url, params: { repeater_search: attributes_for(:repeater_search).merge({ distance: "hello" })}
+          post repeater_searches_url, params: {repeater_search: attributes_for(:repeater_search).merge({distance: "hello"})}
         }.to change(RepeaterSearch, :count).by(0)
         expect(response).to have_http_status(422)
       end
@@ -58,7 +58,7 @@ RSpec.describe "/repeater_searches", type: :request do
     context "with valid parameters" do
       it "updates the requested repeater_search" do
         repeater_search = create(:repeater_search)
-        patch repeater_search_url(repeater_search), params: { repeater_search: { fm: true } }
+        patch repeater_search_url(repeater_search), params: {repeater_search: {fm: true}}
         repeater_search.reload
         expect(repeater_search.fm?).to be true
         expect(response).to redirect_to(repeater_search_url(repeater_search))
@@ -68,7 +68,7 @@ RSpec.describe "/repeater_searches", type: :request do
     context "with invalid parameters" do
       it "renders a successful response (i.e. to display the 'edit' template)" do
         repeater_search = repeater_search = create(:repeater_search)
-        patch repeater_search_url(repeater_search), params: { repeater_search: { distance: "hello" } }
+        patch repeater_search_url(repeater_search), params: {repeater_search: {distance: "hello"}}
         expect(response).to have_http_status(422)
       end
     end
