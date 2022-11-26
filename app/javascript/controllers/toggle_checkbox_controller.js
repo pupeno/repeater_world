@@ -10,7 +10,7 @@ export default class extends Controller {
     this.checkbox.addEventListener("change", this.updateBadge.bind(this));
 
     this.updateBadge()
-    this.slot.classList.remove("bg-orange-400")
+    this.slot.classList.remove("bg-gray-200")
     this.circle.classList.remove("translate-x-2.5")
   }
 

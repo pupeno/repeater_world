@@ -8,6 +8,7 @@ export default class extends Controller {
     this.checkbox.addEventListener("change", this.updateBadge.bind(this));
 
     this.updateBadge()
+    this.label.classList.remove("bg-gray-200", "text-gray-800")
   }
 
   disconnect() {
@@ -15,8 +16,8 @@ export default class extends Controller {
   }
 
   updateBadge() {
-    const whenChecked = ["bg-orange-800", "text-orange-100"];
-    const whenUnchecked = ["bg-orange-100", "text-orange-800"];
+    const whenChecked = ["bg-orange-800", "text-orange-200"];
+    const whenUnchecked = ["bg-orange-200", "text-orange-800"];
     if (this.checkbox.checked) {
      this.label.classList.add(...whenChecked);
      this.label.classList.remove(...whenUnchecked);
