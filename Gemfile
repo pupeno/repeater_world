@@ -3,6 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.1.1"
 
+gem "activerecord-postgis-adapter", "~> 8.0"
 gem "babosa", "~> 2.0.0"
 gem "bootsnap", require: false # Reduces boot times through caching; required in config/boot.rb
 gem "countries", "~> 5.1"
