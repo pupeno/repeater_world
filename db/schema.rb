@@ -14,6 +14,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "postgis"
 
   create_table "admins", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -68,6 +69,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
     t.integer "dmr_cc"
     t.string "dmr_con"
     t.boolean "nxdn"
+    t.geography "location", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.string "grid_square"
     t.decimal "latitude"
     t.decimal "longitude"
@@ -82,6 +84,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
     t.datetime "updated_at", null: false
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["country_id"], name: "index_repeaters_on_country_id"
+    t.index ["location"], name: "index_repeaters_on_location", using: :gist
   end
 
   add_foreign_key "repeaters", "countries"
