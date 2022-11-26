@@ -14,41 +14,17 @@
   <div>
     Band:
     <% Repeater::BANDS.each do |band| %>
-      <div data-controller="badge-checkbox" class="inline-block">
-        <%= form.check_box "band_#{band}", class: "hidden" %>
-        <%= form.label "band_#{band}", band, class: "inline-flex items-center rounded-md m-px cursor-pointer
-                                                     px-2.5 py-0.5 text-md font-medium" %>
-      </div>
+      <%= render partial: "shared/badge_checkbox", locals: { form: form, name: "band_#{band}", label: band } %>
     <% end %>
   </div>
 
   <div>
     Mode:
-    <div data-controller="badge-checkbox" class="inline-block">
-      <%= form.check_box :fm, class: "hidden" %>
-      <%= form.label :fm, "FM", class: "inline-flex items-center rounded-md m-px cursor-pointer
-                                        px-2.5 py-0.5 text-md font-medium" %>
-    </div>
-    <div data-controller="badge-checkbox" class="inline-block">
-      <%= form.check_box :dstar, class: "hidden" %>
-      <%= form.label :dstar, "D-Star", class: "inline-flex items-center rounded-md m-px cursor-pointer
-                                               px-2.5 py-0.5 text-md font-medium" %>
-    </div>
-    <div data-controller="badge-checkbox" class="inline-block">
-      <%= form.check_box :fusion, class: "hidden" %>
-      <%= form.label :fusion, "fusion", class: "inline-flex items-center rounded-md m-px cursor-pointer
-                                                px-2.5 py-0.5 text-md font-medium" %>
-    </div>
-    <div data-controller="badge-checkbox" class="inline-block">
-      <%= form.check_box :dmr, class: "hidden" %>
-      <%= form.label :dmr, "DMR", class: "inline-flex items-center rounded-md m-px cursor-pointer
-                                          px-2.5 py-0.5 text-md font-medium" %>
-    </div>
-    <div data-controller="badge-checkbox" class="inline-block">
-      <%= form.check_box :nxdn, class: "hidden" %>
-      <%= form.label :nxdn, "NXDN", class: "inline-flex items-center rounded-md m-px cursor-pointer
-                                            px-2.5 py-0.5 text-md font-medium" %>
-    </div>
+    <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :fm, label: "FM" } %>
+    <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :dstar, label: "D-Star" } %>
+    <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :fusion, label: "Fusion" } %>
+    <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :dmr, label: "DMR" } %>
+    <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :nxdn, label: "NXDN" } %>
   </div>
 
   <div>
