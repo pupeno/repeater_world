@@ -10,7 +10,7 @@ non_production: &non_production
   username: repeater_world_development
   password: te6ahng1phi1uizaeGhahMof1
   host: localhost
-  port: 10401
+  port: 5001
 
 development:
   <<: *non_production

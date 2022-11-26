@@ -13,9 +13,8 @@ threads min_threads_count, max_threads_count
 #
 worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
 
-# Specifies the `port` that Puma will listen on to receive requests; default is 10400.
-#
-port ENV.fetch("PORT", 10400)
+# Specifies the `port` that Puma will listen on to receive requests; default is 5000.
+port ENV.fetch("PORT", 5000)
 
 # Specifies the `environment` that Puma will run in.
 #
