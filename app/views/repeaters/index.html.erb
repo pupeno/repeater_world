@@ -1,3 +1,46 @@
+<div>
+  Band:
+  <% Repeater::BANDS.each do |band| %>
+    <%= link_to band, q: @raw_query.merge({ band_in: @raw_query.fetch(:band_in, []) + [band] }) %>
+  <% end %>
+  <% if @raw_query.include? :band_in %>
+    <%= link_to "Clear", q: @raw_query.except(:band_in) %>
+  <% end %>
+</div>
+
+<div>
+  Mode:
+  <% if @raw_query[:fm_eq].present? %>
+    <%= link_to "FM", q: @raw_query.except(:fm_eq) %>
+  <% else %>
+    <%= link_to "FM", q: @raw_query.merge({ fm_eq: true }) %>
+  <% end %>
+  <% if @raw_query[:dstar_eq].present? %>
+    <%= link_to "D-Star", q: @raw_query.except(:dstar_eq) %>
+  <% else %>
+    <%= link_to "D-Star", q: @raw_query.merge({ dstar_eq: true }) %>
+  <% end %>
+  <% if @raw_query[:fusion_eq].present? %>
+    <%= link_to "Fusion", q: @raw_query.except(:fusion_eq) %>
+  <% else %>
+    <%= link_to "Fusion", q: @raw_query.merge({ fusion_eq: true }) %>
+  <% end %>
+  <% if @raw_query[:dmr_eq].present? %>
+    <%= link_to "DMR", q: @raw_query.except(:dmr_eq) %>
+  <% else %>
+    <%= link_to "DMR", q: @raw_query.merge({ dmr_eq: true }) %>
+  <% end %>
+  <% if @raw_query[:nxdn_eq].present? %>
+    <%= link_to "NXDN", q: @raw_query.except(:nxdn_eq) %>
+  <% else %>
+    <%= link_to "NXDN", q: @raw_query.merge({ nxdn_eq: true }) %>
+  <% end %>
+
+  <% if [:fm_eq, :dstar_eq, :fusion_eq, :dmr_eq, :nxdn_eq].any? { |k| @raw_query.include? k } %>
+    <%= link_to "Clear", q: @raw_query.except(:fm_eq, :dstar_eq, :fusion_eq, :dmr_eq, :nxdn_eq) %>
+  <% end %>
+</div>
+
 <div class="w-full">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>

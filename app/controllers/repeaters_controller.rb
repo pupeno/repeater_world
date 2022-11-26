@@ -3,7 +3,10 @@ class RepeatersController < ApplicationController
 
   # GET /repeaters
   def index
-    @repeaters = Repeater.all
+    @raw_query = params[:q]&.to_unsafe_h || {}
+    @raw_query = @raw_query.slice(:band_in, :fm_eq, :dstar_eq, :fusion_eq, :dmr_eq, :nxdn_eq)
+    @q = Repeater.ransack(@raw_query)
+    @repeaters = @q.result(distinct: true).order(:call_sign)
   end
 
   # GET /repeaters/1
