@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_26_094614) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -47,6 +47,28 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_063407) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_countries_on_name", unique: true
+  end
+
+  create_table "repeater_searches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.boolean "band_10m"
+    t.boolean "band_6m"
+    t.boolean "band_4m"
+    t.boolean "band_2m"
+    t.boolean "band_70cm"
+    t.boolean "band_23cm"
+    t.boolean "fm"
+    t.boolean "dstar"
+    t.boolean "fusion"
+    t.boolean "dmr"
+    t.boolean "nxdn"
+    t.boolean "geo"
+    t.integer "distance"
+    t.string "distance_unit"
+    t.boolean "coordinates"
+    t.decimal "latitude"
+    t.decimal "longitude"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "repeaters", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
