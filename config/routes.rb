@@ -2,8 +2,7 @@ Rails.application.routes.draw do
   mount RailsAdmin::Engine => "/admin", :as => "rails_admin"
   devise_for :admins
 
-  resources :repeater_searches
-  resources :repeaters
+  resources :repeater_searches, only: [:new, :create, :show]
 
   get "sitemap", to: "static#sitemap"
   get "404", to: "static#not_found"
