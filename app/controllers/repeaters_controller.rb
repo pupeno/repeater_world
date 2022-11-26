@@ -3,10 +3,13 @@ class RepeatersController < ApplicationController
 
   # GET /repeaters
   def index
-    @raw_query = params[:q]&.to_unsafe_h || {}
-    @raw_query = @raw_query.slice(:band_in, :fm_eq, :dstar_eq, :fusion_eq, :dmr_eq, :nxdn_eq)
-    @q = Repeater.ransack(@raw_query)
-    @repeaters = @q.result(distinct: true).order(:call_sign)
+    # @q = params[:q]&.to_unsafe_h || {}
+    # @q = @q.slice(:band_in, :fm_eq, :dstar_eq, :fusion_eq, :dmr_eq, :nxdn_eq, :l)
+    # # @q[:l] ||= {d: 5}
+    # @repeaters = Repeater.ransack(@q).result(distinct: true).order(:call_sign)
+
+    @search = RepeaterSearch.new
+    @repeaters = []
   end
 
   # GET /repeaters/1

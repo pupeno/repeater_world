@@ -1,10 +1,6 @@
 <div class="mx-auto md:w-2/3 w-full flex">
   <div class="mx-auto">
-    <% if notice.present? %>
-      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-    <% end %>
-
-    <%= render @repeater_search %>
+    <%= render "form", repeater_search: @repeater_search %>
 
     <%= link_to 'Edit this repeater_search', edit_repeater_search_path(@repeater_search), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
     <div class="inline-block ml-2">
@@ -12,4 +8,9 @@
     </div>
     <%= link_to 'Back to repeater_searches', repeater_searches_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
   </div>
+</div>
+
+
+<div id="repeaters" class="min-w-full">
+  <%= render @repeaters %>
 </div>

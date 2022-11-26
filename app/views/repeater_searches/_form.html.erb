@@ -11,7 +11,29 @@
     </div>
   <% end %>
 
+  <div>
+    Band:
+    <% Repeater::BANDS.each do |band| %>
+      <%= form.check_box :"band_#{band}" %>
+      <%= form.label :"band_#{band}", band %>
+    <% end %>
+  </div>
+
+  <div>
+    Mode:
+    <%= form.check_box :fm %>
+    <%= form.label :fm, "FM" %>
+    <%= form.check_box :dstar %>
+    <%= form.label :dstar, "D-Star" %>
+    <%= form.check_box :fusion %>
+    <%= form.label :fusion, "fusion" %>
+    <%= form.check_box :dmr %>
+    <%= form.label :dmr, "DMR" %>
+    <%= form.check_box :nxdn %>
+    <%= form.label :nxdn, "NXDN" %>
+  </div>
+
   <div class="inline">
-    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+    <%= form.submit "Search", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
   </div>
 <% end %>
