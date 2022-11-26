@@ -32,6 +32,14 @@ end
 #                         new_admin_unlock GET    /admins/unlock/new(.:format)                                                                      devise/unlocks#new
 #                             admin_unlock GET    /admins/unlock(.:format)                                                                          devise/unlocks#show
 #                                          POST   /admins/unlock(.:format)                                                                          devise/unlocks#create
+#                                repeaters GET    /repeaters(.:format)                                                                              repeaters#index
+#                                          POST   /repeaters(.:format)                                                                              repeaters#create
+#                             new_repeater GET    /repeaters/new(.:format)                                                                          repeaters#new
+#                            edit_repeater GET    /repeaters/:id/edit(.:format)                                                                     repeaters#edit
+#                                 repeater GET    /repeaters/:id(.:format)                                                                          repeaters#show
+#                                          PATCH  /repeaters/:id(.:format)                                                                          repeaters#update
+#                                          PUT    /repeaters/:id(.:format)                                                                          repeaters#update
+#                                          DELETE /repeaters/:id(.:format)                                                                          repeaters#destroy
 #                                  sitemap GET    /sitemap(.:format)                                                                                static#sitemap
 #                                          GET    /404(.:format)                                                                                    static#not_found
 #                                     root GET    /                                                                                                 static#index
