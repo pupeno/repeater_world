@@ -104,7 +104,7 @@ RSpec.describe "/repeater_searches", type: :request do
 
     context "with invalid parameters" do
       it "renders a successful response (i.e. to display the 'edit' template)" do
-        repeater_search = repeater_search = create(:repeater_search)
+        repeater_search = create(:repeater_search)
         patch repeater_search_url(repeater_search), params: {repeater_search: {distance: "hello"}}
         expect(response).to have_http_status(422)
       end
