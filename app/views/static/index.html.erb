@@ -1,4 +1,10 @@
 <div>
+  <%= link_to "Sign up", new_user_registration_url if !user_signed_in? %>
+  <%= link_to "Log in", new_user_session_url if !user_signed_in? %>
+  <%= current_user.email if user_signed_in? %>
+  <%= button_to "Log out", destroy_user_session_url, method: :delete if user_signed_in? %>
+  <%= link_to "Change your password", edit_user_registration_url if user_signed_in? %>
+  <%= link_to "Edit profile", edit_profile_url if user_signed_in? %>
   <h1 class="font-bold text-4xl">Static#index</h1>
   <p>Find me in app/views/static/index.html.erb</p>
 </div>
