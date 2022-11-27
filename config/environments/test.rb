@@ -39,7 +39,7 @@ Rails.application.configure do
   config.active_storage.service = :test
 
   # Email configuration.
-  config.action_mailer.default_url_options = {host: "localhost", port: 10400}
+  config.action_mailer.default_url_options = {host: "localhost", port: 5000}
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :test # The :test delivery method accumulates sent emails in the ActionMailer::Base.deliveries array.

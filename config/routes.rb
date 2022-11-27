@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   mount RailsAdmin::Engine => "/admin", :as => "rails_admin"
   devise_for :admins
 
+  resources :repeater_searches, only: [:new, :create, :show, :update]
+
   get "sitemap", to: "static#sitemap"
   get "404", to: "static#not_found"
   root "static#index"
@@ -30,6 +32,22 @@ end
 #                         new_admin_unlock GET    /admins/unlock/new(.:format)                                                                      devise/unlocks#new
 #                             admin_unlock GET    /admins/unlock(.:format)                                                                          devise/unlocks#show
 #                                          POST   /admins/unlock(.:format)                                                                          devise/unlocks#create
+#                        repeater_searches GET    /repeater_searches(.:format)                                                                      repeater_searches#index
+#                                          POST   /repeater_searches(.:format)                                                                      repeater_searches#create
+#                      new_repeater_search GET    /repeater_searches/new(.:format)                                                                  repeater_searches#new
+#                     edit_repeater_search GET    /repeater_searches/:id/edit(.:format)                                                             repeater_searches#edit
+#                          repeater_search GET    /repeater_searches/:id(.:format)                                                                  repeater_searches#show
+#                                          PATCH  /repeater_searches/:id(.:format)                                                                  repeater_searches#update
+#                                          PUT    /repeater_searches/:id(.:format)                                                                  repeater_searches#update
+#                                          DELETE /repeater_searches/:id(.:format)                                                                  repeater_searches#destroy
+#                                repeaters GET    /repeaters(.:format)                                                                              repeaters#index
+#                                          POST   /repeaters(.:format)                                                                              repeaters#create
+#                             new_repeater GET    /repeaters/new(.:format)                                                                          repeaters#new
+#                            edit_repeater GET    /repeaters/:id/edit(.:format)                                                                     repeaters#edit
+#                                 repeater GET    /repeaters/:id(.:format)                                                                          repeaters#show
+#                                          PATCH  /repeaters/:id(.:format)                                                                          repeaters#update
+#                                          PUT    /repeaters/:id(.:format)                                                                          repeaters#update
+#                                          DELETE /repeaters/:id(.:format)                                                                          repeaters#destroy
 #                                  sitemap GET    /sitemap(.:format)                                                                                static#sitemap
 #                                          GET    /404(.:format)                                                                                    static#not_found
 #                                     root GET    /                                                                                                 static#index

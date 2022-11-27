@@ -27,6 +27,7 @@ class CreateRepeaters < ActiveRecord::Migration[7.0]
 
       t.boolean :nxdn
 
+      t.st_point :location, geographic: true, index: {using: :gist}
       t.string :grid_square
       t.decimal :latitude
       t.decimal :longitude

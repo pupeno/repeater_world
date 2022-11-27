@@ -1,0 +1,7 @@
+<div id="<%= dom_id repeater_search %>">
+  <% if action_name != "show" %>
+    <%= link_to "Show this repeater search", repeater_search, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to 'Edit this repeater search', edit_repeater_search_path(repeater_search), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <hr class="mt-6">
+  <% end %>
+</div>
