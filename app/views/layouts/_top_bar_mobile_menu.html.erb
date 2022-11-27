@@ -1,0 +1,4 @@
+<%# Keep synchronized with top_bar_desktop_menu so that we offer the same options on desktop and mobile. %>
+
+<%= top_bar_mobile_link "Log in", new_user_session_url if !user_signed_in? %>
+<%= top_bar_mobile_link "Sign up", new_user_registration_url if !user_signed_in? %>
