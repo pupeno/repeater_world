@@ -1,7 +1,15 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "A user" do
+    before { @user = create(:user) }
+
+    it "is readable" do
+      expect(@user.to_s).to include(@user.class.name)
+      expect(@user.to_s).to include(@user.id)
+      expect(@user.to_s).to include(@user.email)
+    end
+  end
 end
 
 # == Schema Information

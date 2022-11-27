@@ -1,5 +1,8 @@
 FactoryBot.define do
   factory :user do
+    email { Faker::Internet.unique.email }
+    password { SampleDataGenerator::PASSWORD }
+    confirmed_at { 3.days.ago }
   end
 end
 

@@ -1,5 +1,9 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :confirmable, :lockable, :timeoutable, :trackable # :omniauthable
+
+  def to_s
+    super(email)
+  end
 end
 
 # == Schema Information
