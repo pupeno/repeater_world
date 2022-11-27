@@ -32,19 +32,28 @@ jobs:
         run: bundle exec rspec
 
   lint:
-    name: "Lint"
+    name: "Lint & security"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: Security audit application code
-        run: bundle exec brakeman -q -w2
+
       - name: Lint Ruby files
-        run: rake standard
+        run: bundle exec rake standard
+
+      - name: Security audit application code
+        run: bundle exec brakeman --confidence-level 2 --format sarif --output sarif.json
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: output.sarif.json
+
       # TODO: do we want this when we have dependabot?
 #      - name: Security audit dependencies
 #        run: bin/bundler-audit --update
