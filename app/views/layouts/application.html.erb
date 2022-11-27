@@ -57,27 +57,22 @@
       </script>
     <% end %>
   </head>
+  <body class="min-h-screen flex flex-col">
+    <%= render "layouts/top_bar" %>
 
-  <body>
-    <main>
+    <main class="py-10 flex-grow">
       <%= render "shared/flash_messages" %>
       <%= yield %>
     </main>
 
-    <% if ENV["HELPSCOUT_BEACON_ID"].present? %>
-      <script type="text/javascript">!function (e, t, n) {
-        function a() {
-          var e = t.getElementsByTagName("script")[0], n = t.createElement("script");
-          n.type = "text/javascript", n.async = !0, n.src = "https://beacon-v2.helpscout.net", e.parentNode.insertBefore(n, e)
-        }
+    <footer>
+      <%= render "layouts/cookie_popup" %>
 
-        if (e.Beacon = n = function (t, n, a) {
-          e.Beacon.readyQueue.push({method: t, options: n, data: a})
-        }, n.readyQueue = [], "complete" === t.readyState) return a();
-        e.attachEvent ? e.attachEvent("onload", a) : e.addEventListener("load", a, !1)
-      }(window, document, window.Beacon || function () {
-      });</script>
-      <script type="text/javascript">window.Beacon('init', '<%= ENV["HELPSCOUT_BEACON_ID"] %>')</script>
-    <% end %>
+      <p class="text-center text-sm text-gray-400">
+        <%= link_to "Privacy Policy", privacy_policy_url, class: "underline hover:text-blue-800" %>
+        <%= link_to "Cookie Policy", cookie_policy_url, class: "underline hover:text-blue-800" %>
+        <a class="underline hover:text-blue-800" href="mailto:info@unbrea.ch">Contact Us</a>
+      </p>
+    </footer>
   </body>
 </html>

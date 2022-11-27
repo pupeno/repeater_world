@@ -9,7 +9,7 @@ if ENV["SENTRY_DSN"].present?
     # https://docs.sentry.io/platforms/ruby/configuration/releases/
     if ENV["HEROKU_APP_NAME"].present?
       # https://devcenter.heroku.com/articles/dyno-metadata
-      config.release = "unbreach@#{ENV["HEROKU_APP_NAME"]}@#{ENV["HEROKU_RELEASE_VERSION"]}"
+      config.release = "repeater_world@#{ENV["HEROKU_APP_NAME"]}@#{ENV["HEROKU_RELEASE_VERSION"]}"
       config.environment = ENV["HEROKU_APP_NAME"].split("-").last
     elsif ENV["RENDER"] === "true"
       # https://render.com/docs/environment-variables

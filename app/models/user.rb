@@ -4,6 +4,10 @@ class User < ApplicationRecord
   def to_s
     super(email)
   end
+
+  def name
+    email.split("@").first
+  end
 end
 
 # == Schema Information

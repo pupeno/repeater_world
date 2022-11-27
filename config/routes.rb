@@ -6,8 +6,11 @@ Rails.application.routes.draw do
   resource :profile, only: [:edit, :update]
   resources :repeater_searches, only: [:new, :create, :show, :update]
 
+  get "privacy-policy", to: "static#privacy_policy"
+  get "cookie-policy", to: "static#cookie_policy"
   get "sitemap", to: "static#sitemap"
   get "404", to: "static#not_found"
+
   root "static#index"
 
   # Fail!
@@ -63,6 +66,8 @@ end
 #                          repeater_search GET    /repeater_searches/:id(.:format)                                                                  repeater_searches#show
 #                                          PATCH  /repeater_searches/:id(.:format)                                                                  repeater_searches#update
 #                                          PUT    /repeater_searches/:id(.:format)                                                                  repeater_searches#update
+#                           privacy_policy GET    /privacy-policy(.:format)                                                                         static#privacy_policy
+#                            cookie_policy GET    /cookie-policy(.:format)                                                                          static#cookie_policy
 #                                  sitemap GET    /sitemap(.:format)                                                                                static#sitemap
 #                                          GET    /404(.:format)                                                                                    static#not_found
 #                                     root GET    /                                                                                                 static#index

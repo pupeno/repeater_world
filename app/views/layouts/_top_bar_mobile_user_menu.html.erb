@@ -1,0 +1,5 @@
+<%# Keep synchronized with top_bar_desktop_user_menu so that we offer the same options on desktop and mobile. %>
+
+<%= top_bar_mobile_link "My Profile", edit_profile_url %>
+<%= top_bar_mobile_link "Change your password", edit_user_registration_path %>
+<%= button_to "Log out", destroy_user_session_path, class: top_bar_mobile_button_class, method: :delete %>
