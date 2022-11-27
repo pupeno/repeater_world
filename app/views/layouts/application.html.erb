@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Repeater World</title>
+    <title>
+      <% if content_for? :head_title %>
+        <%= yield :head_title %> - Repeater World
+      <% else %>
+        Repeater World
+      <% end %>
+    </title>
 
     <%# Security tags %>
     <%= csrf_meta_tags %>

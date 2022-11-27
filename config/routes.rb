@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   mount RailsAdmin::Engine => "/admin", :as => "rails_admin"
   devise_for :admins
 
+  devise_for :users
+  resource :profile, only: [:edit, :update]
   resources :repeater_searches, only: [:new, :create, :show, :update]
 
   get "sitemap", to: "static#sitemap"
@@ -32,22 +34,35 @@ end
 #                         new_admin_unlock GET    /admins/unlock/new(.:format)                                                                      devise/unlocks#new
 #                             admin_unlock GET    /admins/unlock(.:format)                                                                          devise/unlocks#show
 #                                          POST   /admins/unlock(.:format)                                                                          devise/unlocks#create
-#                        repeater_searches GET    /repeater_searches(.:format)                                                                      repeater_searches#index
-#                                          POST   /repeater_searches(.:format)                                                                      repeater_searches#create
+#                         new_user_session GET    /users/sign_in(.:format)                                                                          devise/sessions#new
+#                             user_session POST   /users/sign_in(.:format)                                                                          devise/sessions#create
+#                     destroy_user_session DELETE /users/sign_out(.:format)                                                                         devise/sessions#destroy
+#                        new_user_password GET    /users/password/new(.:format)                                                                     devise/passwords#new
+#                       edit_user_password GET    /users/password/edit(.:format)                                                                    devise/passwords#edit
+#                            user_password PATCH  /users/password(.:format)                                                                         devise/passwords#update
+#                                          PUT    /users/password(.:format)                                                                         devise/passwords#update
+#                                          POST   /users/password(.:format)                                                                         devise/passwords#create
+#                 cancel_user_registration GET    /users/cancel(.:format)                                                                           devise/registrations#cancel
+#                    new_user_registration GET    /users/sign_up(.:format)                                                                          devise/registrations#new
+#                   edit_user_registration GET    /users/edit(.:format)                                                                             devise/registrations#edit
+#                        user_registration PATCH  /users(.:format)                                                                                  devise/registrations#update
+#                                          PUT    /users(.:format)                                                                                  devise/registrations#update
+#                                          DELETE /users(.:format)                                                                                  devise/registrations#destroy
+#                                          POST   /users(.:format)                                                                                  devise/registrations#create
+#                    new_user_confirmation GET    /users/confirmation/new(.:format)                                                                 devise/confirmations#new
+#                        user_confirmation GET    /users/confirmation(.:format)                                                                     devise/confirmations#show
+#                                          POST   /users/confirmation(.:format)                                                                     devise/confirmations#create
+#                          new_user_unlock GET    /users/unlock/new(.:format)                                                                       devise/unlocks#new
+#                              user_unlock GET    /users/unlock(.:format)                                                                           devise/unlocks#show
+#                                          POST   /users/unlock(.:format)                                                                           devise/unlocks#create
+#                             edit_profile GET    /profile/edit(.:format)                                                                           profiles#edit
+#                                  profile PATCH  /profile(.:format)                                                                                profiles#update
+#                                          PUT    /profile(.:format)                                                                                profiles#update
+#                        repeater_searches POST   /repeater_searches(.:format)                                                                      repeater_searches#create
 #                      new_repeater_search GET    /repeater_searches/new(.:format)                                                                  repeater_searches#new
-#                     edit_repeater_search GET    /repeater_searches/:id/edit(.:format)                                                             repeater_searches#edit
 #                          repeater_search GET    /repeater_searches/:id(.:format)                                                                  repeater_searches#show
 #                                          PATCH  /repeater_searches/:id(.:format)                                                                  repeater_searches#update
 #                                          PUT    /repeater_searches/:id(.:format)                                                                  repeater_searches#update
-#                                          DELETE /repeater_searches/:id(.:format)                                                                  repeater_searches#destroy
-#                                repeaters GET    /repeaters(.:format)                                                                              repeaters#index
-#                                          POST   /repeaters(.:format)                                                                              repeaters#create
-#                             new_repeater GET    /repeaters/new(.:format)                                                                          repeaters#new
-#                            edit_repeater GET    /repeaters/:id/edit(.:format)                                                                     repeaters#edit
-#                                 repeater GET    /repeaters/:id(.:format)                                                                          repeaters#show
-#                                          PATCH  /repeaters/:id(.:format)                                                                          repeaters#update
-#                                          PUT    /repeaters/:id(.:format)                                                                          repeaters#update
-#                                          DELETE /repeaters/:id(.:format)                                                                          repeaters#destroy
 #                                  sitemap GET    /sitemap(.:format)                                                                                static#sitemap
 #                                          GET    /404(.:format)                                                                                    static#not_found
 #                                     root GET    /                                                                                                 static#index

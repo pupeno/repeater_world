@@ -2,12 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
-
 @layer components {
-  .btn-primary {
-    @apply py-2 px-4 bg-blue-200;
-  }
-}
+    .link {
+        @apply underline text-orange-600 hover:text-orange-800
+    }
 
-*/
+    .field-text {
+        @apply block max-w-lg sm:max-w-sm w-full sm:text-sm rounded-md shadow-sm focus:outline-none
+    }
+
+    .field-text-valid {
+        @apply focus:ring-orange-500 focus:border-orange-500 border-gray-300
+    }
+
+    .field-text-invalid {
+        @apply focus:ring-red-500 focus:border-red-500 border-red-300 text-red-900 placeholder-red-300
+    }
+}
