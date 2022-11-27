@@ -1,0 +1,75 @@
+<%= form_with(model: repeater_search, class: "contents") do |form| %>
+  <% if repeater_search.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(repeater_search.errors.count, "error") %> prohibited this repeater_search from being saved:</h2>
+
+      <ul>
+        <% repeater_search.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    Band:
+    <% Repeater::BANDS.each do |band| %>
+      <%= render partial: "shared/badge_checkbox", locals: { form: form, name: "band_#{band}", label: band } %>
+    <% end %>
+  </div>
+
+  <div class="my-3">
+    Mode:
+    <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :fm, label: "FM" } %>
+    <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :dstar, label: "D-Star" } %>
+    <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :fusion, label: "Fusion" } %>
+    <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :dmr, label: "DMR" } %>
+    <%= render partial: "shared/badge_checkbox", locals: { form: form, name: :nxdn, label: "NXDN" } %>
+  </div>
+
+  <div class="my-3" data-controller="distance-to-coordinates">
+    <%= render partial: "shared/toggle_checkbox",
+               locals: { form: form,
+                         name: :distance_to_coordinates,
+                         check_box_html_options: { data: { distance_to_coordinates_target: "controller" } } } %>
+
+    <span data-distance-to-coordinates-target="controlled">Within</span>
+    <div class="inline-block relative mt-1 rounded-md shadow-sm w-36"
+         data-distance-to-coordinates-target="controlled">
+      <%= form.text_field :distance, class: "block w-full
+                                             rounded-md border-gray-300
+                                             pl-1 pr-20
+                                             focus:border-orange-500 focus:ring-orange-500
+                                             text-right sm:text-sm", placeholder: 0 %>
+      <div class="absolute inset-y-0 right-0 flex items-center">
+        <label for="currency" class="sr-only">Unit</label>
+        <%= form.select :distance_unit,
+                        RepeaterSearch::DISTANCE_UNITS, {}, {
+                          class: "h-full rounded-md border-transparent bg-transparent
+                                  py-0 pl-1 pr-7
+                                  focus:border-orange-500 focus:ring-orange-500 sm:text-sm" } %>
+      </div>
+    </div>
+
+    <span data-distance-to-coordinates-target="controlled">of the coordinates:</span>
+    <%= form.label :latitude, "latitude", data: { distance_to_coordinates_target: "controlled" } %>
+    <%= form.text_field :latitude, class: "inline w-28
+                                           rounded-md border-gray-300
+                                           px-2
+                                           focus:border-orange-500 focus:ring-orange-500
+                                           text-right sm:text-sm",
+                        data: { distance_to_coordinates_target: "controlled" } %>
+    <span data-distance-to-coordinates-target="controlled">and</span>
+    <%= form.label :longitude, "longitude", data: { distance_to_coordinates_target: "controlled" } %>
+    <%= form.text_field :longitude, class: "inline w-28
+                                           rounded-md border-gray-300
+                                           px-2
+                                           focus:border-orange-500 focus:ring-orange-500
+                                           text-right sm:text-sm", data: { distance_to_coordinates_target: "controlled" }
+    %><span data-distance-to-coordinates-target="controlled">.</span>
+  </div>
+
+  <div class="inline">
+    <%= form.submit "Search", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

@@ -8,6 +8,8 @@ class Repeater < ApplicationRecord
     BAND_23CM = "23cm"
   ]
 
+  MODES = %w[fm dstar fusion dmr nxdn]
+
   ACCESS_METHODS = [
     TONE_BURST = "tone_burst",
     CTCSS = "ctcss"
@@ -56,6 +58,7 @@ end
 #  grid_square   :string
 #  keeper        :string
 #  latitude      :decimal(, )
+#  location      :geography        point, 4326
 #  longitude     :decimal(, )
 #  name          :string
 #  notes         :text
@@ -78,6 +81,7 @@ end
 #
 #  index_repeaters_on_call_sign   (call_sign)
 #  index_repeaters_on_country_id  (country_id)
+#  index_repeaters_on_location    (location) USING gist
 #
 # Foreign Keys
 #

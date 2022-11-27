@@ -40,7 +40,7 @@ Rails.application.configure do
   # config.active_job.queue_adapter = :sidekiq
 
   # Email configuration.
-  config.action_mailer.default_url_options = {host: "localhost", port: 10400}
+  config.action_mailer.default_url_options = {host: "localhost", port: 5000}
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :file
@@ -75,9 +75,9 @@ Rails.application.configure do
   # Configure Sidekiq https://github.com/mperham/sidekiq/wiki/Using-Redis
   # Uncomment this when starting to use proper background jobs.
   # Sidekiq.configure_server do |config|
-  #   config.redis = {url: "redis://localhost:10402/0"}
+  #   config.redis = {url: "redis://localhost:5002/0"}
   # end
   # Sidekiq.configure_client do |config|
-  #   config.redis = {url: "redis://localhost:10402/0"}
+  #   config.redis = {url: "redis://localhost:5002/0"}
   # end
 end

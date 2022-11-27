@@ -1,9 +1,9 @@
 version: "3.9"
 services:
   postgres:
-    image: postgres:14-alpine
+    image: postgis/postgis:15-3.3
     ports:
-      - "10401:5432"
+      - "5001:5432"
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
     environment:
@@ -13,4 +13,4 @@ services:
 #  redis:
 #    image: redis:6.2-alpine
 #    ports:
-#      - "10402:6379"
+#      - "5002:6379"
