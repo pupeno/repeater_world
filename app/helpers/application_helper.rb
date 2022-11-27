@@ -8,6 +8,10 @@ module ApplicationHelper
     end
   end
 
+  def gravatar_url(email)
+    "https://www.gravatar.com/avatar/#{Digest::MD5.hexdigest email}?d=mp"
+  end
+
   def badge_checkbox(form, name, label)
     render partial: "shared/badge_checkbox", locals: {form: form, name: name, label: label}
   end
