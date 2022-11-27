@@ -11,8 +11,45 @@ RSpec.describe "/repeater_searches", type: :request do
   # end
 
   describe "GET /show" do
-    it "renders a successful response" do
+    it "run an empty search" do
       repeater_search = create(:repeater_search)
+      get repeater_search_url(repeater_search)
+      expect(response).to be_successful
+    end
+
+    it "run a band search" do
+      repeater_search = create(:repeater_search, band_2m: true)
+      get repeater_search_url(repeater_search)
+      expect(response).to be_successful
+
+      repeater_search.band_23cm = true
+      repeater_search.save!
+      get repeater_search_url(repeater_search)
+      expect(response).to be_successful
+    end
+
+    it "run a mode search" do
+      repeater_search = create(:repeater_search, fm: true)
+      get repeater_search_url(repeater_search)
+      expect(response).to be_successful
+
+      repeater_search.dstar = true
+      repeater_search.fusion = true
+      repeater_search.save!
+      get repeater_search_url(repeater_search)
+      expect(response).to be_successful
+    end
+
+    it "runs a geo search in km" do
+      repeater_search = create(:repeater_search, distance_to_coordinates: true, distance: 10,
+        distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0)
+      get repeater_search_url(repeater_search)
+      expect(response).to be_successful
+    end
+
+    it "runs a geo search in km" do
+      repeater_search = create(:repeater_search, distance_to_coordinates: true, distance: 100,
+        distance_unit: RepeaterSearch::MILES, latitude: 0, longitude: 0)
       get repeater_search_url(repeater_search)
       expect(response).to be_successful
     end
