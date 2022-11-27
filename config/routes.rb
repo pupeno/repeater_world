@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   devise_for :admins
 
   devise_for :users
+  resource :profile, only: [:edit, :update]
   resources :repeater_searches, only: [:new, :create, :show, :update]
 
   get "sitemap", to: "static#sitemap"
@@ -41,19 +42,22 @@ end
 #                            user_password PATCH  /users/password(.:format)                                                                         devise/passwords#update
 #                                          PUT    /users/password(.:format)                                                                         devise/passwords#update
 #                                          POST   /users/password(.:format)                                                                         devise/passwords#create
-#                 cancel_user_registration GET    /users/cancel(.:format)                                                                           users/registrations#cancel
-#                    new_user_registration GET    /users/sign_up(.:format)                                                                          users/registrations#new
-#                   edit_user_registration GET    /users/edit(.:format)                                                                             users/registrations#edit
-#                        user_registration PATCH  /users(.:format)                                                                                  users/registrations#update
-#                                          PUT    /users(.:format)                                                                                  users/registrations#update
-#                                          DELETE /users(.:format)                                                                                  users/registrations#destroy
-#                                          POST   /users(.:format)                                                                                  users/registrations#create
+#                 cancel_user_registration GET    /users/cancel(.:format)                                                                           devise/registrations#cancel
+#                    new_user_registration GET    /users/sign_up(.:format)                                                                          devise/registrations#new
+#                   edit_user_registration GET    /users/edit(.:format)                                                                             devise/registrations#edit
+#                        user_registration PATCH  /users(.:format)                                                                                  devise/registrations#update
+#                                          PUT    /users(.:format)                                                                                  devise/registrations#update
+#                                          DELETE /users(.:format)                                                                                  devise/registrations#destroy
+#                                          POST   /users(.:format)                                                                                  devise/registrations#create
 #                    new_user_confirmation GET    /users/confirmation/new(.:format)                                                                 devise/confirmations#new
 #                        user_confirmation GET    /users/confirmation(.:format)                                                                     devise/confirmations#show
 #                                          POST   /users/confirmation(.:format)                                                                     devise/confirmations#create
 #                          new_user_unlock GET    /users/unlock/new(.:format)                                                                       devise/unlocks#new
 #                              user_unlock GET    /users/unlock(.:format)                                                                           devise/unlocks#show
 #                                          POST   /users/unlock(.:format)                                                                           devise/unlocks#create
+#                             edit_profile GET    /profile/edit(.:format)                                                                           profiles#edit
+#                                  profile PATCH  /profile(.:format)                                                                                profiles#update
+#                                          PUT    /profile(.:format)                                                                                profiles#update
 #                        repeater_searches POST   /repeater_searches(.:format)                                                                      repeater_searches#create
 #                      new_repeater_search GET    /repeater_searches/new(.:format)                                                                  repeater_searches#new
 #                          repeater_search GET    /repeater_searches/:id(.:format)                                                                  repeater_searches#show
