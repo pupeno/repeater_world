@@ -298,7 +298,7 @@ GEM
     standard (1.18.1)
       rubocop (= 1.39.0)
       rubocop-performance (= 1.15.1)
-    stimulus-rails (1.1.1)
+    stimulus-rails (1.2.0)
       railties (>= 6.0.0)
     tailwindcss-rails (2.0.21-x86_64-linux)
       railties (>= 6.0.0)
