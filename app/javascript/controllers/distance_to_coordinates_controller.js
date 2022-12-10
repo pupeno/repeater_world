@@ -5,6 +5,8 @@ export default class extends Controller {
 
   connect() {
     this.controllerTarget.addEventListener("change", this.toggleDisable.bind(this));
+
+    this.toggleDisable();
   }
 
   disconnect() {
