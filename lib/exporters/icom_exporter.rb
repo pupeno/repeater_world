@@ -1,5 +1,5 @@
 # Hopefully when we add more exporters, this class will get a better name.
-class IcomId51AndId52Exporter < Exporter
+class IcomExporter < Exporter
   def export
     headers = ["Group No", "Group Name", "Name", "Sub Name", "Repeater Call Sign", "Gateway Call Sign", "Frequency", "Dup", "Offset", "Mode", "TONE", "Repeater Tone", "RPT1USE", "Position", "Latitude", "Longitude", "UTC Offset"]
     CSV.generate(headers: headers, write_headers: true) do |csv|

@@ -1,4 +1,4 @@
-class IcomId51Exporter < IcomId51AndId52Exporter
+class IcomId51Exporter < IcomExporter
   def dstar_repeater(repeater)
     row = super(repeater)
 
