@@ -21,30 +21,7 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def show
-    @repeaters = Repeater
-
-    bands = Repeater::BANDS.filter { |band| @repeater_search.send(:"band_#{band}?") }
-    @repeaters = @repeaters.where(band: bands) if bands.present?
-
-    modes = Repeater::MODES.filter { |mode| @repeater_search.send(:"#{mode}?") }
-    if modes.present?
-      cond = Repeater.where(modes.first => true)
-      modes[1..]&.each do |mode|
-        cond = cond.or(Repeater.where(mode => true))
-      end
-      @repeaters = @repeaters.merge(cond)
-    end
-
-    if @repeater_search.distance_to_coordinates?
-      distance = @repeater_search.distance * ((@repeater_search.distance_unit == RepeaterSearch::MILES) ? 1609.34 : 1000)
-      @repeaters = @repeaters.where(
-        "ST_DWithin(location, :point, :distance)",
-        {point: Geo.to_wkt(Geo.point(@repeater_search.latitude, @repeater_search.longitude)),
-         distance: distance}
-      ).all
-    end
-
-    @repeaters = @repeaters.all
+    @repeaters = @repeater_search.run
   end
 
   # TODO: implement

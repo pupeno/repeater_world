@@ -12,6 +12,33 @@ class RepeaterSearch < ApplicationRecord
   validates :distance_unit, inclusion: DISTANCE_UNITS, allow_blank: true
   validates :latitude, numericality: true, allow_blank: true
   validates :longitude, numericality: true, allow_blank: true
+  
+  def run
+    repeaters = Repeater
+
+    bands = Repeater::BANDS.filter { |band| self.send(:"band_#{band}?") }
+    repeaters = repeaters.where(band: bands) if bands.present?
+
+    modes = Repeater::MODES.filter { |mode| self.send(:"#{mode}?") }
+    if modes.present?
+      cond = Repeater.where(modes.first => true)
+      modes[1..]&.each do |mode|
+        cond = cond.or(Repeater.where(mode => true))
+      end
+      repeaters = repeaters.merge(cond)
+    end
+
+    if self.distance_to_coordinates?
+      distance = self.distance * ((self.distance_unit == RepeaterSearch::MILES) ? 1609.34 : 1000)
+      repeaters = repeaters.where(
+        "ST_DWithin(location, :point, :distance)",
+        {point: Geo.to_wkt(Geo.point(self.latitude, self.longitude)),
+         distance: distance}
+      ).all
+    end
+
+    repeaters.all
+  end
 end
 
 # == Schema Information
