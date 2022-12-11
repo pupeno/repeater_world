@@ -1,2 +1,2 @@
-class IcomId52Exporter < IcomId51AndId52Exporter
+class IcomId52Exporter < IcomExporter
 end
