@@ -3,39 +3,6 @@
     <%= render "form", repeater_search: @repeater_search %>
   </div>
   <div>
-    <% @repeaters.each do |repeater| %>
-      <div class="mb-4" id="<%= dom_id repeater %>">
-        <h1><%= repeater.name %></h1>
-        <div>Name: <%= repeater.name %></div>
-        <div>Call sign: <%= repeater.call_sign %></div>
-        <div>Band: <%= repeater.band %></div>
-        <div>Operational: <%= repeater.operational %></div>
-        <div>TX Frequency: <%= repeater.tx_frequency %></div>
-        <div>RX Frequency: <%= repeater.rx_frequency %></div>
-        <div>
-          Modes:
-          <% if repeater.fm? %>
-            FM
-          <% end %>
-          <% if repeater.dstar? %>
-            D-Star
-          <% end %>
-          <% if repeater.fusion? %>
-            Fusion
-          <% end %>
-          <% if repeater.dmr? %>
-            DMR
-          <% end %>
-          <% if repeater.nxdn? %>
-            NXDN
-          <% end %>
-        </div>
-        <% if action_name != "show" %>
-          <%= link_to "Show this repeater", repeater, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-          <%= link_to 'Edit this repeater', edit_repeater_path(repeater), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
-          <hr class="mt-6">
-        <% end %>
-      </div>
-    <% end %>
+    <%= render "repeater_list", repeaters: @repeaters %>
   </div>
 </div>
