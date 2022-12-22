@@ -3,7 +3,6 @@ class User < ApplicationRecord
 
   has_many :repeater_searches
 
-
   def to_s
     super(email)
   end
