@@ -7,7 +7,7 @@ class RepeaterSearchesController < ApplicationController
   # end
 
   def new
-    defaults = { distance: 8, distance_unit: RepeaterSearch::KM }
+    defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params))
     @repeaters = @repeater_search.run if !repeater_search_params.empty?
   end
@@ -18,7 +18,7 @@ class RepeaterSearchesController < ApplicationController
     if @repeater_search.save
       redirect_to @repeater_search
     else
-    render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_entity
     end
   end
 
