@@ -11,6 +11,7 @@ class SampleDataGenerator
   def generate
     delete_data
     create_admins
+    create_repeaters
     create_users
   end
 
@@ -30,6 +31,16 @@ class SampleDataGenerator
       end
     end
     Rails.logger.info "Done creating administrators." if created_any_admins
+  end
+
+  def create_repeaters
+    Rails.logger.info "Creating UK repeaters from saved snapshot..."
+    importer = UkrepeatersImporter.new(
+      working_directory: Rails.root.join("spec", "factories", "ukrepeaters_importer_data"),
+      logger: Logger.new("/dev/null")
+    )
+    importer.import
+    Rails.logger.info "Created UK repeaters from saved snapshot."
   end
 
   def create_users
@@ -62,7 +73,7 @@ class SampleDataGenerator
 
   def delete_data
     Rails.logger.info "Deleting data..."
-    table_names = [User, RepeaterSearch].map(&:table_name)
+    table_names = [User, RepeaterSearch, Repeater].map(&:table_name)
     Rails.logger.info "  Truncating tables: #{table_names.join(", ")}"
     Admin.connection.truncate_tables(*table_names)
     Rails.logger.info "Done deleting data."
