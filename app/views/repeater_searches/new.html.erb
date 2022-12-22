@@ -3,7 +3,10 @@
     <%= render "shared/flash_messages" %>
   </div>
   <div class="mx-auto">
-    <%= render "form", repeater_search: @repeater_search %>
+    <%= render "form",
+               repeater_search: @repeater_search,
+               form_method: :get,
+               url: search_url %>
   </div>
   <div class="mx-auto">
     <%= render "repeater_list", repeaters: @repeaters if @repeaters.present? %>

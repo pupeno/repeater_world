@@ -1,7 +1,11 @@
-<%= form_with(model: repeater_search, method: :get, url: search_url, scope: :s,
+<%= repeater_search.persisted? %>
+<%= form_with(model: repeater_search,
+              method: form_method,
+              url: url,
+              scope: :s,
               class: "contents",
               html: { data: { controller: "repeater-searches",
-                              repeater_searches_url: repeater_searches_url} }) do |form| %>
+                              repeater_searches_url: repeater_searches_url } }) do |form| %>
   <% if repeater_search.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
       <h2><%= pluralize(repeater_search.errors.count, "error") %> prohibited this
@@ -70,9 +74,11 @@
     %><span data-distance-to-coordinates-target="controlled">.</span>
   </div>
 
-  <div class="inline">
-    <%= form.submit "Search", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
-  </div>
+  <% if !repeater_search.persisted? %>
+    <div class="inline">
+      <%= form.submit "Search", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+    </div>
+  <% end %>
   <% if user_signed_in? %>
     <div class="inline">
       <%= form.submit "Save Search",
@@ -82,7 +88,7 @@
   <% else %>
     <div class="inline">
       <%= form.submit "Save Search",
-                      data: { action: "click->repeater-searches#save" },
+                      data: { action: "click->repeater-searches#saveSearch" },
                       class: "rounded-lg py-3 px-5 bg-blue-900 text-white inline-block font-medium cursor-pointer" %>
     </div>
   <% end %>
