@@ -28,10 +28,6 @@ class RepeaterSearchesController < ApplicationController
     @repeaters = @repeater_search.run
   end
 
-  # TODO: implement
-  # def edit
-  # end
-
   def update
     if @repeater_search.update(repeater_search_params)
       redirect_to @repeater_search
