@@ -9,16 +9,9 @@ class SampleDataGenerator
   end
 
   def generate
-    previous_stdout_sync = $stdout.sync
-    $stdout.sync = true
-
     delete_data
-
     create_admins
-
     create_users
-  ensure
-    $stdout.sync = previous_stdout_sync
   end
 
   private
@@ -31,16 +24,16 @@ class SampleDataGenerator
         admin.password = PASSWORD
         admin.skip_confirmation!
         admin.save!
-        self.class.puts "Creating administrators:" if !created_any_admins
-        self.class.puts "  Created \"#{admin_email}\" with password \"#{PASSWORD}\"."
+        Rails.logger.info "Creating administrators..." if !created_any_admins
+        Rails.logger.info "  Created \"#{admin_email}\" with password \"#{PASSWORD}\"."
         created_any_admins = true
       end
     end
-    self.class.puts "Done creating administrators.\n\n" if created_any_admins
+    Rails.logger.info "Done creating administrators." if created_any_admins
   end
 
   def create_users
-    self.class.print "Creating Avengers..."
+    Rails.logger.info "Creating users..."
     _nick_fury = create(:user, email: "nick.fury@avengers.asm")
     _tony_stark = create(:user, email: "tony.stark@avengers.asm")
     _steve_rogers = create(:user, email: "steve.rogers@avengers.asm")
@@ -59,37 +52,16 @@ class SampleDataGenerator
     _matt_murdock = create(:user, email: "matt.murdock@defenders.alt")
     _jessica_jones = create(:user, email: "jessica.jones@defenders.alt")
     _luke_cage = create(:user, email: "luke.cage@defenders.alt")
-    self.class.puts "done"
+    Rails.logger.info "Done creating users."
   end
 
   def delete_data
-    self.class.puts "Deleting data..."
-
+    Rails.logger.info "Deleting data..."
     table_names = [User].map(&:table_name)
-
-    self.class.print "  Truncating tables: #{table_names.join(", ")}..."
+    Rails.logger.info "  Truncating tables: #{table_names.join(", ")}"
     Admin.connection.truncate_tables(*table_names)
-    self.class.puts " done."
-    self.class.puts "Done deleting data.\n\n"
+    Rails.logger.info "Done deleting data."
   end
-
-  class << self
-    attr_accessor :output
-  end
-
-  ##
-  # Wrapper around puts that respects the verbosity setting. It's a class method so that factories can call it.
-  def self.puts(obj, ...)
-    (output || $stdout).puts(obj, ...)
-  end
-
-  ##
-  # Wrapper around print that respects the verbosity setting. It's a class method so that factories can call it.
-  def self.print(obj, ...)
-    (output || $stdout).print(obj, ...)
-  end
-
-  private
 
   ##
   # Returns whether sample data generation can be run. We can run in dev and testing and during a pull request.
