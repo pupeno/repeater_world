@@ -1,12 +1,6 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
-  connect() {
-  }
-
-  disconnect() {
-  }
-
   saveSearch(event) {
     // Turn the form into a save form... and let the submit event continue.
     this.element.setAttribute("method", "post")
