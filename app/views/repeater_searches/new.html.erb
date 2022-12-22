@@ -1,1 +1,5 @@
-<%= render "form", repeater_search: @repeater_search %>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <%= render "shared/flash_messages" %>
+  <%= render "form", repeater_search: @repeater_search %>
+  <%= render "repeater_list", repeaters: @repeaters if @repeaters.present? %>
+</div>

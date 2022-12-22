@@ -7,7 +7,9 @@ class RepeaterSearchesController < ApplicationController
   # end
 
   def new
-    @repeater_search = RepeaterSearch.new(distance: 8, distance_unit: RepeaterSearch::KM)
+    defaults = { distance: 8, distance_unit: RepeaterSearch::KM }
+    @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params))
+    @repeaters = @repeater_search.run if !repeater_search_params.empty?
   end
 
   def create
@@ -16,7 +18,7 @@ class RepeaterSearchesController < ApplicationController
     if @repeater_search.save
       redirect_to @repeater_search
     else
-      render :new, status: :unprocessable_entity
+    render :new, status: :unprocessable_entity
     end
   end
 
@@ -51,7 +53,7 @@ class RepeaterSearchesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def repeater_search_params
-    params.fetch(:repeater_search, {}).permit(
+    params.fetch(:s, {}).permit(
       Repeater::BANDS.map { |b| :"band_#{b}" } +
         Repeater::MODES +
         [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude]
