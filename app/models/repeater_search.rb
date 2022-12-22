@@ -4,6 +4,8 @@ class RepeaterSearch < ApplicationRecord
     MILES = "miles"
   ]
 
+  belongs_to :user
+
   validates :distance, presence: true, if: :distance_to_coordinates?
   validates :distance_unit, presence: true, if: :distance_to_coordinates?
   validates :latitude, presence: true, if: :distance_to_coordinates?
@@ -64,4 +66,13 @@ end
 #  nxdn                    :boolean
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  user_id                 :uuid
+#
+# Indexes
+#
+#  index_repeater_searches_on_user_id  (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
 #

@@ -1,5 +1,6 @@
 class RepeaterSearchesController < ApplicationController
   before_action :set_repeater_search, only: %i[show edit update destroy]
+  before_action :authenticate_user!, except: %i[new]
 
   # TODO: implement
   # def index
@@ -14,6 +15,7 @@ class RepeaterSearchesController < ApplicationController
 
   def create
     @repeater_search = RepeaterSearch.new(repeater_search_params)
+    @repeater_search.user = current_user
 
     if @repeater_search.save
       redirect_to @repeater_search
@@ -48,7 +50,7 @@ class RepeaterSearchesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_repeater_search
-    @repeater_search = RepeaterSearch.find(params[:id])
+    @repeater_search = current_user.repeater_searches.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
