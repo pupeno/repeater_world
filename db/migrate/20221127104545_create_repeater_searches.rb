@@ -1,6 +1,8 @@
 class CreateRepeaterSearches < ActiveRecord::Migration[7.0]
   def change
     create_table :repeater_searches, id: :uuid do |t|
+      t.references :user, foreign_key: true, type: :uuid
+
       t.boolean :band_10m
       t.boolean :band_6m
       t.boolean :band_4m

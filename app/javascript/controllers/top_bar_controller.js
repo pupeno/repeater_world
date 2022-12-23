@@ -1,7 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
 
-console.log("top bar")
-
 export default class extends Controller {
   static targets = [
     "desktopUserMenu", "desktopUserMenuButton",

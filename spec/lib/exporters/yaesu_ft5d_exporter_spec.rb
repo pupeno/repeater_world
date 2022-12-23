@@ -911,7 +911,7 @@ RSpec.describe YaesuFt5dExporter do
   end
 
   it "should crash with a non-fusion, non-fm repeater" do
-    repeater = create(:repeater, fm: false, fusion: false)
+    repeater = create(:repeater, fm: false, fusion: false, dmr: true)
 
     exporter = YaesuFt5dExporter.new(Repeater.all)
     expect { exporter.send(:repeater, repeater) }.to raise_exception(/Unknown fm\/fusion conditions for repeater/)
