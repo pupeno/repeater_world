@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :repeater_search do
+    association(:user)
   end
 end
 

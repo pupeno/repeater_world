@@ -32,7 +32,7 @@ class RepeaterSearchesController < ApplicationController
     if @repeater_search.update(repeater_search_params)
       redirect_to @repeater_search
     else
-      render :edit, status: :unprocessable_entity
+      render :show, status: :unprocessable_entity
     end
   end
 
