@@ -37,6 +37,22 @@ class Repeater < ApplicationRecord
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
   end
+
+  def latitude
+    location&.latitude
+  end
+
+  def latitude=(value)
+    self.location = Geo.point(value, longitude || 0)
+  end
+
+  def longitude
+    location&.longitude
+  end
+
+  def longitude=(value)
+    self.location = Geo.point(latitude || 0, value)
+  end
 end
 
 # == Schema Information
