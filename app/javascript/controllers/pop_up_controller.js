@@ -19,4 +19,10 @@ export default class extends Controller {
       this.element.classList.add("hidden")
     })
   }
+
+  // Stop propagating an event so that clicking on the pop up doesn't close it, but
+  // everywhere else, it does.
+  dontHide(event) {
+    event.stopPropagation()
+  }
 }
