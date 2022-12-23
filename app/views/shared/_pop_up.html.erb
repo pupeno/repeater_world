@@ -1,0 +1,67 @@
+<%= content_tag(:div,
+                args.deep_merge(
+                  { class: "relative z-10 hidden #{args[:class]}",
+                    aria: { labelledby: title, modal: "true" },
+                    role: "dialog",
+                    data: { controller: "pop-up",
+                            action: "#{triggering_event}->pop-up#show" } })) do %>
+  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+       data-repeater-searches-target="backgroundBackdrop"
+       data-pop-up-target="backgroundBackdrop"
+       data-transition-enter="ease-out duration-300"
+       data-transition-enter-start="opacity-0"
+       data-transition-enter-end="opacity-100"
+       data-transition-leave="ease-in duration-200"
+       data-transition-leave-start="opacity-100"
+       data-transition-leave-end="opacity-0"></div>
+  <div class="fixed inset-0 z-10 overflow-y-auto">
+    <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+      <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6"
+           data-repeater-searches-target="modalPanel"
+           data-pop-up-target="modalPanel"
+           data-transition-enter="ease-out duration-300"
+           data-transition-enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+           data-transition-enter-end="opacity-100 translate-y-0 sm:scale-100"
+           data-transition-leave="ease-in duration-200"
+           data-transition-leave-start="opacity-100 translate-y-0 sm:scale-100"
+           data-transition-leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+        <div>
+          <div class="mt-3 sm:mt-5">
+            <h3 class="text-center text-lg font-medium leading-6 text-gray-900" id="modal-title">
+              <%= title %>
+            </h3>
+            <div class="mt-2">
+              <%= contents %>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-<%= links.count + 1 %> sm:gap-3">
+          <% links.each_with_index do |link, index| %>
+            <%= link_to link[:url],
+                        class: "inline-flex w-full justify-center mt-3 px-4 py-2
+                                rounded-md border border-transparent bg-orange-600
+                                text-base font-medium text-white shadow-sm
+                                hover:bg-orange-700
+                                focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2
+                                sm:col-start-#{index + 2} sm:text-sm" do %>
+              <% if link[:icon].present? %>
+                <i class="<%= link[:icon] %> text-xl mr-3"></i>
+              <% end %>
+              <%= link[:text] %>
+            <% end %>
+          <% end %>
+          <button type="button" class="mt-3 inline-flex w-full justify-center
+                                         rounded-md border border-gray-300 bg-white px-4 py-2
+                                         text-base font-medium text-gray-700 shadow-sm
+                                         hover:bg-gray-50
+                                         focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2
+                                         sm:col-start-1 sm:text-sm"
+                  data-action="click->pop-up#hide">
+            <i class="fa-solid fa-xmark text-xl mr-3"></i>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

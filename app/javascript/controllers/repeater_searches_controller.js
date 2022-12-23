@@ -1,5 +1,5 @@
 import {Controller} from "@hotwired/stimulus"
-import { enter, leave } from "el-transition";
+import {enter, leave} from "el-transition";
 
 
 export default class extends Controller {
@@ -26,15 +26,6 @@ export default class extends Controller {
 
   askToSignInOrLogIn(event) {
     event.preventDefault()
-    this.signInOrLogInPopUpTarget.classList.remove("hidden")
-    enter(this.modalPanelTarget)
-  }
-
-  closeAskToSignInOrLogIn(event) {
-    Promise.all([
-      leave(this.modalPanelTarget)
-    ]).then(()=> {
-      this.signInOrLogInPopUpTarget.classList.add("hidden")
-    })
+    this.dispatch("logInOrSignUp", {target: this.signInOrLogInPopUpTarget})
   }
 }
