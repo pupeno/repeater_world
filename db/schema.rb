@@ -94,8 +94,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_27_104545) do
     t.boolean "nxdn"
     t.geography "location", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.string "grid_square"
-    t.decimal "latitude"
-    t.decimal "longitude"
     t.string "country_id"
     t.string "region_1"
     t.string "region_2"
