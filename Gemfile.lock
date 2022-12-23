@@ -369,7 +369,7 @@ DEPENDENCIES
   simplecov
   simplecov-cobertura
   sprockets-rails
-  standard (~> 1.12)
+  standard (~> 1.20)
   stimulus-rails
   tailwindcss-rails
   turbo-rails
