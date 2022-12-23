@@ -24,7 +24,7 @@ class RepeaterSearch < ApplicationRecord
     modes = Repeater::MODES.filter { |mode| send(:"#{mode}?") }
     if modes.present?
       cond = Repeater.where(modes.first => true)
-      modes[1..]&.each do |mode|
+      modes[1..].each do |mode|
         cond = cond.or(Repeater.where(mode => true))
       end
       repeaters = repeaters.merge(cond)
