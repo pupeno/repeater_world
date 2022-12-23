@@ -1,7 +1,23 @@
 require "rails_helper"
 
 RSpec.describe "/repeater_searches", type: :request do
-  context "While logged in as a user" do
+  it "shows a search form on /" do
+    get root_url
+    expect(response).to be_successful
+    expect(response).to render_template(:new)
+    expect(response.body).to include("Search")
+    expect(response.body).to include("Save Search")
+  end
+
+  it "runs a search" do
+    get search_url(s: attributes_for(:repeater_search, band_2m: true, fm: true))
+    expect(response).to be_successful
+    expect(response).to render_template(:new)
+    expect(response.body).to include("Search")
+    expect(response.body).to include("Save Search")
+  end
+
+  context "While logged in" do
     before do
       @current_user = create(:user)
       sign_in @current_user
