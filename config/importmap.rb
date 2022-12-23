@@ -18,5 +18,6 @@ pin "@sentry/minimal", to: "https://ga.jspm.io/npm:@sentry/minimal@6.19.2/esm/in
 pin "@sentry/tracing", to: "https://ga.jspm.io/npm:@sentry/tracing@6.19.2/esm/index.js"
 pin "@sentry/types", to: "https://ga.jspm.io/npm:@sentry/types@6.19.2/esm/index.js"
 pin "@sentry/utils", to: "https://ga.jspm.io/npm:@sentry/utils@6.19.2/esm/index.js"
+pin "el-transition", to: "https://ga.jspm.io/npm:el-transition@0.0.7/index.js"
 pin "js-cookie", to: "https://ga.jspm.io/npm:js-cookie@3.0.1/dist/js.cookie.mjs"
 pin "tslib", to: "https://ga.jspm.io/npm:tslib@1.14.1/tslib.es6.js"

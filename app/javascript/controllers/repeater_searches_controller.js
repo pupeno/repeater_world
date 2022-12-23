@@ -1,6 +1,10 @@
 import {Controller} from "@hotwired/stimulus"
+import { enter, leave } from "el-transition";
+
 
 export default class extends Controller {
+  static targets = ["signInOrLogInPopUp", "modalPanel"]
+
   // Turns the get search form into a post save form.
   saveSearch() {
     if (this.element.getAttribute("method") === "get") { // Only act on the get form, not on the patch of the show/edit action.
@@ -18,5 +22,19 @@ export default class extends Controller {
         this.element.appendChild(csrfHidenInput)
       }
     }
+  }
+
+  askToSignInOrLogIn(event) {
+    event.preventDefault()
+    this.signInOrLogInPopUpTarget.classList.remove("hidden")
+    enter(this.modalPanelTarget)
+  }
+
+  closeAskToSignInOrLogIn(event) {
+    Promise.all([
+      leave(this.modalPanelTarget)
+    ]).then(()=> {
+      this.signInOrLogInPopUpTarget.classList.add("hidden")
+    })
   }
 }
