@@ -76,27 +76,19 @@
 
   <% if !repeater_search.persisted? %>
     <div class="inline">
-      <%= form.submit "Search", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+      <%= form.submit "Search", class: "rounded-lg py-3 px-5 bg-orange-600 text-white inline-block font-medium cursor-pointer" %>
     </div>
   <% end %>
-  <% if user_signed_in? %>
-    <div class="inline">
-      <%= form.submit "Save Search",
-                      data: { action: "click->repeater-searches#saveSearch" },
-                      class: "rounded-lg py-3 px-5 bg-blue-900 text-white inline-block font-medium cursor-pointer" %>
-    </div>
-  <% else %>
-    <div class="inline">
-      <%= form.submit "Save Search",
-                      data: { action: "click->repeater-searches#askToSignInOrLogIn" },
-                      class: "rounded-lg py-3 px-5 bg-blue-900 text-white inline-block font-medium cursor-pointer" %>
-    </div>
-  <% end %>
+  <div class="inline">
+    <%= form.submit "Save Search",
+                    data: { action: user_signed_in? ? "click->repeater-searches#saveSearch" : "click->repeater-searches#askToSignInOrLogIn" },
+                    class: "rounded-lg py-3 px-5 bg-orange-900 text-white inline-block font-medium cursor-pointer" %>
+  </div>
 
   <%= pop_up title: "Log in or sign up",
              triggering_event: "repeater-searches:logInOrSignUp",
-             links: [{text: "Sign up", url: new_user_registration_url, icon: "fa-regular fa-face-smile"},
-                     {text: "Log in", url: new_user_session_url, icon: "fa-solid fa-right-to-bracket"}],
+             links: [{ text: "Sign up", url: new_user_registration_url, icon: "fa-regular fa-face-smile" },
+                     { text: "Log in", url: new_user_session_url, icon: "fa-solid fa-right-to-bracket" }],
              data: { repeater_searches_target: "signInOrLogInPopUp" } do %>
     <p class="text-sm text-gray-500 mb-2">
       A saved search allows you to easily re-run it later with updated
