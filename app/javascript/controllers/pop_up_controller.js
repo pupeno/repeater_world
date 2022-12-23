@@ -1,10 +1,11 @@
 import {Controller} from "@hotwired/stimulus"
-import { enter, leave } from "el-transition";
+import {enter, leave} from "el-transition";
 
 export default class extends Controller {
   static targets = ["modalPanel", "backgroundBackdrop"]
 
-  show() {
+  show(event) {
+    event.stopImmediatePropagation()
     this.element.classList.remove("hidden")
     enter(this.backgroundBackdropTarget)
     enter(this.modalPanelTarget)
@@ -14,7 +15,7 @@ export default class extends Controller {
     Promise.all([
       leave(this.backgroundBackdropTarget),
       leave(this.modalPanelTarget)
-    ]).then(()=> {
+    ]).then(() => {
       this.element.classList.add("hidden")
     })
   }
