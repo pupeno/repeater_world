@@ -11,14 +11,21 @@ FactoryBot.define do
     rx_frequency { tx_frequency - 600000 } # VHF, maybe dispatch on the band for different frequencies?
     access_method { Repeater::TONE_BURST }
 
-    fm { true }
     operational { true }
 
     latitude { 51.74 }
     longitude { -3.42 }
+    location { "POINT(51.74 -3.42)" }
     country_id { "gb" }
     region_1 { "WM" }
     grid_square { "IO81HR" }
+
+    after(:build) do |repeater|
+      # If no mode was selected, select FM.
+      if !(repeater.fm? || repeater.dstar? || repeater.fusion? || repeater.dmr? || repeater.nxdn?)
+        repeater.fm = true
+      end
+    end
   end
 end
 

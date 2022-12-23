@@ -9,15 +9,13 @@ class SampleDataGenerator
   end
 
   def generate
-    previous_stdout_sync = $stdout.sync
-    $stdout.sync = true
-
-    create_admins
-
     delete_data
-  ensure
-    $stdout.sync = previous_stdout_sync
+    create_admins
+    create_repeaters
+    create_users
   end
+
+  private
 
   def create_admins
     created_any_admins = false
@@ -27,42 +25,59 @@ class SampleDataGenerator
         admin.password = PASSWORD
         admin.skip_confirmation!
         admin.save!
-        self.class.puts "Creating administrators:" if !created_any_admins
-        self.class.puts "  Created \"#{admin_email}\" with password \"#{PASSWORD}\"."
+        Rails.logger.info "Creating administrators..." if !created_any_admins
+        Rails.logger.info "  Created \"#{admin_email}\" with password \"#{PASSWORD}\"."
         created_any_admins = true
       end
     end
-    self.class.puts "Done creating administrators.\n\n" if created_any_admins
+    Rails.logger.info "Done creating administrators." if created_any_admins
+  end
+
+  def create_repeaters
+    Rails.logger.info "Creating UK repeaters from saved snapshot..."
+    importer = UkrepeatersImporter.new(
+      working_directory: Rails.root.join("spec", "factories", "ukrepeaters_importer_data"),
+      logger: Logger.new("/dev/null")
+    )
+    importer.import
+    Rails.logger.info "Created UK repeaters from saved snapshot."
+  end
+
+  def create_users
+    Rails.logger.info "Creating users..."
+    _nick_fury = create_user("nick.fury@avengers.asm")
+    _tony_stark = create_user("tony.stark@avengers.asm")
+    _steve_rogers = create_user("steve.rogers@avengers.asm")
+    _natasha_romanoff = create_user("natasha.romanoff@avengers.asm")
+    _clint_barton = create_user("clint.barton@avengers.asm")
+    _peter_parker = create_user("peter.parker@avengers.asm")
+    _thor_odinson = create_user("thor@avengers.asm")
+    _robert_banner = create_user("robert.banner@avengers.asm")
+    _stephen_stranger = create_user("stephen.strange@avengers.asm")
+    _scott_lang = create_user("stepher.strange@avengers.asm")
+    _phli_coulson = create_user("phil.coulson@avengers.asm")
+    _wanda_maximoff = create_user("wanda.maximoff@avengers.asm")
+    _pepper_potts = create_user("pepper.potts@avengers.asm")
+    _james_rhodes = create_user("james.rhodes@avengers.asm")
+    _vision = create_user("vision@avengers.asm")
+    _matt_murdock = create_user("matt.murdock@defenders.alt")
+    _jessica_jones = create_user("jessica.jones@defenders.alt")
+    _luke_cage = create_user("luke.cage@defenders.alt")
+    Rails.logger.info "Done creating users."
+  end
+
+  def create_user(email)
+    create(:user, email: email)
+    Rails.logger.info " Created user \"#{email}\" with password \"#{PASSWORD}\"."
   end
 
   def delete_data
-    self.class.puts "Deleting data..."
-
-    table_names = [].map(&:table_name)
-
-    self.class.print "  Truncating tables: #{table_names.join(", ")}..."
+    Rails.logger.info "Deleting data..."
+    table_names = [User, RepeaterSearch, Repeater].map(&:table_name)
+    Rails.logger.info "  Truncating tables: #{table_names.join(", ")}"
     Admin.connection.truncate_tables(*table_names)
-    self.class.puts " done."
-    self.class.puts "Done deleting data.\n\n"
+    Rails.logger.info "Done deleting data."
   end
-
-  class << self
-    attr_accessor :output
-  end
-
-  ##
-  # Wrapper around puts that respects the verbosity setting. It's a class method so that factories can call it.
-  def self.puts(obj, ...)
-    (output || $stdout).puts(obj, ...)
-  end
-
-  ##
-  # Wrapper around print that respects the verbosity setting. It's a class method so that factories can call it.
-  def self.print(obj, ...)
-    (output || $stdout).print(obj, ...)
-  end
-
-  private
 
   ##
   # Returns whether sample data generation can be run. We can run in dev and testing and during a pull request.

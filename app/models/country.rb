@@ -7,11 +7,13 @@ class Country < ApplicationRecord
   end
 
   def self.create_all
+    Rails.logger.info "Creating #{ISO3166::Country.codes.count} countries..."
     ISO3166::Country.codes.each do |code|
       country = find_or_initialize_by(id: code.downcase)
       country.name = ISO3166::Country[code].common_name
       country.save!
     end
+    Rails.logger.info "Created #{ISO3166::Country.codes.count} countries."
   end
 
   rails_admin do

@@ -1,17 +1,22 @@
 Rails.application.routes.draw do
+  # Admin
   mount RailsAdmin::Engine => "/admin", :as => "rails_admin"
   devise_for :admins
 
+  # Root URL and searching.
+  root "repeater_searches#new"
+  resources :repeater_searches, only: [:new, :create, :show, :update]
+  get "search", to: "repeater_searches#new"
+
+  # User and profile.
   devise_for :users
   resource :profile, only: [:edit, :update]
-  resources :repeater_searches, only: [:new, :create, :show, :update]
 
+  # Boring routes.
   get "privacy-policy", to: "static#privacy_policy"
   get "cookie-policy", to: "static#cookie_policy"
   get "sitemap", to: "static#sitemap"
   get "404", to: "static#not_found"
-
-  root "static#index"
 
   # Fail!
   get "fail", to: "static#fail"
@@ -37,6 +42,13 @@ end
 #                         new_admin_unlock GET    /admins/unlock/new(.:format)                                                                      devise/unlocks#new
 #                             admin_unlock GET    /admins/unlock(.:format)                                                                          devise/unlocks#show
 #                                          POST   /admins/unlock(.:format)                                                                          devise/unlocks#create
+#                                     root GET    /                                                                                                 repeater_searches#new
+#                        repeater_searches POST   /repeater_searches(.:format)                                                                      repeater_searches#create
+#                      new_repeater_search GET    /repeater_searches/new(.:format)                                                                  repeater_searches#new
+#                          repeater_search GET    /repeater_searches/:id(.:format)                                                                  repeater_searches#show
+#                                          PATCH  /repeater_searches/:id(.:format)                                                                  repeater_searches#update
+#                                          PUT    /repeater_searches/:id(.:format)                                                                  repeater_searches#update
+#                                   search GET    /search(.:format)                                                                                 repeater_searches#new
 #                         new_user_session GET    /users/sign_in(.:format)                                                                          devise/sessions#new
 #                             user_session POST   /users/sign_in(.:format)                                                                          devise/sessions#create
 #                     destroy_user_session DELETE /users/sign_out(.:format)                                                                         devise/sessions#destroy
@@ -61,16 +73,10 @@ end
 #                             edit_profile GET    /profile/edit(.:format)                                                                           profiles#edit
 #                                  profile PATCH  /profile(.:format)                                                                                profiles#update
 #                                          PUT    /profile(.:format)                                                                                profiles#update
-#                        repeater_searches POST   /repeater_searches(.:format)                                                                      repeater_searches#create
-#                      new_repeater_search GET    /repeater_searches/new(.:format)                                                                  repeater_searches#new
-#                          repeater_search GET    /repeater_searches/:id(.:format)                                                                  repeater_searches#show
-#                                          PATCH  /repeater_searches/:id(.:format)                                                                  repeater_searches#update
-#                                          PUT    /repeater_searches/:id(.:format)                                                                  repeater_searches#update
 #                           privacy_policy GET    /privacy-policy(.:format)                                                                         static#privacy_policy
 #                            cookie_policy GET    /cookie-policy(.:format)                                                                          static#cookie_policy
 #                                  sitemap GET    /sitemap(.:format)                                                                                static#sitemap
 #                                          GET    /404(.:format)                                                                                    static#not_found
-#                                     root GET    /                                                                                                 static#index
 #                                     fail GET    /fail(.:format)                                                                                   static#fail
 #                                  fail_fe GET    /fail-fe(.:format)                                                                                static#fail_fe
 #                                  fail_bg GET    /fail-bg(.:format)                                                                                static#fail_bg

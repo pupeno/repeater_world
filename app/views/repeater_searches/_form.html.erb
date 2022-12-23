@@ -1,7 +1,15 @@
-<%= form_with(model: repeater_search, class: "contents") do |form| %>
+<%= repeater_search.persisted? %>
+<%= form_with(model: repeater_search,
+              method: form_method,
+              url: url,
+              scope: :s,
+              class: "contents",
+              html: { data: { controller: "repeater-searches",
+                              repeater_searches_url: repeater_searches_url } }) do |form| %>
   <% if repeater_search.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2><%= pluralize(repeater_search.errors.count, "error") %> prohibited this repeater_search from being saved:</h2>
+      <h2><%= pluralize(repeater_search.errors.count, "error") %> prohibited this
+        repeater_search from being saved:</h2>
 
       <ul>
         <% repeater_search.errors.each do |error| %>
@@ -66,7 +74,37 @@
     %><span data-distance-to-coordinates-target="controlled">.</span>
   </div>
 
+  <% if !repeater_search.persisted? %>
+    <div class="inline">
+      <button type="submit" class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer">
+        <i class="fa-solid fa-magnifying-glass mr-2"></i>
+        Search
+      </button>
+    </div>
+  <% end %>
   <div class="inline">
-    <%= form.submit "Search", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+    <button type="<%= user_signed_in? ? "submit" : "button" %>"
+            class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer <%= repeater_search.persisted? ? "bg-orange-600" : "bg-orange-900" %>"
+            data-action="<%= user_signed_in? ? "click->repeater-searches#saveSearch" : "click->repeater-searches#askToSignInOrLogIn" %>">
+      <i class="fa-regular fa-bookmark mr-2"></i>
+      Save Search
+    </button>
   </div>
+
+  <%= pop_up title: "Save Search",
+             triggering_event: "repeater-searches:logInOrSignUp",
+             links: [{ text: "Sign up", url: new_user_registration_url, icon: "fa-regular fa-face-smile" },
+                     { text: "Log in", url: new_user_session_url, icon: "fa-solid fa-right-to-bracket" }],
+             data: { repeater_searches_target: "signInOrLogInPopUp" } do %>
+    <p class="text-sm text-gray-500 mb-2">
+      A saved search allows you to easily re-run it later with updated
+      information
+      and also be notified when a change happens (new repeater pops up, or
+      one goes down).
+    </p>
+    <p class="text-sm text-gray-500">
+      To be able to save a search, you need to log in or sign up to be able
+      to access the saved searches later.
+    </p>
+  <% end %>
 <% end %>
