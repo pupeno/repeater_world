@@ -17,7 +17,7 @@ gem "pg", "~> 1.1" # Use postgresql as the database for Active Record
 gem "postmark-rails", "~> 0.22.0"
 gem "puma", "~> 6.0" # Use the Puma web server [https://github.com/puma/puma]
 gem "rails", "~> 7.0.2", ">= 7.0.2.2" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails_admin", "~> 3.1.0"
+gem "rails_admin", "~> 3.1.1"
 gem "sassc-rails", "~> 2.1.2" # Asked by rails_admin... but it's not a dependency??? the world is complicated.
 gem "sentry-rails", "~> 5.7"
 gem "sentry-ruby", "~> 5.3"
