@@ -66,7 +66,6 @@ class UkrepeatersImporter
     repeater.grid_square = raw_repeater[:qthr].upcase
     repeater.latitude = raw_repeater[:lat]
     repeater.longitude = raw_repeater[:lon]
-    repeater.location = "POINT(#{raw_repeater[:lat]} #{raw_repeater[:lon]})"
     repeater.country_id = "gb"
     repeater.region_1 = case raw_repeater[:region]
     when "SE", "SW", "NOR", "MIDL"

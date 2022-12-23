@@ -29,8 +29,6 @@ class CreateRepeaters < ActiveRecord::Migration[7.0]
 
       t.st_point :location, geographic: true, index: {using: :gist}
       t.string :grid_square
-      t.decimal :latitude
-      t.decimal :longitude
       t.references :country, foreign_key: true, type: :string
       t.string :region_1
       t.string :region_2

@@ -1,6 +1,29 @@
 require "rails_helper"
 
 RSpec.describe Repeater, type: :model do
+  it "has latitude and longitude" do
+    @repeater = build(:repeater)
+    @repeater.location = nil
+    expect(@repeater.latitude).to be(nil)
+    expect(@repeater.longitude).to be(nil)
+    @repeater.save!
+    @repeater.reload
+    expect(@repeater.latitude).to be(nil)
+    expect(@repeater.longitude).to be(nil)
+
+    @repeater.latitude = 1
+    expect(@repeater.latitude).to eq(1)
+    expect(@repeater.longitude).to eq(0)
+
+    @repeater.longitude = 2
+    expect(@repeater.latitude).to eq(1)
+    expect(@repeater.longitude).to eq(2)
+    @repeater.save
+    @repeater.reload
+    expect(@repeater.latitude).to eq(1)
+    expect(@repeater.longitude).to eq(2)
+  end
+
   context "A repeater" do
     before { @repeater = create(:repeater) }
 

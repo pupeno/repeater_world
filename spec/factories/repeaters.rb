@@ -15,7 +15,6 @@ FactoryBot.define do
 
     latitude { 51.74 }
     longitude { -3.42 }
-    location { "POINT(51.74 -3.42)" }
     country_id { "gb" }
     region_1 { "WM" }
     grid_square { "IO81HR" }
