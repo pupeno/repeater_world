@@ -76,16 +76,22 @@
 
   <% if !repeater_search.persisted? %>
     <div class="inline">
-      <%= form.submit "Search", class: "rounded-lg py-3 px-5 bg-orange-600 text-white inline-block font-medium cursor-pointer" %>
+      <button type="submit" class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer">
+        <i class="fa-solid fa-magnifying-glass mr-2"></i>
+        Search
+      </button>
     </div>
   <% end %>
   <div class="inline">
-    <%= form.submit "Save Search",
-                    data: { action: user_signed_in? ? "click->repeater-searches#saveSearch" : "click->repeater-searches#askToSignInOrLogIn" },
-                    class: "rounded-lg py-3 px-5 bg-orange-900 text-white inline-block font-medium cursor-pointer" %>
+    <button type="<%= user_signed_in? ? "submit" : "button" %>"
+            class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer <%= repeater_search.persisted? ? "bg-orange-600" : "bg-orange-900" %>"
+            data-action="<%= user_signed_in? ? "click->repeater-searches#saveSearch" : "click->repeater-searches#askToSignInOrLogIn" %>">
+      <i class="fa-regular fa-bookmark mr-2"></i>
+      Save Search
+    </button>
   </div>
 
-  <%= pop_up title: "Log in or sign up",
+  <%= pop_up title: "Save Search",
              triggering_event: "repeater-searches:logInOrSignUp",
              links: [{ text: "Sign up", url: new_user_registration_url, icon: "fa-regular fa-face-smile" },
                      { text: "Log in", url: new_user_session_url, icon: "fa-solid fa-right-to-bracket" }],
