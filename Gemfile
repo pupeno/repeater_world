@@ -51,6 +51,6 @@ end
 
 group :test do
   gem "rails-controller-testing", "~> 1.0"
-  gem "simplecov", "~> 0.21", require: false
+  gem "simplecov", "~> 0.22", require: false
   gem "simplecov-cobertura", "~> 2.1"
 end
