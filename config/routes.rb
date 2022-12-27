@@ -5,8 +5,9 @@ Rails.application.routes.draw do
 
   # Root URL and searching.
   root "repeater_searches#new"
-  resources :repeater_searches, only: [:new, :create, :show, :update]
   get "search", to: "repeater_searches#new"
+  resources :repeater_searches, only: [:new, :create, :show, :update]
+  resources :repeaters, only: [:show]
 
   # User and profile.
   devise_for :users

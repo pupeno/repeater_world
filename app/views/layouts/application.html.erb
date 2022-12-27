@@ -61,7 +61,11 @@
     <%= render "layouts/top_bar" %>
 
     <main class="py-10 flex-grow">
-      <%= render "shared/flash_messages" %>
+      <% if !@flash_messages_shown %>
+        <div class="mx-10">
+          <%= render "shared/flash_messages" %>
+        </div>
+      <% end %>
       <%= yield %>
     </main>
 
@@ -71,7 +75,8 @@
       <p class="text-center text-sm text-gray-400">
         <%= link_to "Privacy Policy", privacy_policy_url, class: "underline hover:text-orange-800" %>
         <%= link_to "Cookie Policy", cookie_policy_url, class: "underline hover:text-orange-800" %>
-        <a class="underline hover:text-orange-800" href="mailto:info@unbrea.ch">Contact Us</a>
+        <a class="underline hover:text-orange-800" href="mailto:info@unbrea.ch">Contact
+          Us</a>
       </p>
     </footer>
   </body>

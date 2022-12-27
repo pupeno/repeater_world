@@ -53,6 +53,16 @@ class Repeater < ApplicationRecord
   def longitude=(value)
     self.location = Geo.point(latitude || 0, value)
   end
+
+  def modes
+    modes = []
+    modes << "FM" if fm?
+    modes << "D-Star" if dstar?
+    modes << "Fusion" if fusion?
+    modes << "DMR" if dmr?
+    modes << "NXDN" if nxdn?
+    modes
+  end
 end
 
 # == Schema Information
