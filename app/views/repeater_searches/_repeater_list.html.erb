@@ -1,29 +1,91 @@
-<% repeaters.each do |repeater| %>
-  <div class="mb-4" id="<%= dom_id repeater %>">
-    <h1><%= repeater.name %></h1>
-    <div>Name: <%= repeater.name %></div>
-    <div>Call sign: <%= repeater.call_sign %></div>
-    <div>Band: <%= repeater.band %></div>
-    <div>Operational: <%= repeater.operational %></div>
-    <div>TX Frequency: <%= repeater.tx_frequency %></div>
-    <div>RX Frequency: <%= repeater.rx_frequency %></div>
-    <div>
-      Modes:
-      <% if repeater.fm? %>
-        FM
-      <% end %>
-      <% if repeater.dstar? %>
-        D-Star
-      <% end %>
-      <% if repeater.fusion? %>
-        Fusion
-      <% end %>
-      <% if repeater.dmr? %>
-        DMR
-      <% end %>
-      <% if repeater.nxdn? %>
-        NXDN
-      <% end %>
-    </div>
-  </div>
-<% end %>
+<ul role="list" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
+    data-controller="repeater-list">
+  <% repeaters.each do |repeater| %>
+    <li class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white shadow
+               border border-gray-200"
+        id="<%= dom_id repeater %>">
+      <div class="px-2 pt-5 pb-3 sm:px-3">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">
+          <%= repeater.name %>
+        </h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">
+          <%= repeater.band %> <%= repeater.modes.to_sentence %>
+        </p>
+      </div>
+      <div class="border-t border-gray-200 px-2 py-5 sm:p-0">
+        <dl class="sm:divide-y sm:divide-gray-200">
+          <%= render partial: "card_entry", locals: { key: "Call Sign", value: repeater.call_sign } %>
+          <%= render partial: "card_entry", locals: { key: "Band", value: repeater.band } %>
+          <%= render partial: "card_entry", locals: { key: "Modes", value: repeater.modes.join(", ") } %>
+          <%= render layout: "card_entry", locals: { key: "Operational" } do %>
+            <% if repeater.operational? %>
+              <i class="fa-solid fa-check"></i> Yes
+            <% else %>
+              <i class="fa-solid fa-xmark"></i> No
+            <% end %>
+          <% end %>
+          <%= render layout: "card_entry", locals: { key: "TX Frequency" } do %>
+            <%= repeater.tx_frequency / (10 ** 6) %>MHz
+          <% end %>
+          <%= render layout: "card_entry", locals: { key: "RX Frequency" } do %>
+            <div data-action="click->repeater-list#toggleRxFrequencyFormat"
+                 class="cursor-pointer">
+              <% offset = "#{(repeater.rx_frequency - repeater.tx_frequency > 0) ? "+" : ""}#{((repeater.rx_frequency - repeater.tx_frequency) / (10 ** 3)).to_i}kHz" %>
+              <div title="<%= offset %>"
+                   data-repeater-list-target="rxFreqAsFreq">
+                <%= repeater.rx_frequency / (10 ** 6) %>MHz
+              </div>
+              <div title="<%= repeater.rx_frequency / (10 ** 6) %>MHz"
+                   data-repeater-list-target="rxFreqAsOffset"
+                   class="hidden">
+                <%= offset %>
+              </div>
+            </div>
+          <% end %>
+          <%= render layout: "card_entry", locals: { key: "Location" } do %>
+            <div data-action="click->repeater-list#changeLocationFormat"
+                 class="cursor-pointer">
+              <div data-repeater-list-target="locationFormat1">
+                <%= [repeater.region_1, repeater.region_2, repeater.region_3, repeater.region_4, repeater.country.name].reject(&:blank?).join(", ") %>
+              </div>
+              <div data-repeater-list-target="locationFormat2" class="hidden">
+                Lat: <%= repeater.latitude %>, Long: <%= repeater.longitude %>
+              </div>
+              <div data-repeater-list-target="locationFormat3" class="hidden">
+                <%= repeater.grid_square %>
+              </div>
+
+            </div>
+          <% end %>
+        </dl>
+      </div>
+    </li>
+    <!--  <div class="mb-4" id="<%#= dom_id repeater %>">-->
+    <!--    <h1><%#= repeater.name %></h1>-->
+    <!--    <div>Name: <%#= repeater.name %></div>-->
+    <!--    <div>Call sign: <%#= repeater.call_sign %></div>-->
+    <!--    <div>Band: <%#= repeater.band %></div>-->
+    <!--    <div>Operational: <%#= repeater.operational %></div>-->
+    <!--    <div>TX Frequency: <%#= repeater.tx_frequency %></div>-->
+    <!--    <div>RX Frequency: <%#= repeater.rx_frequency %></div>-->
+    <!--    <div>-->
+    <!--      Modes:-->
+    <%# if repeater.fm? %>
+    <!--        FM-->
+    <%# end %>
+    <%# if repeater.dstar? %>
+    <!--        D-Star-->
+    <%# end %>
+    <%# if repeater.fusion? %>
+    <!--        Fusion-->
+    <%# end %>
+    <%# if repeater.dmr? %>
+    <!--        DMR-->
+    <%# end %>
+    <%# if repeater.nxdn? %>
+    <!--        NXDN-->
+    <%# end %>
+    <!--    </div>-->
+    <!--  </div>-->
+  <% end %>
+</ul>
