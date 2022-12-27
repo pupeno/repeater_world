@@ -6,7 +6,7 @@
         id="<%= dom_id repeater %>">
       <div class="px-2 pt-5 pb-3 sm:px-3">
         <h3 class="text-lg font-medium leading-6 text-gray-900">
-          <%= repeater.name %>
+          <%= link_to repeater.name, repeater, class: "link" %>
         </h3>
         <p class="mt-1 max-w-2xl text-sm text-gray-500">
           <%= repeater.band %> <%= repeater.modes.to_sentence %>
@@ -18,11 +18,7 @@
           <%= render partial: "shared/card/entry", locals: { key: "Band", value: repeater.band } %>
           <%= render partial: "shared/card/entry", locals: { key: "Modes", value: repeater.modes.join(", ") } %>
           <%= render layout: "shared/card/entry", locals: { key: "Operational" } do %>
-            <% if repeater.operational? %>
-              <i class="fa-solid fa-check"></i> Yes
-            <% else %>
-              <i class="fa-solid fa-xmark"></i> No
-            <% end %>
+            <%= render partial: "shared/card/boolean", locals: { value: repeater.operational? } %>
           <% end %>
           <%= render layout: "shared/card/entry", locals: { key: "TX Frequency" } do %>
             <%= repeater.tx_frequency / (10 ** 6) %>MHz
@@ -54,7 +50,6 @@
               <div data-repeater-list-target="locationFormat3" class="hidden">
                 <%= repeater.grid_square %>
               </div>
-
             </div>
           <% end %>
         </dl>

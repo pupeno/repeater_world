@@ -1,0 +1,73 @@
+<div id="<%= dom_id repeater %>" data-controller="repeater-list">
+  <div class="overflow-hidden bg-white shadow sm:rounded-lg border border-gray-200">
+    <div class="px-4 py-5 sm:p-0">
+      <dl class="sm:divide-y sm:divide-gray-200">
+        <%= render partial: "shared/card/entry", locals: { key: "Name", value: repeater.name } %>
+        <%= render partial: "shared/card/entry", locals: { key: "Call Sign", value: repeater.call_sign } %>
+        <%= render partial: "shared/card/entry", locals: { key: "Band", value: repeater.band } %>
+        <%= render partial: "shared/card/entry", locals: { key: "Modes", value: repeater.modes.join(", ") } %>
+        <%= render layout: "shared/card/entry", locals: { key: "Operational" } do %>
+          <%= render partial: "shared/card/boolean", locals: { value: repeater.operational? } %>
+        <% end %>
+        <%= render layout: "shared/card/entry", locals: { key: "TX Frequency" } do %>
+          <%= repeater.tx_frequency / (10 ** 6) %>MHz
+        <% end %>
+        <%= render layout: "shared/card/entry", locals: { key: "RX Frequency" } do %>
+          <div data-action="click->repeater-list#toggleRxFrequencyFormat"
+               class="cursor-pointer">
+            <% offset = "#{(repeater.rx_frequency - repeater.tx_frequency > 0) ? "+" : ""}#{((repeater.rx_frequency - repeater.tx_frequency) / (10 ** 3)).to_i}kHz" %>
+            <div title="<%= offset %>"
+                 data-repeater-list-target="rxFreqAsFreq">
+              <%= repeater.rx_frequency / (10 ** 6) %>MHz
+            </div>
+            <div title="<%= repeater.rx_frequency / (10 ** 6) %>MHz"
+                 data-repeater-list-target="rxFreqAsOffset"
+                 class="hidden">
+              <%= offset %>
+            </div>
+          </div>
+        <% end %>
+        <%= render layout: "shared/card/entry", locals: { key: "FM" } do %>
+          <%= render partial: "shared/card/boolean", locals: { value: repeater.fm? } %>
+        <% end %>
+        <% if repeater.fm? %>
+          <%= render partial: "shared/card/entry", locals: { key: "Access Method", value: repeater.access_method } %>
+          <%= render partial: "shared/card/entry", locals: { key: "CTCSS Tone", value: repeater.ctcss_tone } if repeater.access_method == Repeater::CTCSS %>
+        <% end %>
+        <%= render layout: "shared/card/entry", locals: { key: "D-Star" } do %>
+          <%= render partial: "shared/card/boolean", locals: { value: repeater.dstar? } %>
+        <% end %>
+        <%= render layout: "shared/card/entry", locals: { key: "Fusion" } do %>
+          <%= render partial: "shared/card/boolean", locals: { value: repeater.fusion? } %>
+        <% end %>
+        <%= render layout: "shared/card/entry", locals: { key: "DMR" } do %>
+          <%= render partial: "shared/card/boolean", locals: { value: repeater.dmr? } %>
+        <% end %>
+        <% if repeater.dmr? %>
+          <%= render partial: "shared/card/entry", locals: { key: "DMR CC", value: repeater.dmr_cc } %>
+          <%= render partial: "shared/card/entry", locals: { key: "DMR Con", value: repeater.dmr_con } if repeater.access_method == Repeater::CTCSS %>
+        <% end %>
+        <%= render layout: "shared/card/entry", locals: { key: "NXDN" } do %>
+          <%= render partial: "shared/card/boolean", locals: { value: repeater.nxdn } %>
+        <% end %>
+        <%= render layout: "shared/card/entry", locals: { key: "Location" } do %>
+          <div data-action="click->repeater-list#changeLocationFormat"
+               class="cursor-pointer">
+            <div data-repeater-list-target="locationFormat1">
+              <%= [repeater.region_1, repeater.region_2, repeater.region_3, repeater.region_4, repeater.country.name].reject(&:blank?).join(", ") %>
+            </div>
+            <div data-repeater-list-target="locationFormat2" class="hidden">
+              Lat: <%= repeater.latitude %>, Long: <%= repeater.longitude %>
+            </div>
+            <div data-repeater-list-target="locationFormat3" class="hidden">
+              <%= repeater.grid_square %>
+            </div>
+          </div>
+        <% end %>
+        <%= render partial: "shared/card/entry", locals: { key: "Channel", value: repeater.channel } if repeater.channel.present? %>
+        <%= render partial: "shared/card/entry", locals: { key: "Notes", value: repeater.notes } if repeater.notes.present? %>
+        <%= render partial: "shared/card/entry", locals: { key: "Source", value: repeater.source } if repeater.source.present? %>
+      </dl>
+    </div>
+  </div>
+</div>
