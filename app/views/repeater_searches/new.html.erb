@@ -1,13 +1,17 @@
-<div class="mx-auto w-full px-10">
+<div class="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
   <div class="mx-auto">
     <%= render "shared/flash_messages" %>
   </div>
+
   <div class="mx-auto">
     <%= render "form",
                repeater_search: @repeater_search,
                form_method: :get,
                url: search_url %>
   </div>
+</div>
+
+<div class="mx-auto w-full px-10">
   <div class="mx-auto mt-10">
     <%= render "repeater_list", repeaters: @repeaters if @repeaters.present? %>
   </div>
