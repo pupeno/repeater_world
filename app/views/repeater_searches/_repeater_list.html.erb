@@ -14,20 +14,20 @@
       </div>
       <div class="border-t border-gray-200 px-2 py-5 sm:p-0">
         <dl class="sm:divide-y sm:divide-gray-200">
-          <%= render partial: "card_entry", locals: { key: "Call Sign", value: repeater.call_sign } %>
-          <%= render partial: "card_entry", locals: { key: "Band", value: repeater.band } %>
-          <%= render partial: "card_entry", locals: { key: "Modes", value: repeater.modes.join(", ") } %>
-          <%= render layout: "card_entry", locals: { key: "Operational" } do %>
+          <%= render partial: "shared/card/entry", locals: { key: "Call Sign", value: repeater.call_sign } %>
+          <%= render partial: "shared/card/entry", locals: { key: "Band", value: repeater.band } %>
+          <%= render partial: "shared/card/entry", locals: { key: "Modes", value: repeater.modes.join(", ") } %>
+          <%= render layout: "shared/card/entry", locals: { key: "Operational" } do %>
             <% if repeater.operational? %>
               <i class="fa-solid fa-check"></i> Yes
             <% else %>
               <i class="fa-solid fa-xmark"></i> No
             <% end %>
           <% end %>
-          <%= render layout: "card_entry", locals: { key: "TX Frequency" } do %>
+          <%= render layout: "shared/card/entry", locals: { key: "TX Frequency" } do %>
             <%= repeater.tx_frequency / (10 ** 6) %>MHz
           <% end %>
-          <%= render layout: "card_entry", locals: { key: "RX Frequency" } do %>
+          <%= render layout: "shared/card/entry", locals: { key: "RX Frequency" } do %>
             <div data-action="click->repeater-list#toggleRxFrequencyFormat"
                  class="cursor-pointer">
               <% offset = "#{(repeater.rx_frequency - repeater.tx_frequency > 0) ? "+" : ""}#{((repeater.rx_frequency - repeater.tx_frequency) / (10 ** 3)).to_i}kHz" %>
@@ -42,7 +42,7 @@
               </div>
             </div>
           <% end %>
-          <%= render layout: "card_entry", locals: { key: "Location" } do %>
+          <%= render layout: "shared/card/entry", locals: { key: "Location" } do %>
             <div data-action="click->repeater-list#changeLocationFormat"
                  class="cursor-pointer">
               <div data-repeater-list-target="locationFormat1">
