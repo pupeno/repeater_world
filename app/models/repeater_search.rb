@@ -15,7 +15,7 @@ class RepeaterSearch < ApplicationRecord
   validates :latitude, numericality: true, allow_blank: true
   validates :longitude, numericality: true, allow_blank: true
 
-  def run
+  def run(page: 1)
     repeaters = Repeater
 
     bands = Repeater::BANDS.filter { |band| send(:"band_#{band}?") }
@@ -46,6 +46,8 @@ class RepeaterSearch < ApplicationRecord
             when \"repeaters\".\"operational\" = false then 3
         end"))
     repeaters = repeaters.order("name, call_sign")
+
+    repeaters.page page
   end
 end
 
