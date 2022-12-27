@@ -39,7 +39,13 @@ class RepeaterSearch < ApplicationRecord
       ).all
     end
 
-    repeaters.all
+    repeaters = repeaters.order(Arel.sql("
+        case
+            when \"repeaters\".\"operational\" = true then 1
+            when \"repeaters\".\"operational\" IS NULL then 2
+            when \"repeaters\".\"operational\" = false then 3
+        end"))
+    repeaters = repeaters.order("name, call_sign")
   end
 end
 
