@@ -26,6 +26,11 @@ export default class extends Controller {
 
   askToSignInOrLogIn(event) {
     event.preventDefault()
-    this.dispatch("logInOrSignUp", {target: this.signInOrLogInPopUpTarget})
+    showPopUp(this.signInOrLogInPopUpTarget)
   }
+}
+
+
+function showPopUp(popUp) {
+  this.dispatch("show", {target: popUp, prefix: "popUp", bubbles: false, cancelable: true})
 }

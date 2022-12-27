@@ -4,7 +4,7 @@
                     aria: { labelledby: title, modal: "true" },
                     role: "dialog",
                     data: { controller: "pop-up",
-                            action: "#{triggering_event}->pop-up#show" } })) do %>
+                            action: "popUp:show->pop-up#show" } })) do %>
   <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
        data-pop-up-target="backgroundBackdrop"
        data-transition-enter="ease-out duration-300"
