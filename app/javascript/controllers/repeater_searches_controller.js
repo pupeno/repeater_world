@@ -1,9 +1,7 @@
 import {Controller} from "@hotwired/stimulus"
-import {enter, leave} from "el-transition";
-
 
 export default class extends Controller {
-  static targets = ["signInOrLogInPopUp", "modalPanel"]
+  static targets = ["authPopUp", "modalPanel"]
 
   // Turns the get search form into a post save form.
   saveSearch() {
@@ -24,13 +22,12 @@ export default class extends Controller {
     }
   }
 
-  askToSignInOrLogIn(event) {
-    event.preventDefault()
-    showPopUp(this.signInOrLogInPopUpTarget)
+  showAuthPopUp() {
+    this.showPopUp(this.authPopUpTarget)
   }
 }
 
-
-function showPopUp(popUp) {
-  this.dispatch("show", {target: popUp, prefix: "popUp", bubbles: false, cancelable: true})
+  showPopUp(popUp) {
+    this.dispatch("show", {target: popUp, prefix: "pop-up"})
+  }
 }
