@@ -61,7 +61,11 @@
     <%= render "layouts/top_bar" %>
 
     <main class="py-10 flex-grow">
-      <%= render "shared/flash_messages" %>
+      <% if !@flash_messages_shown %>
+        <div class="mx-10">
+          <%= render "shared/flash_messages" %>
+        </div>
+      <% end %>
       <%= yield %>
     </main>
 
@@ -71,10 +75,12 @@
       <p class="text-center text-sm text-gray-400">
         <%= link_to "Privacy Policy", privacy_policy_url, class: "underline hover:text-orange-800" %>
         <%= link_to "Cookie Policy", cookie_policy_url, class: "underline hover:text-orange-800" %>
-        <a class="underline hover:text-orange-800" href="mailto:info@unbrea.ch">Contact Us</a>
+        <a class="underline hover:text-orange-800" href="mailto:info@unbrea.ch">Contact
+          Us</a>
       </p>
       <p class="p-2 text-center text-xs text-gray-300">
-        Flexpoint Tech Ltd is a company registered England and Wales (Company No. 10362469)<br/>
+        Flexpoint Tech Ltd is a company registered England and Wales (Company No.
+        10362469)<br/>
         20-22 Wenlock Road, London, N1 7GU, England, United Kingdom
       </p>
     </footer>
