@@ -56,21 +56,26 @@
     </div>
 
     <span data-distance-to-coordinates-target="controlled">of the coordinates:</span>
-    <%= form.label :latitude, "latitude", data: { distance_to_coordinates_target: "controlled" } %>
-    <%= form.text_field :latitude, class: "inline w-28
-                                           rounded-md border-gray-300
-                                           px-2
-                                           focus:border-orange-500 focus:ring-orange-500
-                                           text-right sm:text-sm",
-                        data: { distance_to_coordinates_target: "controlled" } %>
+    <div class="inline-flex items-baseline">
+      <%= form.label :latitude, "latitude", data: { distance_to_coordinates_target: "controlled" }, class: "mr-2" %>
+      <%= form.text_field :latitude, class: "inline w-28
+                                             rounded-md border-gray-300
+                                             px-2
+                                             focus:border-orange-500 focus:ring-orange-500
+                                             text-right sm:text-sm",
+                          data: { distance_to_coordinates_target: "controlled" } %>
+    </div>
     <span data-distance-to-coordinates-target="controlled">and</span>
-    <%= form.label :longitude, "longitude", data: { distance_to_coordinates_target: "controlled" } %>
-    <%= form.text_field :longitude, class: "inline w-28
+
+    <div class="inline-flex items-baseline">
+      <%= form.label :longitude, "longitude", data: { distance_to_coordinates_target: "controlled" }, class: "mr-2" %>
+      <%= form.text_field :longitude, class: "inline w-28
                                            rounded-md border-gray-300
                                            px-2
                                            focus:border-orange-500 focus:ring-orange-500
-                                           text-right sm:text-sm", data: { distance_to_coordinates_target: "controlled" }
-    %><span data-distance-to-coordinates-target="controlled">.</span>
+                                           text-right sm:text-sm", data: { distance_to_coordinates_target: "controlled" } %>
+      <span data-distance-to-coordinates-target="controlled">.</span>
+    </div>
   </div>
 
   <% if !repeater_search.persisted? %>
