@@ -10,7 +10,7 @@ class RepeaterSearchesController < ApplicationController
   def new
     defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params))
-    @repeaters = @repeater_search.run if !repeater_search_params.empty?
+    @repeaters = @repeater_search.run(page: params[:p] || 1) if !repeater_search_params.empty?
   end
 
   def create
@@ -25,7 +25,7 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def show
-    @repeaters = @repeater_search.run
+    @repeaters = @repeater_search.run(page: params[:p] || 1)
   end
 
   def update

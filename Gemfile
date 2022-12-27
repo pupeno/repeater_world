@@ -13,6 +13,7 @@ gem "devise-async", "~> 1.0"
 gem "factory_bot_rails", "~> 6.2" # To be able to generate sample data in staging (which is production).
 gem "faker", "~> 3.1" # To be able to generate sample data in staging (which is production).
 gem "importmap-rails", "~> 1.1" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
+gem "kaminari", "~> 1.2"
 gem "pg", "~> 1.1" # Use postgresql as the database for Active Record
 gem "postmark-rails", "~> 0.22"
 gem "puma", "~> 6.0" # Use the Puma web server [https://github.com/puma/puma]
@@ -25,13 +26,13 @@ gem "sprockets-rails", "~> 3.4" # The original asset pipeline for Rails [https:/
 gem "stimulus-rails", "~> 1.2" # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "tailwindcss-rails", "~> 2.0" # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
 gem "turbo-rails", "~> 1.3" # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-# gem "sidekiq", "~> 6.4" # Uncomment this when starting to use proper background jobs.
-# # gem "sentry-sidekiq", "~> 5.3" # Uncomment this when starting to use proper background jobs.
 # gem "bcrypt", "~> 3.1.7" # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "image_processing", "~> 1.2" # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "kredis" # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "redis", "~> 4.0" # Use Redis adapter to run Action Cable in production
 # gem "sassc-rails" # Use Sass to process CSS
+# gem "sentry-sidekiq", "~> 5.3" # Uncomment this when starting to use proper background jobs.
+# gem "sidekiq", "~> 6.4" # Uncomment this when starting to use proper background jobs.
 
 group :development, :test do
   gem "capybara", "~> 3.37"

@@ -1,5 +1,7 @@
 <% if value %>
   <i class="fa-solid fa-check"></i> Yes
-<% else %>
+<% elsif value === false %>
   <i class="fa-solid fa-xmark"></i> No
+<% else %>
+  <i class="fa-solid fa-question"></i> Unknown
 <% end %>

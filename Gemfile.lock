@@ -356,6 +356,7 @@ DEPENDENCIES
   factory_bot_rails (~> 6.2)
   faker (~> 3.1)
   importmap-rails (~> 1.1)
+  kaminari (~> 1.2)
   pg (~> 1.1)
   postmark-rails (~> 0.22)
   puma (~> 6.0)

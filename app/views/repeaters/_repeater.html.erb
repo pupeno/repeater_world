@@ -7,7 +7,7 @@
         <%= render partial: "shared/card/entry", locals: { key: "Band", value: repeater.band } %>
         <%= render partial: "shared/card/entry", locals: { key: "Modes", value: repeater.modes.join(", ") } %>
         <%= render layout: "shared/card/entry", locals: { key: "Operational" } do %>
-          <%= render partial: "shared/card/boolean", locals: { value: repeater.operational? } %>
+          <%= render partial: "shared/card/boolean", locals: { value: repeater.operational } %>
         <% end %>
         <%= render layout: "shared/card/entry", locals: { key: "TX Frequency" } do %>
           <%= repeater.tx_frequency / (10 ** 6) %>MHz
@@ -28,20 +28,20 @@
           </div>
         <% end %>
         <%= render layout: "shared/card/entry", locals: { key: "FM" } do %>
-          <%= render partial: "shared/card/boolean", locals: { value: repeater.fm? } %>
+          <%= render partial: "shared/card/boolean", locals: { value: repeater.fm } %>
         <% end %>
         <% if repeater.fm? %>
           <%= render partial: "shared/card/entry", locals: { key: "Access Method", value: repeater.access_method } %>
           <%= render partial: "shared/card/entry", locals: { key: "CTCSS Tone", value: repeater.ctcss_tone } if repeater.access_method == Repeater::CTCSS %>
         <% end %>
         <%= render layout: "shared/card/entry", locals: { key: "D-Star" } do %>
-          <%= render partial: "shared/card/boolean", locals: { value: repeater.dstar? } %>
+          <%= render partial: "shared/card/boolean", locals: { value: repeater.dstar } %>
         <% end %>
         <%= render layout: "shared/card/entry", locals: { key: "Fusion" } do %>
-          <%= render partial: "shared/card/boolean", locals: { value: repeater.fusion? } %>
+          <%= render partial: "shared/card/boolean", locals: { value: repeater.fusion } %>
         <% end %>
         <%= render layout: "shared/card/entry", locals: { key: "DMR" } do %>
-          <%= render partial: "shared/card/boolean", locals: { value: repeater.dmr? } %>
+          <%= render partial: "shared/card/boolean", locals: { value: repeater.dmr } %>
         <% end %>
         <% if repeater.dmr? %>
           <%= render partial: "shared/card/entry", locals: { key: "DMR CC", value: repeater.dmr_cc } %>
