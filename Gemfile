@@ -7,7 +7,7 @@ gem "active_link_to", "~> 1.0"
 gem "activerecord-postgis-adapter", "~> 8.0"
 gem "babosa", "~> 2.0"
 gem "bootsnap", "~> 1.15", require: false # Reduces boot times through caching; required in config/boot.rb
-gem "countries", "~> 5.1"
+gem "countries", "~> 5.3"
 gem "devise", "~> 4.8"
 gem "devise-async", "~> 1.0"
 gem "factory_bot_rails", "~> 6.2" # To be able to generate sample data in staging (which is production).
