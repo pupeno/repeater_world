@@ -1,6 +1,6 @@
 class RepeaterSearchesController < ApplicationController
   before_action :set_repeater_search, only: %i[show edit update destroy]
-  before_action :authenticate_user!, except: %i[new]
+  before_action :authenticate_user!, except: %i[new export]
 
   # TODO: implement
   # def index
@@ -10,7 +10,17 @@ class RepeaterSearchesController < ApplicationController
   def new
     defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params))
-    @repeaters = @repeater_search.run(page: params[:p] || 1) if !repeater_search_params.empty?
+    @repeaters = @repeater_search.run.page(params[:p] || 1) if !repeater_search_params.empty?
+    if params[:export]
+      @export_url = export_url(repeater_search_params)
+    end
+  end
+
+  def export
+    defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
+    @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params))
+    @export = IcomId52Exporter.new(@repeater_search.run).export
+    send_data(@export, filename: "export.csv", disposition: "attachment")
   end
 
   def create
@@ -25,7 +35,7 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def show
-    @repeaters = @repeater_search.run(page: params[:p] || 1)
+    @repeaters = @repeater_search.run.page(params[:p] || 1)
   end
 
   def update

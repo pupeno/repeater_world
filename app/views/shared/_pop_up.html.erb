@@ -3,7 +3,7 @@
                   { class: "relative z-10 hidden #{args[:class]}",
                     aria: { labelledby: title, modal: "true" },
                     role: "dialog",
-                    data: { controller: "pop-up",
+                    data: { controller: "pop-up #{args.dig(:data, :controller)}",
                             action: "pop-up:show->pop-up#show" } })) do %>
   <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
        data-pop-up-target="backgroundBackdrop"

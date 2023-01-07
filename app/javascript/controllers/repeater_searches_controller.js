@@ -1,7 +1,15 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["authPopUp", "modalPanel"]
+  static targets = ["authPopUp", "exportPopUp", "modalPanel", "exportLink"]
+
+  exportLinkTargetConnected(target) {
+    target.click()
+    target.remove()
+    let url = new URL(location.href)
+    url.searchParams.delete("export")
+    history.replaceState(history.state, null, url.toString())
+  }
 
   // Turns the get search form into a post save form.
   saveSearch() {
@@ -25,7 +33,19 @@ export default class extends Controller {
   showAuthPopUp() {
     this.showPopUp(this.authPopUpTarget)
   }
-}
+
+  showExportPopUp() {
+    this.showPopUp(this.exportPopUpTarget)
+  }
+
+  export() {
+    let exportHidenInput = document.createElement("input")
+    exportHidenInput.setAttribute("type", "hidden")
+    exportHidenInput.setAttribute("autocomplete", "off")
+    exportHidenInput.setAttribute("name", "export")
+    exportHidenInput.setAttribute("value", "true")
+    this.element.appendChild(exportHidenInput)
+  }
 
   showPopUp(popUp) {
     this.dispatch("show", {target: popUp, prefix: "pop-up"})

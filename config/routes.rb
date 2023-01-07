@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   # Root URL and searching.
   root "repeater_searches#new"
   get "search", to: "repeater_searches#new"
+  get "export", to: "repeater_searches#export"
   resources :repeater_searches, only: [:new, :create, :show, :update]
   resources :repeaters, only: [:show]
 
