@@ -1,14 +1,15 @@
 module Exporters
   EXPORTER_FOR = {
     baofeng_uv_5r: BaofengUv5rExporter,
-    csv: Exporter,
+    csv: CsvExporter,
     icom_ic_705: IcomIc705Exporter,
     icom_id_51: IcomId51Exporter,
     icom_id_52: IcomId52Exporter,
     yaesu_ft5d: YaesuFt5dExporter
   }
 
-  SUPPORTED_FORMATS = [["General", [["CSV", :csv]]]] +
+  SUPPORTED_FORMATS =
+    [["General", [["CSV", :csv]]]] + # At the beginning to avoid being sorted.
     [
       ["Baofeng", [
         ["Baofeng UV-5R", :baofeng_uv5r]

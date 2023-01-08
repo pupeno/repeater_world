@@ -135,7 +135,7 @@ RSpec.shared_context "repeaters" do
 
     # Japanese D-Star repeaters.
     create(:repeater,
-      name: "Made up", call_sign: "JP0AA", band: "70cm",
+      name: "Made up", call_sign: "JP0AA", band: "70cm", keeper: "JP0ZZ",
       operational: true,
       tx_frequency: 439420000,
       rx_frequency: 430420000,
@@ -145,7 +145,7 @@ RSpec.shared_context "repeaters" do
       dmr: false, dmr_cc: nil, dmr_con: nil, nxdn: nil,
       country_id: "jp")
     create(:repeater,
-      name: "Made up", call_sign: "JP0AA", band: "23cm",
+      name: "Made up", call_sign: "JP0AA", band: "23cm", keeper: "JP0ZZ",
       operational: true,
       tx_frequency: 1297900000,
       rx_frequency: 1297900000,
@@ -156,7 +156,7 @@ RSpec.shared_context "repeaters" do
       country_id: "jp")
 
     # Blank repeater
-    create(:repeater, call_sign: nil)
+    create(:repeater, call_sign: nil, keeper: nil)
   end
 
   after(:context) do
