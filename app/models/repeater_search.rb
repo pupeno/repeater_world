@@ -45,7 +45,12 @@ class RepeaterSearch < ApplicationRecord
             when \"repeaters\".\"operational\" IS NULL then 2
             when \"repeaters\".\"operational\" = false then 3
         end"))
-    repeaters.order("name, call_sign")
+
+    repeaters = repeaters.order("name, call_sign")
+
+    repeaters.includes(:country)
+
+    repeaters
   end
 end
 
