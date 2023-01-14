@@ -105,13 +105,25 @@
   </div>
   <%= pop_up title: "Export",
              data: { repeater_searches_target: "exportPopUp" } do %>
-    Export for:
-    <%= select_tag(:"e[format]", grouped_options_for_select(Exporters::SUPPORTED_FORMATS),) %>
-    <button type="submit"
-            class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-900"
-            data-action="click->repeater-searches#export">
-      Export
-    </button>
+    <div class="flex items-baseline gap-3 justify-items-stretch">
+      <div class="shrink">Export for:</div>
+      <%= select_tag(:"e[format]",
+                     grouped_options_for_select(Exporters::SUPPORTED_FORMATS),
+                     class: "grow
+                             mt-1 py-2 pl-3
+                             rounded-md border-gray-300
+                             text-base sm:text-sm
+                             focus:border-orange-500 focus:outline-none focus:ring-orange-500 ") %>
+    </div>
+    <div class="mt-5 sm:mt-6
+                    flex flex-col-reverse sm:flex-row sm:flex-wrap justify-end gap-3">
+      <button type="submit"
+              class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer"
+              data-action="click->repeater-searches#export">
+        <i class="fa-solid fa-cloud-arrow-down mr-2"></i>
+        Export
+      </button>
+    </div>
   <% end %>
   <% if @export_url %>
     <%= link_to "Download file", @export_url, data: { repeater_searches_target: "exportLink" } %>
