@@ -8,9 +8,7 @@ class RepeaterSearchesController < ApplicationController
   # end
 
   def new
-    puts params
-    puts repeater_search_params
-    defaults = { distance: 8, distance_unit: RepeaterSearch::KM }
+    defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s] || {}))
     @repeaters = @repeater_search.run.page(params[:p] || 1) if repeater_search_params[:s].present?
     if params[:export]
@@ -19,7 +17,7 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def export
-    defaults = { distance: 8, distance_unit: RepeaterSearch::KM }
+    defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s]))
     exporter_class = Exporters::EXPORTER_FOR[repeater_search_params[:e][:format].to_sym]
     @export = exporter_class.new(@repeater_search.run).export
@@ -27,7 +25,7 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def create
-    @repeater_search = RepeaterSearch.new(repeater_search_params)
+    @repeater_search = RepeaterSearch.new(repeater_search_params[:s])
     @repeater_search.user = current_user
 
     if @repeater_search.save
@@ -42,7 +40,7 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def update
-    if @repeater_search.update(repeater_search_params)
+    if @repeater_search.update(repeater_search_params[:s])
       redirect_to @repeater_search
     else
       render :show, status: :unprocessable_entity
@@ -69,7 +67,6 @@ class RepeaterSearchesController < ApplicationController
         Repeater::MODES +
         [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
       e: [:format]
-
     )
   end
 end
