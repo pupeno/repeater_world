@@ -8,18 +8,21 @@ class RepeaterSearchesController < ApplicationController
   # end
 
   def new
-    defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
-    @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params))
-    @repeaters = @repeater_search.run.page(params[:p] || 1) if !repeater_search_params.empty?
+    puts params
+    puts repeater_search_params
+    defaults = { distance: 8, distance_unit: RepeaterSearch::KM }
+    @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s] || {}))
+    @repeaters = @repeater_search.run.page(params[:p] || 1) if repeater_search_params[:s].present?
     if params[:export]
       @export_url = export_url(repeater_search_params)
     end
   end
 
   def export
-    defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
-    @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params))
-    @export = IcomId52Exporter.new(@repeater_search.run).export
+    defaults = { distance: 8, distance_unit: RepeaterSearch::KM }
+    @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s]))
+    exporter_class = Exporters::EXPORTER_FOR[repeater_search_params[:e][:format].to_sym]
+    @export = exporter_class.new(@repeater_search.run).export
     send_data(@export, filename: "export.csv", disposition: "attachment")
   end
 
@@ -61,10 +64,12 @@ class RepeaterSearchesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def repeater_search_params
-    params.fetch(:s, {}).permit(
-      Repeater::BANDS.map { |b| :"band_#{b}" } +
+    params.permit(
+      s: Repeater::BANDS.map { |b| :"band_#{b}" } +
         Repeater::MODES +
-        [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude]
+        [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
+      e: [:format]
+
     )
   end
 end

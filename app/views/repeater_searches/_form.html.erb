@@ -106,7 +106,7 @@
   <%= pop_up title: "Export",
              data: { repeater_searches_target: "exportPopUp" } do %>
     Export for:
-    <%= select_tag(:export_format_1, grouped_options_for_select(Exporters::SUPPORTED_FORMATS),) %>
+    <%= select_tag(:"e[format]", grouped_options_for_select(Exporters::SUPPORTED_FORMATS),) %>
     <button type="submit"
             class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-900"
             data-action="click->repeater-searches#export">
