@@ -126,7 +126,10 @@
     </div>
   <% end %>
   <% if @export_url %>
-    <%= link_to "Download file", @export_url, data: { repeater_searches_target: "exportLink" } %>
+    <div>
+      If your download doesn't start automatically:
+      <%= link_to "Download export.csv", @export_url, class: "link", data: { repeater_searches_target: "exportLink" } %>
+    </div>
   <% end %>
 
   <%= pop_up title: "Save Search",

@@ -17,8 +17,13 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def export
-    defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
-    @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s]))
+    if params[:id].present?
+      @repeater_search  = RepeaterSearch.new(repeater_search_params[:s])
+    else
+      defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
+      @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s]))
+    end
+
     exporter_class = Exporters::EXPORTER_FOR[repeater_search_params[:e][:format].to_sym]
     @export = exporter_class.new(@repeater_search.run).export
     send_data(@export, filename: "export.csv", disposition: "attachment")
@@ -37,11 +42,19 @@ class RepeaterSearchesController < ApplicationController
 
   def show
     @repeaters = @repeater_search.run.page(params[:p] || 1)
+    if params[:export]
+      @export_url = export_repeater_search_url(@repeater_search, e: repeater_search_params[:e])
+    end
   end
 
   def update
     if @repeater_search.update(repeater_search_params[:s])
-      redirect_to @repeater_search
+      if params[:export]
+        # redirect_to export_url(repeater_search_params)
+        redirect_to repeater_search_url(@repeater_search, export: true, e: repeater_search_params[:e])
+      else
+        redirect_to @repeater_search
+      end
     else
       render :show, status: :unprocessable_entity
     end

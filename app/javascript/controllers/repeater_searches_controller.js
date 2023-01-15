@@ -5,7 +5,7 @@ export default class extends Controller {
 
   exportLinkTargetConnected(target) {
     target.click()
-    target.remove()
+    // target.remove()
     let url = new URL(location.href)
     url.searchParams.delete("export")
     history.replaceState(history.state, null, url.toString())
