@@ -23,7 +23,6 @@ class RepeaterSearchesController < ApplicationController
       defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
       @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s]))
     end
-
     exporter_class = Exporters::EXPORTER_FOR[repeater_search_params[:e][:format].to_sym]
     @export = exporter_class.new(@repeater_search.run).export
     send_data(@export, filename: "export.csv", disposition: "attachment")
