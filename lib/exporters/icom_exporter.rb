@@ -8,6 +8,7 @@ class IcomExporter < Exporter
         .where.not(operational: false) # Skip repeaters known to not be operational.
         .merge(Repeater.where(fm: true).or(Repeater.where(dstar: true))) # ID-52 does FM and DStar only
         .order(:name, :call_sign)
+        .includes(:country)
         .each do |repeater|
         if repeater.fm?
           csv << fm_repeater(repeater)

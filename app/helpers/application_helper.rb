@@ -23,10 +23,9 @@ module ApplicationHelper
                check_box_html_options: check_box_html_options}
   end
 
-  def pop_up(title:, triggering_event:, links:, **args, &block)
+  def pop_up(title:, links: [], **args, &block)
     render partial: "shared/pop_up",
       locals: {title: title,
-               triggering_event: triggering_event,
                links: links,
                args: args,
                contents: capture(&block)}

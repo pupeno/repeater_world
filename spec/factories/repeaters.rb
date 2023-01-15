@@ -3,7 +3,7 @@ FactoryBot.define do
 
   factory :repeater do
     call_sign
-    sequence(:name) { |n| "Repeater #{call_sign}" }
+    sequence(:name) { |n| "Repeater #{call_sign}".strip }
     keeper { generate(:call_sign) }
     band { Repeater::BAND_2M }
 

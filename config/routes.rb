@@ -6,7 +6,12 @@ Rails.application.routes.draw do
   # Root URL and searching.
   root "repeater_searches#new"
   get "search", to: "repeater_searches#new"
-  resources :repeater_searches, only: [:new, :create, :show, :update]
+  get "export", to: "repeater_searches#export"
+  resources :repeater_searches, only: [:new, :create, :show, :update] do
+    member do
+      get "export"
+    end
+  end
   resources :repeaters, only: [:show]
 
   # User and profile.
@@ -44,12 +49,15 @@ end
 #                             admin_unlock GET    /admins/unlock(.:format)                                                                          devise/unlocks#show
 #                                          POST   /admins/unlock(.:format)                                                                          devise/unlocks#create
 #                                     root GET    /                                                                                                 repeater_searches#new
+#                                   search GET    /search(.:format)                                                                                 repeater_searches#new
+#                                   export GET    /export(.:format)                                                                                 repeater_searches#export
+#                   export_repeater_search GET    /repeater_searches/:id/export(.:format)                                                           repeater_searches#export
 #                        repeater_searches POST   /repeater_searches(.:format)                                                                      repeater_searches#create
 #                      new_repeater_search GET    /repeater_searches/new(.:format)                                                                  repeater_searches#new
 #                          repeater_search GET    /repeater_searches/:id(.:format)                                                                  repeater_searches#show
 #                                          PATCH  /repeater_searches/:id(.:format)                                                                  repeater_searches#update
 #                                          PUT    /repeater_searches/:id(.:format)                                                                  repeater_searches#update
-#                                   search GET    /search(.:format)                                                                                 repeater_searches#new
+#                                 repeater GET    /repeaters/:id(.:format)                                                                          repeaters#show
 #                         new_user_session GET    /users/sign_in(.:format)                                                                          devise/sessions#new
 #                             user_session POST   /users/sign_in(.:format)                                                                          devise/sessions#create
 #                     destroy_user_session DELETE /users/sign_out(.:format)                                                                         devise/sessions#destroy
