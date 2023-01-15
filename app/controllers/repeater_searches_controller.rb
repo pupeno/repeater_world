@@ -18,7 +18,7 @@ class RepeaterSearchesController < ApplicationController
 
   def export
     if params[:id].present?
-      @repeater_search  = RepeaterSearch.new(repeater_search_params[:s])
+      @repeater_search = RepeaterSearch.new(repeater_search_params[:s])
     else
       defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
       @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s]))
