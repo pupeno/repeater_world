@@ -3,8 +3,8 @@
                   { class: "relative z-10 hidden #{args[:class]}",
                     aria: { labelledby: title, modal: "true" },
                     role: "dialog",
-                    data: { controller: "pop-up",
-                            action: "#{triggering_event}->pop-up#show" } })) do %>
+                    data: { controller: "pop-up #{args.dig(:data, :controller)}",
+                            action: "pop-up:show->pop-up#show" } })) do %>
   <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
        data-pop-up-target="backgroundBackdrop"
        data-transition-enter="ease-out duration-300"
@@ -50,7 +50,7 @@
           <% links.reverse.each_with_index do |link, index| %>
             <%= link_to link[:url],
                         class: "basis-[31%]
-                                px-4 py-2
+                                px-6 py-3
                                 rounded-md border border-transparent
                                 inline-flex justify-center
                                 text-base sm:text-sm font-medium shadow-sm

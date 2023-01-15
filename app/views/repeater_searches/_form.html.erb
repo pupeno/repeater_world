@@ -46,7 +46,7 @@
                                              focus:border-orange-500 focus:ring-orange-500
                                              text-right sm:text-sm", placeholder: 0 %>
       <div class="absolute inset-y-0 right-0 flex items-center">
-        <label for="currency" class="sr-only">Unit</label>
+        <%= form.label :distance_unit, "Unit", class: "sr-only" %>
         <%= form.select :distance_unit,
                         RepeaterSearch::DISTANCE_UNITS, {}, {
                           class: "h-full rounded-md border-transparent bg-transparent
@@ -56,21 +56,26 @@
     </div>
 
     <span data-distance-to-coordinates-target="controlled">of the coordinates:</span>
-    <%= form.label :latitude, "latitude", data: { distance_to_coordinates_target: "controlled" } %>
-    <%= form.text_field :latitude, class: "inline w-28
-                                           rounded-md border-gray-300
-                                           px-2
-                                           focus:border-orange-500 focus:ring-orange-500
-                                           text-right sm:text-sm",
-                        data: { distance_to_coordinates_target: "controlled" } %>
+    <div class="inline-flex items-baseline">
+      <%= form.label :latitude, "latitude", data: { distance_to_coordinates_target: "controlled" }, class: "mr-2" %>
+      <%= form.text_field :latitude, class: "inline w-28
+                                             rounded-md border-gray-300
+                                             px-2
+                                             focus:border-orange-500 focus:ring-orange-500
+                                             text-right sm:text-sm",
+                          data: { distance_to_coordinates_target: "controlled" } %>
+    </div>
     <span data-distance-to-coordinates-target="controlled">and</span>
-    <%= form.label :longitude, "longitude", data: { distance_to_coordinates_target: "controlled" } %>
-    <%= form.text_field :longitude, class: "inline w-28
+
+    <div class="inline-flex items-baseline">
+      <%= form.label :longitude, "longitude", data: { distance_to_coordinates_target: "controlled" }, class: "mr-2" %>
+      <%= form.text_field :longitude, class: "inline w-28
                                            rounded-md border-gray-300
                                            px-2
                                            focus:border-orange-500 focus:ring-orange-500
-                                           text-right sm:text-sm", data: { distance_to_coordinates_target: "controlled" }
-    %><span data-distance-to-coordinates-target="controlled">.</span>
+                                           text-right sm:text-sm", data: { distance_to_coordinates_target: "controlled" } %>
+      <span data-distance-to-coordinates-target="controlled">.</span>
+    </div>
   </div>
 
   <% if !repeater_search.persisted? %>
@@ -84,17 +89,53 @@
   <div class="inline">
     <button type="<%= user_signed_in? ? "submit" : "button" %>"
             class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer <%= repeater_search.persisted? ? "bg-orange-600" : "bg-orange-900" %>"
-            data-action="<%= user_signed_in? ? "click->repeater-searches#saveSearch" : "click->repeater-searches#askToSignInOrLogIn" %>">
+            data-action="<%= user_signed_in? ? "click->repeater-searches#saveSearch" : "click->repeater-searches#showAuthPopUp" %>">
       <i class="fa-regular fa-bookmark mr-2"></i>
       Save Search
     </button>
   </div>
 
+  <div class="inline">
+    <button type="button"
+            class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-900"
+            data-action="click->repeater-searches#showExportPopUp">
+      <i class="fa-solid fa-cloud-arrow-down mr-2"></i>
+      Export
+    </button>
+  </div>
+  <%= pop_up title: "Export",
+             data: { repeater_searches_target: "exportPopUp" } do %>
+    <div class="flex items-baseline gap-3 justify-items-stretch">
+      <div class="shrink">Export for:</div>
+      <%= select_tag(:"e[format]",
+                     grouped_options_for_select(Exporters::SUPPORTED_FORMATS),
+                     class: "grow
+                             mt-1 py-2 pl-3
+                             rounded-md border-gray-300
+                             text-base sm:text-sm
+                             focus:border-orange-500 focus:outline-none focus:ring-orange-500 ") %>
+    </div>
+    <div class="mt-5 sm:mt-6
+                    flex flex-col-reverse sm:flex-row sm:flex-wrap justify-end gap-3">
+      <button type="submit"
+              class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer"
+              data-action="click->repeater-searches#export">
+        <i class="fa-solid fa-cloud-arrow-down mr-2"></i>
+        Export
+      </button>
+    </div>
+  <% end %>
+  <% if @export_url %>
+    <div>
+      If your download doesn't start automatically:
+      <%= link_to "Download export.csv", @export_url, class: "link", data: { repeater_searches_target: "exportLink" } %>
+    </div>
+  <% end %>
+
   <%= pop_up title: "Save Search",
-             triggering_event: "repeater-searches:logInOrSignUp",
              links: [{ text: "Sign up", url: new_user_registration_url, icon: "fa-regular fa-face-smile" },
                      { text: "Log in", url: new_user_session_url, icon: "fa-solid fa-right-to-bracket" }],
-             data: { repeater_searches_target: "signInOrLogInPopUp" } do %>
+             data: { repeater_searches_target: "authPopUp" } do %>
     <p class="text-sm text-gray-500 mb-2">
       A saved search allows you to easily re-run it later with updated
       information

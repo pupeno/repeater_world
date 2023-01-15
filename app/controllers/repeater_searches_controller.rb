@@ -1,6 +1,6 @@
 class RepeaterSearchesController < ApplicationController
   before_action :set_repeater_search, only: %i[show edit update destroy]
-  before_action :authenticate_user!, except: %i[new]
+  before_action :authenticate_user!, except: %i[new export]
 
   # TODO: implement
   # def index
@@ -9,12 +9,27 @@ class RepeaterSearchesController < ApplicationController
 
   def new
     defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
-    @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params))
-    @repeaters = @repeater_search.run(page: params[:p] || 1) if !repeater_search_params.empty?
+    @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s] || {}))
+    @repeaters = @repeater_search.run.page(params[:p] || 1) if repeater_search_params[:s].present?
+    if params[:export]
+      @export_url = export_url(repeater_search_params)
+    end
+  end
+
+  def export
+    if params[:id].present?
+      @repeater_search = RepeaterSearch.new(repeater_search_params[:s])
+    else
+      defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
+      @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s]))
+    end
+    exporter_class = Exporters::EXPORTER_FOR[repeater_search_params[:e][:format].to_sym]
+    @export = exporter_class.new(@repeater_search.run).export
+    send_data(@export, filename: "export.csv", disposition: "attachment")
   end
 
   def create
-    @repeater_search = RepeaterSearch.new(repeater_search_params)
+    @repeater_search = RepeaterSearch.new(repeater_search_params[:s])
     @repeater_search.user = current_user
 
     if @repeater_search.save
@@ -25,12 +40,20 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def show
-    @repeaters = @repeater_search.run(page: params[:p] || 1)
+    @repeaters = @repeater_search.run.page(params[:p] || 1)
+    if params[:export]
+      @export_url = export_repeater_search_url(@repeater_search, e: repeater_search_params[:e])
+    end
   end
 
   def update
-    if @repeater_search.update(repeater_search_params)
-      redirect_to @repeater_search
+    if @repeater_search.update(repeater_search_params[:s])
+      if params[:export]
+        # redirect_to export_url(repeater_search_params)
+        redirect_to repeater_search_url(@repeater_search, export: true, e: repeater_search_params[:e])
+      else
+        redirect_to @repeater_search
+      end
     else
       render :show, status: :unprocessable_entity
     end
@@ -51,10 +74,11 @@ class RepeaterSearchesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def repeater_search_params
-    params.fetch(:s, {}).permit(
-      Repeater::BANDS.map { |b| :"band_#{b}" } +
+    params.permit(
+      s: Repeater::BANDS.map { |b| :"band_#{b}" } +
         Repeater::MODES +
-        [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude]
+        [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
+      e: [:format]
     )
   end
 end
