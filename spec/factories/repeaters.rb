@@ -65,9 +65,7 @@ end
 #  fusion        :boolean
 #  grid_square   :string
 #  keeper        :string
-#  latitude      :decimal(, )
 #  location      :geography        point, 4326
-#  longitude     :decimal(, )
 #  name          :string
 #  notes         :text
 #  nxdn          :boolean
