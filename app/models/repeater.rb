@@ -12,7 +12,7 @@ class Repeater < ApplicationRecord
 
   ACCESS_METHODS = [
     TONE_BURST = "tone_burst",
-    CTCSS = "ctcss"
+    CTCSS = "CTCSS"
   ]
 
   CTCSS_CODES = [
