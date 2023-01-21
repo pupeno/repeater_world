@@ -11,6 +11,12 @@ class RepeaterSearchesController < ApplicationController
     defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s] || {}))
     @repeaters = @repeater_search.run.page(params[:p] || 1) if repeater_search_params[:s].present?
+
+    params[:d] ||= "cards" # the default display type
+    @cards_url = search_url(repeater_search_params.merge(d: "cards"))
+    @map_url = search_url(repeater_search_params.merge(d: "map"))
+    @table_url = search_url(repeater_search_params.merge(d: "table"))
+
     if params[:export]
       @export_url = export_url(repeater_search_params)
     end
@@ -75,6 +81,7 @@ class RepeaterSearchesController < ApplicationController
   # Only allow a list of trusted parameters through.
   def repeater_search_params
     params.permit(
+      :d,
       s: Repeater::BANDS.map { |b| :"band_#{b}" } +
         Repeater::MODES +
         [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
