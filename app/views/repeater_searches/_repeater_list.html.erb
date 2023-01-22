@@ -1,7 +1,7 @@
 <%= tabbed_view tabs: [{ title: "Cards", name: "cards", url: @cards_url, icon: "fa-solid fa-table" },
                        { title: "Map", name: "map", url: @map_url, icon: "fa-solid fa-map-location-dot" },
                        { title: "Table", name: "table", url: @table_url, icon: "fa-solid fa-table-list" }],
-                selected_tab: params[:d] do |selected_tab| %>
+                selected_tab: @selected_tab do |selected_tab| %>
   <% if selected_tab == "cards" %>
     <ul role="list" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
         data-controller="repeater-list">
@@ -64,9 +64,9 @@
     </ul>
 
     <%= paginate repeaters %>
-  <% elsif params[:d] == "map" %>
+  <% elsif @selected_tab == "map" %>
     imagine a map
-  <% elsif params[:d] == "table" %>
+  <% elsif @selected_tab == "table" %>
     imagine a table
   <% end %>
 <% end %>
