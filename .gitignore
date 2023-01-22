@@ -35,5 +35,8 @@
 !/app/assets/builds/.keep
 coverage
 
+# .env
+.env*.local
+
 # RubyMine
 .idea

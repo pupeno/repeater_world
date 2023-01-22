@@ -62,10 +62,22 @@
         </li>
       <% end %>
     </ul>
-
     <%= paginate repeaters %>
   <% elsif @selected_tab == "map" %>
-    imagine a map
+    <div id="map" class="w-full flex-grow min-h-[500px] bg-gray-300"></div>
+    <script>
+      let map;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 8,
+        });
+      }
+
+      window.initMap = initMap;
+    </script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=<%= ENV["GOOGLE_MAPS_API_KEY"] %>&callback=initMap"></script>
   <% elsif @selected_tab == "table" %>
     imagine a table
   <% end %>
