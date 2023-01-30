@@ -14,7 +14,6 @@ export default class extends Controller {
   }
 
   changeLocationFormat() {
-    console.log(this.locationFormat1Target.classList.contains("hidden"))
     if (!this.locationFormat1Target.classList.contains("hidden")) {
       this.locationFormat1Targets.forEach((x) => x.classList.add("hidden"))
       this.locationFormat2Targets.forEach((x) => x.classList.remove("hidden"))
