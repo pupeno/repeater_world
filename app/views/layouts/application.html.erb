@@ -84,5 +84,19 @@
         20-22 Wenlock Road, London, N1 7GU, England, United Kingdom
       </p>
     </footer>
+
+    <%# Google maps: https://www.driftingruby.com/episodes/google-maps-api-with-stimulusjs %>
+    <script>
+      window.dispatchMapsEvent = function (...args) {
+        const event = document.createEvent("Events")
+        event.initEvent("google-maps-callback", true, true)
+        event.args = args
+        window.dispatchEvent(event)
+      }
+    </script>
+    <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{ENV["GOOGLE_MAPS_API_KEY"]}&callback=dispatchMapsEvent",
+                               async: true,
+                               defer: true,
+                               "data-turbolinks-eval": false %>
   </body>
 </html>
