@@ -81,6 +81,10 @@ class Repeater < ApplicationRecord
   def location_in_words
     [region_1, region_2, region_3, region_4, country.name].reject(&:blank?).join(", ")
   end
+
+  def to_param
+    "#{id}-#{call_sign.parameterize}-#{name.parameterize}"
+  end
 end
 
 # == Schema Information
