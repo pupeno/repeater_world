@@ -3,6 +3,9 @@
     <thead class="bg-gray-50">
       <tr>
         <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+          Name
+        </th>
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
           Call Sign
         </th>
         <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter text-right">
@@ -34,6 +37,9 @@
     <tbody class="bg-white">
       <% repeaters.each_with_index do |repeater, index| %>
         <tr class="<%= index.even? ? "bg-white" : "bg-gray-50" %>">
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-900">
+            <%= link_to repeater.name, repeater, class: "link font-bold" %>
+          </td>
           <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-900">
             <%= link_to repeater.call_sign, repeater, class: "link font-bold" %>
           </td>
@@ -82,3 +88,4 @@
     </tbody>
   </table>
 </div>
+<%= paginate repeaters %>
