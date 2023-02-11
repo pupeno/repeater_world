@@ -9,9 +9,12 @@ class RepeaterSearchesController < ApplicationController
   # end
 
   def new
-    defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
+    defaults = { distance: 8, distance_unit: RepeaterSearch::KM }
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s] || {}))
-    @repeaters = @repeater_search.run.page(params[:p] || 1) if repeater_search_params[:s].present?
+    if repeater_search_params[:s].present?
+      @repeaters = @repeater_search.run
+      @repeaters = @repeaters.page(params[:p] || 1) if @selected_tab != "map"
+    end
 
     if params[:export]
       @export_url = export_url(repeater_search_params)
@@ -22,7 +25,7 @@ class RepeaterSearchesController < ApplicationController
     if params[:id].present?
       @repeater_search = RepeaterSearch.new(repeater_search_params[:s])
     else
-      defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
+      defaults = { distance: 8, distance_unit: RepeaterSearch::KM }
       @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s]))
     end
     exporter_class = Exporters::EXPORTER_FOR[repeater_search_params[:e][:format].to_sym]
@@ -42,7 +45,8 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def show
-    @repeaters = @repeater_search.run.page(params[:p] || 1)
+    @repeaters = @repeater_search.run
+    @repeaters = @repeaters.page(params[:p] || 1) if @selected_tab != "map"
     if params[:export]
       @export_url = export_repeater_search_url(@repeater_search, e: repeater_search_params[:e])
     end

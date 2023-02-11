@@ -26,12 +26,6 @@ export default class extends Controller {
         position: {lat: marker.lat, lng: marker.lng},
         map,
         title: marker.tooltip,
-        icon: {
-          url: marker.icon,
-          // scaledSize: 2
-          // size: new google.maps.Size(25, 30),
-          scaledSize: new google.maps.Size(25, 30)
-        },
       })
       mapMarker.addListener("click", () => {
         if (isInfoWindowOpen) {
