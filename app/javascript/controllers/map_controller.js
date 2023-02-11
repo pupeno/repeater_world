@@ -6,16 +6,15 @@ export default class extends Controller {
   }
 
   connect() {
-    if (typeof (google) != "undefined"){
+    if (typeof (google) != "undefined") {
       this.initializeMap()
     }
   }
 
   initializeMap() {
-    let map = new google.maps.Map(this.element, {
-      center: {lat: 51.5, lng: 0},
-      zoom: 8,
-    });
+    let map = new google.maps.Map(this.element, {center: {lat: 0, lng: 0}, zoom: 2});
+
+    let bounds = new google.maps.LatLngBounds();
 
     this.markersValue.forEach(marker => {
       const infowindow = new google.maps.InfoWindow({
@@ -29,11 +28,11 @@ export default class extends Controller {
         //icon: "<%= image_url "font-awesome/tower-cell-solid.svg" %>"
       })
       mapMarker.addListener("click", () => {
-        infowindow.open({
-          anchor: mapMarker,
-          map,
-        });
+        infowindow.open({anchor: mapMarker, map,});
       });
+      bounds.extend(new google.maps.LatLng(marker.lat, marker.lng))
     })
+
+    map.fitBounds(bounds);
   }
 }
