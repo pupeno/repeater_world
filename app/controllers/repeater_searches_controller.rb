@@ -9,7 +9,7 @@ class RepeaterSearchesController < ApplicationController
   # end
 
   def new
-    defaults = { distance: 8, distance_unit: RepeaterSearch::KM }
+    defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s] || {}))
     if repeater_search_params[:s].present?
       @repeaters = @repeater_search.run
@@ -25,7 +25,7 @@ class RepeaterSearchesController < ApplicationController
     if params[:id].present?
       @repeater_search = RepeaterSearch.new(repeater_search_params[:s])
     else
-      defaults = { distance: 8, distance_unit: RepeaterSearch::KM }
+      defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
       @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s]))
     end
     exporter_class = Exporters::EXPORTER_FOR[repeater_search_params[:e][:format].to_sym]
