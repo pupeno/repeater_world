@@ -26,7 +26,12 @@ export default class extends Controller {
         position: {lat: marker.lat, lng: marker.lng},
         map,
         title: marker.tooltip,
-        //icon: "<%= image_url "font-awesome/tower-cell-solid.svg" %>"
+        icon: {
+          url: marker.icon,
+          // scaledSize: 2
+          // size: new google.maps.Size(25, 30),
+          scaledSize: new google.maps.Size(25, 30)
+        },
       })
       mapMarker.addListener("click", () => {
         if (isInfoWindowOpen) {
@@ -38,6 +43,7 @@ export default class extends Controller {
       });
       bounds.extend(new google.maps.LatLng(marker.lat, marker.lng))
     })
+
 
     map.fitBounds(bounds);
   }
