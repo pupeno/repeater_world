@@ -1,4 +1,6 @@
 import {Controller} from "@hotwired/stimulus"
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
+
 
 export default class extends Controller {
   static values = {
@@ -16,7 +18,7 @@ export default class extends Controller {
 
     let bounds = new google.maps.LatLngBounds();
 
-    this.markersValue.forEach(marker => {
+    const markers = this.markersValue.map(marker => {
       let isInfoWindowOpen = false;
       const infoWindow = new google.maps.InfoWindow({
         content: marker.info,
@@ -24,7 +26,6 @@ export default class extends Controller {
       });
       const mapMarker = new google.maps.Marker({
         position: {lat: marker.lat, lng: marker.lng},
-        map,
         title: marker.tooltip,
       })
       mapMarker.addListener("click", () => {
@@ -36,9 +37,11 @@ export default class extends Controller {
         isInfoWindowOpen = !isInfoWindowOpen;
       });
       bounds.extend(new google.maps.LatLng(marker.lat, marker.lng))
+
+      return mapMarker;
     })
 
-
+    new MarkerClusterer({ markers, map });
     map.fitBounds(bounds);
   }
 }

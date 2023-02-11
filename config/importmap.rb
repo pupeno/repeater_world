@@ -8,6 +8,7 @@ pin "@fortawesome/fontawesome-svg-core", to: "https://ga.jspm.io/npm:@fortawesom
 pin "@fortawesome/free-brands-svg-icons", to: "https://ga.jspm.io/npm:@fortawesome/free-brands-svg-icons@6.1.1/index.es.js"
 pin "@fortawesome/free-regular-svg-icons", to: "https://ga.jspm.io/npm:@fortawesome/free-regular-svg-icons@6.1.1/index.es.js"
 pin "@fortawesome/free-solid-svg-icons", to: "https://ga.jspm.io/npm:@fortawesome/free-solid-svg-icons@6.1.1/index.es.js"
+pin "@googlemaps/markerclusterer", to: "https://ga.jspm.io/npm:@googlemaps/markerclusterer@2.0.15/dist/index.esm.js"
 pin "@hotwired/stimulus", to: "stimulus.min.js", preload: true
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js", preload: true
 pin "@hotwired/turbo-rails", to: "turbo.min.js", preload: true
@@ -19,5 +20,8 @@ pin "@sentry/tracing", to: "https://ga.jspm.io/npm:@sentry/tracing@6.19.2/esm/in
 pin "@sentry/types", to: "https://ga.jspm.io/npm:@sentry/types@6.19.2/esm/index.js"
 pin "@sentry/utils", to: "https://ga.jspm.io/npm:@sentry/utils@6.19.2/esm/index.js"
 pin "el-transition", to: "https://ga.jspm.io/npm:el-transition@0.0.7/index.js"
+pin "fast-deep-equal", to: "https://ga.jspm.io/npm:fast-deep-equal@3.1.3/index.js"
 pin "js-cookie", to: "https://ga.jspm.io/npm:js-cookie@3.0.1/dist/js.cookie.mjs"
+pin "kdbush", to: "https://ga.jspm.io/npm:kdbush@3.0.0/kdbush.js"
+pin "supercluster", to: "https://ga.jspm.io/npm:supercluster@7.1.5/index.js"
 pin "tslib", to: "https://ga.jspm.io/npm:tslib@1.14.1/tslib.es6.js"
