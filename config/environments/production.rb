@@ -62,7 +62,7 @@ Rails.application.configure do
   config.active_job.queue_adapter = :inline # To cut cost but not break all the code, we are using inline job running, so there's no background job
 
   # Email configuration.
-  config.action_mailer.default_url_options = {host: "repeater_world.com"}
+  config.action_mailer.default_url_options = {host: "repeater.world"}
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_caching = false # Switch to true only if we are sending a lot of email and we know what we are doing.
   config.action_mailer.delivery_method = :postmark
