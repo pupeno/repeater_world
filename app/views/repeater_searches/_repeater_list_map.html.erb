@@ -1,4 +1,17 @@
 <div id="map"
      class="w-full flex-grow min-h-[500px] bg-gray-300"
      data-controller="map"
-     data-action="google-maps-callback@window->maps#initializeMap"></div>
+     data-action="google-maps-callback@window->maps#initializeMap"
+     data-map-markers-value="<%= repeaters.map do |repeater|
+       { lat: repeater.latitude,
+         lng: repeater.longitude,
+         tooltip: repeater.call_sign,
+         info: "<h1 class='font-bold text-lg link'>#{link_to repeater.call_sign, repeater}</h1>
+                <p>Band: <span class='font-bold'>#{h repeater.band}</span></p>
+                <p>Modes: <span class='font-bold'>#{h repeater.modes.join(", ")}</span></p>
+                <p>Frequency: <span class='font-bold'>#{h repeater.tx_frequency_in_mhz} #{h repeater.rx_offset_in_khz}</span></p>
+                <p>Location: <span class='font-bold'>#{h repeater.location_in_words}</span></p>
+                <p>Lat: <span class='font-bold'>#{h repeater.latitude}</span>,
+                   Long: <span class='font-bold'>#{h repeater.longitude}</span</p>
+                <p>Grid square: <span class='font-bold'>#{h repeater.grid_square}<span></p>" }
+     end.to_json %>"></div>

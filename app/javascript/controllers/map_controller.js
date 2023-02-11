@@ -1,6 +1,10 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
+  static values = {
+    markers: Array
+  }
+
   connect() {
     if (typeof (google) != "undefined"){
       this.initializeMap()
@@ -9,25 +13,27 @@ export default class extends Controller {
 
   initializeMap() {
     let map = new google.maps.Map(this.element, {
-      center: {lat: -34.397, lng: 150.644},
+      center: {lat: 51.5, lng: 0},
       zoom: 8,
     });
 
-    const infowindow = new google.maps.InfoWindow({
-      content: "string",
-      ariaLabel: "label",
-    });
-    const marker = new google.maps.Marker({
-      position: {lat: -34.397, lng: 150.644},
-      map,
-      title: "Hey!",
-      //icon: "<%= image_url "font-awesome/tower-cell-solid.svg" %>"
-    })
-    marker.addListener("click", () => {
-      infowindow.open({
-        anchor: marker,
-        map,
+    this.markersValue.forEach(marker => {
+      const infowindow = new google.maps.InfoWindow({
+        content: marker.info,
+        ariaLabel: "label",
       });
-    });
+      const mapMarker = new google.maps.Marker({
+        position: {lat: marker.lat, lng: marker.lng},
+        map,
+        title: marker.tooltip,
+        //icon: "<%= image_url "font-awesome/tower-cell-solid.svg" %>"
+      })
+      mapMarker.addListener("click", () => {
+        infowindow.open({
+          anchor: mapMarker,
+          map,
+        });
+      });
+    })
   }
 }
