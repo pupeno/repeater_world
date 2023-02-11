@@ -6,7 +6,7 @@ ruby "3.1.2"
 gem "active_link_to", "~> 1.0"
 gem "activerecord-postgis-adapter", "~> 8.0"
 gem "babosa", "~> 2.0"
-gem "bootsnap", "~> 1.15", require: false # Reduces boot times through caching; required in config/boot.rb
+gem "bootsnap", "~> 1.16", require: false # Reduces boot times through caching; required in config/boot.rb
 gem "countries", "~> 5.3"
 gem "devise", "~> 4.8"
 gem "devise-async", "~> 1.0"
