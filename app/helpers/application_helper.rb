@@ -30,4 +30,11 @@ module ApplicationHelper
                args: args,
                contents: capture(&block)}
   end
+
+  def tabbed_view(tabs:, selected_tab:, &block)
+    render partial: "shared/tabbed_view",
+      locals: {tabs: tabs,
+               selected_tab: selected_tab,
+               contents: capture(selected_tab, &block)}
+  end
 end

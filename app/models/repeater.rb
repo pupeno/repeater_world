@@ -63,6 +63,24 @@ class Repeater < ApplicationRecord
     modes << "NXDN" if nxdn?
     modes
   end
+
+  def tx_frequency_in_mhz
+    "#{tx_frequency / (10**6)}MHz"
+  end
+
+  def rx_frequency_in_mhz
+    "#{rx_frequency / (10**6)}MHz"
+  end
+
+  def rx_offset_in_khz
+    sign = (rx_frequency - tx_frequency > 0) ? "+" : "" # Artificially adding the +, because the int 600 renders as 600, not +600
+    raw_offset = ((rx_frequency - tx_frequency) / (10**3)).to_i
+    "#{sign}#{raw_offset}kHz"
+  end
+
+  def location_in_words
+    [region_1, region_2, region_3, region_4, country.name].reject(&:blank?).join(", ")
+  end
 end
 
 # == Schema Information

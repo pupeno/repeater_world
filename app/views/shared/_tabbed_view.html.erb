@@ -1,0 +1,29 @@
+<div data-controller="tabs">
+  <div class="py-3">
+    <div class="sm:hidden">
+      <label for="display_mode_tabs" class="sr-only">Select a tab</label>
+      <select id="display_mode_tabs"
+              name="display_mode_tabs"
+              class="block w-full rounded-md border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+              data-action="tabs#switch">
+        <%= options_for_select(tabs.each_with_object({}) { |tab, result| result[tab[:title]] = tab[:url] },
+                               tabs.find { |tab| tab[:name] == selected_tab }[:url]) %>
+      </select>
+    </div>
+    <div class="hidden sm:block">
+      <div class="border-b border-gray-200">
+        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+          <% tabs.each do |tab| %>
+            <%= link_to tab[:url],
+                        class: "group inline-flex items-center py-2 px-1 border-b-2 font-medium text-sm #{tab[:name] == selected_tab ? "border-orange-500 text-orange-600 " : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}" do %>
+              <i class="<%= tab[:icon] %>"></i>
+              <span class="ml-3"><%= tab[:title] %></span>
+            <% end %>
+          <% end %>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= contents %>

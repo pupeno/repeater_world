@@ -10,6 +10,7 @@ gem "bootsnap", "~> 1.16", require: false # Reduces boot times through caching; 
 gem "countries", "~> 5.3"
 gem "devise", "~> 4.8"
 gem "devise-async", "~> 1.0"
+gem "dotenv-rails", "~> 2.8"
 gem "factory_bot_rails", "~> 6.2" # To be able to generate sample data in staging (which is production).
 gem "faker", "~> 3.1" # To be able to generate sample data in staging (which is production).
 gem "importmap-rails", "~> 1.1" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]

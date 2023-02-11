@@ -56,11 +56,25 @@
         gtag('config', '<%= ENV["GOOGLE_ANALYTICS_ID"] %>');
       </script>
     <% end %>
+
+    <%# Google maps: https://www.driftingruby.com/episodes/google-maps-api-with-stimulusjs %>
+    <script>
+      window.dispatchMapsEvent = function (...args) {
+        const event = document.createEvent("Events")
+        event.initEvent("google-maps-callback", true, true)
+        event.args = args
+        window.dispatchEvent(event)
+      }
+    </script>
+    <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{ENV["GOOGLE_MAPS_API_KEY"]}&callback=dispatchMapsEvent",
+                               async: true,
+                               defer: true,
+                               "data-turbolinks-eval": false %>
   </head>
   <body class="min-h-screen flex flex-col">
     <%= render "layouts/top_bar" %>
 
-    <main class="py-10 flex-grow">
+    <main class="py-10 flex-grow flex">
       <% if !@flash_messages_shown %>
         <div class="mx-10">
           <%= render "shared/flash_messages" %>
