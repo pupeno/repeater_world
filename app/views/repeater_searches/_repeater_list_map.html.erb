@@ -6,7 +6,8 @@
        { lat: repeater.latitude,
          lng: repeater.longitude,
          tooltip: repeater.call_sign,
-         info: "<h1 class='font-bold text-lg link'>#{link_to repeater.call_sign, repeater}</h1>
+         info: "<h1 class='font-bold text-lg link'>#{link_to repeater.name, repeater}</h1>
+                <p class='link'>#{link_to repeater.call_sign, repeater}</p>
                 <p>Band: <span class='font-bold'>#{h repeater.band}</span></p>
                 <p>Modes: <span class='font-bold'>#{h repeater.modes.join(", ")}</span></p>
                 <p>Frequency: <span class='font-bold'>#{h repeater.tx_frequency_in_mhz} #{h repeater.rx_offset_in_khz}</span></p>
