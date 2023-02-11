@@ -1,0 +1,91 @@
+<div class="shadow-sm ring-1 ring-black ring-opacity-5">
+  <table class="min-w-full border-separate" style="border-spacing: 0">
+    <thead class="bg-gray-50">
+      <tr>
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+          Name
+        </th>
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+          Call Sign
+        </th>
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter text-right">
+          Band
+        </th>
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+          Modes
+        </th>
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+          Operational
+        </th>
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter text-right">
+          TX Frequency
+        </th>
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter text-right">
+          <div data-action="click->repeater-list#toggleRxFrequencyFormat"
+               class="cursor-pointer">
+            RX Frequency
+          </div>
+        </th>
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+          <div data-action="click->repeater-list#changeLocationFormat"
+               class="cursor-pointer">
+            Location
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      <% repeaters.each_with_index do |repeater, index| %>
+        <tr class="<%= index.even? ? "bg-white" : "bg-gray-50" %>">
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-900">
+            <%= link_to repeater.name, repeater, class: "link font-bold" %>
+          </td>
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-900">
+            <%= link_to repeater.call_sign, repeater, class: "link font-bold" %>
+          </td>
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
+            <%= repeater.band %>
+          </td>
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500">
+            <%= repeater.modes.join(", ") %>
+          </td>
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500">
+            <%= render partial: "shared/card/boolean", locals: { value: repeater.operational } %>
+          </td>
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
+            <%= repeater.tx_frequency_in_mhz %>
+          </td>
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
+            <div data-action="click->repeater-list#toggleRxFrequencyFormat"
+                 class="cursor-pointer">
+              <div title="<%= repeater.rx_offset_in_khz %>"
+                   data-repeater-list-target="rxFreqAsFreq">
+                <%= repeater.rx_frequency_in_mhz %>
+              </div>
+              <div title="<%= repeater.rx_frequency / (10 ** 6) %>MHz"
+                   data-repeater-list-target="rxFreqAsOffset"
+                   class="hidden">
+                <%= repeater.rx_offset_in_khz %>
+              </div>
+            </div>
+          </td>
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500">
+            <div data-action="click->repeater-list#changeLocationFormat"
+                 class="cursor-pointer">
+              <div data-repeater-list-target="locationFormat1">
+                <%= repeater.location_in_words %>
+              </div>
+              <div data-repeater-list-target="locationFormat2" class="hidden">
+                Lat: <%= repeater.latitude %>, Long: <%= repeater.longitude %>
+              </div>
+              <div data-repeater-list-target="locationFormat3" class="hidden">
+                <%= repeater.grid_square %>
+              </div>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<%= paginate repeaters %>
