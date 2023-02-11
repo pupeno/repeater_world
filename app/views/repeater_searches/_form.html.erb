@@ -2,8 +2,7 @@
               method: form_method,
               url: url,
               scope: :s,
-              class: "contents",
-              html: { data: { controller: "repeater-searches",
+              html: { data: { repeater_searches_target: "form",
                               repeater_searches_url: repeater_searches_url } }) do |form| %>
   <% if repeater_search.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">

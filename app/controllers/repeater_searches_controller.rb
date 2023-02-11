@@ -1,6 +1,7 @@
 class RepeaterSearchesController < ApplicationController
-  before_action :set_repeater_search, only: %i[show edit update destroy]
   before_action :authenticate_user!, except: %i[new export]
+  before_action :set_repeater_search, only: %i[show edit update destroy]
+  before_action :set_selected_tab_and_tab_urls, only: %i[new show create update]
 
   # TODO: implement
   # def index
@@ -11,6 +12,7 @@ class RepeaterSearchesController < ApplicationController
     defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s] || {}))
     @repeaters = @repeater_search.run.page(params[:p] || 1) if repeater_search_params[:s].present?
+
     if params[:export]
       @export_url = export_url(repeater_search_params)
     end
@@ -75,10 +77,18 @@ class RepeaterSearchesController < ApplicationController
   # Only allow a list of trusted parameters through.
   def repeater_search_params
     params.permit(
+      :d,
       s: Repeater::BANDS.map { |b| :"band_#{b}" } +
         Repeater::MODES +
         [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
       e: [:format]
     )
+  end
+
+  def set_selected_tab_and_tab_urls
+    @selected_tab = params[:d] || "cards" # the default selected tab is "cards"
+    @cards_url = search_url(repeater_search_params.merge(d: "cards"))
+    @map_url = search_url(repeater_search_params.merge(d: "map"))
+    @table_url = search_url(repeater_search_params.merge(d: "table"))
   end
 end
