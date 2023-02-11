@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "RepeaterWorld <info@repeater_world.com>"
+  default from: "Repeater World <info@repeater.world>"
   layout "mailer"
 end
