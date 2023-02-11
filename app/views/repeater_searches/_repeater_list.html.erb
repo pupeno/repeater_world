@@ -1,12 +1,14 @@
-<%= tabbed_view tabs: [{ title: "Cards", name: "cards", url: @cards_url, icon: "fa-solid fa-table" },
-                       { title: "Map", name: "map", url: @map_url, icon: "fa-solid fa-map-location-dot" },
-                       { title: "Table", name: "table", url: @table_url, icon: "fa-solid fa-table-list" }],
-                selected_tab: @selected_tab do |selected_tab| %>
-  <% if selected_tab == "cards" %>
-    <%= render "repeater_list_cards", repeaters: repeaters %>
-  <% elsif @selected_tab == "map" %>
-    <%= render "repeater_list_map", repeaters: repeaters %>
-  <% elsif @selected_tab == "table" %>
-    imagine a table
+<div data-controller="repeater-list">
+  <%= tabbed_view tabs: [{ title: "Cards", name: "cards", url: @cards_url, icon: "fa-solid fa-table" },
+                         { title: "Map", name: "map", url: @map_url, icon: "fa-solid fa-map-location-dot" },
+                         { title: "Table", name: "table", url: @table_url, icon: "fa-solid fa-table-list" }],
+                  selected_tab: @selected_tab do |selected_tab| %>
+    <% if selected_tab == "cards" %>
+      <%= render "repeater_list_cards", repeaters: repeaters %>
+    <% elsif @selected_tab == "map" %>
+      <%= render "repeater_list_map", repeaters: repeaters %>
+    <% elsif @selected_tab == "table" %>
+      <%= render "repeater_list_table", repeaters: repeaters %>
+    <% end %>
   <% end %>
-<% end %>
+</div>
