@@ -17,7 +17,8 @@ export default class extends Controller {
     let bounds = new google.maps.LatLngBounds();
 
     this.markersValue.forEach(marker => {
-      const infowindow = new google.maps.InfoWindow({
+      let isInfoWindowOpen = false;
+      const infoWindow = new google.maps.InfoWindow({
         content: marker.info,
         ariaLabel: "label",
       });
@@ -28,7 +29,12 @@ export default class extends Controller {
         //icon: "<%= image_url "font-awesome/tower-cell-solid.svg" %>"
       })
       mapMarker.addListener("click", () => {
-        infowindow.open({anchor: mapMarker, map,});
+        if (isInfoWindowOpen) {
+          infoWindow.close()
+        } else {
+          infoWindow.open({anchor: mapMarker, map});
+        }
+        isInfoWindowOpen = !isInfoWindowOpen;
       });
       bounds.extend(new google.maps.LatLng(marker.lat, marker.lng))
     })
