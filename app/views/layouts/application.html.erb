@@ -74,7 +74,7 @@
   <body class="min-h-screen flex flex-col">
     <%= render "layouts/top_bar" %>
 
-    <main class="py-10 flex-grow flex">
+    <main class="py-10 flex-grow flex flex-col">
       <% if !@flash_messages_shown %>
         <div class="mx-10">
           <%= render "shared/flash_messages" %>
