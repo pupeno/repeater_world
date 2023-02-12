@@ -1,3 +1,15 @@
+<%# Copyright 2023, Pablo Fernandez
+
+This file is part of Repeater World.
+
+Repeater World is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+Public License as published by the Free Software Foundation, either version 3 of the License.
+
+Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with Foobar. If not, see
+<https://www.gnu.org/licenses/>.%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -87,6 +99,7 @@
       <%= render "layouts/cookie_popup" %>
 
       <p class="text-center text-sm text-gray-400">
+        <%= link_to "Report a Bug", "https://github.com/pupeno/repeater_world/issues/new", class: "underline hover:text-orange-800" %>
         <%= link_to "Privacy Policy", privacy_policy_url, class: "underline hover:text-orange-800" %>
         <%= link_to "Cookie Policy", cookie_policy_url, class: "underline hover:text-orange-800" %>
         <a class="underline hover:text-orange-800" href="mailto:info@repeater.world">Contact
