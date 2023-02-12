@@ -2,6 +2,7 @@ require "open-uri"
 
 class UkrepeatersImporter
   USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 https://repeater.world/crawler info@repeater.world"
+  SOURCE = "https://ukrepeater.net"
 
   def initialize(working_directory: nil, logger: nil)
     @working_directory = working_directory || Rails.root.join("tmp", "ukrepeaters").to_s # Stable working directory to avoid re-downloading when developing.
@@ -40,6 +41,12 @@ class UkrepeatersImporter
   def create_repeater(raw_repeater)
     # For the UK, we treat the call sign as unique and the identifier of the repeater.
     repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[:callsign].upcase)
+
+    # Only update repeaters that were sourced from ukrepeater.
+    if repeater.persisted? && repeater.source != SOURCE
+      @logger.info "  Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+      return
+    end
 
     # Some metadata.
     repeater.name = raw_repeater[:where].titleize
@@ -103,7 +110,7 @@ class UkrepeatersImporter
     repeater.region_4 = raw_repeater[:where].titleize
     repeater.utc_offset = "0:00"
 
-    repeater.source = "https://ukrepeater.net"
+    repeater.source = SOURCE
     repeater.redistribution_limitations = "https://repeater.world/ukrepeater-net"
 
     @logger.info "  Created #{repeater}." if repeater.new_record?
@@ -123,6 +130,9 @@ class UkrepeatersImporter
       if !repeater
         @logger.info "  Repeater not found: #{raw_repeater[:call]} when importing #{raw_repeater}"
         next # TODO: create these repeaters.
+      elsif repeater.source != SOURCE
+        @logger.info "  Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+        next
       end
 
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
@@ -152,6 +162,9 @@ class UkrepeatersImporter
       if !repeater
         @logger.info "  Repeater not found: #{raw_repeater[:call]}"
         next # TODO: create these repeaters.
+      elsif repeater.source != SOURCE
+        @logger.info "  Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+        next
       end
 
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
@@ -188,6 +201,9 @@ class UkrepeatersImporter
       if !repeater
         @logger.info "  Repeater not found: #{raw_repeater[:call]}"
         next # TODO: create these repeaters.
+      elsif repeater.source != SOURCE
+        @logger.info "  Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+        next
       end
 
       repeater.fm = raw_repeater[:analg] == 1
@@ -235,6 +251,9 @@ class UkrepeatersImporter
       if !repeater
         @logger.info "  Repeater not found: #{raw_repeater[:repeater]}"
         next # TODO: create these repeaters.
+      elsif repeater.source != SOURCE
+        @logger.info "  Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+        next
       end
 
       if raw_repeater[:status] == "OPERATIONAL"
