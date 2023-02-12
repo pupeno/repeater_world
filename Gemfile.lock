@@ -288,10 +288,10 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    sentry-rails (5.7.0)
+    sentry-rails (5.8.0)
       railties (>= 5.0)
-      sentry-ruby (~> 5.7.0)
-    sentry-ruby (5.7.0)
+      sentry-ruby (~> 5.8.0)
+    sentry-ruby (5.8.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -340,7 +340,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.6)
+    zeitwerk (2.6.7)
 
 PLATFORMS
   x86_64-linux
@@ -370,7 +370,7 @@ DEPENDENCIES
   rails_admin (~> 3.1)
   rspec-rails (~> 6.0)
   sassc-rails (~> 2.1)
-  sentry-rails (~> 5.7)
+  sentry-rails (~> 5.8)
   sentry-ruby (~> 5.3)
   simplecov (~> 0.22)
   simplecov-cobertura (~> 2.1)
