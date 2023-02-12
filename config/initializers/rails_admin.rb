@@ -44,3 +44,32 @@ RailsAdmin.config do |config|
 
   config.label_methods << :to_s
 end
+
+# Add Rails Admin support for the "geography" column type
+# https://github.com/railsadminteam/rails_admin/issues/2225
+class RailsAdmin::Config::Fields::Types::Geography < RailsAdmin::Config::Fields::Base
+  RailsAdmin::Config::Fields::Types.register(self)
+
+  # Add some sensible default behaviour. Can be overridden when
+  # configuring models/fields
+
+  register_instance_option :read_only? do
+    true
+  end
+
+  register_instance_option :sortable do
+    false
+  end
+
+  register_instance_option :searchable do
+    false
+  end
+
+  register_instance_option :queryable? do
+    false
+  end
+
+  register_instance_option :filterable? do
+    false
+  end
+end
