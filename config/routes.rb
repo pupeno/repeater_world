@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   # Boring routes.
   get "open-source", to: "static#open_source"
   get "ukrepeater-net", to: "static#ukrepeater_net"
+  get "crawler", to: "static#crawler"
   get "privacy-policy", to: "static#privacy_policy"
   get "cookie-policy", to: "static#cookie_policy"
   get "sitemap", to: "static#sitemap"
