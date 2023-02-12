@@ -1,0 +1,12 @@
+<%= render "shared/page_header", title: "Crawler" %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <%= render "shared/flash_messages" %>
+
+  <p class="mt-2">
+    Repeater World has a crawler that we use to download data to import into our
+    database. The crawler should be well behaved and not run too often. Generally we ask
+    for permission first. If for some reason the crawler is misbehaving, please don't
+    just block us, <%= mail_to "info@repeater.world", "contact us" %> so we can fix it.
+  </p>
+</div>

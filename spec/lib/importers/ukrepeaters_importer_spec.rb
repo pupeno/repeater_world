@@ -49,10 +49,31 @@ RSpec.describe UkrepeatersImporter do
       expect(repeater.region_4).to eq("Derby")
       expect(repeater.utc_offset).to eq("0:00")
 
-      # The second time we call it, it shouldn't re-download any files, nor create new repeaters
+      # The second time we call it, it shouldn't re-download any files, nor create new
+      # repeaters
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
       end.to change { Repeater.count }.by(0)
+
+      # Some repeaters change, some get disconnected from the source, other's don't.
+      repeater = Repeater.find_by(call_sign: "GB3HI")
+      repeater.band = Repeater::BAND_23CM
+      repeater.source = nil
+      repeater.redistribution_limitations = nil
+      repeater.save!
+      repeater = Repeater.find_by(call_sign: "GB3NL")
+      repeater.band = Repeater::BAND_23CM
+      repeater.save!
+
+      # The third time we call it, it shouldn't re-download any files, nor create new
+      # repeaters, but some get updated and some don't.
+      expect do
+        UkrepeatersImporter.new(working_directory: dir).import
+      end.to change { Repeater.count }.by(0)
+      repeater = Repeater.find_by(call_sign: "GB3HI") # This one didn't change.
+      expect(repeater.band).to eq(Repeater::BAND_23CM)
+      repeater = Repeater.find_by(call_sign: "GB3NL") # This one did
+      expect(repeater.band).to eq(Repeater::BAND_2M)
     end
   end
 end

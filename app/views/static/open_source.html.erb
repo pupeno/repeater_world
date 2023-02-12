@@ -1,0 +1,56 @@
+<%= render "shared/page_header", title: "Open Source" %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <%= render "shared/flash_messages" %>
+
+  <h2 class="text-xl font-bold leading-7 text-gray-900 sm:text-2xl mt-4">Code</h2>
+
+  <p class="mt-2">
+    Repeater World is open source, that means that all the code that was written to
+    create Repeater World is freely available to all hams radio operators and everyone
+    else in the world. You can find it and fork it on
+    <a href="https://github.com/pupeno/repeater_world"
+       class="link">Github: Repeater World</a>. You can host your own copy if you want.
+  </p>
+
+  <p class="mt-2">
+    Of course, we would prefer if you didn't host your own and instead contributed to
+    Repeater World. You can get the code, modify it, and make a pull request, and after
+    reviewing it, we'll merge it and it'll get release to our production servers for you
+    and everyone else to enjoy.
+  </p>
+
+  <h2 class="text-xl font-bold leading-7 text-gray-900 sm:text-2xl mt-4">Data</h2>
+
+  <p class="mt-2">
+    We not only want our code to be free and open, we want our data too. Some of the
+    data we have is inherently private and will remain protected as best as we can. For
+    example, our list of users and their searches is private and will never be
+    exportable. In the future, there might be other private information (like exact
+    location of repeaters, addresses, keepers, etc).
+  </p>
+
+  <p class="mt-2">
+    What we want to make the list of repeaters completely free and open for anyone to do
+    whatever they want with it. We believe this matches the spirit of tinkering and
+    experimentation of ham radio. Unfortunately, the way we source data sometimes
+    imposes a limitation and those limitations will be imposed on those receiving the
+    data. When you download the data from our servers, records will be marked with their
+    redistribution limitations, which generally will be an URL to a page that
+    elaborates.
+  </p>
+
+  <p class="mt-2">
+    We currently have these limitations:
+  <ul class="list-disc list-inside">
+    <li><%= link_to "ukpereaters.net", ukrepeater_net_url, class: "link" %></li>
+  </ul>
+  </p>
+
+  <p class="mt-2">
+    You can help us make the information free by submitting your own repeaters and
+    making the information public domain. You can submit them to
+    <%= mail_to "info@repeater.world", class: "link" %> whether it's a repeater we have
+    with limitations or a new one.
+  </p>
+</div>

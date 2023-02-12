@@ -15,13 +15,6 @@ class Country < ApplicationRecord
     end
     Rails.logger.info "Created #{ISO3166::Country.codes.count} countries."
   end
-
-  rails_admin do
-    list do
-      field :code
-      field :name
-    end
-  end
 end
 
 # == Schema Information

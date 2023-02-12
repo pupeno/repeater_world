@@ -1,0 +1,37 @@
+<%= render "shared/page_header", title: "ukrepeater.net" %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <%= render "shared/flash_messages" %>
+
+  <p class="mt-2">
+    Repeater World aims to be
+    <%= link_to "open source, both code and data", open_source_url, class: "link" %> but
+    depending on the origin of the data we have, there are limitations in how it can be
+    redistributed. Every record marked with this URL has the restrictions documented
+    here.
+  </p>
+
+  <p class="mt-2">
+    ukrepeaters.net says:
+
+  <blockquote class="mt-2 pl-2 border-gray-200 border-l-4">
+    You may LINK to material on this web site but note that it is not acceptable to lift
+    information and re-publish it on other web sites as this has over the years resulted
+    in out-of-date and therefore incorrect data to be commonly found.
+  </blockquote>
+  </p>
+
+  <p class="mt-2">
+    We have contact them and since we have a method by which to keep our data up to
+    date they have allowed us to re-host this data, but we cannot grant you permission
+    to re-host it yourself. If you clone this site, you shouldn't import any data with
+    this limitation without first requesting permission.
+  </p>
+
+  <p class="mt-2">
+    We don't like these limitations. We believe information should be free, and we'll
+    aim, over time, to re-source all the data to have no limitations. You can help us
+    by submitting new data to <%= mail_to "info@repeater.world", class: "link" %> and
+    putting it in public domain.
+  </p>
+</div>
