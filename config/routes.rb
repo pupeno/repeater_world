@@ -19,6 +19,9 @@ Rails.application.routes.draw do
   resource :profile, only: [:edit, :update]
 
   # Boring routes.
+  get "open-source", to: "static#open_source"
+  get "ukrepeater-net", to: "static#ukrepeater_net"
+  get "crawler", to: "static#crawler"
   get "privacy-policy", to: "static#privacy_policy"
   get "cookie-policy", to: "static#cookie_policy"
   get "sitemap", to: "static#sitemap"
@@ -82,6 +85,8 @@ end
 #                             edit_profile GET    /profile/edit(.:format)                                                                           profiles#edit
 #                                  profile PATCH  /profile(.:format)                                                                                profiles#update
 #                                          PUT    /profile(.:format)                                                                                profiles#update
+#                              open_source GET    /open-source(.:format)                                                                            static#open_source
+#                           ukrepeater_net GET    /ukrepeater-net(.:format)                                                                         static#ukrepeater_net
 #                           privacy_policy GET    /privacy-policy(.:format)                                                                         static#privacy_policy
 #                            cookie_policy GET    /cookie-policy(.:format)                                                                          static#cookie_policy
 #                                  sitemap GET    /sitemap(.:format)                                                                                static#sitemap
