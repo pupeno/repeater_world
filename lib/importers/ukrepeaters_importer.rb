@@ -103,7 +103,8 @@ class UkrepeatersImporter
     repeater.region_4 = raw_repeater[:where].titleize
     repeater.utc_offset = "0:00"
 
-    repeater.source = "ukrepeater.net"
+    repeater.source = "https://ukrepeater.net"
+    repeater.redistribution_limitations = "https://repeater.world/ukrepeater-net"
 
     @logger.info "  Created #{repeater}." if repeater.new_record?
 
