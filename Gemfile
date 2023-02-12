@@ -35,7 +35,7 @@ gem "rails", "~> 7.0" # Bundle edge Rails instead: gem "rails", github: "rails/r
 gem "rails_admin", "~> 3.1"
 gem "sassc-rails", "~> 2.1" # Asked by rails_admin... but it's not a dependency??? the world is complicated.
 gem "sentry-rails", "~> 5.7"
-gem "sentry-ruby", "~> 5.3"
+gem "sentry-ruby", "~> 5.8"
 gem "sprockets-rails", "~> 3.4" # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "stimulus-rails", "~> 1.2" # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "tailwindcss-rails", "~> 2.0" # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
