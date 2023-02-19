@@ -1,0 +1,161 @@
+<%# Copyright 2023, Flexpoint Tech
+
+This file is part of Repeater World.
+
+Repeater World is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+Public License as published by the Free Software Foundation, either version 3 of the License.
+
+Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with Foobar. If not, see
+<https://www.gnu.org/licenses/>.%>
+
+<%= render "shared/page_header", title: "Add a New Repeater" %>
+
+<div class="w-full sm:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <%= render "shared/flash_messages" %>
+
+  <%= form_with(model: @suggested_repeater, class: "contents") do |form| %>
+    <% if @suggested_repeater.errors.any? %>
+      <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+        <h2>
+          <%= pluralize(@suggested_repeater.errors.count, "error") %> prevented this new repeater from being saved:
+        </h2>
+
+        <ul>
+          <% @suggested_repeater.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <h2 class="text-xl font-bold leading-7 text-gray-900 sm:text-2xl mt-4">About you</h2>
+    <%= form_text_field form: form,
+                        field_name: :submitter_name,
+                        label: "Your name (optional)",
+                        input_html_options: { autofocus: true } %>
+    <%= form_email_field form: form,
+                         field_name: :submitter_email,
+                         label: "Your email (optional)" %>
+    <%= form_text_field form: form,
+                        field_name: :submitter_call_sign,
+                        label: "Your call sign (optional)" %>
+    <div class="sm:grid sm:grid-cols-3 sm:items-start sm:border-b sm:border-gray-200 py-3 sm:py-5">
+      <%= form.label :submitter_keeper, "Are you the keeper of this repeater?", class: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" %>
+      <div class="sm:mt-px sm:pt-2 flex flex-row">
+        <%= form.check_box :submitter_keeper, class: "h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded" %>
+        <%= form.label :submitter_keeper, "Yes, I'm the keeper.", class: "ml-2 block text-sm text-gray-900" %>
+      </div>
+    </div>
+    <%= form_textarea_field form: form, field_name: :submitter_notes,
+                            help_text: "Private notes that will not be published. Anything you want to tell us about this repeater." %>
+
+    <h2 class="text-xl font-bold leading-7 text-gray-900 sm:text-2xl mt-20">About the repeater</h2>
+    <%= form_text_field form: form, field_name: :name %>
+    <%= form_text_field form: form, field_name: :call_sign %>
+    <%= form_text_field form: form, field_name: :band,
+                        help_text: "Likely one of: #{Repeater::BANDS.to_sentence(last_word_connector: " or ")}." %>
+    <%= form_text_field form: form, field_name: :channel %>
+    <%= form_text_field form: form, field_name: :keeper, label: "Keeper's call sign" %>
+    <%= form_textarea_field form: form, field_name: :notes,
+                            help_text: "This will be in the public record of the repeater." %>
+    <%= form_text_field form: form, field_name: :web_site %>
+    <%= form_text_field form: form, field_name: :tx_frequency, label: "TX frequency",
+                        help_text: "The frequency the repeater transmits on." %>
+    <%= form_text_field form: form, field_name: :rx_frequency, label: "RX frequency",
+                        help_text: "The frequency the repeater receives on, can be an offset." %>
+
+    <div class="py-3 sm:py-5 sm:border-b sm:border-gray-200">
+      <div role="group" aria-labelledby="label-modes">
+        <div class="sm:grid sm:grid-cols-3 sm:items-baseline sm:gap-4">
+          <div>
+            <div class="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700" id="label-modes">
+              What modes are supported by this repeater?
+            </div>
+          </div>
+          <div class="mt-4 sm:col-span-2 sm:mt-0">
+            <div class="max-w-lg space-y-4">
+              <div class="relative flex items-start">
+                <div class="flex h-5 items-center">
+                  <%= form.check_box :fm, class: "h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= form.label :fm, "FM", class: "font-medium text-gray-700" %>
+                </div>
+              </div>
+              <div class="relative flex items-start">
+                <div class="flex h-5 items-center">
+                  <%= form.check_box :dstar, class: "h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= form.label :dstar, "D-Star", class: "font-medium text-gray-700" %>
+                </div>
+              </div>
+              <div class="relative flex items-start">
+                <div class="flex h-5 items-center">
+                  <%= form.check_box :fusion, class: "h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= form.label :fusion, class: "font-medium text-gray-700" %>
+                </div>
+              </div>
+              <div class="relative flex items-start">
+                <div class="flex h-5 items-center">
+                  <%= form.check_box :dmr, class: "h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= form.label :dmr, "DMR", class: "font-medium text-gray-700" %>
+                </div>
+              </div>
+              <div class="relative flex items-start">
+                <div class="flex h-5 items-center">
+                  <%= form.check_box :nxdn, class: "h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= form.label :nxdn, "NXDN", class: "font-medium text-gray-700" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%= form_text_field form: form, field_name: :access_method,
+                        help_text: "Likely one of #{Repeater::ACCESS_METHODS.to_sentence(last_word_connector: " or ")}" %>
+
+    <%= form_text_field form: form, field_name: :ctcss_tone, label: "CTCSS tone",
+                        help_text: "Likely one of #{Repeater::CTCSS_CODES.to_sentence(last_word_connector: " or ")}" %>
+
+    <%= form_text_field form: form, field_name: :dmr_color_code, label: "DMR Color Code",
+                        help_text: "Likely one of #{Repeater::DMR_COLOR_CODES.to_sentence(last_word_connector: " or ")}" %>
+
+    <%= form_text_field form: form, field_name: :dmr_network, label: "DMR Connectivity",
+                        help_text: "Likely something like BRANDMEISTER or freeDMR, but there are many others." %>
+
+
+    <%= form_text_field form: form, field_name: :latitude %>
+    <%= form_text_field form: form, field_name: :longitude %>
+    <%= form_text_field form: form, field_name: :grid_square %>
+    <%= form_text_field form: form, field_name: :country %>
+    <%= form_text_field form: form, field_name: :region_1, help_text: "Could be city or town." %>
+    <%= form_text_field form: form, field_name: :region_2, help_text: "Could be state, province." %>
+    <%= form_text_field form: form, field_name: :region_3, help_text: "Any other regional demarcation" %>
+    <%= form_text_field form: form, field_name: :region_4, help_text: "Any other regional demarcation" %>
+
+    <div class="pt-5">
+      <div class="flex justify-end">
+        <%= form.submit "Add Repeater", class: "flex justify-center
+                                                py-2 px-4
+                                                border border-transparent rounded-md shadow-sm
+                                                text-sm font-medium text-white
+                                                bg-orange-600
+                                                hover:bg-orange-700
+                                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500" %>
+      </div>
+    </div>
+
+  <% end %>
+</div>

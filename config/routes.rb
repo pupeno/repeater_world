@@ -20,12 +20,14 @@ Rails.application.routes.draw do
   root "repeater_searches#new"
   get "search", to: "repeater_searches#new"
   get "export", to: "repeater_searches#export"
+
   resources :repeater_searches, only: [:new, :create, :show, :update] do
     member do
       get "export"
     end
   end
   resources :repeaters, only: [:show]
+  resources :suggested_repeaters, only: [:new, :create]
 
   # User and profile.
   devise_for :users
@@ -74,6 +76,8 @@ end
 #                                          PATCH  /repeater_searches/:id(.:format)                                                                  repeater_searches#update
 #                                          PUT    /repeater_searches/:id(.:format)                                                                  repeater_searches#update
 #                                 repeater GET    /repeaters/:id(.:format)                                                                          repeaters#show
+#                      suggested_repeaters POST   /suggested_repeaters(.:format)                                                                    suggested_repeaters#create
+#                   new_suggested_repeater GET    /suggested_repeaters/new(.:format)                                                                suggested_repeaters#new
 #                         new_user_session GET    /users/sign_in(.:format)                                                                          devise/sessions#new
 #                             user_session POST   /users/sign_in(.:format)                                                                          devise/sessions#create
 #                     destroy_user_session DELETE /users/sign_out(.:format)                                                                         devise/sessions#destroy
@@ -100,6 +104,7 @@ end
 #                                          PUT    /profile(.:format)                                                                                profiles#update
 #                              open_source GET    /open-source(.:format)                                                                            static#open_source
 #                           ukrepeater_net GET    /ukrepeater-net(.:format)                                                                         static#ukrepeater_net
+#                                  crawler GET    /crawler(.:format)                                                                                static#crawler
 #                           privacy_policy GET    /privacy-policy(.:format)                                                                         static#privacy_policy
 #                            cookie_policy GET    /cookie-policy(.:format)                                                                          static#cookie_policy
 #                                  sitemap GET    /sitemap(.:format)                                                                                static#sitemap
