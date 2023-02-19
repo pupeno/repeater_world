@@ -20,3 +20,26 @@ FactoryBot::SyntaxRunner.class_eval do
   # https://blog.eq8.eu/til/factory-bot-trait-for-active-storange-has_attached.html
   include ActionDispatch::TestProcess
 end
+
+FactoryBot.define do
+  sequence(:call_sign) { |n| number_to_call_sign(n) }
+end
+
+# This method counts in call sign, so base 26 for 3 characters, then base 10 for a number, and then base 26 for another
+# character. Sort of.
+def number_to_call_sign(n)
+  letters = ("A".."Z").to_a
+
+  call_sign = StringIO.new
+  call_sign << letters[n % 26]
+  n /= 26
+  call_sign << letters[n % 26]
+  n /= 26
+  call_sign << letters[n % 26]
+  n /= 26
+  call_sign << n % 10
+  n /= 10
+  call_sign << letters[n % 26]
+
+  call_sign.string.reverse
+end
