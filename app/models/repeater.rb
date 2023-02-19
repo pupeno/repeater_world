@@ -28,7 +28,6 @@ class Repeater < ApplicationRecord
     CTCSS = "ctcss"
   ]
 
-  # Call this CTCSS tones.
   CTCSS_TONES = [
     67.0, 69.3, 71.9, 74.4, 77.0, 79.7, 82.5, 85.4, 88.5, 91.5, 94.8, 97.4, 100.0, 103.5, 107.2, 110.9, 114.8, 118.8,
     123, 127.3, 131.8, 136.5, 141.3, 146.2, 151.4, 156.7, 162.2, 167.9, 173.8, 179.9, 186.2, 192.8, 203.5, 210.7, 218.1,
@@ -47,6 +46,7 @@ class Repeater < ApplicationRecord
   validates :ctcss_tone,
     presence: {if: lambda { |r| r.access_method == CTCSS }},
     inclusion: {in: CTCSS_TONES, if: lambda { |r| r.access_method == CTCSS }}
+  validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
@@ -128,8 +128,8 @@ end
 #  channel                    :string
 #  ctcss_tone                 :decimal(, )
 #  dmr                        :boolean
-#  dmr_cc                     :integer
-#  dmr_con                    :string
+#  dmr_color_code             :integer
+#  dmr_network                :string
 #  dstar                      :boolean
 #  fm                         :boolean
 #  fusion                     :boolean

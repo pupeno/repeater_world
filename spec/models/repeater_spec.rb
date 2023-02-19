@@ -60,8 +60,8 @@ end
 #  channel                    :string
 #  ctcss_tone                 :decimal(, )
 #  dmr                        :boolean
-#  dmr_cc                     :integer
-#  dmr_con                    :string
+#  dmr_color_code             :integer
+#  dmr_network                :string
 #  dstar                      :boolean
 #  fm                         :boolean
 #  fusion                     :boolean

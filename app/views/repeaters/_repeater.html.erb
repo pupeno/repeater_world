@@ -61,10 +61,8 @@ You should have received a copy of the GNU Affero General Public License along w
           <%= render partial: "shared/card/boolean", locals: { value: repeater.dmr } %>
         <% end %>
         <% if repeater.dmr? %>
-          <%= render partial: "shared/card/entry", locals: { key: "DMR CC", value: repeater.dmr_cc } %>
-          <%= render partial: "shared/card/entry",
-                     locals: { key: "DMR Con",
-                               value: repeater.dmr_con } if repeater.access_method == Repeater::CTCSS %>
+          <%= render partial: "shared/card/entry", locals: { key: "DMR color code", value: repeater.dmr_color_code } %>
+          <%= render partial: "shared/card/entry", locals: { key: "DMR network", value: repeater.dmr_network } %>
         <% end %>
         <%= render layout: "shared/card/entry", locals: { key: "NXDN" } do %>
           <%= render partial: "shared/card/boolean", locals: { value: repeater.nxdn } %>

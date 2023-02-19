@@ -76,7 +76,7 @@ class UkrepeatersImporter
         repeater.ctcss_tone = raw_repeater[:code]
         repeater.tone_sql = false # TODO: how do we know when this should be true? https://github.com/flexpointtech/repeater_world/issues/23
       elsif Repeater::DMR_COLOR_CODES.include?(raw_repeater[:code].to_f)
-        repeater.dmr_cc = raw_repeater[:code]
+        repeater.dmr_color_code = raw_repeater[:code]
       else
         @logger.info "  Ignoring invalid code #{raw_repeater[:code]} in #{raw_repeater}"
       end
@@ -226,8 +226,8 @@ class UkrepeatersImporter
       repeater.fusion = raw_repeater[:fusion] == 1
 
       repeater.dmr = raw_repeater[:dmr] == 1
-      repeater.dmr_cc = raw_repeater[:dmrcc]
-      repeater.dmr_con = raw_repeater[:dmrcon]
+      repeater.dmr_color_code = raw_repeater[:dmrcc]
+      repeater.dmr_network = raw_repeater[:dmrcon]
 
       if raw_repeater[:status] == "OPERATIONAL"
         repeater.operational = true
