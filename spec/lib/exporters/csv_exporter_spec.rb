@@ -20,7 +20,7 @@ RSpec.describe CsvExporter do
     exporter = CsvExporter.new(Repeater.order(:call_sign, :tx_frequency).all)
 
     expect(exporter.export).to eq(<<~CSV)
-      Name,Call Sign,Band,Channel,Keeper,Operational,Notes,Tx Frequency,Rx Frequency,FM,Access Method,CTCSS Tone,Tone Sql,D-Star,Fusion,DMR,DMR Color Code,DMR Network,NXDN,Latitude,Longitude,Grid Square,Country,Region 1,Region 2,Region 3,Region 4,UTC offset,Source,Redistribution Limitations
+      Name,Call Sign,Band,Channel,Keeper,Operational,Notes,Tx Frequency,Rx Frequency,FM,Access Method,CTCSS Tone,Tone SQL,D-Star,Fusion,DMR,DMR Color Code,DMR Network,NXDN,Latitude,Longitude,Grid Square,Country,Region 1,Region 2,Region 3,Region 4,UTC offset,Source,Redistribution Limitations
       Hawick,GB3AI,2m,RV59,GM8SJP,false,,145737500.0,145137500.0,true,ctcss,103.5,,true,true,true,3,DV Scotland Phoenix,,55.4,-2.7,IO85PK,gb,Scotland,Scotland,TD9,Hawick,0:00,ukrepeater.net,
       Amersham,GB3AM,6m,R50-13,M0ZPU,true,,50840000.0,51340000.0,true,ctcss,77.0,false,false,false,false,,,,51.65,-0.62,IO91QP,gb,England,South West,HP7,Amersham,0:00,ukrepeater.net,
       Cleobury North,GB3BX,2m,RV54,G4VZO,true,Reduced output.,145675000.0,145075000.0,false,,,,false,false,true,13,SALOP DMR,,52.5,-2.6,IO82QL,gb,Wales & Marches,Wales & Marches,SY7,Cleobury North,0:00,ukrepeater.net,

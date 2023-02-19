@@ -27,7 +27,7 @@ class CsvExporter < Exporter
     # Some columns require special cases.
     column_names[:fm] = "FM"
     column_names[:ctcss_tone] = "CTCSS Tone"
-    column_names[:ctcss_sql] = "Tone SQL"
+    column_names[:tone_sql] = "Tone SQL"
     column_names[:dstar] = "D-Star"
     column_names[:dmr] = "DMR"
     column_names[:dmr_color_code] = "DMR Color Code"
