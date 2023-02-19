@@ -17,7 +17,7 @@ RSpec.describe CsvExporter do
   include_context "repeaters"
 
   it "should export" do
-    exporter = CsvExporter.new(Repeater.order(:call_sign).all)
+    exporter = CsvExporter.new(Repeater.order(:call_sign, :tx_frequency).all)
 
     expect(exporter.export).to eq(<<~CSV)
       Name,Call Sign,Band,Channel,Keeper,Operational,Notes,Tx Frequency,Rx Frequency,FM,Access Method,CTCSS Tone,Tone Sql,D-Star,Fusion,DMR,DMR CC,DMR Con,NXDN,Latitude,Longitude,Grid Square,Country,Region 1,Region 2,Region 3,Region 4,UTC Offset,Source
