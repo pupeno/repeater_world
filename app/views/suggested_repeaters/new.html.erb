@@ -129,12 +129,12 @@ You should have received a copy of the GNU Affero General Public License along w
                           .to_sentence(last_word_connector: " or ", two_words_connector: " or ")}." %>
 
     <%= form_text_field form: form, field_name: :ctcss_tone, label: "CTCSS tone",
-                        help_text: "Likely one of #{Repeater::CTCSS_CODES
-                          .to_sentence(last_word_connector: " or ", two_words_connector: " or ")}" %>
+                        help_text: "Likely one of #{Repeater::CTCSS_TONES
+                          .to_sentence(last_word_connector: " or ", two_words_connector: " or ")}." %>
 
     <%= form_text_field form: form, field_name: :dmr_color_code, label: "DMR Color Code",
                         help_text: "Likely one of #{Repeater::DMR_COLOR_CODES
-                          .to_sentence(last_word_connector: " or ", two_words_connector: " or ")}" %>
+                          .to_sentence(last_word_connector: " or ", two_words_connector: " or ")}." %>
 
     <%= form_text_field form: form, field_name: :dmr_network, label: "DMR Connectivity",
                         help_text: "Likely something like BRANDMEISTER or freeDMR, but there are many others." %>
