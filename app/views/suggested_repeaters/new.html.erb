@@ -124,17 +124,20 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
 
     <%= form_text_field form: form, field_name: :access_method,
-                        help_text: "Likely one of #{Repeater::ACCESS_METHODS.to_sentence(last_word_connector: " or ")}" %>
+                        help_text: "Likely one of #{Repeater::ACCESS_METHODS
+                          .map { |r| access_method_name(r) }
+                          .to_sentence(last_word_connector: " or ", two_words_connector: " or ")}." %>
 
     <%= form_text_field form: form, field_name: :ctcss_tone, label: "CTCSS tone",
-                        help_text: "Likely one of #{Repeater::CTCSS_CODES.to_sentence(last_word_connector: " or ")}" %>
+                        help_text: "Likely one of #{Repeater::CTCSS_CODES
+                          .to_sentence(last_word_connector: " or ", two_words_connector: " or ")}" %>
 
     <%= form_text_field form: form, field_name: :dmr_color_code, label: "DMR Color Code",
-                        help_text: "Likely one of #{Repeater::DMR_COLOR_CODES.to_sentence(last_word_connector: " or ")}" %>
+                        help_text: "Likely one of #{Repeater::DMR_COLOR_CODES
+                          .to_sentence(last_word_connector: " or ", two_words_connector: " or ")}" %>
 
     <%= form_text_field form: form, field_name: :dmr_network, label: "DMR Connectivity",
                         help_text: "Likely something like BRANDMEISTER or freeDMR, but there are many others." %>
-
 
     <%= form_text_field form: form, field_name: :latitude %>
     <%= form_text_field form: form, field_name: :longitude %>
