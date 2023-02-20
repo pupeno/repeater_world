@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_19_223503) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_19_231305) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -94,16 +94,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_19_223503) do
     t.boolean "nxdn"
     t.geography "location", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.string "grid_square"
-    t.string "country_id"
-    t.string "region_1"
-    t.string "region_2"
-    t.string "region_3"
-    t.string "region_4"
     t.string "utc_offset"
     t.string "source"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "redistribution_limitations"
+    t.string "address"
+    t.string "locality"
+    t.string "region"
+    t.string "post_code"
+    t.string "country_id"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["country_id"], name: "index_repeaters_on_country_id"
     t.index ["location"], name: "index_repeaters_on_location", using: :gist
@@ -137,14 +137,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_19_223503) do
     t.string "latitude"
     t.string "longitude"
     t.string "grid_square"
-    t.string "country"
-    t.string "region_1"
-    t.string "region_2"
-    t.string "region_3"
-    t.string "region_4"
     t.text "private_notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "address"
+    t.string "locality"
+    t.string "region"
+    t.string "post_code"
+    t.string "country"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

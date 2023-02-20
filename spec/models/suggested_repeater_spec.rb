@@ -40,6 +40,7 @@ end
 #
 #  id                  :uuid             not null, primary key
 #  access_method       :string
+#  address             :string
 #  band                :string
 #  call_sign           :string
 #  channel             :string
@@ -54,15 +55,14 @@ end
 #  grid_square         :string
 #  keeper              :string
 #  latitude            :string
+#  locality            :string
 #  longitude           :string
 #  name                :string
 #  notes               :text
 #  nxdn                :boolean
+#  post_code           :string
 #  private_notes       :text
-#  region_1            :string
-#  region_2            :string
-#  region_3            :string
-#  region_4            :string
+#  region              :string
 #  rx_frequency        :string
 #  submitter_call_sign :string
 #  submitter_email     :string

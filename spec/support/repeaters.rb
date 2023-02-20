@@ -27,7 +27,7 @@ RSpec.shared_context "repeaters" do
       dmr: false, dmr_color_code: nil, dmr_network: nil,
       nxdn: nil,
       grid_square: "IO71TX", latitude: 51.99, longitude: -4.4,
-      country_id: "gb", region_1: "Wales & Marches", region_2: "Wales & Marches", region_3: "SA44", region_4: "Newcastle Emlyn",
+      locality: "Newcastle Emlyn", region: "Wales & Marches", post_code: "SA44", country_id: "gb",
       utc_offset: "0:00", source: "ukrepeater.net", redistribution_limitations: "https://repeater.world/ukrepeater-net")
 
     # FM repeater without CTCSS
@@ -42,7 +42,7 @@ RSpec.shared_context "repeaters" do
       dmr: false, dmr_color_code: nil, dmr_network: nil,
       nxdn: nil,
       grid_square: "IO80SN", latitude: 50.55, longitude: -2.44,
-      country_id: "gb", region_1: "England", region_2: "South West", region_3: "DT5", region_4: "Weymouth",
+      locality: "Weymouth", region: "South West, England", post_code: "DT5", country_id: "gb",
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # FM and D-Star repeater.
@@ -57,7 +57,7 @@ RSpec.shared_context "repeaters" do
       dmr: false, dmr_color_code: nil, dmr_network: nil,
       nxdn: nil,
       grid_square: "JO01NI", latitude: 51.36, longitude: 1.15,
-      country_id: "gb", region_1: "England", region_2: "South East", region_3: "CT6", region_4: "Herne Bay",
+      locality: "Herne Bay", region: "South East, England", post_code: "CT6", country_id: "gb",
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # D-Star repeater only.
@@ -71,7 +71,7 @@ RSpec.shared_context "repeaters" do
       fusion: false,
       dmr: false, dmr_color_code: nil, dmr_network: nil, nxdn: nil,
       grid_square: "IO91CJ", latitude: 51.42, longitude: -1.76,
-      country_id: "gb", region_1: "England", region_2: "South West", region_3: "SN8", region_4: "Marlborough",
+      locality: "Marlborough", region: "South West, England", post_code: "SN8", country_id: "gb",
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # FM and Fusion repeater.
@@ -85,7 +85,8 @@ RSpec.shared_context "repeaters" do
       fusion: true,
       dmr: true, dmr_color_code: 1, dmr_network: "BRANDMEISTER",
       nxdn: true,
-      grid_square: "IO92GW", latitude: 52.9, longitude: -1.4, country_id: "gb", region_1: "England", region_2: "Midlands", region_3: "DE21", region_4: "Derby",
+      grid_square: "IO92GW", latitude: 52.9, longitude: -1.4,
+      locality: "Derby", region: "Midlands, England", post_code: "DE21", country_id: "gb",
       utc_offset: nil, source: "ukrepeater.net")
 
     # Fusion only repeater.
@@ -100,7 +101,7 @@ RSpec.shared_context "repeaters" do
       dmr: false, dmr_color_code: nil, dmr_network: nil,
       nxdn: nil,
       grid_square: "IO86HK", latitude: 56.5, longitude: -3.4,
-      country_id: "gb", region_1: "Scotland", region_2: "Scotland", region_3: "PH2", region_4: "Perth",
+      locality: "Perth", region: "Scotland", post_code: "PH2", country_id: "gb",
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # DMR and nxdn repeater.
@@ -114,7 +115,8 @@ RSpec.shared_context "repeaters" do
       fusion: false,
       dmr: true, dmr_color_code: 13, dmr_network: "SALOP DMR",
       nxdn: nil,
-      grid_square: "IO82QL", latitude: 52.5, longitude: -2.6, country_id: "gb", region_1: "Wales & Marches", region_2: "Wales & Marches", region_3: "SY7", region_4: "Cleobury North",
+      grid_square: "IO82QL", latitude: 52.5, longitude: -2.6,
+      locality: "Cleobury North", region: "Wales & Marches", post_code: "SY7", country_id: "gb",
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # Non-2m-70cm repeater.
@@ -128,7 +130,8 @@ RSpec.shared_context "repeaters" do
       fusion: false,
       dmr: false, dmr_color_code: nil, dmr_network: nil,
       nxdn: nil,
-      grid_square: "IO91QP", latitude: 51.65, longitude: -0.62, country_id: "gb", region_1: "England", region_2: "South West", region_3: "HP7", region_4: "Amersham",
+      grid_square: "IO91QP", latitude: 51.65, longitude: -0.62,
+      locality: "Amersham", region: "South West, England", post_code: "HP7", country_id: "gb",
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # Non operational repeater on fm, dstar, fusion and dmr.
@@ -143,7 +146,7 @@ RSpec.shared_context "repeaters" do
       dmr: true, dmr_color_code: 3, dmr_network: "DV Scotland Phoenix",
       nxdn: nil,
       grid_square: "IO85PK", latitude: 55.4, longitude: -2.7,
-      country_id: "gb", region_1: "Scotland", region_2: "Scotland", region_3: "TD9", region_4: "Hawick",
+      locality: "Hawick", region: "Scotland", post_code: "TD9", country_id: "gb",
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # Japanese D-Star repeaters.

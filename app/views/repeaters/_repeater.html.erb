@@ -71,7 +71,7 @@ You should have received a copy of the GNU Affero General Public License along w
           <div data-action="click->repeater-list#changeLocationFormat"
                class="cursor-pointer">
             <div data-repeater-list-target="locationFormat1">
-              <%= [repeater.region_1, repeater.region_2, repeater.region_3, repeater.region_4, repeater.country.name].reject(&:blank?).join(", ") %>
+              <%= [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.country.name].reject(&:blank?).join(", ") %>
             </div>
             <div data-repeater-list-target="locationFormat2" class="hidden">
               Lat: <%= repeater.latitude %>, Long: <%= repeater.longitude %>

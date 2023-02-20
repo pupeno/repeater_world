@@ -142,11 +142,12 @@ You should have received a copy of the GNU Affero General Public License along w
     <%= form_text_field form: form, field_name: :latitude %>
     <%= form_text_field form: form, field_name: :longitude %>
     <%= form_text_field form: form, field_name: :grid_square %>
+    <%= form_text_field form: form, field_name: :address, help_text: "Address where the repeater is, if known." %>
+    <%= form_text_field form: form, field_name: :locality, label: "City or town" %>
+    <%= form_text_field form: form, field_name: :region, label: "State or province",
+                        help_text: "Or any other region demarcation" %>
+    <%= form_text_field form: form, field_name: :post_code, label: "Post code or ZIP" %>
     <%= form_text_field form: form, field_name: :country %>
-    <%= form_text_field form: form, field_name: :region_1, help_text: "Could be city or town." %>
-    <%= form_text_field form: form, field_name: :region_2, help_text: "Could be state, province." %>
-    <%= form_text_field form: form, field_name: :region_3, help_text: "Any other regional demarcation" %>
-    <%= form_text_field form: form, field_name: :region_4, help_text: "Any other regional demarcation" %>
 
     <div class="pt-5">
       <div class="flex justify-end">

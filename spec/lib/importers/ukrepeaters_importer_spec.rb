@@ -56,10 +56,9 @@ RSpec.describe UkrepeatersImporter do
       expect(repeater.latitude).to eq(52.9)
       expect(repeater.longitude).to eq(-1.4)
       expect(repeater.country_id).to eq("gb")
-      expect(repeater.region_1).to eq("England")
-      expect(repeater.region_2).to eq("Midlands")
-      expect(repeater.region_3).to eq("DE21")
-      expect(repeater.region_4).to eq("Derby")
+      expect(repeater.locality).to eq("Derby")
+      expect(repeater.post_code).to eq("DE21")
+      expect(repeater.region).to eq("Midlands, England")
       expect(repeater.utc_offset).to eq("0:00")
 
       # The second time we call it, it shouldn't re-download any files, nor create new

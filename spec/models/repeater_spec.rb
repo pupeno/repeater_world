@@ -55,6 +55,7 @@ end
 #
 #  id                         :uuid             not null, primary key
 #  access_method              :string
+#  address                    :string
 #  band                       :string
 #  call_sign                  :string
 #  channel                    :string
@@ -67,16 +68,15 @@ end
 #  fusion                     :boolean
 #  grid_square                :string
 #  keeper                     :string
+#  locality                   :string
 #  location                   :geography        point, 4326
 #  name                       :string
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean
+#  post_code                  :string
 #  redistribution_limitations :string
-#  region_1                   :string
-#  region_2                   :string
-#  region_3                   :string
-#  region_4                   :string
+#  region                     :string
 #  rx_frequency               :decimal(, )
 #  source                     :string
 #  tone_sql                   :boolean

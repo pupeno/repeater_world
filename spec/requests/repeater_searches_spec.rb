@@ -61,7 +61,7 @@ RSpec.describe "/repeater_searches", type: :request do
       get export_url(s: attributes_for(:repeater_search, band_2m: true, fm: true),
         e: {format: "csv"})
       expect(response).to be_successful
-      expect(response.body).to include("Name,Call Sign,Band,Channel,Keeper,Operational,Notes,Tx Frequency,Rx Frequency,FM,Access Method,CTCSS Tone,Tone SQL,D-Star,Fusion,DMR,DMR Color Code,DMR Network,NXDN,Latitude,Longitude,Grid Square,Country,Region 1,Region 2,Region 3,Region 4,UTC offset,Source,Redistribution Limitations")
+      expect(response.body).to include("Name,Call Sign,Band,Channel,Keeper,Operational,Notes,Tx Frequency,Rx Frequency,FM,Access Method,CTCSS Tone,Tone SQL,D-Star,Fusion,DMR,DMR Color Code,DMR Network,NXDN,Latitude,Longitude,Grid Square,Address,Locality,Region,Post Code,Country,UTC Offset,Source,Redistribution Limitations")
       expect(response.body).to include("2M FM,")
     end
 
@@ -174,7 +174,7 @@ RSpec.describe "/repeater_searches", type: :request do
           repeater_search = create(:repeater_search, user: @current_user, band_2m: true, fm: true)
           get export_repeater_search_url(repeater_search, e: {format: "csv"})
           expect(response).to be_successful
-          expect(response.body).to include("Name,Call Sign,Band,Channel,Keeper,Operational,Notes,Tx Frequency,Rx Frequency,FM,Access Method,CTCSS Tone,Tone SQL,D-Star,Fusion,DMR,DMR Color Code,DMR Network,NXDN,Latitude,Longitude,Grid Square,Country,Region 1,Region 2,Region 3,Region 4,UTC offset,Source,Redistribution Limitations")
+          expect(response.body).to include("Name,Call Sign,Band,Channel,Keeper,Operational,Notes,Tx Frequency,Rx Frequency,FM,Access Method,CTCSS Tone,Tone SQL,D-Star,Fusion,DMR,DMR Color Code,DMR Network,NXDN,Latitude,Longitude,Grid Square,Address,Locality,Region,Post Code,Country,UTC Offset,Source,Redistribution Limitations")
           expect(response.body).to include("2M FM,")
         end
       end

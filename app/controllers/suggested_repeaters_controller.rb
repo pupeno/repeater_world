@@ -38,7 +38,7 @@ class SuggestedRepeatersController < ApplicationController
       :submitter_name, :submitter_email, :submitter_call_sign, :submitter_keeper, :submitter_notes, :name, :call_sign,
       :band, :channel, :keeper, :notes, :web_site, :tx_frequency, :rx_frequency, :fm, :access_method, :ctcss_tone,
       :tone_sql, :dstar, :fusion, :dmr, :dmr_color_code, :dmr_network, :nxdn, :latitude, :longitude, :grid_square,
-      :country, :region_1, :region_2, :region_3, :region_4
+      :address, :locality, :region, :post_code, :country
     )
   end
 end

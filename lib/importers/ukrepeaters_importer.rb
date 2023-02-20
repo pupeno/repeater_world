@@ -88,39 +88,28 @@ class UkrepeatersImporter
     repeater.grid_square = raw_repeater[:qthr].upcase
     repeater.latitude = raw_repeater[:lat]
     repeater.longitude = raw_repeater[:lon]
-    repeater.country_id = "gb"
-    repeater.region_1 = case raw_repeater[:region]
-    when "SE", "SW", "NOR", "MIDL"
-      "England"
-    when "SCOT"
-      "Scotland"
-    when "WM"
-      "Wales & Marches"
-    when "NI"
-      "Northern Ireland"
-    else
-      raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
-    end
-    repeater.region_2 = case raw_repeater[:region]
+    repeater.locality = raw_repeater[:where].titleize
+    case raw_repeater[:region]
     when "SE"
-      "South East"
+      repeater.region = "South East, England"
     when "SW"
-      "South West"
+      repeater.region = "South West, England"
     when "NOR"
-      "North England"
+      repeater.region = "North England"
     when "MIDL"
-      "Midlands"
+      repeater.region = "Midlands, England"
     when "SCOT"
-      "Scotland"
+      repeater.region = "Scotland"
     when "WM"
-      "Wales & Marches"
+      repeater.region = "Wales & Marches"
     when "NI"
-      "Northern Ireland"
+      repeater.region = "Northern Ireland"
     else
       raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
     end
-    repeater.region_3 = raw_repeater[:postcode]
-    repeater.region_4 = raw_repeater[:where].titleize
+    repeater.post_code = raw_repeater[:postcode]
+    repeater.country_id = "gb"
+
     repeater.utc_offset = "0:00"
 
     repeater.source = SOURCE

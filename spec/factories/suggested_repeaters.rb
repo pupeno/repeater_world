@@ -48,11 +48,11 @@ FactoryBot.define do
     latitude { "latitude" }
     longitude { "longitude" }
     grid_square { "grid square" }
+    address { "address" }
+    locality { "locality" }
+    region { "region" }
+    post_code { "post code" }
     country { "country" }
-    region_1 { "region 1" }
-    region_2 { "region 2" }
-    region_3 { "region 3" }
-    region_4 { "region 4" }
 
     private_notes { "private notes" }
   end
@@ -64,6 +64,7 @@ end
 #
 #  id                  :uuid             not null, primary key
 #  access_method       :string
+#  address             :string
 #  band                :string
 #  call_sign           :string
 #  channel             :string
@@ -78,15 +79,14 @@ end
 #  grid_square         :string
 #  keeper              :string
 #  latitude            :string
+#  locality            :string
 #  longitude           :string
 #  name                :string
 #  notes               :text
 #  nxdn                :boolean
+#  post_code           :string
 #  private_notes       :text
-#  region_1            :string
-#  region_2            :string
-#  region_3            :string
-#  region_4            :string
+#  region              :string
 #  rx_frequency        :string
 #  submitter_call_sign :string
 #  submitter_email     :string
