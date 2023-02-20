@@ -32,4 +32,16 @@
     .field-text-invalid {
         @apply focus:ring-red-500 focus:border-red-500 border-red-300 text-red-900 placeholder-red-300
     }
+
+    .field-textarea {
+        @apply block w-full max-w-lg rounded-md shadow-sm sm:text-sm
+    }
+
+    .field-textarea-valid {
+        @apply focus:ring-orange-500 focus:border-orange-500 border-gray-300
+    }
+
+    .field-textarea-invalid {
+        @apply focus:ring-red-500 focus:border-red-500 border-red-300 text-red-900 placeholder-red-300
+    }
 }
