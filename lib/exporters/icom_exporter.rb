@@ -46,7 +46,11 @@ class IcomExporter < Exporter
   def repeater(repeater)
     group_name = truncate(MAX_COUNTRY_NAME_LENGTH, repeater.country.name) # TODO: do something smarter about groups: https://github.com/pupeno/repeater_world/issues/21
     name = truncate(MAX_NAME_LENGTH, repeater.name)
-    sub_name = truncate(MAX_SUB_NAME_LENGTH, repeater.region_1)
+    sub_name = if repeater.name == repeater.locality # If the name is the locality, use the region as the sub name.
+      truncate(MAX_SUB_NAME_LENGTH, repeater.region)
+    else
+      truncate(MAX_SUB_NAME_LENGTH, repeater.locality)
+    end
 
     call_sign = truncate(MAX_CALL_SIGN_LENGTH, repeater.call_sign&.tr("-", " ")) # In the UK, some call signs have a hyphen, but ID-52 doesn't like that.
 

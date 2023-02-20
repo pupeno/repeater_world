@@ -71,12 +71,12 @@ class UkrepeatersImporter
     repeater.tx_frequency = raw_repeater[:tx].to_f * 10**6
     repeater.rx_frequency = raw_repeater[:rx].to_f * 10**6
     if raw_repeater[:code].present?
-      if Repeater::CTCSS_CODES.include?(raw_repeater[:code].to_f)
+      if Repeater::CTCSS_TONES.include?(raw_repeater[:code].to_f)
         repeater.access_method = Repeater::CTCSS
         repeater.ctcss_tone = raw_repeater[:code]
         repeater.tone_sql = false # TODO: how do we know when this should be true? https://github.com/pupeno/repeater_world/issues/23
       elsif Repeater::DMR_COLOR_CODES.include?(raw_repeater[:code].to_f)
-        repeater.dmr_cc = raw_repeater[:code]
+        repeater.dmr_color_code = raw_repeater[:code]
       else
         @logger.info "  Ignoring invalid code #{raw_repeater[:code]} in #{raw_repeater}"
       end
@@ -88,39 +88,28 @@ class UkrepeatersImporter
     repeater.grid_square = raw_repeater[:qthr].upcase
     repeater.latitude = raw_repeater[:lat]
     repeater.longitude = raw_repeater[:lon]
-    repeater.country_id = "gb"
-    repeater.region_1 = case raw_repeater[:region]
-    when "SE", "SW", "NOR", "MIDL"
-      "England"
-    when "SCOT"
-      "Scotland"
-    when "WM"
-      "Wales & Marches"
-    when "NI"
-      "Northern Ireland"
-    else
-      raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
-    end
-    repeater.region_2 = case raw_repeater[:region]
+    repeater.locality = raw_repeater[:where].titleize
+    case raw_repeater[:region]
     when "SE"
-      "South East"
+      repeater.region = "South East, England"
     when "SW"
-      "South West"
+      repeater.region = "South West, England"
     when "NOR"
-      "North England"
+      repeater.region = "North England"
     when "MIDL"
-      "Midlands"
+      repeater.region = "Midlands, England"
     when "SCOT"
-      "Scotland"
+      repeater.region = "Scotland"
     when "WM"
-      "Wales & Marches"
+      repeater.region = "Wales & Marches"
     when "NI"
-      "Northern Ireland"
+      repeater.region = "Northern Ireland"
     else
       raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
     end
-    repeater.region_3 = raw_repeater[:postcode]
-    repeater.region_4 = raw_repeater[:where].titleize
+    repeater.post_code = raw_repeater[:postcode]
+    repeater.country_id = "gb"
+
     repeater.utc_offset = "0:00"
 
     repeater.source = SOURCE
@@ -226,8 +215,8 @@ class UkrepeatersImporter
       repeater.fusion = raw_repeater[:fusion] == 1
 
       repeater.dmr = raw_repeater[:dmr] == 1
-      repeater.dmr_cc = raw_repeater[:dmrcc]
-      repeater.dmr_con = raw_repeater[:dmrcon]
+      repeater.dmr_color_code = raw_repeater[:dmrcc]
+      repeater.dmr_network = raw_repeater[:dmrcon]
 
       if raw_repeater[:status] == "OPERATIONAL"
         repeater.operational = true
