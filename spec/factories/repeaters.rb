@@ -12,8 +12,6 @@
 # <https://www.gnu.org/licenses/>.
 
 FactoryBot.define do
-  sequence(:call_sign) { |n| number_to_call_sign(n) }
-
   factory :repeater do
     call_sign
     sequence(:name) { |n| "Repeater #{call_sign}".strip }
@@ -28,8 +26,11 @@ FactoryBot.define do
 
     latitude { 51.74 }
     longitude { -3.42 }
+    address { "address" }
+    locality { "city" }
+    region { "region" }
+    post_code { "PC" }
     country_id { "gb" }
-    region_1 { "WM" }
     grid_square { "IO81HR" }
 
     after(:build) do |repeater|
@@ -41,53 +42,34 @@ FactoryBot.define do
   end
 end
 
-# This method counts in call sign, so base 26 for 3 characters, then base 10 for a number, and then base 26 for another
-# character. Sort of.
-def number_to_call_sign(n)
-  letters = ("A".."Z").to_a
-
-  call_sign = StringIO.new
-  call_sign << letters[n % 26]
-  n /= 26
-  call_sign << letters[n % 26]
-  n /= 26
-  call_sign << letters[n % 26]
-  n /= 26
-  call_sign << n % 10
-  n /= 10
-  call_sign << letters[n % 26]
-
-  call_sign.string.reverse
-end
-
 # == Schema Information
 #
 # Table name: repeaters
 #
 #  id                         :uuid             not null, primary key
 #  access_method              :string
+#  address                    :string
 #  band                       :string
 #  call_sign                  :string
 #  channel                    :string
 #  ctcss_tone                 :decimal(, )
 #  dmr                        :boolean
-#  dmr_cc                     :integer
-#  dmr_con                    :string
+#  dmr_color_code             :integer
+#  dmr_network                :string
 #  dstar                      :boolean
 #  fm                         :boolean
 #  fusion                     :boolean
 #  grid_square                :string
 #  keeper                     :string
+#  locality                   :string
 #  location                   :geography        point, 4326
 #  name                       :string
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean
+#  post_code                  :string
 #  redistribution_limitations :string
-#  region_1                   :string
-#  region_2                   :string
-#  region_3                   :string
-#  region_4                   :string
+#  region                     :string
 #  rx_frequency               :decimal(, )
 #  source                     :string
 #  tone_sql                   :boolean

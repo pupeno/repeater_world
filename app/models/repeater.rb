@@ -25,10 +25,10 @@ class Repeater < ApplicationRecord
 
   ACCESS_METHODS = [
     TONE_BURST = "tone_burst",
-    CTCSS = "CTCSS"
+    CTCSS = "ctcss"
   ]
 
-  CTCSS_CODES = [
+  CTCSS_TONES = [
     67.0, 69.3, 71.9, 74.4, 77.0, 79.7, 82.5, 85.4, 88.5, 91.5, 94.8, 97.4, 100.0, 103.5, 107.2, 110.9, 114.8, 118.8,
     123, 127.3, 131.8, 136.5, 141.3, 146.2, 151.4, 156.7, 162.2, 167.9, 173.8, 179.9, 186.2, 192.8, 203.5, 210.7, 218.1,
     225.7, 233.6, 241.8, 250.3
@@ -45,7 +45,8 @@ class Repeater < ApplicationRecord
   validates :access_method, inclusion: ACCESS_METHODS, allow_blank: true
   validates :ctcss_tone,
     presence: {if: lambda { |r| r.access_method == CTCSS }},
-    inclusion: {in: CTCSS_CODES, if: lambda { |r| r.access_method == CTCSS }}
+    inclusion: {in: CTCSS_TONES, if: lambda { |r| r.access_method == CTCSS }}
+  validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
@@ -92,7 +93,7 @@ class Repeater < ApplicationRecord
   end
 
   def location_in_words
-    [region_1, region_2, region_3, region_4, country.name].reject(&:blank?).join(", ")
+    [address, locality, region, post_code, country.name].reject(&:blank?).join(", ")
   end
 
   def to_param
@@ -122,28 +123,28 @@ end
 #
 #  id                         :uuid             not null, primary key
 #  access_method              :string
+#  address                    :string
 #  band                       :string
 #  call_sign                  :string
 #  channel                    :string
 #  ctcss_tone                 :decimal(, )
 #  dmr                        :boolean
-#  dmr_cc                     :integer
-#  dmr_con                    :string
+#  dmr_color_code             :integer
+#  dmr_network                :string
 #  dstar                      :boolean
 #  fm                         :boolean
 #  fusion                     :boolean
 #  grid_square                :string
 #  keeper                     :string
+#  locality                   :string
 #  location                   :geography        point, 4326
 #  name                       :string
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean
+#  post_code                  :string
 #  redistribution_limitations :string
-#  region_1                   :string
-#  region_2                   :string
-#  region_3                   :string
-#  region_4                   :string
+#  region                     :string
 #  rx_frequency               :decimal(, )
 #  source                     :string
 #  tone_sql                   :boolean
