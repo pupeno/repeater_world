@@ -19,4 +19,8 @@ class StaticController < ApplicationController
   def fail_bg
     FailJob.perform_later
   end
+
+  def sitemap
+    @repeaters = Repeater.order(:call_sign, :tx_frequency)
+  end
 end

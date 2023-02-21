@@ -97,7 +97,7 @@ class Repeater < ApplicationRecord
   end
 
   def to_param
-    "#{id}-#{call_sign.parameterize}-#{name.parameterize}"
+    [id, call_sign&.parameterize, name&.parameterize].reject(&:blank?).join("-")
   end
 
   rails_admin do
