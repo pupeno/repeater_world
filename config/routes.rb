@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   resource :profile, only: [:edit, :update]
 
   # Boring routes.
+  get "sitemap", to: "static#sitemap"
   get "open-source", to: "static#open_source"
   get "ukrepeater-net", to: "static#ukrepeater_net"
   get "crawler", to: "static#crawler"
