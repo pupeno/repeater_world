@@ -49,4 +49,14 @@ RSpec.describe "Statics", type: :request do
     expect(response).to have_http_status(:not_found)
     expect(response.body).to include("Page not found")
   end
+
+  context "with a bunch of repeaters" do
+    include_context "repeaters"
+    it "shows a sitemap" do
+      get "/sitemap.xml"
+      expect(response).to be_successful
+      expect(response.body).to include(root_url)
+      expect(response.body).to include(repeater_url(Repeater.first))
+    end
+  end
 end

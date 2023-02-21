@@ -15,7 +15,21 @@ xml.instruct!
 xml.urlset xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9" do
   xml.url do
     xml.loc root_url
-    xml.changefreq "daily"
-    xml.priority 1
+  end
+
+  xml.url do
+    xml.loc new_suggested_repeater_url
+  end
+
+  xml.url do
+    xml.loc open_source_url
+  end
+
+  @repeaters.map do |repeater|
+    puts repeater
+    xml.url do
+      xml.loc repeater_url(repeater)
+      xml.lastmod repeater.updated_at.to_date
+    end
   end
 end
