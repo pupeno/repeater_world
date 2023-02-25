@@ -150,6 +150,7 @@ end
 #  tone_sql                   :boolean
 #  tx_frequency               :decimal(, )
 #  utc_offset                 :string
+#  web_site                   :string
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  country_id                 :string
