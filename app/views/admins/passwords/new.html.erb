@@ -20,7 +20,7 @@ You should have received a copy of the GNU Affero General Public License along w
     <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-200">
       <%= render "shared/flash_messages" %>
 
-      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, "data-turbo": "false", class: "space-y-6" }) do |f| %>
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "space-y-6" }) do |f| %>
         <%= render "users/shared/error_messages", resource: resource %>
 
         <div>

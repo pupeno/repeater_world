@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License along w
 <div class="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
   <%= render "shared/flash_messages" %>
 
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, "data-turbo": "false", class: "space-y-6" }) do |f| %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
 
     <%= render "users/shared/error_messages", resource: resource %>
 
