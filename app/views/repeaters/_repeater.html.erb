@@ -11,7 +11,7 @@ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero Gener
 You should have received a copy of the GNU Affero General Public License along with Foobar. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div id="<%= dom_id repeater %>" data-controller="repeater-list">
+<div id="<%= dom_id repeater %>" data-controller="repeater">
   <div class="overflow-hidden bg-white shadow sm:rounded-lg border border-gray-200 flex flex-row">
     <div class="flex-1 px-4 py-5 sm:p-0">
       <dl class="sm:divide-y sm:divide-gray-200">
@@ -29,15 +29,15 @@ You should have received a copy of the GNU Affero General Public License along w
           <%= repeater.tx_frequency / (10 ** 6) %>MHz
         <% end %>
         <%= render layout: "shared/card/entry", locals: { key: "RX Frequency" } do %>
-          <div data-action="click->repeater-list#toggleRxFrequencyFormat"
+          <div data-action="click->repeater#toggleRxFrequencyFormat"
                class="cursor-pointer">
             <% offset = "#{(repeater.rx_frequency - repeater.tx_frequency > 0) ? "+" : ""}#{((repeater.rx_frequency - repeater.tx_frequency) / (10 ** 3)).to_i}kHz" %>
             <div title="<%= offset %>"
-                 data-repeater-list-target="rxFreqAsFreq">
+                 data-repeater-target="rxFreqAsFreq">
               <%= repeater.rx_frequency / (10 ** 6) %>MHz
             </div>
             <div title="<%= repeater.rx_frequency / (10 ** 6) %>MHz"
-                 data-repeater-list-target="rxFreqAsOffset"
+                 data-repeater-target="rxFreqAsOffset"
                  class="hidden">
               <%= offset %>
             </div>
@@ -71,15 +71,15 @@ You should have received a copy of the GNU Affero General Public License along w
           <%= render partial: "shared/card/boolean", locals: { value: repeater.nxdn } %>
         <% end %>
         <%= render layout: "shared/card/entry", locals: { key: "Location" } do %>
-          <div data-action="click->repeater-list#changeLocationFormat"
+          <div data-action="click->repeater#changeLocationFormat"
                class="cursor-pointer">
-            <div data-repeater-list-target="locationFormat1">
+            <div data-repeater-target="locationFormat1">
               <%= [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.country.name].reject(&:blank?).join(", ") %>
             </div>
-            <div data-repeater-list-target="locationFormat2" class="hidden">
+            <div data-repeater-target="locationFormat2" class="hidden">
               Lat: <%= repeater.latitude %>, Long: <%= repeater.longitude %>
             </div>
-            <div data-repeater-list-target="locationFormat3" class="hidden">
+            <div data-repeater-target="locationFormat3" class="hidden">
               <%= repeater.grid_square %>
             </div>
           </div>
