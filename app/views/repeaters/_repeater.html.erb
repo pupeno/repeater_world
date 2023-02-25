@@ -12,9 +12,10 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <div id="<%= dom_id repeater %>" data-controller="repeater">
-  <div class="overflow-hidden bg-white shadow sm:rounded-lg border border-gray-200 flex flex-row">
+  <div class="overflow-hidden bg-white shadow sm:rounded-lg border border-gray-200
+              flex flex-col sm:flex-row">
     <div class="flex-1 px-4 py-5 sm:p-0">
-      <dl class="sm:divide-y sm:divide-gray-200">
+      <dl class="divide-y divide-gray-200">
         <%= render partial: "shared/card/entry", locals: { key: "Name", value: repeater.name } %>
         <%= render partial: "shared/card/entry", locals: { key: "Call Sign", value: repeater.call_sign } %>
         <% if repeater.web_site.present? %>
@@ -91,8 +92,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= render partial: "shared/card/entry", locals: { key: "Source", value: repeater.source } if repeater.source.present? %>
       </dl>
     </div>
-    <div class="flex-1 place-self-stretch
-      bg-gray-300"
+    <div class="flex-1 min-h-[500px] place-self-stretch bg-gray-300"
          data-controller="map"
          data-action="google-maps-callback@window->maps#initializeMap"
          data-map-markers-value="<%=
