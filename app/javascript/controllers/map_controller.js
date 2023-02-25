@@ -13,7 +13,7 @@
  */
 
 import {Controller} from "@hotwired/stimulus"
-import { MarkerClusterer } from "@googlemaps/markerclusterer";
+import {MarkerClusterer} from "@googlemaps/markerclusterer";
 
 export default class extends Controller {
   static values = {
@@ -54,7 +54,14 @@ export default class extends Controller {
       return mapMarker;
     })
 
-    new MarkerClusterer({ markers, map });
+    new MarkerClusterer({markers, map});
+
+    // Don't allow fitBounds to zoom in too much (it happens when there's only 1 repeater for example).
+    google.maps.event.addListenerOnce(map, "bounds_changed", function () {
+      if (map.getZoom() > 12) {
+        map.setZoom(12);
+      }
+    });
     map.fitBounds(bounds);
   }
 }
