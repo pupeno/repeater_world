@@ -12,8 +12,8 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <div id="<%= dom_id repeater %>" data-controller="repeater-list">
-  <div class="overflow-hidden bg-white shadow sm:rounded-lg border border-gray-200">
-    <div class="px-4 py-5 sm:p-0">
+  <div class="overflow-hidden bg-white shadow sm:rounded-lg border border-gray-200 flex flex-row">
+    <div class="flex-1 px-4 py-5 sm:p-0">
       <dl class="sm:divide-y sm:divide-gray-200">
         <%= render partial: "shared/card/entry", locals: { key: "Name", value: repeater.name } %>
         <%= render partial: "shared/card/entry", locals: { key: "Call Sign", value: repeater.call_sign } %>
@@ -88,6 +88,25 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= render partial: "shared/card/entry", locals: { key: "Notes", value: repeater.notes } if repeater.notes.present? %>
         <%= render partial: "shared/card/entry", locals: { key: "Source", value: repeater.source } if repeater.source.present? %>
       </dl>
+    </div>
+    <div class="flex-1 place-self-stretch
+      bg-gray-300"
+         data-controller="map"
+         data-action="google-maps-callback@window->maps#initializeMap"
+         data-map-markers-value="<%=
+           [{
+              lat: repeater.latitude,
+              lng: repeater.longitude,
+              tooltip: repeater.call_sign,
+              info: "<h1 class='font-bold text-lg link'>#{repeater.name}</h1>
+                <p class='link'>#{repeater.call_sign}</p>
+                <p>Band: <span class='font-bold'>#{h repeater.band}</span></p>
+                <p>Modes: <span class='font-bold'>#{h repeater.modes.join(", ")}</span></p>
+                <p>Frequency: <span class='font-bold'>#{h repeater.tx_frequency_in_mhz} #{h repeater.rx_offset_in_khz}</span></p>
+                <p>Location: <span class='font-bold'>#{h repeater.location_in_words}</span></p>
+                <p>Lat: <span class='font-bold'>#{h repeater.latitude}</span>,
+                   Long: <span class='font-bold'>#{h repeater.longitude}</span</p>
+                <p>Grid square: <span class='font-bold'>#{h repeater.grid_square}<span></p>" }].to_json %>">
     </div>
   </div>
 </div>
