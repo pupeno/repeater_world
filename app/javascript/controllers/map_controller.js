@@ -58,8 +58,8 @@ export default class extends Controller {
 
     // Don't allow fitBounds to zoom in too much (it happens when there's only 1 repeater for example).
     google.maps.event.addListenerOnce(map, "bounds_changed", function () {
-      if (map.getZoom() > 12) {
-        map.setZoom(12);
+      if (map.getZoom() > 13) {
+        map.setZoom(13);
       }
     });
     map.fitBounds(bounds);
