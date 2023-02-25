@@ -17,8 +17,10 @@ You should have received a copy of the GNU Affero General Public License along w
       <dl class="sm:divide-y sm:divide-gray-200">
         <%= render partial: "shared/card/entry", locals: { key: "Name", value: repeater.name } %>
         <%= render partial: "shared/card/entry", locals: { key: "Call Sign", value: repeater.call_sign } %>
-        <%= render layout: "shared/card/entry", locals: { key: "Web Site" } do %>
-          <%= link_to repeater.web_site, repeater.web_site, class: "link" %>
+        <% if repeater.web_site.present? %>
+          <%= render layout: "shared/card/entry", locals: { key: "Web Site" } do %>
+            <%= link_to repeater.web_site, repeater.web_site, class: "link" %>
+          <% end %>
         <% end %>
         <%= render partial: "shared/card/entry", locals: { key: "Band", value: repeater.band } %>
         <%= render partial: "shared/card/entry", locals: { key: "Modes", value: repeater.modes.join(", ") } %>
