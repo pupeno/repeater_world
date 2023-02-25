@@ -103,12 +103,13 @@ end
 #                             edit_profile GET    /profile/edit(.:format)                                                                           profiles#edit
 #                                  profile PATCH  /profile(.:format)                                                                                profiles#update
 #                                          PUT    /profile(.:format)                                                                                profiles#update
+#                                  sitemap GET    /sitemap(.:format)                                                                                static#sitemap
 #                              open_source GET    /open-source(.:format)                                                                            static#open_source
 #                           ukrepeater_net GET    /ukrepeater-net(.:format)                                                                         static#ukrepeater_net
 #                                  crawler GET    /crawler(.:format)                                                                                static#crawler
 #                           privacy_policy GET    /privacy-policy(.:format)                                                                         static#privacy_policy
 #                            cookie_policy GET    /cookie-policy(.:format)                                                                          static#cookie_policy
-#                                  sitemap GET    /sitemap(.:format)                                                                                static#sitemap
+#                                          GET    /sitemap(.:format)                                                                                static#sitemap
 #                                          GET    /404(.:format)                                                                                    static#not_found
 #                                     fail GET    /fail(.:format)                                                                                   static#fail
 #                                  fail_fe GET    /fail-fe(.:format)                                                                                static#fail_fe
