@@ -46,8 +46,7 @@ RSpec.describe "/repeater_searches", type: :request do
     end
 
     it "runs a search generating an exporting link" do
-      get search_url(s: attributes_for(:repeater_search, band_2m: true, fm: true),
-        export: true, e: {format: "csv"})
+      get search_url(s: attributes_for(:repeater_search, band_2m: true, fm: true), export: true, e: {format: "csv"})
       expect(response).to be_successful
       expect(response).to render_template(:new)
       expect(response.body).to include("Search")
@@ -88,7 +87,7 @@ RSpec.describe "/repeater_searches", type: :request do
       # end
 
       describe "GET /show" do
-        it "run an empty search" do
+        it "runs an empty search" do
           repeater_search = create(:repeater_search, user: @current_user)
           get repeater_search_url(repeater_search)
           expect(response).to be_successful
@@ -96,7 +95,7 @@ RSpec.describe "/repeater_searches", type: :request do
           expect(response.body).to include("4M FM")
         end
 
-        it "run a band search" do
+        it "runs a band search" do
           repeater_search = create(:repeater_search, band_2m: true, user: @current_user)
           get repeater_search_url(repeater_search)
           expect(response).to be_successful
@@ -113,7 +112,7 @@ RSpec.describe "/repeater_searches", type: :request do
           expect(response.body).not_to include("4M FM")
         end
 
-        it "run a mode search" do
+        it "runs a mode search" do
           repeater_search = create(:repeater_search, fm: true, user: @current_user)
           get repeater_search_url(repeater_search)
           expect(response).to be_successful
@@ -167,6 +166,13 @@ RSpec.describe "/repeater_searches", type: :request do
           expect(response.body).to include("4M FM")
           expect(response.body).to include("Download export.csv")
         end
+
+        it "doesn't run someone else's search" do
+          repeater_search = create(:repeater_search, user: create(:user))
+          expect do
+            get repeater_search_url(repeater_search)
+          end.to raise_exception(ActiveRecord::RecordNotFound)
+        end
       end
 
       context "GET /export" do
@@ -216,10 +222,17 @@ RSpec.describe "/repeater_searches", type: :request do
           expect(response).to redirect_to(repeater_search_url(repeater_search, export: true, e: {format: "csv"}))
         end
 
-        it "fails to update" do
+        it "fails to update due to validations" do
           repeater_search = create(:repeater_search, user: @current_user)
           patch repeater_search_url(repeater_search), params: {s: {distance: "hello"}}
           expect(response).to have_http_status(422)
+        end
+
+        it "fails to update due search belonging to someone else" do
+          repeater_search = create(:repeater_search, user: create(:user))
+          expect do
+            patch repeater_search_url(repeater_search), params: {s: {dmr: true}}
+          end.to raise_exception(ActiveRecord::RecordNotFound)
         end
       end
 
