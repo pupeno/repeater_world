@@ -28,7 +28,7 @@ gem "factory_bot_rails", "~> 6.2" # To be able to generate sample data in stagin
 gem "faker", "~> 3.1" # To be able to generate sample data in staging (which is production).
 gem "importmap-rails", "~> 1.1" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "kaminari", "~> 1.2"
-gem "pg", "~> 1.1" # Use postgresql as the database for Active Record
+gem "pg", "~> 1.4" # Use postgresql as the database for Active Record
 gem "postmark-rails", "~> 0.22"
 gem "puma", "~> 6.1" # Use the Puma web server [https://github.com/puma/puma]
 gem "rails", "~> 7.0" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
