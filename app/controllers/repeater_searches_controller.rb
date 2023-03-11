@@ -97,7 +97,7 @@ class RepeaterSearchesController < ApplicationController
       :d,
       s: Repeater::BANDS.map { |b| :"band_#{b}" } +
         Repeater::MODES +
-        [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
+        [:name, :distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
       e: [:format]
     )
   end

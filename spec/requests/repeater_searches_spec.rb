@@ -189,7 +189,7 @@ RSpec.describe "/repeater_searches", type: :request do
         context "with valid parameters" do
           it "creates a new RepeaterSearch" do
             expect {
-              post repeater_searches_url, params: attributes_for(:repeater_search)
+              post repeater_searches_url, params: {s: attributes_for(:repeater_search)}
             }.to change(RepeaterSearch, :count).by(1)
             expect(response).to redirect_to(repeater_search_url(RepeaterSearch.last))
           end
