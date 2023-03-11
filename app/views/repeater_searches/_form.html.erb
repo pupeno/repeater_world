@@ -101,7 +101,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <div class="inline">
     <button type="<%= user_signed_in? ? "submit" : "button" %>"
             class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer <%= repeater_search.persisted? ? "bg-orange-600" : "bg-orange-900" %>"
-            data-action="<%= user_signed_in? ? "click->repeater-searches#saveSearch" : "click->repeater-searches#showAuthPopUp" %>">
+            data-action="<%= user_signed_in? ? "click->repeater-searches#saveSearch" : "click->repeater-searches#showAuthBeforeSavePopUp" %>">
       <i class="fa-regular fa-bookmark mr-2"></i>
       Save Search
     </button>
@@ -147,16 +147,13 @@ You should have received a copy of the GNU Affero General Public License along w
   <%= pop_up title: "Save Search",
              links: [{ text: "Sign up", url: new_user_registration_url, icon: "fa-regular fa-face-smile" },
                      { text: "Log in", url: new_user_session_url, icon: "fa-solid fa-right-to-bracket" }],
-             data: { repeater_searches_target: "authPopUp" } do %>
+             data: { repeater_searches_target: "authBeforeSavePopUp" } do %>
     <p class="text-sm text-gray-500 mb-2">
-      A saved search allows you to easily re-run it later with updated
-      information
-      and also be notified when a change happens (new repeater pops up, or
-      one goes down).
+      A saved search allows you to easily re-run it later with updated information and also be notified when a change
+      happens (new repeater pops up, or one goes down).
     </p>
     <p class="text-sm text-gray-500">
-      To be able to save a search, you need to log in or sign up to be able
-      to access the saved searches later.
+      To be able to save a search, you need to log in or sign up to be able to access the saved searches later.
     </p>
   <% end %>
 <% end %>

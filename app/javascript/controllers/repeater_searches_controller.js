@@ -15,7 +15,7 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["form", "authPopUp", "exportPopUp", "modalPanel", "exportLink"]
+  static targets = ["form", "authBeforeSavePopUp", "exportPopUp", "modalPanel", "exportLink"]
 
   exportLinkTargetConnected(target) {
     target.click()
@@ -43,8 +43,8 @@ export default class extends Controller {
     }
   }
 
-  showAuthPopUp() {
-    this.showPopUp(this.authPopUpTarget)
+  showAuthBeforeSavePopUp() {
+    this.showPopUp(this.authBeforeSavePopUpTarget)
   }
 
   showExportPopUp() {
