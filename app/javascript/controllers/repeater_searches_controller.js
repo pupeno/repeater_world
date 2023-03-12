@@ -15,7 +15,7 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["form", "authBeforeSavePopUp", "exportPopUp", "modalPanel", "exportLink"]
+  static targets = ["form", "authBeforeSavePopUp", "firstSavePopUp", "exportPopUp", "modalPanel", "exportLink"]
 
   exportLinkTargetConnected(target) {
     target.click()
@@ -41,6 +41,10 @@ export default class extends Controller {
         this.formTarget.appendChild(csrfHidenInput)
       }
     }
+  }
+
+  showFirstSavePopUp() {
+    this.showPopUp(this.firstSavePopUpTarget)
   }
 
   showAuthBeforeSavePopUp() {

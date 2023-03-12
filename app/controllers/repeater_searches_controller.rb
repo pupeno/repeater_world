@@ -32,6 +32,24 @@ class RepeaterSearchesController < ApplicationController
     if params[:export]
       @export_url = export_url(repeater_search_params)
     end
+
+    modes = []
+    modes << "FM" if @repeater_search.fm?
+    modes << "D-Star" if @repeater_search.dstar?
+    modes << "Fusion" if @repeater_search.fusion?
+    modes << "DMR" if @repeater_search.dmr?
+    modes << "NXDN" if @repeater_search.nxdn?
+    modes << "All modes" if modes.empty?
+    bands = []
+    bands << "10m" if @repeater_search.band_10m?
+    bands << "6m" if @repeater_search.band_6m?
+    bands << "4m" if @repeater_search.band_4m?
+    bands << "2m" if @repeater_search.band_2m?
+    bands << "70cm" if @repeater_search.band_70cm?
+    bands << "23cm" if @repeater_search.band_23cm?
+    bands << "all bands" if bands.empty?
+    distance = "#{@repeater_search.distance}#{@repeater_search.distance_unit} of #{@repeater_search.latitude}, #{@repeater_search.longitude}" if @repeater_search.distance_to_coordinates
+    @repeater_search.name = "#{modes.to_sentence} on #{bands.to_sentence} #{distance}".strip
   end
 
   def export
