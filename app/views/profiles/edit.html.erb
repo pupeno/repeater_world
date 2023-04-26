@@ -13,7 +13,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
 <%= render "shared/page_header", title: "My profile" %>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="w-full sm:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <%= render "shared/flash_messages" %>
 
   <%= form_with(model: current_user, url: profile_url) do |form| %>
@@ -40,7 +40,9 @@ You should have received a copy of the GNU Affero General Public License along w
             <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <%= form.label :email, class: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" %>
               <div class="mt-1 sm:mt-0 sm:col-span-2">
-                <%= form.text_field :email, placeholder: "sam@example.com", class: ["field-text", current_user.errors.where(:email).any? ? "field-text-invalid" : "field-text-valid"] %>
+                <%= form.text_field :email,
+                                    placeholder: "sam@example.com",
+                                    class: "field-text block max-w-lg sm:max-w-sm w-full" %>
                 <% current_user.errors.where(:email).each do |error| %>
                   <p class="mt-2 text-sm text-red-600"><%= error.full_message %></p>
                 <% end %>
@@ -61,7 +63,9 @@ You should have received a copy of the GNU Affero General Public License along w
               <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <%= form.label :name, class: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" %>
                 <div class="mt-1 sm:mt-0 sm:col-span-2">
-                  <%= form.text_field :name, placeholder: "John Smith", class: ["field-text", current_user.errors.where(:name).any? ? "field-text-invalid" : "field-text-valid"] %>
+                  <%= form.text_field :name,
+                                      placeholder: "John Smith",
+                                      class: "field-text block max-w-lg sm:max-w-sm w-full" %>
                   <% current_user.errors.where(:name).each do |error| %>
                     <p class="mt-2 text-sm text-red-600"><%= error.full_message %></p>
                   <% end %>
@@ -77,7 +81,9 @@ You should have received a copy of the GNU Affero General Public License along w
               <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <%= form.label :nickname, class: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" %>
                 <div class="mt-1 sm:mt-0 sm:col-span-2">
-                  <%= form.text_field :nickname, placeholder: "Johnny", class: ["field-text", current_user.errors.where(:nickname).any? ? "field-text-invalid" : "field-text-valid"] %>
+                  <%= form.text_field :nickname,
+                                      placeholder: "Johnny",
+                                      class: "field-text block max-w-lg sm:max-w-sm w-full" %>
                   <% current_user.errors.where(:nickname).each do |error| %>
                     <p class="mt-2 text-sm text-red-600"><%= error.full_message %></p>
                   <% end %>
@@ -95,7 +101,8 @@ You should have received a copy of the GNU Affero General Public License along w
 
       <div class="pt-5">
         <div class="flex justify-end">
-          <%= form.submit "Save", class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500" %>
+          <%= form.submit "Save",
+                          class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500" %>
         </div>
       </div>
     </div>
