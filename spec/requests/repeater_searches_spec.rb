@@ -203,6 +203,22 @@ RSpec.describe "/repeater_searches", type: :request do
             get repeater_search_url(repeater_search)
           end.to raise_exception(ActiveRecord::RecordNotFound)
         end
+
+        it "shows an unsaved search over a saved search" do
+          repeater_search = create(:repeater_search, user: @current_user)
+          get repeater_search_url(repeater_search, s: attributes_for(:repeater_search, band_2m: false, band_4m: true, fm: true))
+          expect(response).to be_successful
+          expect(response.body).not_to include("2M FM")
+          expect(response.body).to include("4M FM")
+        end
+
+        it "shows an unsaved search over a saved search, ignoring page because of map mode" do
+          repeater_search = create(:repeater_search, user: @current_user)
+          get repeater_search_url(repeater_search, s: attributes_for(:repeater_search, band_2m: false, band_4m: true, fm: true), p: 2, d: "map")
+          expect(response).to be_successful
+          expect(response.body).not_to include("2M FM")
+          expect(response.body).to include("4M FM")
+        end
       end
 
       context "GET /export" do
