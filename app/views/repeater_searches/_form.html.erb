@@ -12,11 +12,15 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <%= form_with(model: repeater_search,
-              method: form_method,
-              url: url,
+              method: :get, # It's get because by default it shouldn't save, so you can search without altering your saved searches.
+              url: search_url,
               scope: :s,
               html: { data: { repeater_searches_target: "form",
-                              repeater_searches_url: repeater_searches_url } }) do |form| %>
+                              save_url: save_url,
+                              save_method: save_method } }) do |form| %>
+  <% show_name_field = repeater_search.persisted? || repeater_search.errors.present?
+     unsaved_changes = repeater_search.persisted? && repeater_search.changed? %>
+
   <% if repeater_search.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
       <h2>We found <%= pluralize(repeater_search.errors.count, "error") %> in this search:</h2>
@@ -28,8 +32,6 @@ You should have received a copy of the GNU Affero General Public License along w
       </ul>
     </div>
   <% end %>
-
-  <% show_name_field = repeater_search.persisted? || repeater_search.errors.present? %>
 
   <% if show_name_field %>
     <div class="my-3 flex flex-row items-baseline gap-3">
@@ -107,19 +109,21 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
   </div>
 
-  <% if !repeater_search.persisted? %>
-    <div class="inline">
-      <button type="submit" class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer">
-        <i class="fa-solid fa-magnifying-glass mr-2"></i>
-        Search
-      </button>
-    </div>
+  <% if unsaved_changes %>
+    <p>You have unsaved changes to your search.</p>
   <% end %>
+
+  <div class="inline">
+    <button type="submit" class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer">
+      <i class="fa-solid fa-magnifying-glass mr-2"></i>
+      Search
+    </button>
+  </div>
 
   <% if !user_signed_in? %>
     <div class="inline">
       <button type="button"
-              class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-900"
+              class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-600"
               data-action="click->repeater-searches#showAuthBeforeSavePopUp">
         <i class="fa-regular fa-bookmark mr-2"></i>
         Save Search
@@ -129,7 +133,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <% elsif show_name_field %> <%# logged in and the search has already been saved, or is being saved %>
     <div class="inline">
       <button type="submit"
-              class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-900"
+              class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-600"
               data-action="click->repeater-searches#saveSearch">
         <i class="fa-regular fa-bookmark mr-2"></i>
         Save Search
@@ -155,6 +159,17 @@ You should have received a copy of the GNU Affero General Public License along w
       Export
     </button>
   </div>
+
+  <% if unsaved_changes %>
+    <div class="inline">
+      <%= link_to repeater_search,
+                  type: "button",
+                  class: "rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-900" do %>
+        <i class="fa-solid fa-xmark mr-2"></i>
+        Discard Unsaved Changes
+      <% end %>
+    </div>
+  <% end %>
 
   <% if @export_url %>
     <div>

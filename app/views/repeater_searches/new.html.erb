@@ -11,15 +11,15 @@ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero Gener
 You should have received a copy of the GNU Affero General Public License along with Foobar. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div class="flex-grow w-full px-10
-            flex flex-col"
+<div class="flex-grow w-full px-10 flex flex-col"
      data-controller="repeater-searches">
   <%= render "shared/flash_messages" %>
 
   <%= render "form",
              repeater_search: @repeater_search,
-             form_method: :get,
-             url: search_url %>
+             search_rl: search_url,
+             save_url: repeater_searches_url,
+             save_method: "post" %>
 
   <%= render "repeater_list", repeaters: @repeaters if @repeaters.present? %>
 </div>

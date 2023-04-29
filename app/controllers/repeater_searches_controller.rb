@@ -69,13 +69,16 @@ class RepeaterSearchesController < ApplicationController
     @repeater_search.user = current_user
 
     if @repeater_search.save
-      redirect_to @repeater_search
+      redirect_to @repeater_search, notice: "You search is now saved."
     else
       render :new, status: :unprocessable_entity
     end
   end
 
   def show
+    if repeater_search_params[:s].present?
+      @repeater_search.assign_attributes(repeater_search_params[:s])
+    end
     @repeaters = @repeater_search.run
     @repeaters = @repeaters.page(params[:p] || 1) if @selected_tab != "map"
     if params[:export]
@@ -89,7 +92,7 @@ class RepeaterSearchesController < ApplicationController
         # redirect_to export_url(repeater_search_params)
         redirect_to repeater_search_url(@repeater_search, export: true, e: repeater_search_params[:e])
       else
-        redirect_to @repeater_search
+        redirect_to @repeater_search, notice: "Your search is now saved."
       end
     else
       render :show, status: :unprocessable_entity
