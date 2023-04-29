@@ -25,14 +25,19 @@ You should have received a copy of the GNU Affero General Public License along w
         <div>
           <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
           <div class="mt-1">
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: ["field-text", resource.errors.where(:email).any? ? "field-text-invalid" : "field-text-valid"] %>
+            <%= f.email_field :email,
+                              autofocus: true,
+                              autocomplete: "email",
+                              class: "field-text block max-w-lg sm:max-w-sm w-full" %>
           </div>
         </div>
 
         <div>
           <%= f.label :password, class: "block text-sm font-medium text-gray-700" %>
           <div class="mt-1">
-            <%= f.password_field :password, autocomplete: "current-password", class: ["field-text", resource.errors.where(:password).any? ? "field-text-invalid" : "field-text-valid"] %>
+            <%= f.password_field :password,
+                                 autocomplete: "current-password",
+                                 class: "field-text block max-w-lg sm:max-w-sm w-full" %>
           </div>
         </div>
 

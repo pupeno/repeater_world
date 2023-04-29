@@ -28,7 +28,7 @@ export default class extends Controller {
   }
 
   toggleDisable() {
-    const grayedOutText = "text-gray-400";
+    const grayedOutText = "text-gray-300";
     if (this.controllerTarget.checked) {
       this.controlledTargets.forEach(x => x.classList.remove(grayedOutText))
     } else {
