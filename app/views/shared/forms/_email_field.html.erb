@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <%= form.label field_name, label, class: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" %>
   <div class="mt-1 sm:col-span-2 sm:mt-0">
     <%= form.email_field field_name,
-                         **input_html_options.deep_merge({ class: [input_html_options[:class], "field-text", form.object.errors.where(field_name).any? ? "field-text-invalid" : "field-text-valid"] }) %>
+                         **input_html_options.deep_merge({ class: [input_html_options[:class], "field-text block max-w-lg sm:max-w-sm w-full"] }) %>
     <% if help_text.present? %>
       <p class="mt-2 text-sm text-gray-500"><%= help_text %></p>
     <% end %>

@@ -12,17 +12,20 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <%= form_with(model: repeater_search,
-              method: form_method,
-              url: url,
+              method: :get, # It's get because by default it shouldn't save, so you can search without altering your saved searches.
+              url: search_url,
               scope: :s,
               html: { data: { repeater_searches_target: "form",
-                              repeater_searches_url: repeater_searches_url } }) do |form| %>
+                              save_url: save_url,
+                              save_method: save_method } }) do |form| %>
+  <% show_name_field = repeater_search.persisted? || repeater_search.errors.present?
+     unsaved_changes = repeater_search.persisted? && repeater_search.changed? %>
+
   <% if repeater_search.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2><%= pluralize(repeater_search.errors.count, "error") %> prohibited this
-        repeater_search from being saved:</h2>
+      <h2>We found <%= pluralize(repeater_search.errors.count, "error") %> in this search:</h2>
 
-      <ul>
+      <ul class="list-disc pl-4">
         <% repeater_search.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -30,7 +33,21 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
   <% end %>
 
-  <div>
+  <% if show_name_field %>
+    <div class="my-3 flex flex-row items-baseline gap-3">
+      <%= form.label :name, "Name:",
+                     class: "mr-2" %>
+      <div class="mt-1 sm:mt-0 grow">
+        <%= form.text_field :name,
+                            class: "field-text w-full" %>
+        <% repeater_search.errors.where(:name).each do |error| %>
+          <p class="mt-2 text-sm text-red-600"><%= error.full_message %></p>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="my-3">
     Band:
     <% Repeater::BANDS.each do |band| %>
       <%= badge_checkbox form, "band_#{band}", band %>
@@ -77,35 +94,62 @@ You should have received a copy of the GNU Affero General Public License along w
                                              text-right sm:text-sm",
                           data: { distance_to_coordinates_target: "controlled" } %>
     </div>
-    <span data-distance-to-coordinates-target="controlled">and</span>
+    <span data-distance-to-coordinates-target="controlled">&nbsp;and</span>
 
     <div class="inline-flex items-baseline">
-      <%= form.label :longitude, "longitude", data: { distance_to_coordinates_target: "controlled" }, class: "mr-2" %>
+      <%= form.label :longitude, "longitude", class: "mr-2",
+                     data: { distance_to_coordinates_target: "controlled" } %>
       <%= form.text_field :longitude, class: "inline w-28
-                                           rounded-md border-gray-300
-                                           px-2
-                                           focus:border-orange-500 focus:ring-orange-500
-                                           text-right sm:text-sm", data: { distance_to_coordinates_target: "controlled" } %>
+                                              rounded-md border-gray-300
+                                              px-2
+                                              focus:border-orange-500 focus:ring-orange-500
+                                              text-right sm:text-sm",
+                          data: { distance_to_coordinates_target: "controlled" } %>
       <span data-distance-to-coordinates-target="controlled">.</span>
     </div>
   </div>
 
-  <% if !repeater_search.persisted? %>
+  <% if unsaved_changes %>
+    <p>You have unsaved changes to your search.</p>
+  <% end %>
+
+  <div class="inline">
+    <button type="submit" class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer">
+      <i class="fa-solid fa-magnifying-glass mr-2"></i>
+      Search
+    </button>
+  </div>
+
+  <% if !user_signed_in? %>
     <div class="inline">
-      <button type="submit" class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer">
-        <i class="fa-solid fa-magnifying-glass mr-2"></i>
-        Search
+      <button type="button"
+              class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-600"
+              data-action="click->repeater-searches#showAuthBeforeSavePopUp">
+        <i class="fa-regular fa-bookmark mr-2"></i>
+        Save Search
+      </button>
+    </div>
+
+  <% elsif show_name_field %> <%# logged in and the search has already been saved, or is being saved %>
+    <div class="inline">
+      <button type="submit"
+              class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-600"
+              data-action="click->repeater-searches#saveSearch">
+        <i class="fa-regular fa-bookmark mr-2"></i>
+        Save Search
+      </button>
+    </div>
+
+  <% else %>  <%# logged in but this search is not saved yet %>
+    <div class="inline">
+      <button type="button"
+              class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-600"
+              data-action="click->repeater-searches#showFirstSavePopUp">
+        <i class="fa-regular fa-bookmark mr-2"></i>
+        Save Search
       </button>
     </div>
   <% end %>
-  <div class="inline">
-    <button type="<%= user_signed_in? ? "submit" : "button" %>"
-            class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer <%= repeater_search.persisted? ? "bg-orange-600" : "bg-orange-900" %>"
-            data-action="<%= user_signed_in? ? "click->repeater-searches#saveSearch" : "click->repeater-searches#showAuthPopUp" %>">
-      <i class="fa-regular fa-bookmark mr-2"></i>
-      Save Search
-    </button>
-  </div>
 
   <div class="inline">
     <button type="button"
@@ -115,6 +159,67 @@ You should have received a copy of the GNU Affero General Public License along w
       Export
     </button>
   </div>
+
+  <% if unsaved_changes %>
+    <div class="inline">
+      <%= link_to repeater_search,
+                  type: "button",
+                  class: "rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-900" do %>
+        <i class="fa-solid fa-xmark mr-2"></i>
+        Discard Unsaved Changes
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @export_url %>
+    <div>
+      If your download doesn't start automatically:
+      <%= link_to "Download export.csv", @export_url, class: "link", data: { repeater_searches_target: "exportLink" } %>
+    </div>
+  <% end %>
+
+  <% if !user_signed_in? %> <%# Pop up for when the user is not logged in. %>
+    <%= pop_up title: "Save Search",
+               links: [{ text: "Sign up", url: new_user_registration_url, icon: "fa-regular fa-face-smile" },
+                       { text: "Log in", url: new_user_session_url, icon: "fa-solid fa-right-to-bracket" }],
+               data: { repeater_searches_target: "authBeforeSavePopUp" } do %>
+      <p class="text-sm text-gray-500 mb-2">
+        A saved search allows you to easily re-run it later with updated information and also be notified when a change
+        happens (new repeater pops up, or one goes down).
+      </p>
+      <p class="text-sm text-gray-500">
+        To be able to save a search, you need to log in or sign up to be able to access the saved searches later.
+      </p>
+    <% end %>
+
+  <% elsif !show_name_field %> <%# Pop up for when the search is not yet saved (and not being saved). %>
+    <%= pop_up title: "Save Search",
+               data: { repeater_searches_target: "firstSavePopUp" } do %>
+      <p class="text-sm text-gray-500 mb-2">
+        To save a search you need to give it a name, something that'll help you remember what it is.
+      </p>
+      <div class="flex items-baseline gap-3 justify-items-stretch">
+        <%= form.label :name, "Name:",
+                       class: "mr-2" %>
+        <div class="mt-1 sm:mt-0 grow">
+          <%= form.text_field :name,
+                              class: "field-text w-full" %>
+          <% repeater_search.errors.where(:name).each do |error| %>
+            <p class="mt-2 text-sm text-red-600"><%= error.full_message %></p>
+          <% end %>
+        </div>
+      </div>
+      <div class="mt-5 sm:mt-6 flex flex-col-reverse sm:flex-row sm:flex-wrap justify-end gap-3">
+        <button type="submit"
+                class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer"
+                data-action="click->repeater-searches#saveSearch">
+          <i class="fa-regular fa-bookmark mr-2"></i>
+          Save Search
+        </button>
+      </div>
+    <% end %>
+  <% end %>
+
   <%= pop_up title: "Export",
              data: { repeater_searches_target: "exportPopUp" } do %>
     <div class="flex items-baseline gap-3 justify-items-stretch">
@@ -128,7 +233,7 @@ You should have received a copy of the GNU Affero General Public License along w
                              focus:border-orange-500 focus:outline-none focus:ring-orange-500 ") %>
     </div>
     <div class="mt-5 sm:mt-6
-                    flex flex-col-reverse sm:flex-row sm:flex-wrap justify-end gap-3">
+                flex flex-col-reverse sm:flex-row sm:flex-wrap justify-end gap-3">
       <button type="submit"
               class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer"
               data-action="click->repeater-searches#export">
@@ -136,27 +241,5 @@ You should have received a copy of the GNU Affero General Public License along w
         Export
       </button>
     </div>
-  <% end %>
-  <% if @export_url %>
-    <div>
-      If your download doesn't start automatically:
-      <%= link_to "Download export.csv", @export_url, class: "link", data: { repeater_searches_target: "exportLink" } %>
-    </div>
-  <% end %>
-
-  <%= pop_up title: "Save Search",
-             links: [{ text: "Sign up", url: new_user_registration_url, icon: "fa-regular fa-face-smile" },
-                     { text: "Log in", url: new_user_session_url, icon: "fa-solid fa-right-to-bracket" }],
-             data: { repeater_searches_target: "authPopUp" } do %>
-    <p class="text-sm text-gray-500 mb-2">
-      A saved search allows you to easily re-run it later with updated
-      information
-      and also be notified when a change happens (new repeater pops up, or
-      one goes down).
-    </p>
-    <p class="text-sm text-gray-500">
-      To be able to save a search, you need to log in or sign up to be able
-      to access the saved searches later.
-    </p>
   <% end %>
 <% end %>

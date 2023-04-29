@@ -17,7 +17,7 @@ You should have received a copy of the GNU Affero General Public License along w
     <%= form.text_area field_name,
                        **{ rows: 4 }
                          .deep_merge(input_html_options)
-                         .deep_merge({ class: [input_html_options[:class], "field-textarea", form.object.errors.where(field_name).any? ? "field-textarea-invalid" : "field-textarea-valid"] }) %>
+                         .deep_merge({ class: [input_html_options[:class], "field-textarea block w-full max-w-lg"] }) %>
     <% if help_text.present? %>
       <p class="mt-2 text-sm text-gray-500"><%= help_text %></p>
     <% end %>
