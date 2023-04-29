@@ -53,7 +53,7 @@ group :development, :test do
   gem "brakeman", "~> 5.4"
   gem "debug", "~> 1.7", platforms: %i[mri mingw x64_mingw] # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "rspec-rails", "~> 6.0"
-  gem "standard", "~> 1.24"
+  gem "standard", "~> 1.28"
   gem "tzinfo-data", "~> 1.2022", platforms: %i[mingw mswin x64_mingw jruby] # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 end
 
