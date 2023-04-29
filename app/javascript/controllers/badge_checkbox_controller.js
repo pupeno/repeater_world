@@ -30,8 +30,8 @@ export default class extends Controller {
   }
 
   updateBadge() {
-    const whenChecked = ["bg-orange-800", "text-orange-200"];
-    const whenUnchecked = ["bg-orange-200", "text-orange-800"];
+    const whenChecked = ["bg-orange-800", "text-orange-300"];
+    const whenUnchecked = ["bg-orange-300", "text-orange-800"];
     if (this.checkbox.checked) {
      this.label.classList.add(...whenChecked);
      this.label.classList.remove(...whenUnchecked);

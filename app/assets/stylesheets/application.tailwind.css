@@ -18,30 +18,22 @@
 
 @layer components {
     .link {
-        @apply underline text-orange-600 hover:text-orange-800
+        @apply underline text-orange-600 hover:text-orange-800;
     }
 
     .field-text {
-        @apply block max-w-lg sm:max-w-sm w-full sm:text-sm rounded-md shadow-sm focus:outline-none
+        @apply sm:text-sm rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 border-gray-300;
     }
 
-    .field-text-valid {
-        @apply focus:ring-orange-500 focus:border-orange-500 border-gray-300
-    }
-
-    .field-text-invalid {
-        @apply focus:ring-red-500 focus:border-red-500 border-red-300 text-red-900 placeholder-red-300
+    .field_with_errors > .field-text {
+        @apply focus:ring-red-500 focus:border-red-500 border-red-300 text-red-900 placeholder-red-300;
     }
 
     .field-textarea {
-        @apply block w-full max-w-lg rounded-md shadow-sm sm:text-sm
+        @apply rounded-md shadow-sm sm:text-sm focus:ring-orange-500 focus:border-orange-500 border-gray-300;
     }
 
-    .field-textarea-valid {
-        @apply focus:ring-orange-500 focus:border-orange-500 border-gray-300
-    }
-
-    .field-textarea-invalid {
-        @apply focus:ring-red-500 focus:border-red-500 border-red-300 text-red-900 placeholder-red-300
+    .field_with_errors > .field-textarea {
+        @apply focus:ring-red-500 focus:border-red-500 border-red-300 text-red-900 placeholder-red-300;
     }
 }

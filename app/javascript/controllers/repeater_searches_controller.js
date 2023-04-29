@@ -15,7 +15,7 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["form", "authPopUp", "exportPopUp", "modalPanel", "exportLink"]
+  static targets = ["form", "authBeforeSavePopUp", "firstSavePopUp", "exportPopUp", "modalPanel", "exportLink"]
 
   exportLinkTargetConnected(target) {
     target.click()
@@ -26,9 +26,9 @@ export default class extends Controller {
 
   // Turns the get search form into a post save form.
   saveSearch() {
-    if (this.formTarget.getAttribute("method") === "get") { // Only act on the get form, not on the patch of the show/edit action.
-      this.formTarget.setAttribute("method", "post")
-      this.formTarget.setAttribute("action", this.formTarget.getAttribute("data-repeater-searches-url"))
+    if (this.formTarget.getAttribute("method") === "get") { // Only act on the get form.
+      this.formTarget.setAttribute("action", this.formTarget.getAttribute("data-save-url"))
+      this.formTarget.setAttribute("method", this.formTarget.getAttribute("data-save-method"))
 
       // Add the csrf hidden input if it's not there yet.
       const csrfParam = document.head.querySelector("meta[name='csrf-param']").content
@@ -43,8 +43,12 @@ export default class extends Controller {
     }
   }
 
-  showAuthPopUp() {
-    this.showPopUp(this.authPopUpTarget)
+  showFirstSavePopUp() {
+    this.showPopUp(this.firstSavePopUpTarget)
+  }
+
+  showAuthBeforeSavePopUp() {
+    this.showPopUp(this.authBeforeSavePopUpTarget)
   }
 
   showExportPopUp() {
