@@ -32,6 +32,24 @@ class RepeaterSearchesController < ApplicationController
     if params[:export]
       @export_url = export_url(repeater_search_params)
     end
+
+    modes = []
+    modes << "FM" if @repeater_search.fm?
+    modes << "D-Star" if @repeater_search.dstar?
+    modes << "Fusion" if @repeater_search.fusion?
+    modes << "DMR" if @repeater_search.dmr?
+    modes << "NXDN" if @repeater_search.nxdn?
+    modes << "All modes" if modes.empty?
+    bands = []
+    bands << "10m" if @repeater_search.band_10m?
+    bands << "6m" if @repeater_search.band_6m?
+    bands << "4m" if @repeater_search.band_4m?
+    bands << "2m" if @repeater_search.band_2m?
+    bands << "70cm" if @repeater_search.band_70cm?
+    bands << "23cm" if @repeater_search.band_23cm?
+    bands << "all bands" if bands.empty?
+    distance = "#{@repeater_search.distance}#{@repeater_search.distance_unit} of #{@repeater_search.latitude}, #{@repeater_search.longitude}" if @repeater_search.distance_to_coordinates
+    @repeater_search.name = "#{modes.to_sentence} on #{bands.to_sentence} #{distance}".strip
   end
 
   def export
@@ -51,13 +69,16 @@ class RepeaterSearchesController < ApplicationController
     @repeater_search.user = current_user
 
     if @repeater_search.save
-      redirect_to @repeater_search
+      redirect_to @repeater_search, notice: "You search is now saved."
     else
       render :new, status: :unprocessable_entity
     end
   end
 
   def show
+    if repeater_search_params[:s].present?
+      @repeater_search.assign_attributes(repeater_search_params[:s])
+    end
     @repeaters = @repeater_search.run
     @repeaters = @repeaters.page(params[:p] || 1) if @selected_tab != "map"
     if params[:export]
@@ -71,7 +92,7 @@ class RepeaterSearchesController < ApplicationController
         # redirect_to export_url(repeater_search_params)
         redirect_to repeater_search_url(@repeater_search, export: true, e: repeater_search_params[:e])
       else
-        redirect_to @repeater_search
+        redirect_to @repeater_search, notice: "Your search is now saved."
       end
     else
       render :show, status: :unprocessable_entity
@@ -97,7 +118,7 @@ class RepeaterSearchesController < ApplicationController
       :d,
       s: Repeater::BANDS.map { |b| :"band_#{b}" } +
         Repeater::MODES +
-        [:distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
+        [:name, :distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
       e: [:format]
     )
   end

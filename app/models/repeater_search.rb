@@ -19,6 +19,7 @@ class RepeaterSearch < ApplicationRecord
 
   belongs_to :user
 
+  validates :name, presence: true
   validates :distance, presence: true, if: :distance_to_coordinates?
   validates :distance_unit, presence: true, if: :distance_to_coordinates?
   validates :latitude, presence: true, if: :distance_to_coordinates?
@@ -87,6 +88,7 @@ end
 #  fusion                  :boolean
 #  latitude                :decimal(, )
 #  longitude               :decimal(, )
+#  name                    :string
 #  nxdn                    :boolean
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null

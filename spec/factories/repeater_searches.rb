@@ -14,6 +14,7 @@
 FactoryBot.define do
   factory :repeater_search do
     association(:user)
+    sequence(:name) { |n| "Repeater Search #{n}" }
   end
 end
 
@@ -37,6 +38,7 @@ end
 #  fusion                  :boolean
 #  latitude                :decimal(, )
 #  longitude               :decimal(, )
+#  name                    :string
 #  nxdn                    :boolean
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null

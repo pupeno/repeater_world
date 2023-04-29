@@ -34,7 +34,7 @@ export default class extends Controller {
 
   updateBadge() {
     const orangeBackground = "bg-orange-800";
-    const grayBackground = "bg-orange-200";
+    const grayBackground = "bg-orange-300";
     const animateRight = "translate-x-5";
     const animateLeft = "translate-x-0";
     if (this.checkbox.checked) {

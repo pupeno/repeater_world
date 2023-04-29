@@ -49,6 +49,7 @@ end
 #  fusion                  :boolean
 #  latitude                :decimal(, )
 #  longitude               :decimal(, )
+#  name                    :string
 #  nxdn                    :boolean
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
