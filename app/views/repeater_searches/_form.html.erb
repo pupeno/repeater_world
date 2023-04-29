@@ -29,10 +29,19 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
   <% end %>
 
-  <% if repeater_search.persisted? %>
+  <% show_name_field = repeater_search.persisted? || repeater_search.errors.present? %>
+
+  <% if show_name_field %>
     <div class="my-3 flex flex-row items-baseline gap-3">
-      <%= form.label :name, "Name:", class: "" %>
-      <%= form.text_field :name, class: "field-text inline w-96 " %>
+      <%= form.label :name, "Name:",
+                     class: "mr-2" %>
+      <div class="mt-1 sm:mt-0 grow">
+        <%= form.text_field :name,
+                            class: "field-text w-full" %>
+        <% repeater_search.errors.where(:name).each do |error| %>
+          <p class="mt-2 text-sm text-red-600"><%= error.full_message %></p>
+        <% end %>
+      </div>
     </div>
   <% end %>
 
@@ -116,20 +125,22 @@ You should have received a copy of the GNU Affero General Public License along w
         Save Search
       </button>
     </div>
-  <% elsif !repeater_search.persisted? %> <%# logged in but this search is not saved yet %>
-    <div class="inline">
-      <button type="button"
-              class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-600"
-              data-action="click->repeater-searches#showFirstSavePopUp">
-        <i class="fa-regular fa-bookmark mr-2"></i>
-        Save Search
-      </button>
-    </div>
-  <% else %> <%# logged in and the search has already been saved %>
+
+  <% elsif show_name_field %> <%# logged in and the search has already been saved, or is being saved %>
     <div class="inline">
       <button type="submit"
               class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-900"
               data-action="click->repeater-searches#saveSearch">
+        <i class="fa-regular fa-bookmark mr-2"></i>
+        Save Search
+      </button>
+    </div>
+
+  <% else %>  <%# logged in but this search is not saved yet %>
+    <div class="inline">
+      <button type="button"
+              class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-600"
+              data-action="click->repeater-searches#showFirstSavePopUp">
         <i class="fa-regular fa-bookmark mr-2"></i>
         Save Search
       </button>
@@ -152,8 +163,7 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
   <% end %>
 
-  <% if !user_signed_in? %>
-    <%# Pop up for when the user is not logged in. %>
+  <% if !user_signed_in? %> <%# Pop up for when the user is not logged in. %>
     <%= pop_up title: "Save Search",
                links: [{ text: "Sign up", url: new_user_registration_url, icon: "fa-regular fa-face-smile" },
                        { text: "Log in", url: new_user_session_url, icon: "fa-solid fa-right-to-bracket" }],
@@ -167,8 +177,7 @@ You should have received a copy of the GNU Affero General Public License along w
       </p>
     <% end %>
 
-  <% elsif !repeater_search.persisted? %>
-    <%# Pop up for when the search is not yet saved. %>
+  <% elsif !show_name_field %> <%# Pop up for when the search is not yet saved (and not being saved). %>
     <%= pop_up title: "Save Search",
                data: { repeater_searches_target: "firstSavePopUp" } do %>
       <p class="text-sm text-gray-500 mb-2">
