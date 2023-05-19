@@ -11,10 +11,6 @@ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero Gener
 You should have received a copy of the GNU Affero General Public License along with Foobar. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<%# Keep synchronized with top_bar_desktop_menu so that we offer the same options on desktop and mobile. %>
-<%= top_bar_mobile_link "Your Searches", repeater_searches_url if user_signed_in? %>
-<%= top_bar_mobile_link "Add a Repeater", new_suggested_repeater_url %>
-<%= top_bar_mobile_link "Support", "https://github.com/flexpointtech/repeater_world/discussions"%>
-<%= top_bar_mobile_link "Open Source", open_source_url %>
-<%= top_bar_mobile_link "Log in", new_user_session_url if !user_signed_in? %>
-<%= top_bar_mobile_link "Sign up", new_user_registration_url if !user_signed_in? %>
+<span class="inline-flex items-center rounded-md m-px cursor-pointer
+             bg-orange-800 text-orange-300 transition-all
+             px-2.5 py-0.5 text-sm font-medium"><%= contents %></span>

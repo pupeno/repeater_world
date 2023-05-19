@@ -58,24 +58,6 @@ You should have received a copy of the GNU Affero General Public License along w
             </div>
           </div>
         </div>
-        <div class="mt-5 sm:mt-6
-                    flex flex-col-reverse sm:flex-row sm:flex-wrap justify-end gap-3">
-          <% links.reverse.each_with_index do |link, index| %>
-            <%= link_to link[:url],
-                        class: "basis-[31%]
-                                px-6 py-3
-                                rounded-md border border-transparent
-                                inline-flex justify-center
-                                text-base sm:text-sm font-medium shadow-sm
-                                #{index == links.count - 1 ? "bg-orange-600 hover:bg-orange-700 text-white" : "bg-orange-200 hover:bg-orange-300 text-gray-700"}
-                                focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2" do %>
-              <% if link[:icon].present? %>
-                <i class="<%= link[:icon] %> text-xl mr-3"></i>
-              <% end %>
-              <%= link[:text] %>
-            <% end %>
-          <% end %>
-        </div>
       </div>
     </div>
   </div>

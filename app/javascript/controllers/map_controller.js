@@ -13,7 +13,7 @@
  */
 
 import {Controller} from "@hotwired/stimulus"
-import {MarkerClusterer} from "@googlemaps/markerclusterer";
+import {MarkerClusterer} from "@googlemaps/markerclusterer"
 
 export default class extends Controller {
   static values = {
@@ -27,16 +27,16 @@ export default class extends Controller {
   }
 
   initializeMap() {
-    let map = new google.maps.Map(this.element, {center: {lat: 0, lng: 0}, zoom: 2});
+    let map = new google.maps.Map(this.element, {center: {lat: 0, lng: 0}, zoom: 2})
 
-    let bounds = new google.maps.LatLngBounds();
+    let bounds = new google.maps.LatLngBounds()
 
     const markers = this.markersValue.map(marker => {
-      let isInfoWindowOpen = false;
+      let isInfoWindowOpen = false
       const infoWindow = new google.maps.InfoWindow({
         content: marker.info,
         ariaLabel: "label",
-      });
+      })
       const mapMarker = new google.maps.Marker({
         position: {lat: marker.lat, lng: marker.lng},
         title: marker.tooltip,
@@ -45,23 +45,23 @@ export default class extends Controller {
         if (isInfoWindowOpen) {
           infoWindow.close()
         } else {
-          infoWindow.open({anchor: mapMarker, map});
+          infoWindow.open({anchor: mapMarker, map})
         }
-        isInfoWindowOpen = !isInfoWindowOpen;
-      });
+        isInfoWindowOpen = !isInfoWindowOpen
+      })
       bounds.extend(new google.maps.LatLng(marker.lat, marker.lng))
 
-      return mapMarker;
+      return mapMarker
     })
 
-    new MarkerClusterer({markers, map});
+    new MarkerClusterer({markers, map})
 
     // Don't allow fitBounds to zoom in too much (it happens when there's only 1 repeater for example).
     google.maps.event.addListenerOnce(map, "bounds_changed", function () {
       if (map.getZoom() > 13) {
-        map.setZoom(13);
+        map.setZoom(13)
       }
-    });
-    map.fitBounds(bounds);
+    })
+    map.fitBounds(bounds)
   }
 }

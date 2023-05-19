@@ -18,17 +18,17 @@ export default class extends Controller {
   static targets = ["controller", "controlled"]
 
   connect() {
-    this.controllerTarget.addEventListener("change", this.toggleDisable.bind(this));
+    this.controllerTarget.addEventListener("change", this.toggleDisable.bind(this))
 
-    this.toggleDisable();
+    this.toggleDisable()
   }
 
   disconnect() {
-    this.controllerTarget.removeEventListener("change", this.toggleDisable.bind(this));
+    this.controllerTarget.removeEventListener("change", this.toggleDisable.bind(this))
   }
 
   toggleDisable() {
-    const grayedOutText = "text-gray-300";
+    const grayedOutText = "text-gray-300"
     if (this.controllerTarget.checked) {
       this.controlledTargets.forEach(x => x.classList.remove(grayedOutText))
     } else {

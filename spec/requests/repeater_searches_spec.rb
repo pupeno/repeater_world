@@ -107,14 +107,14 @@ RSpec.describe "/repeater_searches", type: :request do
         sign_in @current_user
       end
 
-      # TODO: not implemented yet.
-      # describe "GET /index" do
-      #   it "renders a successful response" do
-      #     RepeaterSearch.create! valid_attributes
-      #     get repeater_searches_url
-      #     expect(response).to be_successful
-      #   end
-      # end
+      it "shows a list of repeater searches" do
+        searches = 5.times.collect { create(:repeater_search, user: @current_user) }
+        get repeater_searches_url
+        expect(response).to be_successful
+        searches.each do |search|
+          expect(response.body).to include(search.name)
+        end
+      end
 
       describe "saved searches" do
         it "show an empty saved search" do
@@ -282,30 +282,15 @@ RSpec.describe "/repeater_searches", type: :request do
         end
       end
 
-      # TODO: not implemented yet.
-      # describe "DELETE /destroy" do
-      #   it "destroys the requested repeater_search" do
-      #     repeater_search = RepeaterSearch.create! valid_attributes
-      #     expect {
-      #       delete repeater_search_url(repeater_search)
-      #     }.to change(RepeaterSearch, :count).by(-1)
-      #   end
-      #
-      #   it "redirects to the repeater_searches list" do
-      #     repeater_search = RepeaterSearch.create! valid_attributes
-      #     delete repeater_search_url(repeater_search)
-      #     expect(response).to redirect_to(repeater_searches_url)
-      #   end
-      # end
+      describe "deleting" do
+        it "deletes a repeater search" do
+          repeater_search = create(:repeater_search, user: @current_user)
+          expect {
+            delete repeater_search_url(repeater_search)
+          }.to change(RepeaterSearch, :count).by(-1)
+          expect(response).to redirect_to(repeater_searches_url)
+        end
+      end
     end
-
-    # TODO: not implemented yet.
-    # describe "GET /edit" do
-    #   it "renders a successful response" do
-    #     repeater_search = RepeaterSearch.create! valid_attributes
-    #     get edit_repeater_search_url(repeater_search)
-    #     expect(response).to be_successful
-    #   end
-    # end
   end
 end

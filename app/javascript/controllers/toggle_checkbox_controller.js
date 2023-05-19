@@ -12,16 +12,16 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import { Controller } from "@hotwired/stimulus"
+import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
   connect() {
-    this.checkbox = this.element.querySelector("input[type=checkbox]");
-    this.label = this.element.querySelector("label");
-    this.slot = this.label.querySelector("span.slot");
-    this.circle = this.label.querySelector("span.circle");
+    this.checkbox = this.element.querySelector("input[type=checkbox]")
+    this.label = this.element.querySelector("label")
+    this.slot = this.label.querySelector("span.slot")
+    this.circle = this.label.querySelector("span.circle")
 
-    this.checkbox.addEventListener("change", this.updateBadge.bind(this));
+    this.checkbox.addEventListener("change", this.updateBadge.bind(this))
 
     this.updateBadge()
     this.slot.classList.remove("bg-gray-200")
@@ -29,14 +29,14 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.checkbox.removeEventListener("change", this.updateBadge.bind(this));
+    this.checkbox.removeEventListener("change", this.updateBadge.bind(this))
   }
 
   updateBadge() {
-    const orangeBackground = "bg-orange-800";
-    const grayBackground = "bg-orange-300";
-    const animateRight = "translate-x-5";
-    const animateLeft = "translate-x-0";
+    const orangeBackground = "bg-orange-800"
+    const grayBackground = "bg-orange-300"
+    const animateRight = "translate-x-5"
+    const animateLeft = "translate-x-0"
     if (this.checkbox.checked) {
       this.slot.classList.add(orangeBackground)
       this.slot.classList.remove(grayBackground)
