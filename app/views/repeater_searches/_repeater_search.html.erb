@@ -12,7 +12,9 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <li class="flex items-center justify-between gap-x-6 py-5"
-    id="<%= dom_id repeater_search %>">
+    id="<%= dom_id repeater_search %>"
+    data-controller="repeater-search-row">
+
   <div class="min-w-0">
     <div class="flex items-start gap-x-3">
       <p class="text-sm font-semibold leading-6 text-gray-900">
@@ -78,12 +80,43 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <div class="flex flex-none items-center gap-x-4">
     <%= dropdown_menu do %>
-      <%= link_to repeater_search, class: "block px-3 py-1 text-sm leading-6 text-gray-900", role: "menuitem", tabindex: "-1" do %>
+      <%= link_to repeater_search, class: "block px-3 py-1 text-sm leading-6 text-gray-900",
+                  role: "menuitem", tabindex: "-1" do %>
         <i class="fa-solid fa-eye mr-2"></i> Show <span class="sr-only"><%= repeater_search.name %></span>
       <% end %>
-      <%= link_to repeater_search, class: "block px-3 py-1 text-sm leading-6 text-gray-900", role: "menuitem", tabindex: "-1" do %>
+      <%= link_to repeater_search, class: "block px-3 py-1 text-sm leading-6 text-gray-900",
+                  role: "menuitem", tabindex: "-1" do %>
         <i class="fa-solid fa-pen mr-2"></i> Edit <span class="sr-only"><%= repeater_search.name %></span>
       <% end %>
+      <button class="block px-3 py-1 text-sm leading-6 text-gray-900"
+              role="menuitem" tabindex="-1"
+              data-action="click->repeater-search-row#showDeletePopUp">
+        <i class="fa-solid fa-trash mr-2"></i> Delete <span class="sr-only"><%= repeater_search.name %></span>
+      </button>
     <% end %>
   </div>
+
+  <%= pop_up title: "Are you sure?",
+             links: [{ text: "Sign up", url: new_user_registration_url, icon: "fa-regular fa-face-smile" },
+                     { text: "Log in", url: new_user_session_url, icon: "fa-solid fa-right-to-bracket" }],
+             data: { repeater_search_row_target: "deletePopUp" } do %>
+    <p class="text-sm text-gray-500 mb-2">
+      Are you sure you want to delete your repeater search named "<%= repeater_search.name %>"?
+    </p>
+    <p class="text-sm text-gray-500">
+      This action is not reversible.
+    </p>
+
+    <div class="mt-5 sm:mt-6
+                  flex flex-col-reverse sm:flex-row sm:flex-wrap justify-end gap-3">
+      <button class="button-secondary" data-action="click->pop-up#hide">
+        <i class="fa-solid fa-times text-xl mr-3"></i>
+        Cancel
+      </button>
+      <%= button_to repeater_search, method: :delete, class: "button" do %>
+        <i class="fa-solid fa-trash text-xl mr-3"></i>
+        Delete
+      <% end %>
+    </div>
+  <% end %>
 </li>

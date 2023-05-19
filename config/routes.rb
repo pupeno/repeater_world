@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   get "search", to: "repeater_searches#new"
   get "export", to: "repeater_searches#export"
 
-  resources :repeater_searches, only: [:index, :create, :show, :update] do
+  resources :repeater_searches, only: [:index, :create, :show, :update, :destroy] do
     member do
       get "export"
     end
@@ -76,6 +76,7 @@ end
 #                          repeater_search GET    /repeater_searches/:id(.:format)                                                                  repeater_searches#show
 #                                          PATCH  /repeater_searches/:id(.:format)                                                                  repeater_searches#update
 #                                          PUT    /repeater_searches/:id(.:format)                                                                  repeater_searches#update
+#                                          DELETE /repeater_searches/:id(.:format)                                                                  repeater_searches#destroy
 #                                 repeater GET    /repeaters/:id(.:format)                                                                          repeaters#show
 #                      suggested_repeaters POST   /suggested_repeaters(.:format)                                                                    suggested_repeaters#create
 #                   new_suggested_repeater GET    /suggested_repeaters/new(.:format)                                                                suggested_repeaters#new
