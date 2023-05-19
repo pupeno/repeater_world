@@ -21,6 +21,14 @@
         @apply underline text-orange-600 hover:text-orange-800;
     }
 
+    .button {
+        @apply rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-600;
+    }
+
+    .button-secondary {
+        @apply button bg-orange-900;
+    }
+
     .field-text {
         @apply sm:text-sm rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 border-gray-300;
     }

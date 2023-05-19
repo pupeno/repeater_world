@@ -114,7 +114,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <% end %>
 
   <div class="inline">
-    <button type="submit" class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer">
+    <button type="submit" class="button">
       <i class="fa-solid fa-magnifying-glass mr-2"></i>
       Search
     </button>
@@ -122,9 +122,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <% if !user_signed_in? %>
     <div class="inline">
-      <button type="button"
-              class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-600"
-              data-action="click->repeater-searches#showAuthBeforeSavePopUp">
+      <button type="button" class="button" data-action="click->repeater-searches#showAuthBeforeSavePopUp">
         <i class="fa-regular fa-bookmark mr-2"></i>
         Save Search
       </button>
@@ -132,9 +130,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <% elsif show_name_field %> <%# logged in and the search has already been saved, or is being saved %>
     <div class="inline">
-      <button type="submit"
-              class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-600"
-              data-action="click->repeater-searches#saveSearch">
+      <button type="submit" class="button" data-action="click->repeater-searches#saveSearch">
         <i class="fa-regular fa-bookmark mr-2"></i>
         Save Search
       </button>
@@ -142,9 +138,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <% else %>  <%# logged in but this search is not saved yet %>
     <div class="inline">
-      <button type="button"
-              class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-600"
-              data-action="click->repeater-searches#showFirstSavePopUp">
+      <button type="button" class="button" data-action="click->repeater-searches#showFirstSavePopUp">
         <i class="fa-regular fa-bookmark mr-2"></i>
         Save Search
       </button>
@@ -152,9 +146,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <% end %>
 
   <div class="inline">
-    <button type="button"
-            class="rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-900"
-            data-action="click->repeater-searches#showExportPopUp">
+    <button type="button" class="button-secondary" data-action="click->repeater-searches#showExportPopUp">
       <i class="fa-solid fa-cloud-arrow-down mr-2"></i>
       Export
     </button>
@@ -179,10 +171,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <% end %>
 
   <% if !user_signed_in? %> <%# Pop up for when the user is not logged in. %>
-    <%= pop_up title: "Save Search",
-               links: [{ text: "Sign up", url: new_user_registration_url, icon: "fa-regular fa-face-smile" },
-                       { text: "Log in", url: new_user_session_url, icon: "fa-solid fa-right-to-bracket" }],
-               data: { repeater_searches_target: "authBeforeSavePopUp" } do %>
+    <%= pop_up title: "Save Search", data: { repeater_searches_target: "authBeforeSavePopUp" } do %>
       <p class="text-sm text-gray-500 mb-2">
         A saved search allows you to easily re-run it later with updated information and also be notified when a change
         happens (new repeater pops up, or one goes down).
@@ -190,29 +179,35 @@ You should have received a copy of the GNU Affero General Public License along w
       <p class="text-sm text-gray-500">
         To be able to save a search, you need to log in or sign up to be able to access the saved searches later.
       </p>
+      <div class="mt-5 sm:mt-6
+                  flex flex-col-reverse sm:flex-row sm:flex-wrap justify-end gap-3">
+        <%= link_to new_user_session_url, class: "button-secondary" do %>
+          <i class="fa-solid fa-right-to-bracket text-xl mr-3"></i>
+          Log in
+        <% end %>
+        <%= link_to new_user_registration_url, class: "button" do %>
+          <i class="fa-regular fa-face-smile text-xl mr-3"></i>
+          Sign up
+        <% end %>
+      </div>
     <% end %>
 
   <% elsif !show_name_field %> <%# Pop up for when the search is not yet saved (and not being saved). %>
-    <%= pop_up title: "Save Search",
-               data: { repeater_searches_target: "firstSavePopUp" } do %>
+    <%= pop_up title: "Save Search", data: { repeater_searches_target: "firstSavePopUp" } do %>
       <p class="text-sm text-gray-500 mb-2">
         To save a search you need to give it a name, something that'll help you remember what it is.
       </p>
       <div class="flex items-baseline gap-3 justify-items-stretch">
-        <%= form.label :name, "Name:",
-                       class: "mr-2" %>
+        <%= form.label :name, "Name:", class: "mr-2" %>
         <div class="mt-1 sm:mt-0 grow">
-          <%= form.text_field :name,
-                              class: "field-text w-full" %>
+          <%= form.text_field :name, class: "field-text w-full" %>
           <% repeater_search.errors.where(:name).each do |error| %>
             <p class="mt-2 text-sm text-red-600"><%= error.full_message %></p>
           <% end %>
         </div>
       </div>
       <div class="mt-5 sm:mt-6 flex flex-col-reverse sm:flex-row sm:flex-wrap justify-end gap-3">
-        <button type="submit"
-                class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer"
-                data-action="click->repeater-searches#saveSearch">
+        <button type="submit" class="button" data-action="click->repeater-searches#saveSearch">
           <i class="fa-regular fa-bookmark mr-2"></i>
           Save Search
         </button>
@@ -220,8 +215,7 @@ You should have received a copy of the GNU Affero General Public License along w
     <% end %>
   <% end %>
 
-  <%= pop_up title: "Export",
-             data: { repeater_searches_target: "exportPopUp" } do %>
+  <%= pop_up title: "Export", data: { repeater_searches_target: "exportPopUp" } do %>
     <div class="flex items-baseline gap-3 justify-items-stretch">
       <div class="shrink">Export for:</div>
       <%= select_tag(:"e[format]",
@@ -234,9 +228,7 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
     <div class="mt-5 sm:mt-6
                 flex flex-col-reverse sm:flex-row sm:flex-wrap justify-end gap-3">
-      <button type="submit"
-              class="rounded-lg py-3 px-6 bg-orange-600 text-white inline-block font-medium cursor-pointer"
-              data-action="click->repeater-searches#export">
+      <button type="submit" class="button" data-action="click->repeater-searches#export">
         <i class="fa-solid fa-cloud-arrow-down mr-2"></i>
         Export
       </button>

@@ -1,4 +1,4 @@
-/* Copyright 2023, Pablo Fernandez
+/* Copyright 2023, Flexpoint Tech
  *
  * This file is part of Repeater World.
  *
@@ -15,9 +15,9 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["flashMessage"]
+  static targets = ["deletePopUp"]
 
-  close() {
-    this.flashMessageTarget.classList.add("hidden")
+  showDeletePopUp() {
+    this.dispatch("show", {target: this.deletePopUpTarget, prefix: "pop-up"})
   }
 }

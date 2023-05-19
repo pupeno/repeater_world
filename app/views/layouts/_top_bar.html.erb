@@ -15,20 +15,20 @@ You should have received a copy of the GNU Affero General Public License along w
 <nav class="bg-white border-b border-gray-200"
      data-controller="top-bar">
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto px-4">
     <div class="flex justify-between h-16">
       <%# Logo and name on the top left %>
       <div class="flex flex-row items-center">
-        <%= link_to root_url do %>
+        <%= link_to root_url, class: "contents" do %>
           <%= image_tag "isotype.svg", class: "h-8" %>
         <% end %>
-        <%= link_to root_url do %>
-          <span class="ml-3 text-xl">Repeater World</span>
+        <%= link_to root_url, class: "contents" do %>
+          <span class="ml-3 text-xl whitespace-nowrap">Repeater World</span>
         <% end %>
       </div>
 
       <%# Right aligned content on the menu %>
-      <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+      <div class="hidden md:ml-6 md:flex md:space-x-4 lg:space-x-8">
         <%= render "layouts/top_bar_desktop_menu" %>
 
         <%# User menu that appears only when the user is signed in. %>
@@ -58,7 +58,7 @@ You should have received a copy of the GNU Affero General Public License along w
       </div>
 
       <%# Mobile version of the top bar. %>
-      <div class="-mr-2 flex items-center sm:hidden">
+      <div class="-mr-2 flex items-center md:hidden">
         <%# Mobile menu button %>
         <button type="button"
                 class="w-10 h-10 bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"

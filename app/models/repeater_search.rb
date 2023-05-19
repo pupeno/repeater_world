@@ -66,6 +66,14 @@ class RepeaterSearch < ApplicationRecord
 
     repeaters
   end
+
+  def all_bands?
+    !band_10m? && !band_6m? && !band_4m? && !band_2m? && !band_70cm? && !band_23cm?
+  end
+
+  def all_modes?
+    !fm? && !dstar? && !fusion? && !dmr? && !nxdn?
+  end
 end
 
 # == Schema Information
