@@ -39,6 +39,9 @@ You should have received a copy of the GNU Affero General Public License along w
       <% if repeater_search.band_23cm? %>
         <%= badge "23cm" %>
       <% end %>
+      <% if repeater_search.all_bands? %>
+        <%= badge "All Bands" %>
+      <% end %>
 
       <% if repeater_search.fm? %>
         <%= badge "FM" %>
@@ -54,6 +57,9 @@ You should have received a copy of the GNU Affero General Public License along w
       <% end %>
       <% if repeater_search.nxdn? %>
         <%= badge "NXDN" %>
+      <% end %>
+      <% if repeater_search.all_modes? %>
+        <%= badge "All Modes" %>
       <% end %>
 
       <% if repeater_search.distance_to_coordinates? %>
