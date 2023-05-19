@@ -55,4 +55,9 @@ module ApplicationHelper
     render partial: "shared/dropdown_menu",
       locals: {contents: capture(&block)}
   end
+
+  def badge(content = nil, &block)
+    render partial: "shared/badge",
+      locals: {contents: content || capture(&block)}
+  end
 end
