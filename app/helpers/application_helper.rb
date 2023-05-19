@@ -50,4 +50,9 @@ module ApplicationHelper
                selected_tab: selected_tab,
                contents: capture(selected_tab, &block)}
   end
+
+  def dropdown_menu(&block)
+    render partial: "shared/dropdown_menu",
+      locals: {contents: capture(&block)}
+  end
 end
