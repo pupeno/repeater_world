@@ -11,12 +11,6 @@ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero Gener
 You should have received a copy of the GNU Affero General Public License along with Foobar. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<%= render "shared/page_header", title: "Your Repeater Searches" %>
-
-<div class="w-full sm:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <%= render "shared/flash_messages" %>
-
-  <ul role="list" class="divide-y divide-gray-100">
-    <%= render @repeater_searches %>
-  </ul>
-</div>
+<span class="inline-flex items-center rounded-md m-px cursor-pointer
+             bg-orange-800 text-orange-300 transition-all
+             px-2.5 py-0.5 text-sm font-medium"><%= contents %></span>

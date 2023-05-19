@@ -16,10 +16,9 @@ class RepeaterSearchesController < ApplicationController
   before_action :set_repeater_search, only: %i[show edit update destroy]
   before_action :set_selected_tab_and_tab_urls, only: %i[new show create update]
 
-  # TODO: implement
-  # def index
-  #   @repeater_searches = RepeaterSearch.all
-  # end
+  def index
+    @repeater_searches = current_user.repeater_searches.page(params[:p] || 1)
+  end
 
   def new
     defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
@@ -99,11 +98,11 @@ class RepeaterSearchesController < ApplicationController
     end
   end
 
-  # TODO: implement
-  # def destroy
-  #   @repeater_search.destroy
-  #   redirect_to repeater_searches_url, notice: "Repeater search was successfully destroyed."
-  # end
+  def destroy
+    name = @repeater_search.name
+    @repeater_search.destroy
+    redirect_to repeater_searches_url, notice: "The repeater search \"#{name}\" was deleted."
+  end
 
   private
 
