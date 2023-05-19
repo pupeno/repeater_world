@@ -33,7 +33,7 @@ export default class extends Controller {
   }
 
   isOpen() {
-    return !this.menuTarget.classList.contains("hidden");
+    return !this.menuTarget.classList.contains("hidden")
   }
 
   open() {

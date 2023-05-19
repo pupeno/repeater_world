@@ -12,7 +12,7 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import { Controller } from "@hotwired/stimulus"
+import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [
@@ -47,7 +47,7 @@ export default class extends Controller {
   }
 
   isDesktopUserMenuOpen() {
-    return this.hasDesktopUserMenuTarget && !this.desktopUserMenuTarget.classList.contains("hidden");
+    return this.hasDesktopUserMenuTarget && !this.desktopUserMenuTarget.classList.contains("hidden")
   }
 
   closeDesktopUserMenu() {
@@ -76,7 +76,7 @@ export default class extends Controller {
   }
 
   isMobileMenuOpen() {
-    return this.mobileOpenMenuButtonTarget.classList.contains("hidden");
+    return this.mobileOpenMenuButtonTarget.classList.contains("hidden")
   }
 
   closeMobileMenu() {
