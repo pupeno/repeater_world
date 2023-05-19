@@ -17,9 +17,9 @@ class RepeaterSearchesController < ApplicationController
   before_action :set_selected_tab_and_tab_urls, only: %i[new show create update]
 
   # TODO: implement
-  # def index
-  #   @repeater_searches = RepeaterSearch.all
-  # end
+  def index
+    @repeater_searches = current_user.repeater_searches.page(params[:p] || 1)
+  end
 
   def new
     defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
