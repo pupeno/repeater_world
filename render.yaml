@@ -4,7 +4,7 @@ databases:
   - name: repeater_world-db
     databaseName: repeater_world
     user: repeater_world
-    postgresMajorVersion: 14
+    postgresMajorVersion: 15
     plan: starter
     previewPlan: starter
 
@@ -18,7 +18,7 @@ services:
     previewPlan: starter
     initialDeployHook: bundle exec rake db:seed
     domains:
-      - repeater_world.com
+      - repeater.world
     envVars:
       - fromGroup: repeater_world
       - key: DATABASE_URL
@@ -35,7 +35,7 @@ services:
         value: true
         previewValue: false
       - key: SAFE_EMAIL_DEST
-        value: "staging@repeater_world"
+        value: "staging@repeater.world"
       - key: ALLOW_SAMPLE_DATA_GENERATION
         value: false
         previewValue: true
@@ -43,11 +43,7 @@ services:
         value:
       - key: SENTRY_DSN_FE
         value:
-      - key: HELPSCOUT_BEACON_ID
-        value:
       - key: FATHOM_ID
-        value:
-      - key: GOOGLE_ANALYTICS_ID
         value:
 # Uncomment this when starting to use proper background jobs.
 #  - type: worker
