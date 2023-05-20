@@ -15,5 +15,31 @@
 class Api::Next::RepeatersController < ApplicationController
   def index
     @repeaters = Repeater.all.includes(:country)
+
+    respond_to do |format|
+      format.json { render }
+      format.csv do
+        columns = [
+          :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency, :fm, :access_method,
+          :ctcss_tone, :dstar, :fusion, :dmr, :dmr_color_code, :dmr_network, :nxdn, :address, :locality, :region,
+          :post_code, :country_id, :country_name, :grid_square, :latitude, :longitude, :channel, :source, :utc_offset,
+          :redistribution_limitations, :notes
+        ]
+
+        csv = CSV.generate(headers: columns, write_headers: true) do |csv|
+          @repeaters.each do |repeater|
+            csv << [repeater.name, repeater.call_sign, repeater.web_site, repeater.keeper, repeater.band,
+                    repeater.operational, repeater.tx_frequency, repeater.rx_frequency, repeater.fm,
+                    repeater.access_method, repeater.ctcss_tone, repeater.dstar, repeater.fusion, repeater.dmr,
+                    repeater.dmr_color_code, repeater.dmr_network, repeater.nxdn, repeater.address, repeater.locality,
+                    repeater.region, repeater.post_code, repeater.country_id, repeater.country.name,
+                    repeater.grid_square, repeater.latitude, repeater.longitude, repeater.channel, repeater.source,
+                    repeater.utc_offset, repeater.redistribution_limitations, repeater.notes]
+          end
+        end
+
+        send_data(csv, filename: "repeaters.csv", disposition: "inline")
+      end
+    end
   end
 end

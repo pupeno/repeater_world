@@ -35,5 +35,13 @@ RSpec.describe "/api/next/repeaters", type: :request do
       expect(body.size).to eq(8)
       # TODO: write better assertions.
     end
+
+    it "creates a csv output" do
+      get api_next_repeaters_url(format: :csv)
+      expect(response).to be_successful
+      body = CSV.parse(response.body)
+      expect(body.size).to eq(9)
+      # TODO: write better assertions.
+    end
   end
 end
