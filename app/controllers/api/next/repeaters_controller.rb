@@ -12,8 +12,14 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
+
 class Api::Next::RepeatersController < ApplicationController
   def index
+    # This API explicitly sets columns/field names in the response to make sure that as the model evolves, the API is
+    # stable and it doesn't change. This is so that people can build applications on top of this API with confidence.
+    # Currently the version of this API is "next" which means it's unstable, as we expect the model to evolve a little
+    # bit. Once we're happy with the model, we'll change the version to "v1" and then we'll be stuck with it.
+
     @repeaters = Repeater.all.includes(:country)
 
     respond_to do |format|
@@ -29,12 +35,12 @@ class Api::Next::RepeatersController < ApplicationController
         csv = CSV.generate(headers: columns, write_headers: true) do |csv|
           @repeaters.each do |repeater|
             csv << [repeater.name, repeater.call_sign, repeater.web_site, repeater.keeper, repeater.band,
-                    repeater.operational, repeater.tx_frequency, repeater.rx_frequency, repeater.fm,
-                    repeater.access_method, repeater.ctcss_tone, repeater.dstar, repeater.fusion, repeater.dmr,
-                    repeater.dmr_color_code, repeater.dmr_network, repeater.nxdn, repeater.address, repeater.locality,
-                    repeater.region, repeater.post_code, repeater.country_id, repeater.country.name,
-                    repeater.grid_square, repeater.latitude, repeater.longitude, repeater.channel, repeater.source,
-                    repeater.utc_offset, repeater.redistribution_limitations, repeater.notes]
+              repeater.operational, repeater.tx_frequency, repeater.rx_frequency, repeater.fm,
+              repeater.access_method, repeater.ctcss_tone, repeater.dstar, repeater.fusion, repeater.dmr,
+              repeater.dmr_color_code, repeater.dmr_network, repeater.nxdn, repeater.address, repeater.locality,
+              repeater.region, repeater.post_code, repeater.country_id, repeater.country.name,
+              repeater.grid_square, repeater.latitude, repeater.longitude, repeater.channel, repeater.source,
+              repeater.utc_offset, repeater.redistribution_limitations, repeater.notes]
           end
         end
 
