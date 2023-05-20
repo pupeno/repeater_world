@@ -41,7 +41,7 @@ class UkrepeatersImporter
 
     file_name = download_file("https://ukrepeater.net/csvcreate3.php", "repeaterlist3.csv")
     csv_file = CSV.table(file_name)
-    assert_fields(csv_file, [:callsign, :band, :channel, :tx, :rx, :mode, :qthr, :where, :postcode, :region, :code, :keeper, :lat, :lon, nil], "https://ukrepeater.net/csvcreate3.php", file_name)
+    assert_fields(csv_file, [:callsign, :band, :channel, :tx, :rx, :modes, :qthr, :where, :postcode, :region, :ctcsscc, :keeper, :lat, :lon, nil], "https://ukrepeater.net/csvcreate3.php", file_name)
 
     csv_file.each_with_index do |raw_repeater, line_number|
       create_repeater(raw_repeater)
@@ -105,6 +105,8 @@ class UkrepeatersImporter
       repeater.region = "Wales & Marches"
     when "NI"
       repeater.region = "Northern Ireland"
+    when "CEN"
+      repeater.region = "Central England"
     else
       raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
     end
@@ -247,7 +249,7 @@ class UkrepeatersImporter
 
     file_name = download_file("https://ukrepeater.net/csvcreatewithstatus.php", "repeaterlist_status.csv")
     csv_file = CSV.table(file_name)
-    assert_fields(csv_file, [:repeater, :band, :channel, :tx, :rx, :mode, :qthr, :where, :region, :code, :keeper, :status, nil], "https://ukrepeater.net/csvcreatewithstatus.php", file_name)
+    assert_fields(csv_file, [:repeater, :band, :channel, :tx, :rx, :modes, :qthr, :where, :region, :ctcsscc, :keeper, :status, nil], "https://ukrepeater.net/csvcreatewithstatus.php", file_name)
 
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:repeater])
