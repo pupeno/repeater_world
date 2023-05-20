@@ -12,7 +12,6 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-
 class Api::Next::RepeatersController < ApplicationController
   def index
     # This API explicitly sets columns/field names in the response to make sure that as the model evolves, the API is
