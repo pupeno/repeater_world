@@ -14,13 +14,12 @@
 
 module RepeaterHelper
   def access_method_name(access_method)
-    case access_method
-    when Repeater::TONE_BURST
+    if access_method == Repeater::TONE_BURST
       "tone burst"
-    when Repeater::CTCSS
+    elsif access_method == Repeater::CTCSS
       "CTCSS"
-    else
-      throw "Unexpected access method: #{access_method}"
+    elsif access_method.present? # If it's present, then it's an error.
+      throw "Unexpected access method: \"#{access_method}\""
     end
   end
 end
