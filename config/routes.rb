@@ -34,6 +34,13 @@ Rails.application.routes.draw do
   devise_for :users
   resource :profile, only: [:edit, :update]
 
+  # API
+  namespace :api do
+    namespace :next do
+      resources :repeaters, only: [:index]
+    end
+  end
+
   # Boring routes.
   get "sitemap", to: "static#sitemap"
   get "open-source", to: "static#open_source"
