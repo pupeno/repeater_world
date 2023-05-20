@@ -32,7 +32,7 @@ RSpec.describe UkrepeatersImporter do
     Dir.mktmpdir("ukrepeaters") do |dir|
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(905)
+      end.to change { Repeater.count }.by(919)
 
       repeater = Repeater.find_by(call_sign: "GB7DC")
       expect(repeater.name).to eq("Derby")
@@ -40,13 +40,13 @@ RSpec.describe UkrepeatersImporter do
       expect(repeater.channel).to eq("RU70")
       expect(repeater.keeper).to eq("G7NPW")
       expect(repeater.operational).to eq(true)
-      expect(repeater.notes).to eq("Reduced output.")
+      expect(repeater.notes).to eq(nil)
       expect(repeater.tx_frequency).to eq(430875000)
       expect(repeater.rx_frequency).to eq(438475000)
       expect(repeater.fm).to eq(true)
       expect(repeater.access_method).to eq(Repeater::CTCSS)
       expect(repeater.ctcss_tone).to eq(71.9)
-      expect(repeater.tone_sql).to eq(false)
+      expect(repeater.tone_sql).to eq(nil)
       expect(repeater.dstar).to eq(true)
       expect(repeater.fusion).to eq(true)
       expect(repeater.dmr).to eq(true)
@@ -59,7 +59,7 @@ RSpec.describe UkrepeatersImporter do
       expect(repeater.country_id).to eq("gb")
       expect(repeater.locality).to eq("Derby")
       expect(repeater.post_code).to eq("DE21")
-      expect(repeater.region).to eq("Midlands, England")
+      expect(repeater.region).to eq("Central England")
       expect(repeater.utc_offset).to eq("0:00")
 
       # The second time we call it, it shouldn't re-download any files, nor create new
