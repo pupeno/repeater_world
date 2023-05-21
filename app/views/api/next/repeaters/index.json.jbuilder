@@ -22,8 +22,8 @@ json.array! @repeaters do |repeater|
   json.tx_frequency repeater.tx_frequency
   json.rx_frequency repeater.rx_frequency
   json.fm repeater.fm
-  json.access_method repeater.access_method
-  json.ctcss_tone repeater.ctcss_tone
+  json.fm_tone_burst repeater.fm_tone_burst
+  json.fm_ctcss_tone repeater.fm_ctcss_tone
   json.dstar repeater.dstar
   json.fusion repeater.fusion
   json.dmr repeater.dmr

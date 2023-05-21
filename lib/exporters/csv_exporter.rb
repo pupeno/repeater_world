@@ -17,7 +17,7 @@ class CsvExporter < Exporter
   def export
     columns = [
       :name, :call_sign, :band, :channel, :keeper, :operational, :notes, :tx_frequency, :rx_frequency, :fm,
-      :access_method, :ctcss_tone, :tone_sql, :dstar, :fusion, :dmr, :dmr_color_code, :dmr_network, :nxdn, :latitude,
+      :fm_tone_burst, :fm_ctcss_tone, :tone_sql, :dstar, :fusion, :dmr, :dmr_color_code, :dmr_network, :nxdn, :latitude,
       :longitude, :grid_square, :address, :locality, :region, :post_code, :country_id, :utc_offset, :source,
       :redistribution_limitations
     ]
@@ -27,7 +27,8 @@ class CsvExporter < Exporter
 
     # Some columns require special cases.
     column_names[:fm] = "FM"
-    column_names[:ctcss_tone] = "CTCSS Tone"
+    column_names[:fm_tone_burst] = "Tone Burst"
+    column_names[:fm_ctcss_tone] = "CTCSS Tone"
     column_names[:tone_sql] = "Tone SQL"
     column_names[:dstar] = "D-Star"
     column_names[:dmr] = "DMR"

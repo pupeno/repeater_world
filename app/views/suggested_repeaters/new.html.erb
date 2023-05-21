@@ -124,12 +124,15 @@ You should have received a copy of the GNU Affero General Public License along w
       </div>
     </div>
 
-    <%= form_text_field form: form, field_name: :access_method,
-                        help_text: "Likely one of #{Repeater::ACCESS_METHODS
-                          .map { |r| access_method_name(r) }
-                          .to_sentence(last_word_connector: " or ", two_words_connector: " or ")}." %>
-
-    <%= form_text_field form: form, field_name: :ctcss_tone, label: "CTCSS tone",
+    <div class="sm:grid sm:grid-cols-3 sm:items-start sm:border-b sm:border-gray-200 py-3 sm:py-5">
+      <%= form.label :fm_tone_burst, "Tone burst?", class: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" %>
+      <div class="sm:mt-px sm:pt-2 flex flex-row">
+        <%= form.check_box :fm_tone_burst, class: "h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded" %>
+        <%= form.label :fm_tone_burst, "Yes, this repeater uses tone burst.", class: "ml-2 block text-sm text-gray-900" %>
+      </div>
+    </div>
+    
+    <%= form_text_field form: form, field_name: :fm_ctcss_tone, label: "CTCSS tone",
                         help_text: "Likely one of #{Repeater::CTCSS_TONES
                           .to_sentence(last_word_connector: " or ", two_words_connector: " or ")}." %>
 

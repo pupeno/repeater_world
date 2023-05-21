@@ -32,8 +32,8 @@ FactoryBot.define do
     rx_frequency { "rx freq" }
 
     fm { true }
-    access_method { "access method" }
-    ctcss_tone { "ctcss_tone" }
+    fm_tone_burst { true }
+    fm_ctcss_tone { "ctcss_tone" }
     tone_sql { "tone_sql" }
 
     dstar { true }
@@ -64,18 +64,18 @@ end
 # Table name: suggested_repeaters
 #
 #  id                  :uuid             not null, primary key
-#  access_method       :string
 #  address             :string
 #  band                :string
 #  call_sign           :string
 #  channel             :string
 #  country             :string
-#  ctcss_tone          :string
 #  dmr                 :boolean
 #  dmr_color_code      :string
 #  dmr_network         :string
 #  dstar               :boolean
 #  fm                  :boolean
+#  fm_ctcss_tone       :string
+#  fm_tone_burst       :boolean
 #  fusion              :boolean
 #  grid_square         :string
 #  keeper              :string

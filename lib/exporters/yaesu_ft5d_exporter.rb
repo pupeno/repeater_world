@@ -172,19 +172,10 @@ class YaesuFt5dExporter < Exporter
       raise "Unknown fm/fusion conditions for repeater #{repeater}"
     end
 
-    row[TONE_MODE] = case repeater.access_method
-    when Repeater::CTCSS
-      "TONE" # TODO: when do we use TSQL: https://github.com/flexpointtech/repeater_world/issues/23
-    else
-      OFF # Repeater::TONE_BURST or NULL is "OFF".
-    end
+    # TODO: when do we use TSQL: https://github.com/flexpointtech/repeater_world/issues/23
+    row[TONE_MODE] = repeater.fm_ctcss_tone.present? ? "TONE" : OFF
 
-    row[CTCSS_FREQ] = case repeater.access_method
-    when Repeater::CTCSS
-      "#{repeater.ctcss_tone} Hz"
-    else
-      "88.5 Hz" # FT5D insists on having some value here, even if it makes no sense and it's not used. The ID-51 has a similar broken behaviour.
-    end
+    row[CTCSS_FREQ] = repeater.fm_ctcss_tone.present? ? "#{repeater.fm_ctcss_tone} Hz" : "88.5 Hz"  # FT5D insists on having some value here, even if it makes no sense and it's not used. The ID-51 has a similar broken behaviour.
 
     row
   end

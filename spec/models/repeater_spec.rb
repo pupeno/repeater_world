@@ -55,7 +55,6 @@ end
 # Table name: repeaters
 #
 #  id                         :uuid             not null, primary key
-#  access_method              :string
 #  address                    :string
 #  altitude_agl               :decimal(, )
 #  altitude_asl               :decimal(, )
@@ -63,12 +62,13 @@ end
 #  bearing                    :string
 #  call_sign                  :string
 #  channel                    :string
-#  ctcss_tone                 :decimal(, )
 #  dmr                        :boolean
 #  dmr_color_code             :integer
 #  dmr_network                :string
 #  dstar                      :boolean
 #  fm                         :boolean
+#  fm_ctcss_tone              :decimal(, )
+#  fm_tone_burst              :boolean
 #  fusion                     :boolean
 #  grid_square                :string
 #  keeper                     :string

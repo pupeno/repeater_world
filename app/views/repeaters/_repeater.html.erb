@@ -51,12 +51,11 @@ You should have received a copy of the GNU Affero General Public License along w
           <%= render partial: "shared/card/boolean", locals: { value: repeater.fm } %>
         <% end %>
         <% if repeater.fm? %>
+          <%= render layout: "shared/card/entry", locals: { key: "Tone Burst" } do %>
+            <%= render partial: "shared/card/boolean", locals: { value: repeater.fm_tone_burst } %>
+          <% end if repeater.fm_tone_burst.present? %>
           <%= render partial: "shared/card/entry",
-                     locals: { key: "Access Method",
-                               value: access_method_name(repeater.access_method) } %>
-          <%= render partial: "shared/card/entry",
-                     locals: { key: "CTCSS Tone",
-                               value: repeater.ctcss_tone } if repeater.access_method == Repeater::CTCSS %>
+                     locals: { key: "CTCSS Tone", value: repeater.fm_ctcss_tone } if repeater.fm_ctcss_tone.present? %>
         <% end %>
         <%= render layout: "shared/card/entry", locals: { key: "D-Star" } do %>
           <%= render partial: "shared/card/boolean", locals: { value: repeater.dstar } %>

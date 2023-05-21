@@ -69,16 +69,13 @@ class UkrepeatersImporter < Importer
     repeater.rx_frequency = raw_repeater[:rx].to_f * 10**6
     if raw_repeater[:code].present?
       if Repeater::CTCSS_TONES.include?(raw_repeater[:code].to_f)
-        repeater.access_method = Repeater::CTCSS
-        repeater.ctcss_tone = raw_repeater[:code]
+        repeater.fm_ctcss_tone = raw_repeater[:code]
         repeater.tone_sql = false # TODO: how do we know when this should be true? https://github.com/flexpointtech/repeater_world/issues/23
       elsif Repeater::DMR_COLOR_CODES.include?(raw_repeater[:code].to_f)
         repeater.dmr_color_code = raw_repeater[:code]
       else
         @logger.info "Ignoring invalid code #{raw_repeater[:code]} in #{raw_repeater}"
       end
-      # else
-      #   repeater.access_method = Repeater::TONE_BURST
     end
 
     # The location of the repeater
@@ -171,8 +168,7 @@ class UkrepeatersImporter < Importer
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
       repeater.fm = true if raw_repeater[:analog]&.strip == "Y"
       if repeater.fm && raw_repeater[:ctcss].present? # This file contains some improvements on CTCSS code.
-        repeater.access_method = Repeater::CTCSS
-        repeater.ctcss_tone = raw_repeater[:ctcss]
+        repeater.fm_ctcss_tone = raw_repeater[:ctcss]
       end
 
       repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"
