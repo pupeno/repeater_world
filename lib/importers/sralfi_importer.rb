@@ -58,7 +58,13 @@ class SralfiImporter < Importer
   def import_repeater(raw_repeater)
     repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater["callsign"].upcase)
     repeater.external_id = raw_repeater[:id]
-    # TODO: status, what is QRV?
+    if raw_repeater["status"] == "QRV"
+      repeater.operational = true
+    elsif raw_repeater["status"] == "QRT"
+      repeater.operational = true
+    else
+      raise "Unknown status: #{raw_repeater["status"]}"
+    end
     if raw_repeater["mode"].in? ["FM", "NFM"] # TODO: do we need to separate narrowband fm into its own mode?
       repeater.fm = true
     elsif raw_repeater["mode"] == "FM / P25"
@@ -106,7 +112,7 @@ class SralfiImporter < Importer
     # site_desc imported later
     # TODO: what is alt_asl? altitude
     # TODO: what is alt_agl? altitude
-    repeater.tx_frequency = raw_repeater["tx_freq"].to_f * 10**6
+    repeater.tx_frequency = raw_repeater["tx_freq"].to_f * 10 ** 6
     # TODO: import tx_power
     # TODO: import tx_antenna
     # TODO: what is tx_antpol?
@@ -115,10 +121,10 @@ class SralfiImporter < Importer
     # TODO: what is rx_antpol?
     # TODO: what is rep_access?
     repeater.rx_frequency = if raw_repeater["rep_shift"].blank?
-      repeater.tx_frequency
-    else
-      repeater.tx_frequency + raw_repeater["rep_shift"].to_f * 10**6
-    end
+                              repeater.tx_frequency
+                            else
+                              repeater.tx_frequency + raw_repeater["rep_shift"].to_f * 10 ** 6
+                            end
 
     repeater.band = BAND_MAPPING[raw_repeater["band_name"].strip] || raise("Unknown band #{raw_repeater["band_name"]}")
     repeater.keeper = raw_repeater["responsible_club"]
