@@ -65,50 +65,9 @@ class SralfiImporter < Importer
     end
 
     repeater.external_id = raw_repeater[:id]
-    if raw_repeater["status"] == "QRV"
-      repeater.operational = true
-    elsif raw_repeater["status"] == "QRT"
-      repeater.operational = true
-    else
-      raise "Unknown status: #{raw_repeater["status"]}"
-    end
-    if raw_repeater["mode"].in? ["FM", "NFM"] # TODO: do we need to separate narrowband fm into its own mode?
-      repeater.fm = true
-    elsif raw_repeater["mode"] == "FM / P25"
-      repeater.fm = true
-      repeater.p25 = true
-    elsif raw_repeater["mode"].in? ["FM / Yaesu", "FM C4FM", "FM / C4FM"]
-      repeater.fm = true
-      repeater.fusion = true
-    elsif raw_repeater["mode"].in? ["DMR, FM", "FM/DMR"]
-      repeater.fm = true
-      repeater.dmr = true
-    elsif raw_repeater["mode"].in? ["FM,DMR,D-S"] # I'm assuming D-S is D-Star.
-      repeater.fm = true
-      repeater.dstar = true
-      repeater.dmr = true
-    elsif raw_repeater["mode"] == "DMR"
-      repeater.dmr = true
-    elsif raw_repeater["mode"] == "TETRA"
-      repeater.tetra = true
-    elsif raw_repeater["mode"].blank?
-      # Nothing to do.
-    elsif raw_repeater["mode"] == "FM, Digi" && raw_repeater["callsign"] == "OH4RUB"
-      # "FM, Digi" is not used for any other repeater, and the comment in this repeater says it supports these
-      # modes.
-      repeater.fm = true
-      repeater.dstar = true
-      repeater.fusion = true
-      repeater.dmr = true
-    elsif raw_repeater["mode"] == "4FSK" && raw_repeater["callsign"].in?(["OH5DMRA", "OH5RUA", "OH5RUG"])
-      # Comments on the repeater information says it's actually DMR.
-      repeater.dmr = true
-    else
-      raise "Unknown mode \"#{raw_repeater["mode"]}\"."
-    end
-    repeater.name = raw_repeater["name"]
-    repeater.name = raw_repeater["qth_city"] if repeater.name.blank?
-    repeater.name = raw_repeater["callsign"].upcase if repeater.name.blank?
+    import_status(raw_repeater, repeater)
+    import_mode(raw_repeater, repeater)
+    import_name(raw_repeater, repeater)
     repeater.web_site = raw_repeater["station_url"] || raw_repeater["responsible_club_url"]
     # stdesc imported later
     # TODO: what is cwid? It has some of these values: VJ, RI, KT, KA, JA, JY, JM, KO, OU, RO.
@@ -122,18 +81,56 @@ class SralfiImporter < Importer
     repeater.tx_frequency = raw_repeater["tx_freq"].to_f * 10**6
     repeater.tx_power = raw_repeater["tx_power"]
     repeater.tx_antenna = raw_repeater["tx_ant"]
-    if raw_repeater["tx_antpol"] == "H"
-      repeater.tx_antenna_polarization = "horizontal"
-    elsif raw_repeater["tx_antpol"] == "V"
-      repeater.tx_antenna_polarization = "vertical"
-    end
+    import_tx_antenna_polarization(raw_repeater, repeater)
     # TODO: what is qtf?
     repeater.rx_antenna = raw_repeater["rx_antenna"]
-    if raw_repeater["rx_antpol"] == "H"
-      repeater.rx_antenna_polarization = "horizontal"
-    elsif raw_repeater["rx_antpol"] == "V"
-      repeater.rx_antenna_polarization = "vertical"
+    import_rx_antenna_polarization(raw_repeater, repeater)
+    import_access_method(raw_repeater, repeater)
+    import_rx_frequency(raw_repeater, repeater)
+
+    repeater.band = BAND_MAPPING[raw_repeater["band_name"].strip] || raise("Unknown band #{raw_repeater["band_name"]}")
+    repeater.keeper = raw_repeater["responsible_club"]
+    # responsible_club_url imported earlier/later
+    # remarks imported later
+
+    import_notes(raw_repeater, repeater)
+
+    repeater.source = SOURCE
+    repeater.country_id = "fi"
+
+    if repeater.new_record?
+      @logger.info "Creating #{repeater}."
+    elsif repeater.changed?
+      @logger.info "Updating #{repeater}."
     end
+
+    repeater.save!
+  rescue => e
+    @logger.error "Failed to import repeater #{raw_repeater["callsign"]}: #{e.message}"
+    @logger.error raw_repeater
+    raise "Failed to import repeater #{raw_repeater}"
+  end
+
+  def import_notes(raw_repeater, repeater)
+    repeater.notes = [
+      raw_repeater["site_desc"],
+      raw_repeater["stdesc"],
+      "Responsible club: #{raw_repeater["responsible_club"]} #{raw_repeater["responsible_club_url"]}",
+      raw_repeater["remarks"],
+      "Last modified #{raw_repeater["last_modified"]}",
+      repeater.tetra? ? "Access #{raw_repeater["rep_access"]}." : nil
+    ].compact.join("\n\n")
+  end
+
+  def import_rx_frequency(raw_repeater, repeater)
+    repeater.rx_frequency = if raw_repeater["rep_shift"].blank?
+                              repeater.tx_frequency
+                            else
+                              repeater.tx_frequency + raw_repeater["rep_shift"].to_f * 10 ** 6
+                            end
+  end
+
+  def import_access_method(raw_repeater, repeater)
     if raw_repeater["rep_access"]&.strip&.in? ["Tone 1750", "Tone 1750 tai DTMF *", "Tone 1750, DTMF *", "1750Hz Tone", "Tone 1750, DTMF*", "tone 1750"]
       repeater.access_method = Repeater::TONE_BURST
     elsif raw_repeater["rep_access"]&.strip&.in? ["CTCSS 103.5 Hz", "CTCSS 103,5 Hz", "CTCSS 103,5", "103.5 Hz", "CTCSS 103,5 / Yaesu", "CTCSS 103,5Hz"]
@@ -175,39 +172,74 @@ class SralfiImporter < Importer
     else
       raise "Unknown rep_access: \"#{raw_repeater["rep_access"]}\"."
     end
-    repeater.rx_frequency = if raw_repeater["rep_shift"].blank?
-      repeater.tx_frequency
+  end
+
+  def import_rx_antenna_polarization(raw_repeater, repeater)
+    if raw_repeater["rx_antpol"] == "H"
+      repeater.rx_antenna_polarization = "horizontal"
+    elsif raw_repeater["rx_antpol"] == "V"
+      repeater.rx_antenna_polarization = "vertical"
+    end
+  end
+
+  def import_tx_antenna_polarization(raw_repeater, repeater)
+    if raw_repeater["tx_antpol"] == "H"
+      repeater.tx_antenna_polarization = "horizontal"
+    elsif raw_repeater["tx_antpol"] == "V"
+      repeater.tx_antenna_polarization = "vertical"
+    end
+  end
+
+  def import_name(raw_repeater, repeater)
+    repeater.name = raw_repeater["name"]
+    repeater.name = raw_repeater["qth_city"] if repeater.name.blank?
+    repeater.name = raw_repeater["callsign"].upcase if repeater.name.blank?
+  end
+
+  def import_mode(raw_repeater, repeater)
+    if raw_repeater["mode"].in? ["FM", "NFM"] # TODO: do we need to separate narrowband fm into its own mode?
+      repeater.fm = true
+    elsif raw_repeater["mode"] == "FM / P25"
+      repeater.fm = true
+      repeater.p25 = true
+    elsif raw_repeater["mode"].in? ["FM / Yaesu", "FM C4FM", "FM / C4FM"]
+      repeater.fm = true
+      repeater.fusion = true
+    elsif raw_repeater["mode"].in? ["DMR, FM", "FM/DMR"]
+      repeater.fm = true
+      repeater.dmr = true
+    elsif raw_repeater["mode"].in? ["FM,DMR,D-S"] # I'm assuming D-S is D-Star.
+      repeater.fm = true
+      repeater.dstar = true
+      repeater.dmr = true
+    elsif raw_repeater["mode"] == "DMR"
+      repeater.dmr = true
+    elsif raw_repeater["mode"] == "TETRA"
+      repeater.tetra = true
+    elsif raw_repeater["mode"].blank?
+      # Nothing to do.
+    elsif raw_repeater["mode"] == "FM, Digi" && raw_repeater["callsign"] == "OH4RUB"
+      # "FM, Digi" is not used for any other repeater, and the comment in this repeater says it supports these
+      # modes.
+      repeater.fm = true
+      repeater.dstar = true
+      repeater.fusion = true
+      repeater.dmr = true
+    elsif raw_repeater["mode"] == "4FSK" && raw_repeater["callsign"].in?(["OH5DMRA", "OH5RUA", "OH5RUG"])
+      # Comments on the repeater information says it's actually DMR.
+      repeater.dmr = true
     else
-      repeater.tx_frequency + raw_repeater["rep_shift"].to_f * 10**6
+      raise "Unknown mode \"#{raw_repeater["mode"]}\"."
     end
+  end
 
-    repeater.band = BAND_MAPPING[raw_repeater["band_name"].strip] || raise("Unknown band #{raw_repeater["band_name"]}")
-    repeater.keeper = raw_repeater["responsible_club"]
-    # responsible_club_url imported earlier/later
-    # remarks imported later
-
-    repeater.notes = [
-      raw_repeater["site_desc"],
-      raw_repeater["stdesc"],
-      "Responsible club: #{raw_repeater["responsible_club"]} #{raw_repeater["responsible_club_url"]}",
-      raw_repeater["remarks"],
-      "Last modified #{raw_repeater["last_modified"]}",
-      repeater.tetra? ? "Access #{raw_repeater["rep_access"]}." : nil
-    ].compact.join("\n\n")
-
-    repeater.source = SOURCE
-    repeater.country_id = "fi"
-
-    if repeater.new_record?
-      @logger.info "Creating #{repeater}."
-    elsif repeater.changed?
-      @logger.info "Updating #{repeater}."
+  def import_status(raw_repeater, repeater)
+    if raw_repeater["status"] == "QRV"
+      repeater.operational = true
+    elsif raw_repeater["status"] == "QRT"
+      repeater.operational = true
+    else
+      raise "Unknown status: #{raw_repeater["status"]}"
     end
-
-    repeater.save!
-  rescue => e
-    @logger.error "Failed to import repeater #{raw_repeater["callsign"]}: #{e.message}"
-    @logger.error raw_repeater
-    raise "Failed to import repeater #{raw_repeater}"
   end
 end
