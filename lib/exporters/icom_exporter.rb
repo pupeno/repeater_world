@@ -75,23 +75,15 @@ class IcomExporter < Exporter
 
     row["Mode"] = "FM"
 
-    if !repeater.access_method.present?
-      row["Sub Name"] = "No CTCSS" # We are missing the CTCSS here.
+    if repeater.fm_ctcss_tone.blank? && repeater.fm_tone_burst.blank?
+      row["Sub Name"] = "Missing Tone" # We are missing a tone, so we can't use this repeater.
     end
 
-    row["TONE"] = case repeater.access_method
-    when Repeater::CTCSS
-      "TONE" # TODO: when do we use TSQL: https://github.com/flexpointtech/repeater_world/issues/23
-    else
-      "OFF" # Repeater::TONE_BURST or NULL is "OFF".
-    end
+    # TODO: when do we use TSQL: https://github.com/flexpointtech/repeater_world/issues/23
+    # Repeater::TONE_BURST or NULL is "OFF".
+    row["TONE"] = repeater.fm_ctcss_tone.present? ? "TONE" : "OFF"
 
-    row["Repeater Tone"] = case repeater.access_method
-    when Repeater::CTCSS
-      "#{repeater.ctcss_tone}Hz"
-    else
-      "88.5Hz" # ID-52 insists on having some value here, even if it makes no sense and it's not used. The ID-51 has a similar broken behaviour.
-    end
+    row["Repeater Tone"] = repeater.fm_ctcss_tone.present? ? "#{repeater.fm_ctcss_tone}Hz" : "88.5Hz" # ID-52 insists on having some value here, even if it makes no sense and it's not used. The ID-51 has a similar broken behaviour.
 
     row
   end

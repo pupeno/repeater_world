@@ -12,9 +12,12 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div class="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-3">
-  <dt class="text-sm font-medium text-gray-500 truncate"><%= label %></dt>
-  <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-    <%= contents %>
-  </dd>
+<div class="sm:grid sm:grid-cols-3 sm:items-start sm:border-b sm:border-gray-200 py-3 sm:py-5">
+  <%= form.label field_name, label, class: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" %>
+  <div class="sm:mt-px sm:pt-2 flex flex-row">
+    <%= form.check_box field_name,
+                       input_html_options
+                         .deep_merge({ class: [input_html_options[:class], "h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"] }) %>
+    <%= form.label field_name, second_label, class: "ml-2 block text-sm text-gray-900" %>
+  </div>
 </div>

@@ -50,7 +50,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <div class="my-3">
     Band:
-    <% Repeater::BANDS.each do |band| %>
+    <% RepeaterSearch::BANDS.each do |band| %>
       <%= badge_checkbox form, "band_#{band}", band %>
     <% end %>
   </div>

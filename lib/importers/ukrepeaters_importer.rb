@@ -14,16 +14,11 @@
 
 require "open-uri"
 
-class UkrepeatersImporter
-  USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 https://repeater.world/crawler info@repeater.world"
+class UkrepeatersImporter < Importer
   SOURCE = "https://ukrepeater.net"
 
-  def initialize(working_directory: nil, logger: nil)
-    @working_directory = working_directory || Rails.root.join("tmp", "ukrepeaters").to_s # Stable working directory to avoid re-downloading when developing.
-    @logger = logger || Rails.logger
-  end
-
   def import
+    @logger.info "Importing repeaters from #{SOURCE}."
     Repeater.transaction do
       process_repeaterlist3_csv
       process_repeaterlist_dv_csv
@@ -32,6 +27,7 @@ class UkrepeatersImporter
       # TODO: process packetlist: https://ukrepeater.net/csvfiles.html https://ukrepeater.net/csvcreate4.php
       process_repeaterlist_status_csv
     end
+    @logger.info "Done importing repeaters from #{SOURCE}."
   end
 
   private
@@ -58,7 +54,7 @@ class UkrepeatersImporter
 
     # Only update repeaters that were sourced from ukrepeater.
     if repeater.persisted? && repeater.source != SOURCE
-      @logger.info "  Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
       return
     end
 
@@ -73,16 +69,13 @@ class UkrepeatersImporter
     repeater.rx_frequency = raw_repeater[:rx].to_f * 10**6
     if raw_repeater[:code].present?
       if Repeater::CTCSS_TONES.include?(raw_repeater[:code].to_f)
-        repeater.access_method = Repeater::CTCSS
-        repeater.ctcss_tone = raw_repeater[:code]
-        repeater.tone_sql = false # TODO: how do we know when this should be true? https://github.com/flexpointtech/repeater_world/issues/23
+        repeater.fm_ctcss_tone = raw_repeater[:code]
+        repeater.fm_tone_squelch = false # TODO: how do we know when this should be true? https://github.com/flexpointtech/repeater_world/issues/23
       elsif Repeater::DMR_COLOR_CODES.include?(raw_repeater[:code].to_f)
         repeater.dmr_color_code = raw_repeater[:code]
       else
-        @logger.info "  Ignoring invalid code #{raw_repeater[:code]} in #{raw_repeater}"
+        @logger.info "Ignoring invalid code #{raw_repeater[:code]} in #{raw_repeater}"
       end
-      # else
-      #   repeater.access_method = Repeater::TONE_BURST
     end
 
     # The location of the repeater
@@ -118,7 +111,7 @@ class UkrepeatersImporter
     repeater.source = SOURCE
     repeater.redistribution_limitations = "https://repeater.world/ukrepeater-net"
 
-    @logger.info "  Created #{repeater}." if repeater.new_record?
+    @logger.info "Created #{repeater}." if repeater.new_record?
 
     repeater.save!
   end
@@ -133,10 +126,10 @@ class UkrepeatersImporter
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:call])
       if !repeater
-        @logger.info "  Repeater not found: #{raw_repeater[:call]} when importing #{raw_repeater}"
+        @logger.info "Repeater not found: #{raw_repeater[:call]} when importing #{raw_repeater}"
         next # TODO: create these repeaters.
       elsif repeater.source != SOURCE
-        @logger.info "  Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
         next
       end
 
@@ -146,7 +139,7 @@ class UkrepeatersImporter
       repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
       repeater.nxdn = true if raw_repeater[:nxdn]&.strip == "Y"
 
-      @logger.info "  Enriched #{repeater}." if repeater.changed?
+      @logger.info "Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
     rescue
@@ -165,18 +158,17 @@ class UkrepeatersImporter
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:call])
       if !repeater
-        @logger.info "  Repeater not found: #{raw_repeater[:call]}"
+        @logger.info "Repeater not found: #{raw_repeater[:call]}"
         next # TODO: create these repeaters.
       elsif repeater.source != SOURCE
-        @logger.info "  Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
         next
       end
 
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
       repeater.fm = true if raw_repeater[:analog]&.strip == "Y"
       if repeater.fm && raw_repeater[:ctcss].present? # This file contains some improvements on CTCSS code.
-        repeater.access_method = Repeater::CTCSS
-        repeater.ctcss_tone = raw_repeater[:ctcss]
+        repeater.fm_ctcss_tone = raw_repeater[:ctcss]
       end
 
       repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"
@@ -185,7 +177,7 @@ class UkrepeatersImporter
 
       repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
 
-      @logger.info "  Enriched #{repeater}." if repeater.changed?
+      @logger.info "Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
     rescue
@@ -204,10 +196,10 @@ class UkrepeatersImporter
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:call])
       if !repeater
-        @logger.info "  Repeater not found: #{raw_repeater[:call]}"
+        @logger.info "Repeater not found: #{raw_repeater[:call]}"
         next # TODO: create these repeaters.
       elsif repeater.source != SOURCE
-        @logger.info "  Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
         next
       end
 
@@ -235,7 +227,7 @@ class UkrepeatersImporter
         raise "Unknown status #{raw_repeater[:status]}"
       end
 
-      @logger.info "  Enriched #{repeater}." if repeater.changed?
+      @logger.info "Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
     rescue
@@ -254,10 +246,10 @@ class UkrepeatersImporter
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:repeater])
       if !repeater
-        @logger.info "  Repeater not found: #{raw_repeater[:repeater]}"
+        @logger.info "Repeater not found: #{raw_repeater[:repeater]}"
         next # TODO: create these repeaters.
       elsif repeater.source != SOURCE
-        @logger.info "  Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
         next
       end
 
@@ -275,26 +267,13 @@ class UkrepeatersImporter
         raise "Unknown status #{raw_repeater[:status]}"
       end
 
-      @logger.info "  Enriched #{repeater}." if repeater.changed?
+      @logger.info "Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
     rescue
       raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
     @logger.info "Done processing repeaterlist_status.csv."
-  end
-
-  def download_file(url, dest)
-    dest = File.join(@working_directory, dest)
-    if !File.exist?(dest)
-      @logger.info "  Downloading #{url}"
-      dirname = File.dirname(dest)
-      FileUtils.mkdir_p(dirname) if !File.directory?(dirname)
-      src_stream = URI.parse(url).open({"User-Agent" => USER_AGENT})
-      IO.copy_stream(src_stream, dest)
-    end
-
-    dest
   end
 
   def assert_fields(table, fields, url, file_name)
