@@ -76,6 +76,7 @@ end
 #  source                     :string
 #  tetra                      :boolean
 #  tone_sql                   :boolean
+#  transmit_power             :decimal(, )
 #  tx_frequency               :decimal(, )
 #  utc_offset                 :string
 #  web_site                   :string
