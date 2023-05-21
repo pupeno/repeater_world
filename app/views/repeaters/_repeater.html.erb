@@ -17,22 +17,18 @@ You should have received a copy of the GNU Affero General Public License along w
               flex flex-col sm:flex-row">
     <div class="flex-1 px-4 py-5 sm:p-0">
       <dl class="divide-y divide-gray-200">
-        <%= render partial: "shared/card/entry", locals: { key: "Name", value: repeater.name } %>
-        <%= render partial: "shared/card/entry", locals: { key: "Call Sign", value: repeater.call_sign } %>
-        <% if repeater.web_site.present? %>
-          <%= render layout: "shared/card/entry", locals: { key: "Web Site" } do %>
-            <%= link_to repeater.web_site, repeater.web_site, class: "link" %>
-          <% end %>
+        <%= card_entry(label: "Name", value: repeater.name) %>
+        <%= card_entry(label: "Call Sign", value: repeater.call_sign) %>
+        <%= card_entry(label: "Web Site", value: repeater.web_site, optional: true) do %>
+          <%= link_to repeater.web_site, repeater.web_site, class: "link" %>
         <% end %>
-        <%= render partial: "shared/card/entry", locals: { key: "Band", value: repeater.band } %>
-        <%= render partial: "shared/card/entry", locals: { key: "Modes", value: repeater.modes.join(", ") } %>
-        <%= render layout: "shared/card/entry", locals: { key: "Operational" } do %>
-          <%= render partial: "shared/card/boolean", locals: { value: repeater.operational } %>
-        <% end %>
-        <%= render layout: "shared/card/entry", locals: { key: "TX Frequency" } do %>
+        <%= card_entry(label: "Band", value: repeater.band, optional: true) %>
+        <%= card_entry(label: "Modes", value: repeater.modes.join(", "), optional: true) %>
+        <%= card_entry(label: "Operational", value: repeater.operational) %>
+        <%= card_entry(label: "TX Frequency", value: repeater.tx_frequency) do %>
           <%= repeater.tx_frequency / (10 ** 6) %>MHz
         <% end %>
-        <%= render layout: "shared/card/entry", locals: { key: "RX Frequency" } do %>
+        <%= card_entry(label: "RX Frequency", value: repeater.rx_frequency) do %>
           <div data-action="click->repeater#toggleRxFrequencyFormat"
                class="cursor-pointer">
             <% offset = "#{(repeater.rx_frequency - repeater.tx_frequency > 0) ? "+" : ""}#{((repeater.rx_frequency - repeater.tx_frequency) / (10 ** 3)).to_i}kHz" %>
@@ -47,33 +43,20 @@ You should have received a copy of the GNU Affero General Public License along w
             </div>
           </div>
         <% end %>
-        <%= render layout: "shared/card/entry", locals: { key: "FM" } do %>
-          <%= render partial: "shared/card/boolean", locals: { value: repeater.fm } %>
-        <% end %>
+        <%= card_entry(label: "FM", value: repeater.fm?) %>
         <% if repeater.fm? %>
-          <%= render layout: "shared/card/entry", locals: { key: "Tone Burst" } do %>
-            <%= render partial: "shared/card/boolean", locals: { value: repeater.fm_tone_burst } %>
-          <% end if repeater.fm_tone_burst.present? %>
-          <%= render partial: "shared/card/entry",
-                     locals: { key: "CTCSS Tone", value: repeater.fm_ctcss_tone } if repeater.fm_ctcss_tone.present? %>
+          <%= card_entry(label: "Tone Burst", value: repeater.fm_tone_burst?, optional: true) %>
+          <%= card_entry(label: "CTCSS Tone", value: repeater.fm_ctcss_tone, optional: true) %>
         <% end %>
-        <%= render layout: "shared/card/entry", locals: { key: "D-Star" } do %>
-          <%= render partial: "shared/card/boolean", locals: { value: repeater.dstar } %>
-        <% end %>
-        <%= render layout: "shared/card/entry", locals: { key: "Fusion" } do %>
-          <%= render partial: "shared/card/boolean", locals: { value: repeater.fusion } %>
-        <% end %>
-        <%= render layout: "shared/card/entry", locals: { key: "DMR" } do %>
-          <%= render partial: "shared/card/boolean", locals: { value: repeater.dmr } %>
-        <% end %>
+        <%= card_entry(label: "D-Star", value: repeater.dstar?) %>
+        <%= card_entry(label: "Fusion", value: repeater.fusion?) %>
+        <%= card_entry(label: "DMR", value: repeater.dmr?) %>
         <% if repeater.dmr? %>
-          <%= render partial: "shared/card/entry", locals: { key: "DMR color code", value: repeater.dmr_color_code } %>
-          <%= render partial: "shared/card/entry", locals: { key: "DMR network", value: repeater.dmr_network } %>
+          <%= card_entry(label: "DMR color code", value: repeater.dmr_color_code, optional: true) %>
+          <%= card_entry(label: "DMR network", value: repeater.dmr_network, optional: true) %>
         <% end %>
-        <%= render layout: "shared/card/entry", locals: { key: "NXDN" } do %>
-          <%= render partial: "shared/card/boolean", locals: { value: repeater.nxdn } %>
-        <% end %>
-        <%= render layout: "shared/card/entry", locals: { key: "Location" } do %>
+        <%= card_entry(label: "NXDN", value: repeater.nxdn?) %>
+        <%= card_entry(label: "Location") do %>
           <div data-action="click->repeater#changeLocationFormat"
                class="cursor-pointer">
             <div data-repeater-target="locationFormat1">
@@ -87,9 +70,9 @@ You should have received a copy of the GNU Affero General Public License along w
             </div>
           </div>
         <% end %>
-        <%= render partial: "shared/card/entry", locals: { key: "Channel", value: repeater.channel } if repeater.channel.present? %>
-        <%= render partial: "shared/card/entry", locals: { key: "Notes", value: repeater.notes } if repeater.notes.present? %>
-        <%= render partial: "shared/card/entry", locals: { key: "Source", value: repeater.source } if repeater.source.present? %>
+        <%= card_entry(label: "Channel", value: repeater.channel, optional: true) %>
+        <%= card_entry(label: "Notes", value: repeater.notes, optional: true) %>
+        <%= card_entry(label: "Source", value: repeater.source, optional: true) %>
       </dl>
     </div>
     <div class="flex-1 min-h-[500px] place-self-stretch bg-gray-300"
