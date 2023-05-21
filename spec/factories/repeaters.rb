@@ -53,6 +53,7 @@ end
 #  altitude_agl               :decimal(, )
 #  altitude_asl               :decimal(, )
 #  band                       :string
+#  bearing                    :string
 #  call_sign                  :string
 #  channel                    :string
 #  ctcss_tone                 :decimal(, )

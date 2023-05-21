@@ -82,7 +82,7 @@ class SralfiImporter < Importer
     repeater.tx_power = raw_repeater["tx_power"]
     repeater.tx_antenna = raw_repeater["tx_ant"]
     import_tx_antenna_polarization(raw_repeater, repeater)
-    # TODO: what is qtf?
+    repeater.bearing = raw_repeater["qtf"]
     repeater.rx_antenna = raw_repeater["rx_antenna"]
     import_rx_antenna_polarization(raw_repeater, repeater)
     import_access_method(raw_repeater, repeater)
@@ -124,10 +124,10 @@ class SralfiImporter < Importer
 
   def import_rx_frequency(raw_repeater, repeater)
     repeater.rx_frequency = if raw_repeater["rep_shift"].blank?
-                              repeater.tx_frequency
-                            else
-                              repeater.tx_frequency + raw_repeater["rep_shift"].to_f * 10 ** 6
-                            end
+      repeater.tx_frequency
+    else
+      repeater.tx_frequency + raw_repeater["rep_shift"].to_f * 10**6
+    end
   end
 
   def import_access_method(raw_repeater, repeater)

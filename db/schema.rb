@@ -116,6 +116,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_21_080848) do
     t.string "rx_antenna_polarization"
     t.decimal "altitude_asl"
     t.decimal "altitude_agl"
+    t.string "bearing"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["country_id"], name: "index_repeaters_on_country_id"
     t.index ["location"], name: "index_repeaters_on_location", using: :gist

@@ -24,5 +24,6 @@ class NewFieldsForRepeatersForSral < ActiveRecord::Migration[7.0]
     add_column :repeaters, :rx_antenna_polarization, :string
     add_column :repeaters, :altitude_asl, :numeric
     add_column :repeaters, :altitude_agl, :numeric
+    add_column :repeaters, :bearing, :string
   end
 end
