@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_11_184604) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_21_164157) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -84,9 +84,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_11_184604) do
     t.decimal "tx_frequency"
     t.decimal "rx_frequency"
     t.boolean "fm"
-    t.string "access_method"
-    t.decimal "ctcss_tone"
-    t.boolean "tone_sql"
+    t.decimal "fm_ctcss_tone"
+    t.boolean "fm_tone_squelch"
     t.boolean "dstar"
     t.boolean "fusion"
     t.boolean "dmr"
@@ -106,6 +105,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_11_184604) do
     t.string "post_code"
     t.string "country_id"
     t.string "web_site"
+    t.string "external_id"
+    t.boolean "p25"
+    t.boolean "tetra"
+    t.decimal "tx_power"
+    t.string "tx_antenna"
+    t.string "tx_antenna_polarization"
+    t.string "rx_antenna"
+    t.string "rx_antenna_polarization"
+    t.decimal "altitude_asl"
+    t.decimal "altitude_agl"
+    t.string "bearing"
+    t.boolean "fm_tone_burst"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["country_id"], name: "index_repeaters_on_country_id"
     t.index ["location"], name: "index_repeaters_on_location", using: :gist
@@ -127,9 +138,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_11_184604) do
     t.string "tx_frequency"
     t.string "rx_frequency"
     t.boolean "fm"
-    t.string "access_method"
-    t.string "ctcss_tone"
-    t.boolean "tone_sql"
+    t.string "fm_ctcss_tone"
+    t.boolean "fm_tone_squelch"
     t.boolean "dstar"
     t.boolean "fusion"
     t.boolean "dmr"
@@ -147,6 +157,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_11_184604) do
     t.string "region"
     t.string "post_code"
     t.string "country"
+    t.boolean "fm_tone_burst"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

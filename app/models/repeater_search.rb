@@ -18,6 +18,16 @@ class RepeaterSearch < ApplicationRecord
     MILES = "miles"
   ]
 
+  BANDS = [ # Bands that are supported during search.
+    BAND_6M = "6m",
+    BAND_4M = "4m",
+    BAND_2M = "2m",
+    BAND_70CM = "70cm",
+    BAND_23CM = "23cm"
+  ]
+
+  MODES = %w[fm dstar fusion dmr nxdn] # Modes that are supported during search.
+
   belongs_to :user
 
   validates :name, presence: true
@@ -33,10 +43,10 @@ class RepeaterSearch < ApplicationRecord
   def run
     repeaters = Repeater
 
-    bands = Repeater::BANDS.filter { |band| send(:"band_#{band}?") }
+    bands = BANDS.filter { |band| send(:"band_#{band}?") }
     repeaters = repeaters.where(band: bands) if bands.present?
 
-    modes = Repeater::MODES.filter { |mode| send(:"#{mode}?") }
+    modes = MODES.filter { |mode| send(:"#{mode}?") }
     if modes.present?
       cond = Repeater.where(modes.first => true)
       modes[1..].each do |mode|

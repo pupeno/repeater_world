@@ -12,14 +12,18 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-module RepeaterHelper
-  def access_method_name(access_method)
-    if access_method == Repeater::TONE_BURST
-      "tone burst"
-    elsif access_method == Repeater::CTCSS
-      "CTCSS"
-    elsif access_method.present? # If it's present, then it's an error.
-      throw "Unexpected access method: \"#{access_method}\""
-    end
+class NewFieldsForRepeatersForSral < ActiveRecord::Migration[7.0]
+  def change
+    add_column :repeaters, :external_id, :string
+    add_column :repeaters, :p25, :boolean
+    add_column :repeaters, :tetra, :boolean
+    add_column :repeaters, :tx_power, :numeric
+    add_column :repeaters, :tx_antenna, :string
+    add_column :repeaters, :tx_antenna_polarization, :string
+    add_column :repeaters, :rx_antenna, :string
+    add_column :repeaters, :rx_antenna_polarization, :string
+    add_column :repeaters, :altitude_asl, :numeric
+    add_column :repeaters, :altitude_agl, :numeric
+    add_column :repeaters, :bearing, :string
   end
 end

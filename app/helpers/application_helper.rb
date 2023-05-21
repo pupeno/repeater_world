@@ -61,4 +61,16 @@ module ApplicationHelper
     render partial: "shared/badge",
       locals: {contents: content || capture(&block)}
   end
+
+  def card_entry(label:, value: nil, optional: false, &block)
+    if optional && value.blank?
+      return
+    end
+    if value.in? [true, false]
+      value = render partial: "shared/card/boolean", locals: {value: value}
+    end
+    render partial: "shared/card/entry",
+      locals: {label: label,
+               contents: block ? capture(&block) : value}
+  end
 end
