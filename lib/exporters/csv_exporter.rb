@@ -20,7 +20,7 @@ class CsvExporter < Exporter
       :fm_ctcss_tone, :fm_tone_squelch, :dstar, :fusion, :dmr, :dmr_color_code, :dmr_network, :nxdn, :p25, :tetra,
       :latitude, :longitude, :grid_square, :address, :locality, :region, :post_code, :country_id, :tx_power,
       :tx_antenna, :tx_antenna_polarization, :rx_antenna, :rx_antenna_polarization, :altitude_asl, :altitude_agl,
-      :bearing, :utc_offset, :channel, :notes, :source, :redistribution_limitations,
+      :bearing, :utc_offset, :channel, :notes, :source, :redistribution_limitations
     ]
     column_names = columns.each_with_object({}) do |column, columns|
       columns[column] = column.to_s.tr("_", " ").titleize
