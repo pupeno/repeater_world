@@ -56,7 +56,7 @@ class SralfiImporter < Importer
   private
 
   def import_repeater(raw_repeater)
-    puts raw_repeater
+    # puts raw_repeater
     repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater["callsign"].upcase)
     repeater.external_id = raw_repeater[:id]
     if raw_repeater["status"] == "QRV"
@@ -105,7 +105,7 @@ class SralfiImporter < Importer
     repeater.name = raw_repeater["callsign"].upcase if repeater.name.blank?
     repeater.web_site = raw_repeater["station_url"] || raw_repeater["responsible_club_url"]
     # stdesc imported later
-    # TODO: what is cwid?
+    # TODO: what is cwid? It has some of these values: VJ, RI, KT, KA, JA, JY, JM, KO, OU, RO.
     repeater.locality = raw_repeater["qth_city"]
     repeater.grid_square = raw_repeater["locator"]
     repeater.latitude = raw_repeater["wgs84lat"]
