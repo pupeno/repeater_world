@@ -29,7 +29,7 @@ RSpec.describe UkrepeatersImporter do
       expect(URI).to receive(:parse).with(url).and_return(file)
     end
 
-    Dir.mktmpdir("ukrepeaters") do |dir|
+    Dir.mktmpdir("ukrepeatersimporter") do |dir|
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
       end.to change { Repeater.count }.by(919)
@@ -44,9 +44,9 @@ RSpec.describe UkrepeatersImporter do
       expect(repeater.tx_frequency).to eq(430875000)
       expect(repeater.rx_frequency).to eq(438475000)
       expect(repeater.fm).to eq(true)
-      expect(repeater.access_method).to eq(Repeater::CTCSS)
-      expect(repeater.ctcss_tone).to eq(71.9)
-      expect(repeater.tone_sql).to eq(nil)
+      expect(repeater.fm_tone_burst).to eq(nil)
+      expect(repeater.fm_ctcss_tone).to eq(71.9)
+      expect(repeater.fm_tone_squelch).to eq(nil)
       expect(repeater.dstar).to eq(true)
       expect(repeater.fusion).to eq(true)
       expect(repeater.dmr).to eq(true)

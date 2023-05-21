@@ -21,7 +21,6 @@ FactoryBot.define do
 
     tx_frequency { 144962500 } # VHF, maybe dispatch on the band for different frequencies?
     rx_frequency { tx_frequency - 600000 } # VHF, maybe dispatch on the band for different frequencies?
-    access_method { Repeater::TONE_BURST }
 
     operational { true }
 
@@ -48,17 +47,21 @@ end
 # Table name: repeaters
 #
 #  id                         :uuid             not null, primary key
-#  access_method              :string
 #  address                    :string
+#  altitude_agl               :decimal(, )
+#  altitude_asl               :decimal(, )
 #  band                       :string
+#  bearing                    :string
 #  call_sign                  :string
 #  channel                    :string
-#  ctcss_tone                 :decimal(, )
 #  dmr                        :boolean
 #  dmr_color_code             :integer
 #  dmr_network                :string
 #  dstar                      :boolean
 #  fm                         :boolean
+#  fm_ctcss_tone              :decimal(, )
+#  fm_tone_burst              :boolean
+#  fm_tone_squelch            :boolean
 #  fusion                     :boolean
 #  grid_square                :string
 #  keeper                     :string
@@ -68,18 +71,25 @@ end
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean
+#  p25                        :boolean
 #  post_code                  :string
 #  redistribution_limitations :string
 #  region                     :string
+#  rx_antenna                 :string
+#  rx_antenna_polarization    :string
 #  rx_frequency               :decimal(, )
 #  source                     :string
-#  tone_sql                   :boolean
+#  tetra                      :boolean
+#  tx_antenna                 :string
+#  tx_antenna_polarization    :string
 #  tx_frequency               :decimal(, )
+#  tx_power                   :decimal(, )
 #  utc_offset                 :string
 #  web_site                   :string
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  country_id                 :string
+#  external_id                :string
 #
 # Indexes
 #

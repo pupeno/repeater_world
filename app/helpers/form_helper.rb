@@ -39,4 +39,14 @@ module FormHelper
                input_html_options: input_html_options,
                help_text: help_text}
   end
+
+  def form_boolean_field(form:, field_name:, label: nil, second_label: nil, input_html_options: {}, help_text: nil)
+    render partial: "shared/forms/boolean_field",
+      locals: {form: form,
+               field_name: field_name,
+               label: label,
+               second_label: second_label,
+               input_html_options: input_html_options,
+               help_text: help_text}
+  end
 end

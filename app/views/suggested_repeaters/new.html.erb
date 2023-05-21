@@ -33,23 +33,12 @@ You should have received a copy of the GNU Affero General Public License along w
     <% end %>
 
     <h2 class="text-xl font-bold leading-7 text-gray-900 sm:text-2xl mt-4">About you</h2>
-    <%= form_text_field form: form,
-                        field_name: :submitter_name,
-                        label: "Your name (optional)",
+    <%= form_text_field form: form, field_name: :submitter_name, label: "Your name (optional)",
                         input_html_options: { autofocus: true } %>
-    <%= form_email_field form: form,
-                         field_name: :submitter_email,
-                         label: "Your email (optional)" %>
-    <%= form_text_field form: form,
-                        field_name: :submitter_call_sign,
-                        label: "Your call sign (optional)" %>
-    <div class="sm:grid sm:grid-cols-3 sm:items-start sm:border-b sm:border-gray-200 py-3 sm:py-5">
-      <%= form.label :submitter_keeper, "Are you the keeper of this repeater?", class: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" %>
-      <div class="sm:mt-px sm:pt-2 flex flex-row">
-        <%= form.check_box :submitter_keeper, class: "h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded" %>
-        <%= form.label :submitter_keeper, "Yes, I'm the keeper.", class: "ml-2 block text-sm text-gray-900" %>
-      </div>
-    </div>
+    <%= form_email_field form: form, field_name: :submitter_email, label: "Your email (optional)" %>
+    <%= form_text_field form: form, field_name: :submitter_call_sign, label: "Your call sign (optional)" %>
+    <%= form_boolean_field form: form, field_name: :submitter_keeper, label: "Are you the keeper of this repeater?",
+                           second_label: "Yes, I'm the keeper." %>
     <%= form_textarea_field form: form, field_name: :submitter_notes,
                             help_text: "Private notes that will not be published. Anything you want to tell us about this repeater." %>
 
@@ -124,12 +113,10 @@ You should have received a copy of the GNU Affero General Public License along w
       </div>
     </div>
 
-    <%= form_text_field form: form, field_name: :access_method,
-                        help_text: "Likely one of #{Repeater::ACCESS_METHODS
-                          .map { |r| access_method_name(r) }
-                          .to_sentence(last_word_connector: " or ", two_words_connector: " or ")}." %>
+    <%= form_boolean_field form: form, field_name: :fm_tone_burst, label: "Tone burst?",
+                           second_label: "Yes, this repeater uses tone burst." %>
 
-    <%= form_text_field form: form, field_name: :ctcss_tone, label: "CTCSS tone",
+    <%= form_text_field form: form, field_name: :fm_ctcss_tone, label: "CTCSS tone",
                         help_text: "Likely one of #{Repeater::CTCSS_TONES
                           .to_sentence(last_word_connector: " or ", two_words_connector: " or ")}." %>
 

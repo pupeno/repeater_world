@@ -74,16 +74,11 @@ class BaofengUv5rExporter < Exporter
         truncate(7, repeater.name)
       end
 
-    row[TONE] = if repeater.access_method == Repeater::CTCSS
+    row[TONE] = if repeater.fm_ctcss_tone.present?
       "TONE" # TODO: when do we use TSQL: https://github.com/pupeno/repeater_world/issues/23
     end
 
-    row[R_TONE_FREQ] = case repeater.access_method
-    when Repeater::CTCSS
-      repeater.ctcss_tone
-    else
-      88.5 # Default?
-    end
+    row[R_TONE_FREQ] = repeater.fm_ctcss_tone || 88.5 # Default?
 
     row[C_TONE_FREQ] = row[R_TONE_FREQ]
 

@@ -40,18 +40,19 @@ end
 # Table name: suggested_repeaters
 #
 #  id                  :uuid             not null, primary key
-#  access_method       :string
 #  address             :string
 #  band                :string
 #  call_sign           :string
 #  channel             :string
 #  country             :string
-#  ctcss_tone          :string
 #  dmr                 :boolean
 #  dmr_color_code      :string
 #  dmr_network         :string
 #  dstar               :boolean
 #  fm                  :boolean
+#  fm_ctcss_tone       :string
+#  fm_tone_burst       :boolean
+#  fm_tone_squelch     :boolean
 #  fusion              :boolean
 #  grid_square         :string
 #  keeper              :string
@@ -70,7 +71,6 @@ end
 #  submitter_keeper    :boolean
 #  submitter_name      :string
 #  submitter_notes     :text
-#  tone_sql            :boolean
 #  tx_frequency        :string
 #  web_site            :string
 #  created_at          :datetime         not null

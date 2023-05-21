@@ -37,9 +37,9 @@ class SuggestedRepeatersController < ApplicationController
   def suggested_repeater_params
     params.fetch(:suggested_repeater, {}).permit(
       :submitter_name, :submitter_email, :submitter_call_sign, :submitter_keeper, :submitter_notes, :name, :call_sign,
-      :band, :channel, :keeper, :notes, :web_site, :tx_frequency, :rx_frequency, :fm, :access_method, :ctcss_tone,
-      :tone_sql, :dstar, :fusion, :dmr, :dmr_color_code, :dmr_network, :nxdn, :latitude, :longitude, :grid_square,
-      :address, :locality, :region, :post_code, :country
+      :band, :channel, :keeper, :notes, :web_site, :tx_frequency, :rx_frequency, :fm, :fm_ctcss_tone, :fm_tone_burst,
+      :fm_tone_squelch, :dstar, :fusion, :dmr, :dmr_color_code, :dmr_network, :nxdn, :latitude, :longitude,
+      :grid_square, :address, :locality, :region, :post_code, :country
     )
   end
 end

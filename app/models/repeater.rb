@@ -22,12 +22,7 @@ class Repeater < ApplicationRecord
     BAND_23CM = "23cm"
   ]
 
-  MODES = %w[fm dstar fusion dmr nxdn]
-
-  ACCESS_METHODS = [
-    TONE_BURST = "tone_burst",
-    CTCSS = "ctcss"
-  ]
+  MODES = %w[fm dstar fusion dmr nxdn p25 tetra]
 
   CTCSS_TONES = [
     67.0, 69.3, 71.9, 74.4, 77.0, 79.7, 82.5, 85.4, 88.5, 91.5, 94.8, 97.4, 100.0, 103.5, 107.2, 110.9, 114.8, 118.8,
@@ -43,10 +38,7 @@ class Repeater < ApplicationRecord
   validates :band, presence: true, inclusion: BANDS
   validates :tx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
   validates :rx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
-  validates :access_method, inclusion: ACCESS_METHODS, allow_blank: true
-  validates :ctcss_tone,
-    presence: {if: lambda { |r| r.access_method == CTCSS }},
-    inclusion: {in: CTCSS_TONES, if: lambda { |r| r.access_method == CTCSS }}
+  validates :fm_ctcss_tone, inclusion: CTCSS_TONES, allow_blank: true
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
 
   def to_s(extra = nil)
@@ -123,17 +115,21 @@ end
 # Table name: repeaters
 #
 #  id                         :uuid             not null, primary key
-#  access_method              :string
 #  address                    :string
+#  altitude_agl               :decimal(, )
+#  altitude_asl               :decimal(, )
 #  band                       :string
+#  bearing                    :string
 #  call_sign                  :string
 #  channel                    :string
-#  ctcss_tone                 :decimal(, )
 #  dmr                        :boolean
 #  dmr_color_code             :integer
 #  dmr_network                :string
 #  dstar                      :boolean
 #  fm                         :boolean
+#  fm_ctcss_tone              :decimal(, )
+#  fm_tone_burst              :boolean
+#  fm_tone_squelch            :boolean
 #  fusion                     :boolean
 #  grid_square                :string
 #  keeper                     :string
@@ -143,18 +139,25 @@ end
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean
+#  p25                        :boolean
 #  post_code                  :string
 #  redistribution_limitations :string
 #  region                     :string
+#  rx_antenna                 :string
+#  rx_antenna_polarization    :string
 #  rx_frequency               :decimal(, )
 #  source                     :string
-#  tone_sql                   :boolean
+#  tetra                      :boolean
+#  tx_antenna                 :string
+#  tx_antenna_polarization    :string
 #  tx_frequency               :decimal(, )
+#  tx_power                   :decimal(, )
 #  utc_offset                 :string
 #  web_site                   :string
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  country_id                 :string
+#  external_id                :string
 #
 # Indexes
 #
