@@ -56,6 +56,7 @@ class SralfiImporter < Importer
   private
 
   def import_repeater(raw_repeater)
+    puts raw_repeater
     repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater["callsign"].upcase)
     repeater.external_id = raw_repeater[:id]
     if raw_repeater["status"] == "QRV"
@@ -114,10 +115,11 @@ class SralfiImporter < Importer
     # TODO: what is alt_agl? altitude
     repeater.tx_frequency = raw_repeater["tx_freq"].to_f * 10**6
     repeater.transmit_power = raw_repeater["tx_power"]
+    repeater.transmit_antenna = raw_repeater["tx_ant"]
     # TODO: import tx_antenna
     # TODO: what is tx_antpol?
     # TODO: what is qtf?
-    # TODO: import rx_antenna
+    repeater.receive_antenna = raw_repeater["rx_antenna"]
     # TODO: what is rx_antpol?
     # TODO: what is rep_access?
     repeater.rx_frequency = if raw_repeater["rep_shift"].blank?
