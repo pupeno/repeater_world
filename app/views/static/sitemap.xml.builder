@@ -23,7 +23,7 @@ xml.urlset xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9" do
   end
 
   xml.url do
-    xml.loc open_source_url
+    xml.loc open_source_open_data_url
   end
 
   @repeaters.map do |repeater|

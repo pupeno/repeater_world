@@ -43,7 +43,7 @@ Rails.application.routes.draw do
 
   # Boring routes.
   get "sitemap", to: "static#sitemap"
-  get "open-source", to: "static#open_source"
+  get "open-source-open-data", to: "static#open_source_open_data"
   get "ukrepeater-net", to: "static#ukrepeater_net"
   get "crawler", to: "static#crawler"
   get "privacy-policy", to: "static#privacy_policy"
