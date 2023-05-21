@@ -1,0 +1,23 @@
+<%# Copyright 2023, Flexpoint Tech
+
+This file is part of Repeater World.
+
+Repeater World is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+Public License as published by the Free Software Foundation, either version 3 of the License.
+
+Repeater World is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+details.
+
+You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
+<https://www.gnu.org/licenses/>.%>
+
+<div class="sm:grid sm:grid-cols-3 sm:items-start sm:border-b sm:border-gray-200 py-3 sm:py-5">
+  <%= form.label field_name, label, class: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" %>
+  <div class="sm:mt-px sm:pt-2 flex flex-row">
+    <%= form.check_box field_name,
+                       input_html_options
+                         .deep_merge({ class: [input_html_options[:class], "h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"] }) %>
+    <%= form.label field_name, second_label, class: "ml-2 block text-sm text-gray-900" %>
+  </div>
+</div>
