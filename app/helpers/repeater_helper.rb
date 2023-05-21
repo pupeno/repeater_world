@@ -19,7 +19,7 @@ module RepeaterHelper
     elsif access_method == Repeater::CTCSS
       "CTCSS"
     elsif access_method.present? # If it's present, then it's an error.
-      throw "Unexpected access method: \"#{access_method}\""
+      raise "Unexpected access method: \"#{access_method}\""
     end
   end
 end
