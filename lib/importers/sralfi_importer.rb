@@ -113,10 +113,11 @@ class SralfiImporter < Importer
     # site_desc imported later
     # TODO: what is alt_asl? altitude
     # TODO: what is alt_agl? altitude
+    repeater.altitude_asl = raw_repeater["alt_asl"]
+    repeater.altitude_agl = raw_repeater["alt_agl"]
     repeater.tx_frequency = raw_repeater["tx_freq"].to_f * 10**6
     repeater.transmit_power = raw_repeater["tx_power"]
     repeater.transmit_antenna = raw_repeater["tx_ant"]
-    # TODO: import tx_antenna
     # TODO: what is tx_antpol?
     # TODO: what is qtf?
     repeater.receive_antenna = raw_repeater["rx_antenna"]

@@ -125,6 +125,8 @@ end
 #  id                         :uuid             not null, primary key
 #  access_method              :string
 #  address                    :string
+#  altitude_agl               :decimal(, )
+#  altitude_asl               :decimal(, )
 #  band                       :string
 #  call_sign                  :string
 #  channel                    :string
