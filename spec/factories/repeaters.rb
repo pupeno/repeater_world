@@ -61,6 +61,7 @@ end
 #  fm                         :boolean
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean
+#  fm_tone_squelch            :boolean
 #  fusion                     :boolean
 #  grid_square                :string
 #  keeper                     :string
@@ -79,7 +80,6 @@ end
 #  rx_frequency               :decimal(, )
 #  source                     :string
 #  tetra                      :boolean
-#  tone_sql                   :boolean
 #  tx_antenna                 :string
 #  tx_antenna_polarization    :string
 #  tx_frequency               :decimal(, )

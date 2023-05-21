@@ -15,7 +15,7 @@
 class SeparateToneBurstAndCtcss < ActiveRecord::Migration[7.0]
   def change
     rename_column :repeaters, :ctcss_tone, :fm_ctcss_tone
-    rename_column :repeaters, :tone_sql, :fm_tone_sql
+    rename_column :repeaters, :tone_sql, :fm_tone_squelch
     add_column :repeaters, :fm_tone_burst, :boolean, null: true
     Repeater.reset_column_information
     Repeater.find_each do |repeater|
@@ -29,7 +29,7 @@ class SeparateToneBurstAndCtcss < ActiveRecord::Migration[7.0]
 
     rename_column :suggested_repeaters, :ctcss_tone, :fm_ctcss_tone
     add_column :suggested_repeaters, :fm_tone_burst, :boolean, null: true
-    rename_column :suggested_repeaters, :tone_sql, :fm_tone_sql
+    rename_column :suggested_repeaters, :tone_sql, :fm_tone_squelch
     SuggestedRepeater.reset_column_information
     SuggestedRepeater.find_each do |repeater|
       if repeater.access_method == "tone_burst"

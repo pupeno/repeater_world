@@ -46,7 +46,7 @@ RSpec.describe UkrepeatersImporter do
       expect(repeater.fm).to eq(true)
       expect(repeater.fm_tone_burst).to eq(nil)
       expect(repeater.fm_ctcss_tone).to eq(71.9)
-      expect(repeater.tone_sql).to eq(nil)
+      expect(repeater.fm_tone_squelch).to eq(nil)
       expect(repeater.dstar).to eq(true)
       expect(repeater.fusion).to eq(true)
       expect(repeater.dmr).to eq(true)

@@ -70,7 +70,7 @@ class UkrepeatersImporter < Importer
     if raw_repeater[:code].present?
       if Repeater::CTCSS_TONES.include?(raw_repeater[:code].to_f)
         repeater.fm_ctcss_tone = raw_repeater[:code]
-        repeater.tone_sql = false # TODO: how do we know when this should be true? https://github.com/flexpointtech/repeater_world/issues/23
+        repeater.fm_tone_squelch = false # TODO: how do we know when this should be true? https://github.com/flexpointtech/repeater_world/issues/23
       elsif Repeater::DMR_COLOR_CODES.include?(raw_repeater[:code].to_f)
         repeater.dmr_color_code = raw_repeater[:code]
       else
