@@ -57,6 +57,13 @@ class SralfiImporter < Importer
 
   def import_repeater(raw_repeater)
     repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater["callsign"].upcase)
+
+    # Only update repeaters that were sourced from automatic.sral.fi.
+    if repeater.persisted? && repeater.source != SOURCE
+      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+      return
+    end
+
     repeater.external_id = raw_repeater[:id]
     if raw_repeater["status"] == "QRV"
       repeater.operational = true
@@ -188,6 +195,7 @@ class SralfiImporter < Importer
       repeater.tetra? ? "Access #{raw_repeater["rep_access"]}." : nil,
     ].compact.join("\n\n")
 
+    repeater.source = SOURCE
     repeater.country_id = "fi"
 
     if repeater.new_record?

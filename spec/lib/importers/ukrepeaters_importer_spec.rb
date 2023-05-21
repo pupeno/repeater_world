@@ -29,7 +29,7 @@ RSpec.describe UkrepeatersImporter do
       expect(URI).to receive(:parse).with(url).and_return(file)
     end
 
-    Dir.mktmpdir("ukrepeaters") do |dir|
+    Dir.mktmpdir("ukrepeatersimporter") do |dir|
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
       end.to change { Repeater.count }.by(919)
