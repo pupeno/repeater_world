@@ -16,10 +16,11 @@
 class CsvExporter < Exporter
   def export
     columns = [
-      :name, :call_sign, :band, :channel, :keeper, :operational, :notes, :tx_frequency, :rx_frequency, :fm,
-      :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch, :dstar, :fusion, :dmr, :dmr_color_code, :dmr_network, :nxdn,
-      :latitude, :longitude, :grid_square, :address, :locality, :region, :post_code, :country_id, :utc_offset, :source,
-      :redistribution_limitations
+      :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency, :fm, :fm_tone_burst,
+      :fm_ctcss_tone, :fm_tone_squelch, :dstar, :fusion, :dmr, :dmr_color_code, :dmr_network, :nxdn, :p25, :tetra,
+      :latitude, :longitude, :grid_square, :address, :locality, :region, :post_code, :country_id, :tx_power,
+      :tx_antenna, :tx_antenna_polarization, :rx_antenna, :rx_antenna_polarization, :altitude_asl, :altitude_agl,
+      :bearing, :utc_offset, :channel, :notes, :source, :redistribution_limitations,
     ]
     column_names = columns.each_with_object({}) do |column, columns|
       columns[column] = column.to_s.tr("_", " ").titleize

@@ -22,8 +22,9 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= card_entry(label: "Web Site", value: repeater.web_site, optional: true) do %>
           <%= link_to repeater.web_site, repeater.web_site, class: "link" %>
         <% end %>
+        <%= card_entry(label: "Keeper", value: repeater.call_sign, optional: true) %>
         <%= card_entry(label: "Band", value: repeater.band, optional: true) %>
-        <%= card_entry(label: "Modes", value: repeater.modes.join(", "), optional: true) %>
+        <%= card_entry(label: "Modes", value: repeater.modes.join(", ")) %>
         <%= card_entry(label: "Operational", value: repeater.operational) %>
         <%= card_entry(label: "TX Frequency", value: repeater.tx_frequency) do %>
           <%= repeater.tx_frequency / (10 ** 6) %>MHz
@@ -87,7 +88,7 @@ You should have received a copy of the GNU Affero General Public License along w
           <%= repeater.altitude_agl %>m
         <% end %>
         <%= card_entry(label: "Bearing", value: repeater.bearing, optional: true) %>
-
+        <%= card_entry(label: "UTC Offset", value: repeater.utc_offset, optional: true) %>
         <%= card_entry(label: "Channel", value: repeater.channel, optional: true) %>
         <%= card_entry(label: "Notes", value: repeater.notes, optional: true) %>
         <%= card_entry(label: "Source", value: repeater.source, optional: true) %>

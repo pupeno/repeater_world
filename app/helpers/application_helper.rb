@@ -28,38 +28,38 @@ module ApplicationHelper
 
   def badge_checkbox(form, name, label)
     render partial: "shared/badge_checkbox",
-           locals: { form: form, name: name, label: label }
+      locals: {form: form, name: name, label: label}
   end
 
   def toggle_checkbox(form, name, check_box_html_options)
     render partial: "shared/toggle_checkbox",
-           locals: { form: form, name: name,
-                     check_box_html_options: check_box_html_options }
+      locals: {form: form, name: name,
+               check_box_html_options: check_box_html_options}
   end
 
   def pop_up(title:, links: [], **args, &block)
     render partial: "shared/pop_up",
-           locals: { title: title,
-                     links: links,
-                     args: args,
-                     contents: capture(&block) }
+      locals: {title: title,
+               links: links,
+               args: args,
+               contents: capture(&block)}
   end
 
   def tabbed_view(tabs:, selected_tab:, &block)
     render partial: "shared/tabbed_view",
-           locals: { tabs: tabs,
-                     selected_tab: selected_tab,
-                     contents: capture(selected_tab, &block) }
+      locals: {tabs: tabs,
+               selected_tab: selected_tab,
+               contents: capture(selected_tab, &block)}
   end
 
   def dropdown_menu(&block)
     render partial: "shared/dropdown_menu",
-           locals: { contents: capture(&block) }
+      locals: {contents: capture(&block)}
   end
 
   def badge(content = nil, &block)
     render partial: "shared/badge",
-           locals: { contents: content || capture(&block) }
+      locals: {contents: content || capture(&block)}
   end
 
   def card_entry(label:, value: nil, optional: false, &block)
@@ -67,10 +67,10 @@ module ApplicationHelper
       return
     end
     if value.in? [true, false]
-      value = render partial: "shared/card/boolean", locals: { value: value }
+      value = render partial: "shared/card/boolean", locals: {value: value}
     end
     render partial: "shared/card/entry",
-           locals: { label: label,
-                     contents: block_given? ? capture(&block) : value  }
+      locals: {label: label,
+               contents: block ? capture(&block) : value}
   end
 end
