@@ -56,15 +56,26 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <p class="mt-2">
     We currently have these limitations:
+  </p>
   <ul class="list-disc list-inside">
-    <li><%= link_to "ukpereaters.net", ukrepeater_net_url, class: "link" %></li>
+    <li><%= link_to "ukpereaters.net limitations", ukrepeater_net_url, class: "link" %></li>
   </ul>
+
+  <p class="mt-2">
+    You can help us make the information free
+    by <%= link_to "submitting your own repeaters", new_suggested_repeater_url, class: "link" %> and making the
+    information public domain. You can submit them to <%= mail_to "info@repeater.world", class: "link" %> whether it's a
+    repeater we have with limitations or a new one.
   </p>
 
   <p class="mt-2">
-    You can help us make the information free by submitting your own repeaters and
-    making the information public domain. You can submit them to
-    <%= mail_to "info@repeater.world", class: "link" %> whether it's a repeater we have
-    with limitations or a new one.
+    You can export our data, fresh from the database:
+  </p>
+  <ul class="list-disc list-inside">
+    <li><%= link_to "As CSV: #{api_next_repeaters_url(format: :csv)}", api_next_repeaters_url(format: :csv), class: "link" %></li>
+    <li><%= link_to "As JSON: #{api_next_repeaters_url(format: :json)}", api_next_repeaters_url(format: :json), class: "link" %></li>
+  </ul>
+  <p>
+    The API is still unstable (hence the version number is "next"), once it's been stabilized, we'll publish it at v1.
   </p>
 </div>
