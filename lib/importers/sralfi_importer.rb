@@ -56,7 +56,6 @@ class SralfiImporter < Importer
   private
 
   def import_repeater(raw_repeater)
-    # puts raw_repeater
     repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater["callsign"].upcase)
     repeater.external_id = raw_repeater[:id]
     if raw_repeater["status"] == "QRV"
@@ -128,7 +127,47 @@ class SralfiImporter < Importer
     elsif raw_repeater["rx_antpol"] == "V"
       repeater.rx_antenna_polarization = "vertical"
     end
-    # TODO: what is rep_access?
+    if raw_repeater["rep_access"]&.strip.in? ["Tone 1750", "Tone 1750 tai DTMF *", "Tone 1750, DTMF *", "1750Hz Tone", "Tone 1750, DTMF*", "tone 1750"]
+      repeater.access_method = Repeater::TONE_BURST
+    elsif raw_repeater["rep_access"]&.strip.in? ["CTCSS 103.5 Hz", "CTCSS 103,5 Hz", "CTCSS 103,5", "103.5 Hz", "CTCSS 103,5 / Yaesu", "CTCSS 103,5Hz"]
+      repeater.access_method = Repeater::CTCSS
+      repeater.ctcss_tone = 103.5
+    elsif raw_repeater["rep_access"]&.strip.in? ["CTCSS 110.9 Hz", "CTCSS 110,9 Hz", "CTCSS 110.9", "ctcss 110.9hz", "CTCSS 110,9", "CTSS 110.9"]
+      repeater.access_method = Repeater::CTCSS
+      repeater.ctcss_tone = 110.9
+    elsif raw_repeater["rep_access"]&.strip.in? ["CTCSS 114.8"]
+      repeater.access_method = Repeater::CTCSS
+      repeater.ctcss_tone = 114.8
+    elsif raw_repeater["rep_access"]&.strip.in? ["CTCSS 118.8", "CTCSS 118.8 / NAC293", "118.8", "CTCSS 118.8 Hz"]
+      repeater.access_method = Repeater::CTCSS
+      repeater.ctcss_tone = 118.8
+    elsif raw_repeater["rep_access"]&.strip.in? ["CTCSS 123.0"]
+      repeater.access_method = Repeater::CTCSS
+      repeater.ctcss_tone = 123.0
+    elsif raw_repeater["rep_access"]&.strip.in? ["CC1", "CC 1"]
+      repeater.dmr_color_code = 1 # Just guessing here.
+    elsif raw_repeater["rep_access"]&.strip.in? ["1750 or 118.8", "Tone 1750/CTCSS 118"]
+      repeater.access_method = Repeater::CTCSS # TODO: but they also support tone burst apparently.
+      repeater.ctcss_tone = 118.8
+    elsif raw_repeater["rep_access"]&.strip.in? ["CC1 / CTCSS 103.5Hz"]
+      repeater.access_method = Repeater::CTCSS
+      repeater.ctcss_tone = 103.5
+      repeater.dmr_color_code = 1 # Just guessing here.
+    elsif raw_repeater["rep_access"]&.strip.in? ["CC1 / CTCSS 118.8Hz"]
+      repeater.access_method = Repeater::CTCSS
+      repeater.ctcss_tone = 118.8
+      repeater.dmr_color_code = 1 # Just guessing here.
+    elsif raw_repeater["rep_access"]&.strip.in? ["CC1 / CTCSS 123.0Hz"]
+      repeater.access_method = Repeater::CTCSS
+      repeater.ctcss_tone = 123.0
+      repeater.dmr_color_code = 1 # Just guessing here.
+    elsif raw_repeater["rep_access"]&.strip.in? ["MCC901/MNC9999"]
+      # Nothing to do, this is the Tetra repeater (there's literally 1 in Finland so far), not being properly handled yet.
+    elsif raw_repeater["rep_access"].blank?
+      # Nothing to do.
+    else
+      raise "Unknown rep_access: \"#{raw_repeater["rep_access"]}\"."
+    end
     repeater.rx_frequency = if raw_repeater["rep_shift"].blank?
                               repeater.tx_frequency
                             else
@@ -145,7 +184,8 @@ class SralfiImporter < Importer
       raw_repeater["stdesc"],
       "Responsible club: #{raw_repeater["responsible_club"]} #{raw_repeater["responsible_club_url"]}",
       raw_repeater["remarks"],
-      "Last modified #{raw_repeater["last_modified"]}"
+      "Last modified #{raw_repeater["last_modified"]}",
+      repeater.tetra? ? "Access #{raw_repeater["rep_access"]}." : nil,
     ].compact.join("\n\n")
 
     repeater.country_id = "fi"
