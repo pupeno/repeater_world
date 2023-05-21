@@ -112,8 +112,9 @@ end
 #                             edit_profile GET    /profile/edit(.:format)                                                                           profiles#edit
 #                                  profile PATCH  /profile(.:format)                                                                                profiles#update
 #                                          PUT    /profile(.:format)                                                                                profiles#update
+#                       api_next_repeaters GET    /api/next/repeaters(.:format)                                                                     api/next/repeaters#index
 #                                  sitemap GET    /sitemap(.:format)                                                                                static#sitemap
-#                              open_source GET    /open-source(.:format)                                                                            static#open_source
+#                    open_source_open_data GET    /open-source-open-data(.:format)                                                                  static#open_source_open_data
 #                           ukrepeater_net GET    /ukrepeater-net(.:format)                                                                         static#ukrepeater_net
 #                                  crawler GET    /crawler(.:format)                                                                                static#crawler
 #                           privacy_policy GET    /privacy-policy(.:format)                                                                         static#privacy_policy
