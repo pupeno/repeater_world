@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_11_184604) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_21_080848) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -106,6 +106,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_11_184604) do
     t.string "post_code"
     t.string "country_id"
     t.string "web_site"
+    t.string "external_id"
+    t.boolean "p25"
+    t.boolean "tetra"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["country_id"], name: "index_repeaters_on_country_id"
     t.index ["location"], name: "index_repeaters_on_location", using: :gist

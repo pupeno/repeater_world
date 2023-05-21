@@ -22,7 +22,7 @@ class Repeater < ApplicationRecord
     BAND_23CM = "23cm"
   ]
 
-  MODES = %w[fm dstar fusion dmr nxdn]
+  MODES = %w[fm dstar fusion dmr nxdn p25 tetra]
 
   ACCESS_METHODS = [
     TONE_BURST = "tone_burst",
@@ -143,11 +143,13 @@ end
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean
+#  p25                        :boolean
 #  post_code                  :string
 #  redistribution_limitations :string
 #  region                     :string
 #  rx_frequency               :decimal(, )
 #  source                     :string
+#  tetra                      :boolean
 #  tone_sql                   :boolean
 #  tx_frequency               :decimal(, )
 #  utc_offset                 :string
@@ -155,6 +157,7 @@ end
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  country_id                 :string
+#  external_id                :string
 #
 # Indexes
 #
