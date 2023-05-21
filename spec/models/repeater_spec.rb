@@ -79,16 +79,18 @@ end
 #  operational                :boolean
 #  p25                        :boolean
 #  post_code                  :string
-#  receive_antenna            :string
 #  redistribution_limitations :string
 #  region                     :string
+#  rx_antenna                 :string
+#  rx_antenna_polarization    :string
 #  rx_frequency               :decimal(, )
 #  source                     :string
 #  tetra                      :boolean
 #  tone_sql                   :boolean
-#  transmit_antenna           :string
-#  transmit_power             :decimal(, )
+#  tx_antenna                 :string
+#  tx_antenna_polarization    :string
 #  tx_frequency               :decimal(, )
+#  tx_power                   :decimal(, )
 #  utc_offset                 :string
 #  web_site                   :string
 #  created_at                 :datetime         not null

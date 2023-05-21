@@ -17,9 +17,11 @@ class NewFieldsForRepeatersForSral < ActiveRecord::Migration[7.0]
     add_column :repeaters, :external_id, :string
     add_column :repeaters, :p25, :boolean
     add_column :repeaters, :tetra, :boolean
-    add_column :repeaters, :transmit_power, :numeric
-    add_column :repeaters, :transmit_antenna, :string
-    add_column :repeaters, :receive_antenna, :string
+    add_column :repeaters, :tx_power, :numeric
+    add_column :repeaters, :tx_antenna, :string
+    add_column :repeaters, :tx_antenna_polarization, :string
+    add_column :repeaters, :rx_antenna, :string
+    add_column :repeaters, :rx_antenna_polarization, :string
     add_column :repeaters, :altitude_asl, :numeric
     add_column :repeaters, :altitude_agl, :numeric
   end

@@ -111,23 +111,29 @@ class SralfiImporter < Importer
     repeater.latitude = raw_repeater["wgs84lat"]
     repeater.longitude = raw_repeater["wgs84lon"]
     # site_desc imported later
-    # TODO: what is alt_asl? altitude
-    # TODO: what is alt_agl? altitude
     repeater.altitude_asl = raw_repeater["alt_asl"]
     repeater.altitude_agl = raw_repeater["alt_agl"]
-    repeater.tx_frequency = raw_repeater["tx_freq"].to_f * 10**6
-    repeater.transmit_power = raw_repeater["tx_power"]
-    repeater.transmit_antenna = raw_repeater["tx_ant"]
-    # TODO: what is tx_antpol?
+    repeater.tx_frequency = raw_repeater["tx_freq"].to_f * 10 ** 6
+    repeater.tx_power = raw_repeater["tx_power"]
+    repeater.tx_antenna = raw_repeater["tx_ant"]
+    if raw_repeater["tx_antpol"] == "H"
+      repeater.tx_antenna_polarization = "horizontal"
+    elsif raw_repeater["tx_antpol"] == "V"
+      repeater.tx_antenna_polarization = "vertical"
+    end
     # TODO: what is qtf?
-    repeater.receive_antenna = raw_repeater["rx_antenna"]
-    # TODO: what is rx_antpol?
+    repeater.rx_antenna = raw_repeater["rx_antenna"]
+    if raw_repeater["rx_antpol"] == "H"
+      repeater.rx_antenna_polarization = "horizontal"
+    elsif raw_repeater["rx_antpol"] == "V"
+      repeater.rx_antenna_polarization = "vertical"
+    end
     # TODO: what is rep_access?
     repeater.rx_frequency = if raw_repeater["rep_shift"].blank?
-      repeater.tx_frequency
-    else
-      repeater.tx_frequency + raw_repeater["rep_shift"].to_f * 10**6
-    end
+                              repeater.tx_frequency
+                            else
+                              repeater.tx_frequency + raw_repeater["rep_shift"].to_f * 10 ** 6
+                            end
 
     repeater.band = BAND_MAPPING[raw_repeater["band_name"].strip] || raise("Unknown band #{raw_repeater["band_name"]}")
     repeater.keeper = raw_repeater["responsible_club"]
