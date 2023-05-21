@@ -47,6 +47,20 @@ RSpec.describe Repeater, type: :model do
       expect(@repeater.to_s).to include(@repeater.name)
       expect(@repeater.to_s).to include(@repeater.call_sign)
     end
+
+    it "has SEO friendly params" do
+      expect(@repeater.to_param).to include(@repeater.call_sign.parameterize)
+      expect(@repeater.to_param).to include(@repeater.name.parameterize)
+    end
+
+    it "has frequency helpers" do
+      expect(@repeater.tx_frequency_in_mhz).to eq("144.9625MHz")
+      expect(@repeater.rx_frequency).to eq(144362500)
+      expect(@repeater.rx_frequency_in_mhz).to eq("144.3625MHz")
+      expect(@repeater.rx_offset_in_khz).to eq("-600kHz")
+      @repeater.rx_frequency = 145362500
+      expect(@repeater.rx_offset_in_khz).to eq("+400kHz")
+    end
   end
 end
 
