@@ -44,7 +44,8 @@ Rails.application.routes.draw do
   # Boring routes.
   get "sitemap", to: "static#sitemap"
   get "open-source-open-data", to: "static#open_source_open_data"
-  get "ukrepeater-net", to: "static#ukrepeater_net"
+  get "data-limitations/ukrepeater-net", to: "static#ukrepeater_net"
+  get "data-limitations/sral-fi", to: "static#sral_fi"
   get "crawler", to: "static#crawler"
   get "privacy-policy", to: "static#privacy_policy"
   get "cookie-policy", to: "static#cookie_policy"
@@ -115,7 +116,8 @@ end
 #                       api_next_repeaters GET    /api/next/repeaters(.:format)                                                                     api/next/repeaters#index
 #                                  sitemap GET    /sitemap(.:format)                                                                                static#sitemap
 #                    open_source_open_data GET    /open-source-open-data(.:format)                                                                  static#open_source_open_data
-#                           ukrepeater_net GET    /ukrepeater-net(.:format)                                                                         static#ukrepeater_net
+#          data_limitations_ukrepeater_net GET    /data-limitations/ukrepeater-net(.:format)                                                        static#ukrepeater_net
+#                 data_limitations_sral_fi GET    /data-limitations/sral-fi(.:format)                                                               static#sral_fi
 #                                  crawler GET    /crawler(.:format)                                                                                static#crawler
 #                           privacy_policy GET    /privacy-policy(.:format)                                                                         static#privacy_policy
 #                            cookie_policy GET    /cookie-policy(.:format)                                                                          static#cookie_policy

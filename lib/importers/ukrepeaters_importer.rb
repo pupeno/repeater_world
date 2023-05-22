@@ -109,7 +109,7 @@ class UkrepeatersImporter < Importer
     repeater.utc_offset = "0:00"
 
     repeater.source = SOURCE
-    repeater.redistribution_limitations = "https://repeater.world/ukrepeater-net"
+    repeater.redistribution_limitations = data_limitations_ukrepeater_net_url(host: "repeater.world", protocol: "https")
 
     @logger.info "Created #{repeater}." if repeater.new_record?
 
