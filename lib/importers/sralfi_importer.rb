@@ -96,6 +96,7 @@ class SralfiImporter < Importer
     import_notes(raw_repeater, repeater)
 
     repeater.source = SOURCE
+    repeater.redistribution_limitations = data_limitations_sral_fi_url(host: "repeater.world", protocol: "https")
     repeater.country_id = "fi"
 
     if repeater.new_record?

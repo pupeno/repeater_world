@@ -15,6 +15,8 @@
 class Importer
   USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 https://repeater.world/crawler info@repeater.world"
 
+  include Rails.application.routes.url_helpers
+
   def initialize(working_directory: nil, logger: nil)
     @working_directory = working_directory || Rails.root.join("tmp", (self.class.name || SecureRandom.alphanumeric).downcase).to_s # Stable working directory to avoid re-downloading when developing.
     @logger = logger || Rails.logger
