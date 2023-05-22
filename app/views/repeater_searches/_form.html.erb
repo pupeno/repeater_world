@@ -121,37 +121,39 @@ You should have received a copy of the GNU Affero General Public License along w
     </button>
   </div>
 
-  <% if !user_signed_in? %>
-    <div class="inline">
-      <button type="button" class="button" data-action="click->repeater-searches#showAuthBeforeSavePopUp">
-        <i class="fa-regular fa-bookmark mr-2"></i>
-        Save Search
-      </button>
-    </div>
+  <% if !@repeaters.nil? %>
+    <% if !user_signed_in? %> <%# Not logged in, the save search button invites you to sign up. %>
+      <div class="inline">
+        <button type="button" class="button" data-action="click->repeater-searches#showAuthBeforeSavePopUp">
+          <i class="fa-regular fa-bookmark mr-2"></i>
+          Save Search
+        </button>
+      </div>
 
-  <% elsif show_name_field %> <%# logged in and the search has already been saved, or is being saved %>
-    <div class="inline">
-      <button type="submit" class="button" data-action="click->repeater-searches#saveSearch">
-        <i class="fa-regular fa-bookmark mr-2"></i>
-        Save Search
-      </button>
-    </div>
+    <% elsif show_name_field %> <%# logged in and the search has already been saved, or is being saved %>
+      <div class="inline">
+        <button type="submit" class="button" data-action="click->repeater-searches#saveSearch">
+          <i class="fa-regular fa-bookmark mr-2"></i>
+          Save Search
+        </button>
+      </div>
 
-  <% else %>  <%# logged in but this search is not saved yet %>
+    <% else %>  <%# logged in but this search is not saved yet %>
+      <div class="inline">
+        <button type="button" class="button" data-action="click->repeater-searches#showFirstSavePopUp">
+          <i class="fa-regular fa-bookmark mr-2"></i>
+          Save Search
+        </button>
+      </div>
+    <% end %>
+
     <div class="inline">
-      <button type="button" class="button" data-action="click->repeater-searches#showFirstSavePopUp">
-        <i class="fa-regular fa-bookmark mr-2"></i>
-        Save Search
+      <button type="button" class="button-secondary" data-action="click->repeater-searches#showExportPopUp">
+        <i class="fa-solid fa-cloud-arrow-down mr-2"></i>
+        Export
       </button>
     </div>
   <% end %>
-
-  <div class="inline">
-    <button type="button" class="button-secondary" data-action="click->repeater-searches#showExportPopUp">
-      <i class="fa-solid fa-cloud-arrow-down mr-2"></i>
-      Export
-    </button>
-  </div>
 
   <% if unsaved_changes %>
     <div class="inline">
