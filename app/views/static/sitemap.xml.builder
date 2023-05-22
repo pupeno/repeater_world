@@ -26,6 +26,26 @@ xml.urlset xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9" do
     xml.loc open_source_open_data_url
   end
 
+  xml.url do
+    xml.loc data_limitations_ukrepeater_net_url
+  end
+
+  xml.url do
+    xml.loc data_limitations_sral_fi_url
+  end
+
+  xml.url do
+    xml.loc crawler_url
+  end
+
+  xml.url do
+    xml.loc privacy_policy_url
+  end
+
+  xml.url do
+    xml.loc cookie_policy_url
+  end
+
   @repeaters.map do |repeater|
     xml.url do
       xml.loc repeater_url(repeater)
