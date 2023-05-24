@@ -15,25 +15,39 @@
 require "rails_helper"
 
 RSpec.describe "Statics", type: :request do
-  describe "GET /index" do
-    it "returns http success" do
-      get "/"
-      expect(response).to have_http_status(:success)
-    end
+  it "Renders the home page" do
+    get "/"
+    expect(response).to have_http_status(:success)
   end
 
-  it "shows a backend failure" do
-    expect { get "/fail" }.to raise_error(/Bogus/)
+  it "Renders open-source-open-data" do
+    get "/open-source-open-data"
+    expect(response).to have_http_status(:success)
   end
 
-  it "shows a frontend failure" do
-    get "/fail-fe"
-    expect(response).to be_successful
+  it "Renders data-limitations/ukrepeater-net" do
+    get "/data-limitations/ukrepeater-net"
+    expect(response).to have_http_status(:success)
   end
 
-  it "shows a background failure" do
-    get "/fail-bg"
-    expect(response).to be_successful
+  it "Renders data-limitations/sral-fi" do
+    get "/data-limitations/sral-fi"
+    expect(response).to have_http_status(:success)
+  end
+
+  it "Renders crawler" do
+    get "/crawler"
+    expect(response).to have_http_status(:success)
+  end
+
+  it "Renders privacy-policy" do
+    get "/privacy-policy"
+    expect(response).to have_http_status(:success)
+  end
+
+  it "Renders cookie-policy" do
+    get "/cookie-policy"
+    expect(response).to have_http_status(:success)
   end
 
   it "shows a 404" do
@@ -53,11 +67,26 @@ RSpec.describe "Statics", type: :request do
 
   context "with a bunch of repeaters" do
     include_context "repeaters"
+
     it "shows a sitemap" do
       get "/sitemap.xml"
       expect(response).to be_successful
       expect(response.body).to include(root_url)
       expect(response.body).to include(repeater_url(Repeater.first))
     end
+  end
+
+  it "shows a backend failure" do
+    expect { get "/fail" }.to raise_error(/Bogus/)
+  end
+
+  it "shows a frontend failure" do
+    get "/fail-fe"
+    expect(response).to be_successful
+  end
+
+  it "shows a background failure" do
+    get "/fail-bg"
+    expect(response).to be_successful
   end
 end
