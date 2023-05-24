@@ -40,8 +40,11 @@ services:
         value: false
         previewValue: true
       - key: SENTRY_DSN
+        sync: false
       - key: SENTRY_DSN_FE
+        sync: false
       - key: FATHOM_ID
+        sync: false
 # Uncomment this when starting to use proper background jobs.
 #  - type: worker
 #    name: repeater_world-background
