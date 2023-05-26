@@ -70,8 +70,8 @@ end
 #
 #  id                         :uuid             not null, primary key
 #  address                    :string
-#  altitude_agl               :decimal(, )
-#  altitude_asl               :decimal(, )
+#  altitude_agl               :integer
+#  altitude_asl               :integer
 #  band                       :string
 #  bearing                    :string
 #  call_sign                  :string
@@ -99,13 +99,13 @@ end
 #  region                     :string
 #  rx_antenna                 :string
 #  rx_antenna_polarization    :string
-#  rx_frequency               :decimal(, )
+#  rx_frequency               :integer          not null
 #  source                     :string
 #  tetra                      :boolean
 #  tx_antenna                 :string
 #  tx_antenna_polarization    :string
-#  tx_frequency               :decimal(, )
-#  tx_power                   :decimal(, )
+#  tx_frequency               :integer          not null
+#  tx_power                   :integer
 #  utc_offset                 :string
 #  web_site                   :string
 #  created_at                 :datetime         not null
