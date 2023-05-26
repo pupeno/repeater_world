@@ -56,7 +56,9 @@ class SralfiImporter < Importer
   private
 
   def import_repeater(raw_repeater)
-    repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater["callsign"].upcase)
+    repeater = Repeater.find_or_initialize_by(
+      call_sign: raw_repeater["callsign"].upcase,
+      tx_frequency: raw_repeater["tx_freq"].to_f * 10 ** 6)
 
     # Only update repeaters that were sourced from automatic.sral.fi.
     if repeater.persisted? && repeater.source != SOURCE
@@ -64,7 +66,7 @@ class SralfiImporter < Importer
       return
     end
 
-    repeater.external_id = raw_repeater[:id]
+    repeater.external_id = raw_repeater["id"]
     import_status(raw_repeater, repeater)
     import_mode(raw_repeater, repeater)
     import_name(raw_repeater, repeater)
@@ -78,7 +80,7 @@ class SralfiImporter < Importer
     # site_desc imported later
     repeater.altitude_asl = raw_repeater["alt_asl"]
     repeater.altitude_agl = raw_repeater["alt_agl"]
-    repeater.tx_frequency = raw_repeater["tx_freq"].to_f * 10**6
+    repeater.tx_frequency = raw_repeater["tx_freq"].to_f * 10 ** 6
     repeater.tx_power = raw_repeater["tx_power"]
     repeater.tx_antenna = raw_repeater["tx_ant"]
     import_tx_antenna_polarization(raw_repeater, repeater)
@@ -125,10 +127,10 @@ class SralfiImporter < Importer
 
   def import_rx_frequency(raw_repeater, repeater)
     repeater.rx_frequency = if raw_repeater["rep_shift"].blank?
-      repeater.tx_frequency
-    else
-      repeater.tx_frequency + raw_repeater["rep_shift"].to_f * 10**6
-    end
+                              repeater.tx_frequency
+                            else
+                              repeater.tx_frequency + raw_repeater["rep_shift"].to_f * 10 ** 6
+                            end
   end
 
   def import_access_method(raw_repeater, repeater)
