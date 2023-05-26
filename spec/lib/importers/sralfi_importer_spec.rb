@@ -94,16 +94,22 @@ RSpec.describe SralfiImporter do
       repeater = Repeater.find_by(call_sign: "OH1RAA")
       repeater.band = Repeater::BAND_23CM
       repeater.save!
+      repeater = create(:repeater, call_sign: "OH3RNE", tx_frequency: 145_000_000, source: SralfiImporter::SOURCE)
+      repeater.save!
 
       # The third time we call it, it shouldn't re-download any files, nor create new
-      # repeaters, but some get updated and some don't.
+      # repeaters, but some get updated, some don't, and some get deleted.
+      expect(Repeater.where(call_sign: "OH3RNE").count).to eq(6)
       expect do
         SralfiImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(0)
+      end.to change { Repeater.count }.by(-1)
+      expect(Repeater.where(call_sign: "OH3RNE").count).to eq(5)
       repeater = Repeater.find_by(call_sign: "OH0RAA") # This one didn't change.
       expect(repeater.band).to eq(Repeater::BAND_23CM)
       repeater = Repeater.find_by(call_sign: "OH1RAA") # This one did
       expect(repeater.band).to eq(Repeater::BAND_2M)
+      repeater = Repeater.find_by(call_sign: "OH3RNE", tx_frequency: 145_000_000) # This one got deleted
+      expect(repeater).to be(nil)
     end
   end
 end
