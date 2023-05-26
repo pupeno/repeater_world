@@ -21,6 +21,28 @@ FactoryBot.define do
     rx_frequency { tx_frequency - 600_000 } # VHF, maybe dispatch on the band for different frequencies?
     country_id { "gb" }
 
+    after(:build) do |repeater|
+      # If no mode was selected, select FM.
+      if !(repeater.fm? || repeater.dstar? || repeater.fusion? || repeater.dmr? || repeater.nxdn?)
+        repeater.fm = true
+      end
+    end
+
+    trait :explicit_modes do
+      after(:build) do |repeater|
+        repeater.operational = false unless repeater.operational?
+        repeater.fm = false unless repeater.fm?
+        repeater.fm_tone_burst = false unless repeater.fm_tone_burst?
+        repeater.fm_tone_squelch = false unless repeater.fm_tone_squelch?
+        repeater.dstar = false unless repeater.dstar?
+        repeater.fusion = false unless repeater.fusion?
+        repeater.dmr = false unless repeater.dmr?
+        repeater.nxdn = false unless repeater.nxdn?
+        repeater.p25 = false unless repeater.p25?
+        repeater.tetra = false unless repeater.tetra
+      end
+    end
+
     trait :full do
       call_sign { "FU11" }
       keeper { "K3EPR" }
@@ -32,13 +54,6 @@ FactoryBot.define do
       region { "region" }
       post_code { "PC" }
       grid_square { "IO81HR" }
-    end
-
-    after(:build) do |repeater|
-      # If no mode was selected, select FM.
-      if !(repeater.fm? || repeater.dstar? || repeater.fusion? || repeater.dmr? || repeater.nxdn?)
-        repeater.fm = true
-      end
     end
   end
 end
