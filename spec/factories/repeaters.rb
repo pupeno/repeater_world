@@ -21,13 +21,6 @@ FactoryBot.define do
     rx_frequency { tx_frequency - 600_000 } # VHF, maybe dispatch on the band for different frequencies?
     country_id { "gb" }
 
-    after(:build) do |repeater|
-      # If no mode was selected, select FM.
-      if !(repeater.fm? || repeater.dstar? || repeater.fusion? || repeater.dmr? || repeater.nxdn?)
-        repeater.fm = true
-      end
-    end
-
     trait :explicit_modes do
       after(:build) do |repeater|
         repeater.operational = false unless repeater.operational?
@@ -45,8 +38,24 @@ FactoryBot.define do
 
     trait :full do
       call_sign { "FU11" }
+      sequence(:name) { |n| "Repeater #{call_sign}".strip }
       keeper { "K3EPR" }
       operational { true }
+
+      channel { "channel" }
+      fm { true }
+      fm_ctcss_tone { Repeater::CTCSS_TONES.first }
+      fm_tone_burst { true }
+      fm_tone_squelch { true }
+      dstar { true }
+      fusion { true }
+      dmr { true }
+      dmr_color_code { 1 }
+      dmr_network { "Brandmeister" }
+      nxdn { true }
+      p25 { true }
+      tetra { true }
+
       latitude { 51.74 }
       longitude { -3.42 }
       address { "address" }
@@ -54,6 +63,22 @@ FactoryBot.define do
       region { "region" }
       post_code { "PC" }
       grid_square { "IO81HR" }
+      altitude_agl { 150 }
+      altitude_asl { 200 }
+      utc_offset { "05:00" }
+
+      tx_antenna { "tx_antenna" }
+      tx_antenna_polarization { "V" }
+      tx_power { 50 }
+      rx_antenna { "rx_antenna" }
+      rx_antenna_polarization { "V" }
+      bearing { "bearing" }
+
+      notes { "Notes" }
+      redistribution_limitations { "redistribution_limitations" }
+      source { "source" }
+      web_site { "https://website" }
+      external_id { "external id" }
     end
   end
 end

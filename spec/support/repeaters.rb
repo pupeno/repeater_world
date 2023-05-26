@@ -129,6 +129,7 @@ RSpec.shared_context "repeaters" do
 
     # Blank repeater
     create(:repeater)
+    create(:repeater, fm: true)
 
     # Full repeater
     create(:repeater, :full)
