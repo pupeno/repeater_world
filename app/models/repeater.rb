@@ -35,6 +35,7 @@ class Repeater < ApplicationRecord
   belongs_to :country
 
   validates :name, presence: true
+  validates :call_sign, presence: true
   validates :band, presence: true, inclusion: BANDS
   validates :tx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/flexpointtech/repeater_world/issues/20
   validates :rx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/flexpointtech/repeater_world/issues/20
