@@ -173,7 +173,7 @@ RSpec.shared_context "repeaters" do
       country_id: "jp")
 
     # Blank repeater
-    create(:repeater, call_sign: nil, keeper: nil)
+    create(:repeater, call_sign: "BL4NK", keeper: nil)
   end
 
   after(:context) do

@@ -25,7 +25,7 @@ RSpec.describe BaofengUv5rExporter do
       0,GB7DC,438.475000,+,7.600000,TONE,71.9,71.9,023,NN,FM,5,,Derby GB7DC,,,,
       1,GB7IC-C,145.062500,-,0.600000,,88.5,88.5,023,NN,FM,5,,Herne Bay GB7IC-C,,,,
       2,GB3CN,145.087500,-,0.600000,TONE,94.8,94.8,023,NN,FM,5,,Newcastle Emlyn GB3CN,,,,
-      3,Repeate,144.362500,-,0.600000,,88.5,88.5,023,NN,FM,5,,Repeater ,,,,
+      3,BL4NK,144.362500,-,0.600000,,88.5,88.5,023,NN,FM,5,,Repeater BL4NK BL4NK,,,,
       4,GB3DR,145.137500,-,0.600000,,88.5,88.5,023,NN,FM,5,,Weymouth GB3DR,,,,
     CSV
   end
