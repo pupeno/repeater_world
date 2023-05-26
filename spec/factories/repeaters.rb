@@ -14,24 +14,25 @@
 
 FactoryBot.define do
   factory :repeater do
-    call_sign { generate(:call_sign) }
+    call_sign { "BL4NK" }
     sequence(:name) { |n| "Repeater #{call_sign}".strip }
-    keeper { generate(:call_sign) }
     band { Repeater::BAND_2M }
-
     tx_frequency { 144_962_500 } # VHF, maybe dispatch on the band for different frequencies?
     rx_frequency { tx_frequency - 600_000 } # VHF, maybe dispatch on the band for different frequencies?
-
-    operational { true }
-
-    latitude { 51.74 }
-    longitude { -3.42 }
-    address { "address" }
-    locality { "city" }
-    region { "region" }
-    post_code { "PC" }
     country_id { "gb" }
-    grid_square { "IO81HR" }
+
+    trait :full do
+      call_sign { "FU11" }
+      keeper { "K3EPR" }
+      operational { true }
+      latitude { 51.74 }
+      longitude { -3.42 }
+      address { "address" }
+      locality { "city" }
+      region { "region" }
+      post_code { "PC" }
+      grid_square { "IO81HR" }
+    end
 
     after(:build) do |repeater|
       # If no mode was selected, select FM.

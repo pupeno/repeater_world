@@ -65,8 +65,8 @@ class IcomExporter < Exporter
      "Offset" => frequency_in_mhz((repeater.tx_frequency - repeater.rx_frequency).abs, precision: 6),
      "RPT1USE" => "YES", # Yes, we want to use the repeater.
      "Position" => "Approximate", # TODO: define when to use Approximate and when to use Exact: https://github.com/flexpointtech/repeater_world/issues/22
-     "Latitude" => "%.6f" % repeater.latitude,
-     "Longitude" => "%.6f" % repeater.longitude,
+     "Latitude" => repeater.latitude.present? ? "%.6f" % repeater.latitude : nil,
+     "Longitude" => repeater.longitude.present? ? "%.6f" % repeater.longitude : nil,
      "UTC Offset" => repeater.utc_offset || "--:--"}
   end
 
