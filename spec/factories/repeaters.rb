@@ -19,8 +19,8 @@ FactoryBot.define do
     keeper { generate(:call_sign) }
     band { Repeater::BAND_2M }
 
-    tx_frequency { 144962500 } # VHF, maybe dispatch on the band for different frequencies?
-    rx_frequency { tx_frequency - 600000 } # VHF, maybe dispatch on the band for different frequencies?
+    tx_frequency { 144_962_500 } # VHF, maybe dispatch on the band for different frequencies?
+    rx_frequency { tx_frequency - 600_000 } # VHF, maybe dispatch on the band for different frequencies?
 
     operational { true }
 

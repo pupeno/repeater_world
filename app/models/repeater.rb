@@ -73,16 +73,16 @@ class Repeater < ApplicationRecord
   end
 
   def tx_frequency_in_mhz
-    "#{tx_frequency / (10**6)}MHz"
+    "#{tx_frequency.to_f / (10**6)}MHz"
   end
 
   def rx_frequency_in_mhz
-    "#{rx_frequency / (10**6)}MHz"
+    "#{rx_frequency.to_f / (10**6)}MHz"
   end
 
   def rx_offset_in_khz
     sign = (rx_frequency - tx_frequency > 0) ? "+" : "" # Artificially adding the +, because the int 600 renders as 600, not +600
-    raw_offset = ((rx_frequency - tx_frequency) / (10**3)).to_i
+    raw_offset = ((rx_frequency.to_f - tx_frequency) / (10**3)).to_i
     "#{sign}#{raw_offset}kHz"
   end
 

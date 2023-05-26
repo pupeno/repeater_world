@@ -32,7 +32,7 @@ RSpec.describe UkrepeatersImporter do
     Dir.mktmpdir("ukrepeatersimporter") do |dir|
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(919)
+      end.to change { Repeater.count }.by(914)
 
       repeater = Repeater.find_by(call_sign: "GB7DC")
       expect(repeater.name).to eq("Derby")

@@ -58,7 +58,7 @@ RSpec.describe Repeater, type: :model do
       expect(@repeater.rx_frequency).to eq(144362500)
       expect(@repeater.rx_frequency_in_mhz).to eq("144.3625MHz")
       expect(@repeater.rx_offset_in_khz).to eq("-600kHz")
-      @repeater.rx_frequency = 145362500
+      @repeater.rx_frequency = 145_362_500
       expect(@repeater.rx_offset_in_khz).to eq("+400kHz")
     end
   end
