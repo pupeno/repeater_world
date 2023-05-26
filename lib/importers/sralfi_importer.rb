@@ -239,6 +239,13 @@ class SralfiImporter < Importer
     else
       raise "Unknown mode \"#{raw_repeater["mode"]}\"."
     end
+    if repeater.dmr?
+      if raw_repeater["remarks"].present? &&
+          (raw_repeater["remarks"].include?("Brandmeister") ||
+            raw_repeater["remarks"].include?("FinDMR")) # Is this correct?
+        repeater.dmr_network = "Brandmeister"
+      end
+    end
   end
 
   def import_status(raw_repeater, repeater)

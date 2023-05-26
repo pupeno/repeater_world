@@ -40,7 +40,7 @@ RSpec.describe SralfiImporter do
       expect(repeater.rx_frequency).to eq(144_975_000)
       expect(repeater.tx_power).to eq(50)
       expect(repeater.dmr_color_code).to eq(1)
-      # expect(repeater.dmr_network).to eq("Brandmeister")
+      expect(repeater.dmr_network).to eq("Brandmeister")
 
       repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 145_750_000, fm: true)
       expect(repeater.external_id).to eq("237")
@@ -68,6 +68,7 @@ RSpec.describe SralfiImporter do
       expect(repeater.rx_frequency).to eq(432_550_000)
       expect(repeater.tx_power).to eq(45)
       expect(repeater.dmr_color_code).to eq(1)
+      expect(repeater.dmr_network).to eq("Brandmeister")
 
       repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 434_525_000, dmr: true)
       expect(repeater.external_id).to eq("701")
@@ -77,7 +78,6 @@ RSpec.describe SralfiImporter do
       expect(repeater.rx_frequency).to eq(432_525_000)
       expect(repeater.tx_power).to eq(45.0)
       expect(repeater.dmr_color_code).to eq(1)
-      # expect(repeater.dmr_network).to eq("Brandmeister")
 
       # The second time we call it, it shouldn't re-download any files, nor create new
       # repeaters
