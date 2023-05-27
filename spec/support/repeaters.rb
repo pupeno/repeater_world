@@ -129,7 +129,7 @@ RSpec.shared_context "repeaters" do
 
     # Blank repeater
     create(:repeater)
-    create(:repeater, fm: true)
+    create(:repeater, fm: true, tx_frequency: 144_970_000)
 
     # Full repeater
     create(:repeater, :full)
