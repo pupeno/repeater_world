@@ -67,19 +67,19 @@ You should have received a copy of the GNU Affero General Public License along w
             <%= render partial: "shared/card/boolean", locals: { value: repeater.operational } %>
           </td>
           <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
-            <%= repeater.tx_frequency_in_mhz %>
+            <%= frequency_in_mhz(repeater.tx_frequency) %>
           </td>
           <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
             <div data-action="click->repeater#toggleRxFrequencyFormat"
                  class="cursor-pointer">
-              <div title="<%= repeater.rx_offset_in_khz %>"
+              <div title="<%= frequency_offset_in_khz(repeater.tx_frequency, repeater.rx_frequency) %>"
                    data-repeater-target="rxFreqAsFreq">
-                <%= repeater.rx_frequency_in_mhz %>
+                <%= frequency_in_mhz(repeater.rx_frequency) %>
               </div>
-              <div title="<%= repeater.rx_frequency_in_mhz %>"
+              <div title="<%= frequency_in_mhz(repeater.rx_frequency) %>"
                    data-repeater-target="rxFreqAsOffset"
                    class="hidden">
-                <%= repeater.rx_offset_in_khz %>
+                <%= frequency_offset_in_khz(repeater.tx_frequency, repeater.rx_frequency) %>
               </div>
             </div>
           </td>

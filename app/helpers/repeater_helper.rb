@@ -12,21 +12,14 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-require "rails_helper"
+module RepeaterHelper
+  def frequency_in_mhz(frequency)
+    "#{frequency.to_f / (10**6)}MHz"
+  end
 
-RSpec.describe "/repeaters", type: :request do
-  it "shows a repeater" do
-    repeater = create(:repeater, :full,
-      name: "A Repeater",
-      call_sign: "C4LLS1GN",
-      tx_frequency: 144_962_500,
-      rx_frequency: 144_362_500)
-    get repeater_url(repeater)
-    expect(response).to be_successful
-    expect(response.body).to include("A Repeater")
-    expect(response.body).to include("C4LLS1GN")
-    expect(response.body).to include("144.9625MHz")
-    expect(response.body).to include("144.3625MHz")
-    expect(response.body).to include("-600kHz")
+  def frequency_offset_in_khz(tx_frequency, rx_frequency)
+    sign = (rx_frequency - tx_frequency > 0) ? "+" : "" # Artificially adding the +, because the int 600 renders as 600, not +600
+    raw_offset = ((rx_frequency.to_f - tx_frequency) / (10**3)).to_i
+    "#{sign}#{raw_offset}kHz"
   end
 end

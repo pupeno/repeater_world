@@ -27,20 +27,19 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= card_entry(label: "Modes", value: repeater.modes.join(", ")) %>
         <%= card_entry(label: "Operational", value: repeater.operational) %>
         <%= card_entry(label: "TX Frequency", value: repeater.tx_frequency) do %>
-          <%= repeater.tx_frequency_in_mhz %>
+          <%= frequency_in_mhz(repeater.tx_frequency) %>
         <% end %>
         <%= card_entry(label: "RX Frequency", value: repeater.rx_frequency) do %>
           <div data-action="click->repeater#toggleRxFrequencyFormat"
                class="cursor-pointer">
-            <% offset = "#{(repeater.rx_frequency - repeater.tx_frequency > 0) ? "+" : ""}#{((repeater.rx_frequency.to_f - repeater.tx_frequency) / (10 ** 3)).to_i}kHz" %>
-            <div title="<%= offset %>"
+            <div title="<%= frequency_offset_in_khz(repeater.tx_frequency, repeater.rx_frequency) %>"
                  data-repeater-target="rxFreqAsFreq">
-              <%= repeater.rx_frequency_in_mhz %>
+              <%= frequency_in_mhz(repeater.rx_frequency) %>
             </div>
-            <div title="<%= repeater.rx_frequency_in_mhz %>"
+            <div title="<%= frequency_in_mhz(repeater.rx_frequency) %>"
                  data-repeater-target="rxFreqAsOffset"
                  class="hidden">
-              <%= offset %>
+              <%= frequency_offset_in_khz(repeater.tx_frequency, repeater.rx_frequency) %>
             </div>
           </div>
         <% end %>
@@ -98,15 +97,14 @@ You should have received a copy of the GNU Affero General Public License along w
          data-controller="map"
          data-action="google-maps-callback@window->maps#initializeMap"
          data-map-markers-value="<%=
-           [{
-              lat: repeater.latitude,
+           [{              lat: repeater.latitude,
               lng: repeater.longitude,
               tooltip: repeater.call_sign,
               info: "<h1 class='font-bold text-lg link'>#{repeater.name}</h1>
                 <p class='link'>#{repeater.call_sign}</p>
                 <p>Band: <span class='font-bold'>#{h repeater.band}</span></p>
                 <p>Modes: <span class='font-bold'>#{h repeater.modes.join(", ")}</span></p>
-                <p>Frequency: <span class='font-bold'>#{h repeater.tx_frequency_in_mhz} #{h repeater.rx_offset_in_khz}</span></p>
+                <p>Frequency: <span class='font-bold'>#{h frequency_in_mhz(repeater.tx_frequency)} #{h frequency_offset_in_khz(repeater.tx_frequency, repeater.rx_frequency)}</span></p>
                 <p>Location: <span class='font-bold'>#{h repeater.location_in_words}</span></p>
                 <p>Lat: <span class='font-bold'>#{h repeater.latitude}</span>,
                    Long: <span class='font-bold'>#{h repeater.longitude}</span</p>
