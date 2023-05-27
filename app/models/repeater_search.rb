@@ -19,10 +19,13 @@ class RepeaterSearch < ApplicationRecord
   ]
 
   BANDS = [ # Bands that are supported during search.
+    BAND_10M = "10m",
     BAND_6M = "6m",
     BAND_4M = "4m",
     BAND_2M = "2m",
+    BAND_1_25M = "1.25m",
     BAND_70CM = "70cm",
+    BAND_33CM = "33cm",
     BAND_23CM = "23cm"
   ]
 
