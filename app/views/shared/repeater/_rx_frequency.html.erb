@@ -13,7 +13,7 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <div data-action="click->repeater#toggleRxFrequencyFormat"
-     class="cursor-pointer">
+     class="cursor-pointer underline hover:text-orange-800">
   <div title="<%= frequency_offset_in_khz(repeater.tx_frequency, repeater.rx_frequency) %>"
        data-repeater-target="rxFreqAsFreq">
     <%= frequency_in_mhz(repeater.rx_frequency) %>
