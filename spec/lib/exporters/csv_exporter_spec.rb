@@ -22,8 +22,8 @@ RSpec.describe CsvExporter do
 
     expect(exporter.export).to eq(<<~CSV)
       Name,Call Sign,Web Site,Keeper,Band,Operational,Tx Frequency,Rx Frequency,FM,Tone Burst,CTCSS Tone,Tone Squelch,D-Star,Fusion,DMR,DMR Color Code,DMR Network,NXDN,P25,Tetra,Latitude,Longitude,Grid Square,Address,Locality,Region,Post Code,Country,Tx Power,Tx Antenna,Tx Antenna Polarization,Rx Antenna,Rx Antenna Polarization,Altitude Asl,Altitude Agl,Bearing,UTC Offset,Channel,Notes,Source,Redistribution Limitations
-      Repeater BL4NK,BL4NK,,,2m,,144962500,144362500,true,,,,,,,,,,,,,,,,,,,gb,,,,,,,,,,,,,
       Repeater BL4NK,BL4NK,,,2m,,144962500,144362500,,,,,,,,,,,,,,,,,,,,gb,,,,,,,,,,,,,
+      Repeater BL4NK,BL4NK,,,2m,,144970000,144370000,true,,,,,,,,,,,,,,,,,,,gb,,,,,,,,,,,,,
       Repeater FU11,FU11,https://website,K3EPR,2m,true,144962500,144362500,true,true,67.0,true,true,true,true,1,Brandmeister,true,true,true,51.74,-3.42,IO81HR,address,city,region,PC,gb,50,tx_antenna,V,rx_antenna,V,200,150,bearing,05:00,channel,Notes,source,redistribution_limitations
       Hawick,GB3AI,,GM8SJP,2m,false,145737500,145137500,true,false,103.5,false,true,true,true,3,DV Scotland Phoenix,false,false,false,55.4,-2.7,IO85PK,,Hawick,Scotland,TD9,gb,,,,,,,,,0:00,RV59,,ukrepeater.net,
       Amersham,GB3AM,,M0ZPU,6m,true,50840000,51340000,true,false,77.0,false,false,false,false,,,false,false,false,51.65,-0.62,IO91QP,,Amersham,"South West, England",HP7,gb,,,,,,,,,0:00,R50-13,,ukrepeater.net,
