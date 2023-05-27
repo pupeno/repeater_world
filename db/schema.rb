@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_21_164157) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_26_214143) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -81,8 +81,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_21_164157) do
     t.string "keeper"
     t.boolean "operational"
     t.text "notes"
-    t.decimal "tx_frequency"
-    t.decimal "rx_frequency"
+    t.integer "tx_frequency", null: false
+    t.integer "rx_frequency", null: false
     t.boolean "fm"
     t.decimal "fm_ctcss_tone"
     t.boolean "fm_tone_squelch"
@@ -108,13 +108,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_21_164157) do
     t.string "external_id"
     t.boolean "p25"
     t.boolean "tetra"
-    t.decimal "tx_power"
+    t.integer "tx_power"
     t.string "tx_antenna"
     t.string "tx_antenna_polarization"
     t.string "rx_antenna"
     t.string "rx_antenna_polarization"
-    t.decimal "altitude_asl"
-    t.decimal "altitude_agl"
+    t.integer "altitude_asl"
+    t.integer "altitude_agl"
     t.string "bearing"
     t.boolean "fm_tone_burst"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"

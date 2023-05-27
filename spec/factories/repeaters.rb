@@ -14,30 +14,71 @@
 
 FactoryBot.define do
   factory :repeater do
-    call_sign
+    call_sign { "BL4NK" }
     sequence(:name) { |n| "Repeater #{call_sign}".strip }
-    keeper { generate(:call_sign) }
     band { Repeater::BAND_2M }
-
-    tx_frequency { 144962500 } # VHF, maybe dispatch on the band for different frequencies?
-    rx_frequency { tx_frequency - 600000 } # VHF, maybe dispatch on the band for different frequencies?
-
-    operational { true }
-
-    latitude { 51.74 }
-    longitude { -3.42 }
-    address { "address" }
-    locality { "city" }
-    region { "region" }
-    post_code { "PC" }
+    tx_frequency { 144_962_500 } # VHF, maybe dispatch on the band for different frequencies?
+    rx_frequency { tx_frequency - 600_000 } # VHF, maybe dispatch on the band for different frequencies?
     country_id { "gb" }
-    grid_square { "IO81HR" }
 
-    after(:build) do |repeater|
-      # If no mode was selected, select FM.
-      if !(repeater.fm? || repeater.dstar? || repeater.fusion? || repeater.dmr? || repeater.nxdn?)
-        repeater.fm = true
+    trait :explicit_modes do
+      after(:build) do |repeater|
+        repeater.operational = false unless repeater.operational?
+        repeater.fm = false unless repeater.fm?
+        repeater.fm_tone_burst = false unless repeater.fm_tone_burst?
+        repeater.fm_tone_squelch = false unless repeater.fm_tone_squelch?
+        repeater.dstar = false unless repeater.dstar?
+        repeater.fusion = false unless repeater.fusion?
+        repeater.dmr = false unless repeater.dmr?
+        repeater.nxdn = false unless repeater.nxdn?
+        repeater.p25 = false unless repeater.p25?
+        repeater.tetra = false unless repeater.tetra
       end
+    end
+
+    trait :full do
+      call_sign { "FU11" }
+      sequence(:name) { |n| "Repeater #{call_sign}".strip }
+      keeper { "K3EPR" }
+      operational { true }
+
+      channel { "channel" }
+      fm { true }
+      fm_ctcss_tone { Repeater::CTCSS_TONES.first }
+      fm_tone_burst { true }
+      fm_tone_squelch { true }
+      dstar { true }
+      fusion { true }
+      dmr { true }
+      dmr_color_code { 1 }
+      dmr_network { "Brandmeister" }
+      nxdn { true }
+      p25 { true }
+      tetra { true }
+
+      latitude { 51.74 }
+      longitude { -3.42 }
+      address { "address" }
+      locality { "city" }
+      region { "region" }
+      post_code { "PC" }
+      grid_square { "IO81HR" }
+      altitude_agl { 150 }
+      altitude_asl { 200 }
+      utc_offset { "05:00" }
+
+      tx_antenna { "tx_antenna" }
+      tx_antenna_polarization { "V" }
+      tx_power { 50 }
+      rx_antenna { "rx_antenna" }
+      rx_antenna_polarization { "V" }
+      bearing { "bearing" }
+
+      notes { "Notes" }
+      redistribution_limitations { "redistribution_limitations" }
+      source { "source" }
+      web_site { "https://website" }
+      external_id { "external id" }
     end
   end
 end
@@ -48,8 +89,8 @@ end
 #
 #  id                         :uuid             not null, primary key
 #  address                    :string
-#  altitude_agl               :decimal(, )
-#  altitude_asl               :decimal(, )
+#  altitude_agl               :integer
+#  altitude_asl               :integer
 #  band                       :string
 #  bearing                    :string
 #  call_sign                  :string
@@ -77,13 +118,13 @@ end
 #  region                     :string
 #  rx_antenna                 :string
 #  rx_antenna_polarization    :string
-#  rx_frequency               :decimal(, )
+#  rx_frequency               :integer          not null
 #  source                     :string
 #  tetra                      :boolean
 #  tx_antenna                 :string
 #  tx_antenna_polarization    :string
-#  tx_frequency               :decimal(, )
-#  tx_power                   :decimal(, )
+#  tx_frequency               :integer          not null
+#  tx_power                   :integer
 #  utc_offset                 :string
 #  web_site                   :string
 #  created_at                 :datetime         not null

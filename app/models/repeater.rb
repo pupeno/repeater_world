@@ -35,6 +35,7 @@ class Repeater < ApplicationRecord
   belongs_to :country
 
   validates :name, presence: true
+  validates :call_sign, presence: true
   validates :band, presence: true, inclusion: BANDS
   validates :tx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
   validates :rx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
@@ -72,16 +73,16 @@ class Repeater < ApplicationRecord
   end
 
   def tx_frequency_in_mhz
-    "#{tx_frequency / (10**6)}MHz"
+    "#{tx_frequency.to_f / (10**6)}MHz"
   end
 
   def rx_frequency_in_mhz
-    "#{rx_frequency / (10**6)}MHz"
+    "#{rx_frequency.to_f / (10**6)}MHz"
   end
 
   def rx_offset_in_khz
     sign = (rx_frequency - tx_frequency > 0) ? "+" : "" # Artificially adding the +, because the int 600 renders as 600, not +600
-    raw_offset = ((rx_frequency - tx_frequency) / (10**3)).to_i
+    raw_offset = ((rx_frequency.to_f - tx_frequency) / (10**3)).to_i
     "#{sign}#{raw_offset}kHz"
   end
 
@@ -116,8 +117,8 @@ end
 #
 #  id                         :uuid             not null, primary key
 #  address                    :string
-#  altitude_agl               :decimal(, )
-#  altitude_asl               :decimal(, )
+#  altitude_agl               :integer
+#  altitude_asl               :integer
 #  band                       :string
 #  bearing                    :string
 #  call_sign                  :string
@@ -145,13 +146,13 @@ end
 #  region                     :string
 #  rx_antenna                 :string
 #  rx_antenna_polarization    :string
-#  rx_frequency               :decimal(, )
+#  rx_frequency               :integer          not null
 #  source                     :string
 #  tetra                      :boolean
 #  tx_antenna                 :string
 #  tx_antenna_polarization    :string
-#  tx_frequency               :decimal(, )
-#  tx_power                   :decimal(, )
+#  tx_frequency               :integer          not null
+#  tx_power                   :integer
 #  utc_offset                 :string
 #  web_site                   :string
 #  created_at                 :datetime         not null

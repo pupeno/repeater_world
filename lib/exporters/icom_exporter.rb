@@ -53,7 +53,7 @@ class IcomExporter < Exporter
       truncate(MAX_SUB_NAME_LENGTH, repeater.locality)
     end
 
-    call_sign = truncate(MAX_CALL_SIGN_LENGTH, repeater.call_sign&.tr("-", " ")) # In the UK, some call signs have a hyphen, but ID-52 doesn't like that.
+    call_sign = truncate(MAX_CALL_SIGN_LENGTH, repeater.call_sign.tr("-", " ")) # In the UK, some call signs have a hyphen, but ID-52 doesn't like that.
 
     {"Group No" => 1, # TODO: do something smarter about groups: https://github.com/pupeno/repeater_world/issues/21
      "Group Name" => group_name,
@@ -65,8 +65,8 @@ class IcomExporter < Exporter
      "Offset" => frequency_in_mhz((repeater.tx_frequency - repeater.rx_frequency).abs, precision: 6),
      "RPT1USE" => "YES", # Yes, we want to use the repeater.
      "Position" => "Approximate", # TODO: define when to use Approximate and when to use Exact: https://github.com/pupeno/repeater_world/issues/22
-     "Latitude" => "%.6f" % repeater.latitude,
-     "Longitude" => "%.6f" % repeater.longitude,
+     "Latitude" => repeater.latitude.present? ? "%.6f" % repeater.latitude : nil,
+     "Longitude" => repeater.longitude.present? ? "%.6f" % repeater.longitude : nil,
      "UTC Offset" => repeater.utc_offset || "--:--"}
   end
 
