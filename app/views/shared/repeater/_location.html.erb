@@ -1,0 +1,26 @@
+<%# Copyright 2023, Pablo Fernandez
+
+This file is part of Repeater World.
+
+Repeater World is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+Public License as published by the Free Software Foundation, either version 3 of the License.
+
+Repeater World is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+details.
+
+You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
+<https://www.gnu.org/licenses/>.%>
+
+<div data-action="click->repeater#changeLocationFormat"
+     class="cursor-pointer">
+  <div data-repeater-target="locationFormat1" class="underline hover:text-orange-800">
+    <%= [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.country.name].reject(&:blank?).join(", ") %>
+  </div>
+  <div data-repeater-target="locationFormat2" class="hidden underline hover:text-orange-800">
+    Lat: <%= repeater.latitude %>, Long: <%= repeater.longitude %>
+  </div>
+  <div data-repeater-target="locationFormat3" class="hidden underline hover:text-orange-800">
+    <%= repeater.grid_square %>
+  </div>
+</div>
