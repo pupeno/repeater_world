@@ -30,18 +30,7 @@ You should have received a copy of the GNU Affero General Public License along w
           <%= frequency_in_mhz(repeater.tx_frequency) %>
         <% end %>
         <%= card_entry(label: "RX Frequency", value: repeater.rx_frequency) do %>
-          <div data-action="click->repeater#toggleRxFrequencyFormat"
-               class="cursor-pointer">
-            <div title="<%= frequency_offset_in_khz(repeater.tx_frequency, repeater.rx_frequency) %>"
-                 data-repeater-target="rxFreqAsFreq">
-              <%= frequency_in_mhz(repeater.rx_frequency) %>
-            </div>
-            <div title="<%= frequency_in_mhz(repeater.rx_frequency) %>"
-                 data-repeater-target="rxFreqAsOffset"
-                 class="hidden">
-              <%= frequency_offset_in_khz(repeater.tx_frequency, repeater.rx_frequency) %>
-            </div>
-          </div>
+          <%= render "shared/repeater/rx_frequency", repeater: repeater %>
         <% end %>
         <%= card_entry(label: "FM", value: repeater.fm?) %>
         <% if repeater.fm? %>
