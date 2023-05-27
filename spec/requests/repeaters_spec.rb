@@ -15,7 +15,7 @@
 require "rails_helper"
 
 RSpec.describe "/repeaters", type: :request do
-  it "shows a repeater" do
+  it "shows a repeater full of data" do
     repeater = create(:repeater, :full,
       name: "A Repeater",
       call_sign: "C4LLS1GN",
@@ -28,5 +28,11 @@ RSpec.describe "/repeaters", type: :request do
     expect(response.body).to include("144.9625MHz")
     expect(response.body).to include("144.3625MHz")
     expect(response.body).to include("-600kHz")
+  end
+
+  it "shows a repeater void of data" do
+    repeater = create(:repeater)
+    get repeater_url(repeater)
+    expect(response).to be_successful # We are mostly checking for crashes due to assuming a value exists.
   end
 end
