@@ -17,11 +17,15 @@ class SralfiImporter < Importer
   EXPORT_URL = "https://automatic.sral.fi/api-v1.php?query=list"
 
   def import
+    @logger.info "Importing repeaters from #{SOURCE}."
+    file_name = download_file(EXPORT_URL, "sralfi_export.json")
+    stations = JSON.parse(File.read(file_name))
+
+    ignored_due_to_source_count = 0
+    create_or_updated_ids = []
+    repeaters_deleted_count = 0
+
     Repeater.transaction do
-      @logger.info "Importing repeaters from #{SOURCE}."
-      file_name = download_file(EXPORT_URL, "sralfi_export.json")
-      stations = JSON.parse(File.read(file_name))
-      count = 0
       stations["stations"].each do |raw_repeater|
         # Types:
         # 1: Voice repeater,
@@ -32,12 +36,18 @@ class SralfiImporter < Importer
         # https://m.pablofernandez.tech/@oh8hub@mastodon.radio/110406906005017761
         # TODO: decide whether to add anything other than voice repeaters.
         if raw_repeater["type"] == "1"
-          import_repeater(raw_repeater)
-          count += 1
+          action, imported_repeater = import_repeater(raw_repeater)
+          if action == :ignored_due_to_source
+            ignored_due_to_source_count += 1
+          else
+            create_or_updated_ids << imported_repeater.id
+          end
         end
       end
-      @logger.info "Done importing #{count} repeaters from #{SOURCE}."
+      repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: create_or_updated_ids).delete_all
     end
+
+    @logger.info "Done importing from #{SOURCE}. #{create_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{repeaters_deleted_count} deleted."
   end
 
   private
@@ -56,15 +66,18 @@ class SralfiImporter < Importer
   private
 
   def import_repeater(raw_repeater)
-    repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater["callsign"].upcase)
+    repeater = Repeater.find_or_initialize_by(
+      call_sign: raw_repeater["callsign"].upcase,
+      tx_frequency: raw_repeater["tx_freq"].to_f * 10**6
+    )
 
     # Only update repeaters that were sourced from automatic.sral.fi.
     if repeater.persisted? && repeater.source != SOURCE
       @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
-      return
+      return [:ignored_due_to_source, repeater]
     end
 
-    repeater.external_id = raw_repeater[:id]
+    repeater.external_id = raw_repeater["id"]
     import_status(raw_repeater, repeater)
     import_mode(raw_repeater, repeater)
     import_name(raw_repeater, repeater)
@@ -106,6 +119,8 @@ class SralfiImporter < Importer
     end
 
     repeater.save!
+
+    [:created_or_updated, repeater]
   rescue => e
     @logger.error "Failed to import repeater #{raw_repeater["callsign"]}: #{e.message}"
     @logger.error raw_repeater
@@ -223,6 +238,13 @@ class SralfiImporter < Importer
       repeater.dmr = true
     else
       raise "Unknown mode \"#{raw_repeater["mode"]}\"."
+    end
+    if repeater.dmr?
+      if raw_repeater["remarks"].present? &&
+          (raw_repeater["remarks"].include?("Brandmeister") ||
+            raw_repeater["remarks"].include?("FinDMR")) # Is this correct?
+        repeater.dmr_network = "Brandmeister"
+      end
     end
   end
 

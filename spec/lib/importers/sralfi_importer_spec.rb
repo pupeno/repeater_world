@@ -28,15 +28,56 @@ RSpec.describe SralfiImporter do
     Dir.mktmpdir("SralfiImporter") do |dir|
       expect do
         SralfiImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(113)
+      end.to change { Repeater.count }.by(141)
 
-      repeater = Repeater.find_by(call_sign: "OH0RAA")
-      expect(repeater.name).to eq("Dalkarby")
+      expect(Repeater.where(call_sign: "OH3RNE").count).to eq(5)
+
+      repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 145_575_000, dmr: true)
+      expect(repeater.external_id).to eq("801")
+      expect(repeater.name).to eq("Tampere VHF DMR")
       expect(repeater.band).to eq(Repeater::BAND_2M)
       expect(repeater.operational).to eq(true)
-      expect(repeater.tx_frequency).to eq(145675000)
-      expect(repeater.rx_frequency).to eq(145075000)
-      expect(repeater.fm).to eq(true)
+      expect(repeater.rx_frequency).to eq(144_975_000)
+      expect(repeater.tx_power).to eq(50)
+      expect(repeater.dmr_color_code).to eq(1)
+      expect(repeater.dmr_network).to eq("Brandmeister")
+
+      repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 145_750_000, fm: true)
+      expect(repeater.external_id).to eq("237")
+      expect(repeater.name).to eq("Tampere Wide Area")
+      expect(repeater.band).to eq(Repeater::BAND_2M)
+      expect(repeater.operational).to eq(true)
+      expect(repeater.rx_frequency).to eq(145_150_000)
+      expect(repeater.tx_power).to eq(47)
+      expect(repeater.fm_ctcss_tone).to eq(123)
+
+      repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 434_850_000, fm: true)
+      expect(repeater.external_id).to eq("286")
+      expect(repeater.name).to eq("Tampere City")
+      expect(repeater.band).to eq(Repeater::BAND_70CM)
+      expect(repeater.operational).to eq(true)
+      expect(repeater.rx_frequency).to eq(432_850_000)
+      expect(repeater.tx_power).to eq(35)
+      expect(repeater.fm_ctcss_tone).to eq(123)
+
+      repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 434_550_000, dmr: true)
+      expect(repeater.external_id).to eq("338")
+      expect(repeater.name).to eq("Tampere Tesoma DMR")
+      expect(repeater.band).to eq(Repeater::BAND_70CM)
+      expect(repeater.operational).to eq(true)
+      expect(repeater.rx_frequency).to eq(432_550_000)
+      expect(repeater.tx_power).to eq(45)
+      expect(repeater.dmr_color_code).to eq(1)
+      expect(repeater.dmr_network).to eq("Brandmeister")
+
+      repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 434_525_000, dmr: true)
+      expect(repeater.external_id).to eq("701")
+      expect(repeater.name).to eq("Tampere Hervanta DMR")
+      expect(repeater.band).to eq(Repeater::BAND_70CM)
+      expect(repeater.operational).to eq(true)
+      expect(repeater.rx_frequency).to eq(432_525_000)
+      expect(repeater.tx_power).to eq(45.0)
+      expect(repeater.dmr_color_code).to eq(1)
 
       # The second time we call it, it shouldn't re-download any files, nor create new
       # repeaters
@@ -53,16 +94,21 @@ RSpec.describe SralfiImporter do
       repeater = Repeater.find_by(call_sign: "OH1RAA")
       repeater.band = Repeater::BAND_23CM
       repeater.save!
+      create(:repeater, :full, call_sign: "OH3RNE", source: SralfiImporter::SOURCE)
 
       # The third time we call it, it shouldn't re-download any files, nor create new
-      # repeaters, but some get updated and some don't.
+      # repeaters, but some get updated, some don't, and some get deleted.
+      expect(Repeater.where(call_sign: "OH3RNE").count).to eq(6)
       expect do
         SralfiImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(0)
+      end.to change { Repeater.count }.by(-1)
+      expect(Repeater.where(call_sign: "OH3RNE").count).to eq(5)
       repeater = Repeater.find_by(call_sign: "OH0RAA") # This one didn't change.
       expect(repeater.band).to eq(Repeater::BAND_23CM)
       repeater = Repeater.find_by(call_sign: "OH1RAA") # This one did
       expect(repeater.band).to eq(Repeater::BAND_2M)
+      repeater = Repeater.find_by(call_sign: "OH3RNE", tx_frequency: 145_000_000) # This one got deleted
+      expect(repeater).to be(nil)
     end
   end
 end

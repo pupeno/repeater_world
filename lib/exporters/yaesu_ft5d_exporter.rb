@@ -156,11 +156,7 @@ class YaesuFt5dExporter < Exporter
       LAST => 0
     }
 
-    row[NAME] = if repeater.call_sign.present?
-      "#{truncate(MAX_NAME_LENGTH - repeater.call_sign.length - 1, repeater.name)} #{repeater.call_sign}"
-    else
-      truncate(MAX_NAME_LENGTH, repeater.name).to_s
-    end
+    row[NAME] = "#{truncate(MAX_NAME_LENGTH - repeater.call_sign.length - 1, repeater.name)} #{repeater.call_sign}"
 
     row[DIG_ANALOG] = if repeater.fm? && repeater.fusion?
       "AMS" # Auto mode, FM or DN

@@ -18,15 +18,15 @@ RSpec.describe YaesuFt5dExporter do
   include_context "repeaters"
 
   it "should export" do
-    exporter = YaesuFt5dExporter.new(Repeater.all)
+    exporter = YaesuFt5dExporter.new(Repeater.order(:call_sign, :tx_frequency))
 
     expect(exporter.export).to eq(<<~CSV)
-      1,OFF,430.87500,438.47500,7.60000,+RPT,ON,FM,AMS,,Derby GB7DC,TONE,71.9 Hz,023,RX Normal TX Normal,1600 Hz,RX 00,TX 00,High (5W),OFF,ON,12.5KHz,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,Reduced output.,0
-      2,OFF,145.66250,145.06250,0.60000,-RPT,ON,FM,FM,,Herne Ba GB7IC-C,OFF,88.5 Hz,023,RX Normal TX Normal,1600 Hz,RX 00,TX 00,High (5W),OFF,ON,12.5KHz,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,,0
-      3,OFF,145.68750,145.08750,0.60000,-RPT,ON,FM,FM,,Newcastle GB3CN,TONE,94.8 Hz,023,RX Normal TX Normal,1600 Hz,RX 00,TX 00,High (5W),OFF,ON,12.5KHz,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,,0
+      1,OFF,144.96250,144.36250,0.60000,-RPT,ON,FM,AMS,,Repeater FU FU11,TONE,67.0 Hz,023,RX Normal TX Normal,1600 Hz,RX 00,TX 00,High (5W),OFF,ON,12.5KHz,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,Notes,0
+      2,OFF,145.68750,145.08750,0.60000,-RPT,ON,FM,FM,,Newcastle GB3CN,TONE,94.8 Hz,023,RX Normal TX Normal,1600 Hz,RX 00,TX 00,High (5W),OFF,ON,12.5KHz,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,,0
+      3,OFF,145.73750,145.13750,0.60000,-RPT,ON,FM,AMS,,Weymouth GB3DR,OFF,88.5 Hz,023,RX Normal TX Normal,1600 Hz,RX 00,TX 00,High (5W),OFF,ON,12.5KHz,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,,0
       4,OFF,145.62500,145.02500,0.60000,-RPT,ON,FM,DN,,Perth GB3SF,OFF,88.5 Hz,023,RX Normal TX Normal,1600 Hz,RX 00,TX 00,High (5W),OFF,ON,12.5KHz,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,,0
-      5,OFF,144.96250,144.36250,0.60000,-RPT,ON,FM,FM,,Repeater,OFF,88.5 Hz,023,RX Normal TX Normal,1600 Hz,RX 00,TX 00,High (5W),OFF,ON,12.5KHz,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,,0
-      6,OFF,145.73750,145.13750,0.60000,-RPT,ON,FM,AMS,,Weymouth GB3DR,OFF,88.5 Hz,023,RX Normal TX Normal,1600 Hz,RX 00,TX 00,High (5W),OFF,ON,12.5KHz,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,,0
+      5,OFF,430.87500,438.47500,7.60000,+RPT,ON,FM,AMS,,Derby GB7DC,TONE,71.9 Hz,023,RX Normal TX Normal,1600 Hz,RX 00,TX 00,High (5W),OFF,ON,12.5KHz,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,Reduced output.,0
+      6,OFF,145.66250,145.06250,0.60000,-RPT,ON,FM,FM,,Herne Ba GB7IC-C,OFF,88.5 Hz,023,RX Normal TX Normal,1600 Hz,RX 00,TX 00,High (5W),OFF,ON,12.5KHz,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,OFF,,0
       7,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0
       8,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0
       9,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0
@@ -927,7 +927,7 @@ RSpec.describe YaesuFt5dExporter do
   it "should crash with a non-fusion, non-fm repeater" do
     repeater = create(:repeater, fm: false, fusion: false, dmr: true)
 
-    exporter = YaesuFt5dExporter.new(Repeater.all)
+    exporter = YaesuFt5dExporter.new(Repeater.order(:call_sign, :tx_frequency))
     expect { exporter.send(:repeater, repeater) }.to raise_exception(/Unknown fm\/fusion conditions for repeater/)
   end
 end

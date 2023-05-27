@@ -18,12 +18,12 @@ RSpec.describe Exporter do
   include_context "repeaters"
 
   it "should not export" do
-    exporter = Exporter.new(Repeater.all)
+    exporter = Exporter.new(Repeater.order(:call_sign, :tx_frequency))
     expect { exporter.export }.to raise_exception("Method should be implemented in subclass.")
   end
 
   it "should know conventional D-Star ports" do
-    exporter = Exporter.new(Repeater.all)
+    exporter = Exporter.new(Repeater.order(:call_sign, :tx_frequency))
     expect(exporter.send(:conventional_dstar_port, Repeater::BAND_23CM, "jp")).to eq("B")
     expect(exporter.send(:conventional_dstar_port, Repeater::BAND_70CM, "jp")).to eq("A")
     expect { exporter.send(:conventional_dstar_port, Repeater::BAND_2M, "jp") }.to raise_exception("Unexpected band #{Repeater::BAND_2M} in Japan")
