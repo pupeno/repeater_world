@@ -16,10 +16,17 @@ require "rails_helper"
 
 RSpec.describe "/repeaters", type: :request do
   it "shows a repeater" do
-    repeater = create(:repeater, name: "A Repeater", call_sign: "123")
+    repeater = create(:repeater, :full,
+                      name: "A Repeater",
+                      call_sign: "C4LLS1GN",
+                      tx_frequency: 144_962_500,
+                      rx_frequency: 144_362_500)
     get repeater_url(repeater)
     expect(response).to be_successful
     expect(response.body).to include("A Repeater")
-    expect(response.body).to include("123")
+    expect(response.body).to include("C4LLS1GN")
+    expect(response.body).to include("144.9625MHz")
+    expect(response.body).to include("144.3625MHz")
+    expect(response.body).to include("-600kHz")
   end
 end
