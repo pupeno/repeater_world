@@ -49,8 +49,12 @@ RSpec.describe Repeater, type: :model do
     end
 
     it "has SEO friendly params" do
+      expect(@repeater.to_param).to include(@repeater.id)
       expect(@repeater.to_param).to include(@repeater.call_sign.parameterize)
       expect(@repeater.to_param).to include(@repeater.name.parameterize)
+      @repeater.name = nil
+      @repeater.call_sign = nil
+      expect(@repeater.to_param).to include(@repeater.id)
     end
 
     it "has frequency helpers" do

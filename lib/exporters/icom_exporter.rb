@@ -53,7 +53,7 @@ class IcomExporter < Exporter
       truncate(MAX_SUB_NAME_LENGTH, repeater.locality)
     end
 
-    call_sign = truncate(MAX_CALL_SIGN_LENGTH, repeater.call_sign&.tr("-", " ")) # In the UK, some call signs have a hyphen, but ID-52 doesn't like that.
+    call_sign = truncate(MAX_CALL_SIGN_LENGTH, repeater.call_sign.tr("-", " ")) # In the UK, some call signs have a hyphen, but ID-52 doesn't like that.
 
     {"Group No" => 1, # TODO: do something smarter about groups: https://github.com/flexpointtech/repeater_world/issues/21
      "Group Name" => group_name,
