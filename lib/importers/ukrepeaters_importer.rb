@@ -19,15 +19,21 @@ class UkrepeatersImporter < Importer
 
   def import
     @logger.info "Importing repeaters from #{SOURCE}."
+    created_or_updated_ids = Set.new
+    repeaters_deleted_count = 0
+
     Repeater.transaction do
-      process_repeaterlist3_csv
-      process_repeaterlist_dv_csv
-      process_repeaterlist_all_csv
-      process_repeaterlist_alt2_csv
+      created_or_updated_ids.merge(process_repeaterlist3_csv.map(&:id))
+      created_or_updated_ids.merge(process_repeaterlist_dv_csv.map(&:id))
+      created_or_updated_ids.merge(process_repeaterlist_all_csv.map(&:id))
+      created_or_updated_ids.merge(process_repeaterlist_alt2_csv.map(&:id))
       # TODO: process packetlist: https://ukrepeater.net/csvfiles.html https://ukrepeater.net/csvcreate4.php
-      process_repeaterlist_status_csv
+      created_or_updated_ids.merge(process_repeaterlist_status_csv.map(&:id))
+
+      repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: created_or_updated_ids).delete_all
     end
-    @logger.info "Done importing repeaters from #{SOURCE}."
+
+    @logger.info "Done importing from #{SOURCE}. #{created_or_updated_ids.count} created or updated, #{repeaters_deleted_count} deleted."
   end
 
   private
@@ -39,12 +45,15 @@ class UkrepeatersImporter < Importer
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:callsign, :band, :channel, :tx, :rx, :modes, :qthr, :where, :postcode, :region, :ctcsscc, :keeper, :lat, :lon, nil], "https://ukrepeater.net/csvcreate3.php", file_name)
 
+    repeaters = []
     csv_file.each_with_index do |raw_repeater, line_number|
-      create_repeater(raw_repeater)
+      repeaters << create_repeater(raw_repeater)
     rescue
       raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
+
     @logger.info "Done processing repeaterlist3.csv..."
+    repeaters
   end
 
   # Create repeater from a record in voice_repeater_list.csv
@@ -55,7 +64,7 @@ class UkrepeatersImporter < Importer
     # Only update repeaters that were sourced from ukrepeater.
     if repeater.persisted? && repeater.source != SOURCE
       @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
-      return
+      return repeater
     end
 
     # Some metadata.
@@ -114,6 +123,7 @@ class UkrepeatersImporter < Importer
     @logger.info "Created #{repeater}." if repeater.new_record?
 
     repeater.save!
+    repeater
   end
 
   def process_repeaterlist_dv_csv
@@ -123,6 +133,7 @@ class UkrepeatersImporter < Importer
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :loc, :where, :dmr, :dstar, :fusion, :nxdn, nil], "https://ukrepeater.net/csvcreate_dv.php", file_name)
 
+    repeaters = []
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:call])
       if !repeater
@@ -142,10 +153,14 @@ class UkrepeatersImporter < Importer
       @logger.info "Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
+      repeaters << repeater
     rescue
       raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
+
     @logger.info "Done processing repeaterlist_dv.csv."
+
+    repeaters
   end
 
   def process_repeaterlist_all_csv
@@ -155,6 +170,7 @@ class UkrepeatersImporter < Importer
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :loc, :where, :analog, :dmr, :dstar, :fusion, nil], "https://ukrepeater.net/csvcreate_all.php", file_name)
 
+    repeaters = []
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:call])
       if !repeater
@@ -180,10 +196,13 @@ class UkrepeatersImporter < Importer
       @logger.info "Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
+      repeaters << repeater
     rescue
       raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
+
     @logger.info "Done processing repeaterlist_all.csv."
+    repeaters
   end
 
   def process_repeaterlist_alt2_csv
@@ -193,6 +212,7 @@ class UkrepeatersImporter < Importer
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :shift, :loc, :where, :reg, :ctcss, :dmrcc, :dmrcon, :lat, :lon, :status, :analg, :dmr, :dstar, :fusion, :nxdn, nil], "https://ukrepeater.net/repeaterlist-alt.php", file_name)
 
+    repeaters = []
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:call])
       if !repeater
@@ -230,10 +250,13 @@ class UkrepeatersImporter < Importer
       @logger.info "Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
+      repeaters << repeater
     rescue
       raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
+
     @logger.info "Done processing repeaterlist_alt2.csv."
+    repeaters
   end
 
   def process_repeaterlist_status_csv
@@ -243,6 +266,7 @@ class UkrepeatersImporter < Importer
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:repeater, :band, :channel, :tx, :rx, :modes, :qthr, :where, :region, :ctcsscc, :keeper, :status, nil], "https://ukrepeater.net/csvcreatewithstatus.php", file_name)
 
+    repeaters = []
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = Repeater.find_by(call_sign: raw_repeater[:repeater])
       if !repeater
@@ -270,10 +294,13 @@ class UkrepeatersImporter < Importer
       @logger.info "Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
+      repeaters << repeater
     rescue
       raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
+
     @logger.info "Done processing repeaterlist_status.csv."
+    repeaters
   end
 
   def assert_fields(table, fields, url, file_name)

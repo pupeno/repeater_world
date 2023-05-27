@@ -77,16 +77,19 @@ RSpec.describe UkrepeatersImporter do
       repeater = Repeater.find_by(call_sign: "GB3NL")
       repeater.band = Repeater::BAND_23CM
       repeater.save!
+      create(:repeater, :full, call_sign: "GB7DC", tx_frequency: 145_000_000, source: UkrepeatersImporter::SOURCE)
 
       # The third time we call it, it shouldn't re-download any files, nor create new
-      # repeaters, but some get updated and some don't.
+      # repeaters, but some get updated, some don't, and some get deleted.
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(0)
+      end.to change { Repeater.count }.by(-1)
       repeater = Repeater.find_by(call_sign: "GB3HI") # This one didn't change.
       expect(repeater.band).to eq(Repeater::BAND_23CM)
       repeater = Repeater.find_by(call_sign: "GB3NL") # This one did
       expect(repeater.band).to eq(Repeater::BAND_2M)
+      repeater = Repeater.find_by(call_sign: "GB7DC", tx_frequency: 145_000_000) # This one got deleted
+      expect(repeater).to be(nil)
     end
   end
 end

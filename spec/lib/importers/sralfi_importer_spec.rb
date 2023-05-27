@@ -94,8 +94,7 @@ RSpec.describe SralfiImporter do
       repeater = Repeater.find_by(call_sign: "OH1RAA")
       repeater.band = Repeater::BAND_23CM
       repeater.save!
-      repeater = create(:repeater, call_sign: "OH3RNE", tx_frequency: 145_000_000, source: SralfiImporter::SOURCE)
-      repeater.save!
+      create(:repeater, :full, call_sign: "OH3RNE", source: SralfiImporter::SOURCE)
 
       # The third time we call it, it shouldn't re-download any files, nor create new
       # repeaters, but some get updated, some don't, and some get deleted.
