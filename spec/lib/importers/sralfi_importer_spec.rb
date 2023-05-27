@@ -79,6 +79,11 @@ RSpec.describe SralfiImporter do
       expect(repeater.tx_power).to eq(45.0)
       expect(repeater.dmr_color_code).to eq(1)
 
+      repeater = Repeater.find_sole_by(call_sign: "OH6RVC", tx_frequency: 1_297_425_000)
+      expect(repeater.external_id).to eq("331")
+      expect(repeater.name).to eq("Lapua")
+      expect(repeater.web_site).to eq("http://www.oh6ac.net")
+
       # The second time we call it, it shouldn't re-download any files, nor create new
       # repeaters
       expect do
