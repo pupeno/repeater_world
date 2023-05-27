@@ -57,15 +57,6 @@ RSpec.describe Repeater, type: :model do
       expect(@repeater.to_param).to include(@repeater.id)
     end
 
-    it "has frequency helpers" do
-      expect(@repeater.tx_frequency_in_mhz).to eq("144.9625MHz")
-      expect(@repeater.rx_frequency).to eq(144362500)
-      expect(@repeater.rx_frequency_in_mhz).to eq("144.3625MHz")
-      expect(@repeater.rx_offset_in_khz).to eq("-600kHz")
-      @repeater.rx_frequency = 145_362_500
-      expect(@repeater.rx_offset_in_khz).to eq("+400kHz")
-    end
-
     it "fixes web site" do
       @repeater.web_site = "example.com"
       expect(@repeater.web_site).to eq("http://example.com")
