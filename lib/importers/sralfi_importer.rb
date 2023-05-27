@@ -22,7 +22,7 @@ class SralfiImporter < Importer
     stations = JSON.parse(File.read(file_name))
 
     ignored_due_to_source_count = 0
-    create_or_updated_ids = []
+    created_or_updated_ids = []
     repeaters_deleted_count = 0
 
     Repeater.transaction do
@@ -40,14 +40,14 @@ class SralfiImporter < Importer
           if action == :ignored_due_to_source
             ignored_due_to_source_count += 1
           else
-            create_or_updated_ids << imported_repeater.id
+            created_or_updated_ids << imported_repeater.id
           end
         end
       end
-      repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: create_or_updated_ids).delete_all
+      repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: created_or_updated_ids).delete_all
     end
 
-    @logger.info "Done importing from #{SOURCE}. #{create_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{repeaters_deleted_count} deleted."
+    @logger.info "Done importing from #{SOURCE}. #{created_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{repeaters_deleted_count} deleted."
   end
 
   private
