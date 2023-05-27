@@ -68,11 +68,7 @@ class BaofengUv5rExporter < Exporter
     }
 
     row[NAME] =
-      if repeater.call_sign.present?
-        truncate(7, repeater.call_sign)
-      else
-        truncate(7, repeater.name)
-      end
+      truncate(7, repeater.call_sign)
 
     row[TONE] = if repeater.fm_ctcss_tone.present?
       "TONE" # TODO: when do we use TSQL: https://github.com/flexpointtech/repeater_world/issues/23
