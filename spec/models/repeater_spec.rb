@@ -65,6 +65,19 @@ RSpec.describe Repeater, type: :model do
       @repeater.rx_frequency = 145_362_500
       expect(@repeater.rx_offset_in_khz).to eq("+400kHz")
     end
+
+    it "fixes web site" do
+      @repeater.web_site = "example.com"
+      expect(@repeater.web_site).to eq("http://example.com")
+      @repeater.web_site = nil
+      expect(@repeater.web_site).to be(nil)
+      @repeater.web_site = ""
+      expect(@repeater.web_site).to eq("")
+      @repeater.web_site = "  "
+      expect(@repeater.web_site).to eq("  ")
+      @repeater.web_site = "http:example.com"
+      expect(@repeater.web_site).to eq("http://http:example.com") # Can't save everyone.
+    end
   end
 end
 
