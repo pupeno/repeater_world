@@ -94,6 +94,13 @@ class Repeater < ApplicationRecord
     [id, call_sign&.parameterize, name&.parameterize].reject(&:blank?).join("-")
   end
 
+  def web_site=(value)
+    if value.present? && !value.start_with?("http://") && !value.start_with?("https://")
+      value = "http://#{value}"
+    end
+    super(value)
+  end
+
   rails_admin do
     list do
       field :country
