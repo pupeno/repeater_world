@@ -84,18 +84,7 @@ You should have received a copy of the GNU Affero General Public License along w
             </div>
           </td>
           <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500">
-            <div data-action="click->repeater#changeLocationFormat"
-                 class="cursor-pointer">
-              <div data-repeater-target="locationFormat1">
-                <%= repeater.location_in_words %>
-              </div>
-              <div data-repeater-target="locationFormat2" class="hidden">
-                Lat: <%= repeater.latitude %>, Long: <%= repeater.longitude %>
-              </div>
-              <div data-repeater-target="locationFormat3" class="hidden">
-                <%= repeater.grid_square %>
-              </div>
-            </div>
+            <%= render "shared/repeater/location", repeater: repeater %>
           </td>
         </tr>
       <% end %>

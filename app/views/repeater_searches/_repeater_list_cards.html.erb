@@ -51,18 +51,7 @@ You should have received a copy of the GNU Affero General Public License along w
             </div>
           <% end %>
           <%= card_entry(label: "Location") do %>
-            <div data-action="click->repeater#changeLocationFormat"
-                 class="cursor-pointer">
-              <div data-repeater-target="locationFormat1">
-                <%= [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.country.name].reject(&:blank?).join(", ") %>
-              </div>
-              <div data-repeater-target="locationFormat2" class="hidden">
-                Lat: <%= repeater.latitude %>, Long: <%= repeater.longitude %>
-              </div>
-              <div data-repeater-target="locationFormat3" class="hidden">
-                <%= repeater.grid_square %>
-              </div>
-            </div>
+            <%= render "shared/repeater/location", repeater: repeater %>
           <% end %>
         </dl>
       </div>
