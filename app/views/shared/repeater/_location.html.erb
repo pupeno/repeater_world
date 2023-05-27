@@ -13,14 +13,14 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <div data-action="click->repeater#changeLocationFormat"
-     class="cursor-pointer">
-  <div data-repeater-target="locationFormat1" class="underline hover:text-orange-800">
+     class="cursor-pointer underline hover:text-orange-800">
+  <div data-repeater-target="locationFormat1" class="">
     <%= [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.country.name].reject(&:blank?).join(", ") %>
   </div>
-  <div data-repeater-target="locationFormat2" class="hidden underline hover:text-orange-800">
+  <div data-repeater-target="locationFormat2" class="hidden">
     Lat: <%= repeater.latitude %>, Long: <%= repeater.longitude %>
   </div>
-  <div data-repeater-target="locationFormat3" class="hidden underline hover:text-orange-800">
+  <div data-repeater-target="locationFormat3" class="hidden">
     <%= repeater.grid_square %>
   </div>
 </div>
