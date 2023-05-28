@@ -78,20 +78,6 @@ class Repeater < ApplicationRecord
     modes
   end
 
-  # TODO: move this to a view helper.
-  def modes
-    modes = []
-    modes << "FM" if fm?
-    modes << "NFM" if nfm?
-    modes << "D-Star" if dstar?
-    modes << "Fusion" if fusion?
-    modes << "DMR" if dmr?
-    modes << "NXDN" if nxdn?
-    modes << "P25" if p25?
-    modes << "TETRA" if tetra?
-    modes
-  end
-
   def location_in_words
     [address, locality, region, post_code, country.name].reject(&:blank?).join(", ")
   end
