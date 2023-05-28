@@ -49,6 +49,7 @@ FactoryBot.define do
       fm_tone_burst { true }
       fm_tone_squelch { true }
       dstar { true }
+      dstar_port { "C" }
       fusion { true }
       dmr { true }
       dmr_color_code { 1 }
@@ -100,6 +101,7 @@ end
 #  dmr_color_code             :integer
 #  dmr_network                :string
 #  dstar                      :boolean
+#  dstar_port                 :string
 #  fm                         :boolean
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean

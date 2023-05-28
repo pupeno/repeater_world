@@ -126,6 +126,7 @@ end
 #  dmr_color_code             :integer
 #  dmr_network                :string
 #  dstar                      :boolean
+#  dstar_port                 :string
 #  fm                         :boolean
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean
