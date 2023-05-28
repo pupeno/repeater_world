@@ -292,25 +292,25 @@ class NerepeatersImporter < Importer
 
     if (repeater.fm? || repeater.nfm?) && access_code.to_f&.in?(Repeater::CTCSS_TONES)
       repeater.fm_ctcss_tone = access_code.to_f
-    elsif repeater.modes2 == Set[:fm, :p25] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
+    elsif repeater.modes == Set[:fm, :p25] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
       # TODO: import the first part correctly, it's likely for P25.
       repeater.fm_ctcss_tone = access_code.split("/").second.to_f
-    elsif repeater.modes2 == Set[:fm, :nxdn] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
+    elsif repeater.modes == Set[:fm, :nxdn] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
       # TODO: import the first part correctly, it's likely for NXDN.
       repeater.fm_ctcss_tone = access_code.split("/").second.to_f
-    elsif repeater.modes2 == Set[:nfm, :nxdn] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
+    elsif repeater.modes == Set[:nfm, :nxdn] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
       # TODO: import the first part correctly, it's likely for NXDN.
       repeater.fm_ctcss_tone = access_code.split("/").second.to_f
-    elsif repeater.modes2 == Set[:nfm, :p25] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
+    elsif repeater.modes == Set[:nfm, :p25] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
       # TODO: import the first part correctly, it's likely for P25.
       repeater.fm_ctcss_tone = access_code.split("/").second.to_f
-    elsif repeater.modes2 == Set[:fm, :p25] && access_code.in?(%w[NAC353/D244])
+    elsif repeater.modes == Set[:fm, :p25] && access_code.in?(%w[NAC353/D244])
       # TODO: import the first part correctly, it's likely for P25.
       # TODO: what's the second part? What are these D numbers?
-    elsif repeater.modes2 == Set[:nfm, :p25] && access_code.in?(%w[NAC250/D244])
+    elsif repeater.modes == Set[:nfm, :p25] && access_code.in?(%w[NAC250/D244])
       # TODO: import the first part correctly, it's likely for P25.
       # TODO: what's the second part? What are these D numbers?
-    elsif repeater.modes2 == Set[:fm, :dstar] &&
+    elsif repeater.modes == Set[:fm, :dstar] &&
         access_code.split("/").first.in?(%w[A B C]) &&
         access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
       repeater.fm_ctcss_tone = access_code.split("/").second.to_f

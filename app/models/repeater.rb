@@ -64,8 +64,7 @@ class Repeater < ApplicationRecord
     self.location = Geo.point(latitude || 0, value)
   end
 
-  # TODO: rename this modes.
-  def modes2
+  def modes
     modes = Set.new
     modes << :fm if fm?
     modes << :nfm if nfm?
