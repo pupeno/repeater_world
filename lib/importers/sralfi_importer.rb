@@ -205,8 +205,10 @@ class SralfiImporter < Importer
   end
 
   def import_mode(raw_repeater, repeater)
-    if raw_repeater["mode"].in? ["FM", "NFM"] # TODO: do we need to separate narrowband fm into its own mode?
+    if raw_repeater["mode"] == "FM"
       repeater.fm = true
+    elsif raw_repeater["mode"] == "NFM"
+      repeater.nfm = true
     elsif raw_repeater["mode"] == "FM / P25"
       repeater.fm = true
       repeater.p25 = true

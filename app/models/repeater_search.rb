@@ -29,7 +29,7 @@ class RepeaterSearch < ApplicationRecord
     BAND_23CM = "23cm"
   ]
 
-  MODES = %w[fm dstar fusion dmr nxdn] # Modes that are supported during search.
+  MODES = %w[fm nfm dstar fusion dmr nxdn] # Modes that are supported during search.
 
   belongs_to :user
 

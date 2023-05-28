@@ -24,7 +24,7 @@ class Repeater < ApplicationRecord
     BAND_23CM = "23cm"
   ]
 
-  MODES = %w[fm dstar fusion dmr nxdn p25 tetra]
+  MODES = %w[fm nfm dstar fusion dmr nxdn p25 tetra]
 
   CTCSS_TONES = [
     67.0, 69.3, 71.9, 74.4, 77.0, 79.7, 82.5, 85.4, 88.5, 91.5, 94.8, 97.4, 100.0, 103.5, 107.2, 110.9, 114.8, 118.8,
@@ -67,10 +67,13 @@ class Repeater < ApplicationRecord
   def modes
     modes = []
     modes << "FM" if fm?
+    modes << "NFM" if nfm?
     modes << "D-Star" if dstar?
     modes << "Fusion" if fusion?
     modes << "DMR" if dmr?
     modes << "NXDN" if nxdn?
+    modes << "P25" if p25?
+    modes << "TETRA" if tetra?
     modes
   end
 
@@ -97,6 +100,7 @@ class Repeater < ApplicationRecord
       field :band
       field :tx_frequency
       field :fm
+      field :nfm
       field :dstar
       field :fusion
       field :dmr
@@ -132,6 +136,7 @@ end
 #  locality                   :string
 #  location                   :geography        point, 4326
 #  name                       :string
+#  nfm                        :boolean
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean

@@ -44,6 +44,7 @@ FactoryBot.define do
 
       channel { "channel" }
       fm { true }
+      nfm { true }
       fm_ctcss_tone { Repeater::CTCSS_TONES.first }
       fm_tone_burst { true }
       fm_tone_squelch { true }
@@ -109,6 +110,7 @@ end
 #  locality                   :string
 #  location                   :geography        point, 4326
 #  name                       :string
+#  nfm                        :boolean
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean
