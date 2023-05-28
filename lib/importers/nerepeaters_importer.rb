@@ -130,6 +130,7 @@ class NerepeatersImporter < Importer
     repeater.name = "#{repeater.locality} #{repeater.call_sign}"
     import_mode(repeater, raw_repeater)
     import_access_code(repeater, raw_repeater)
+    repeater.notes = "#{raw_repeater[COMMENT]}\nAccess codes: #{raw_repeater[ACCESS_CODE]} #{raw_repeater[ACCESS_CODE_2]}"
 
     fill_band(repeater)
     repeater.country_id = "us"
