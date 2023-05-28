@@ -23,13 +23,13 @@ class RepeaterSearch < ApplicationRecord
     BAND_6M = "6m",
     BAND_4M = "4m",
     BAND_2M = "2m",
-    BAND_1_25M = "1.25m",
+    # BAND_1_25M = "1.25m",
     BAND_70CM = "70cm",
-    BAND_33CM = "33cm",
+    # BAND_33CM = "33cm",
     BAND_23CM = "23cm"
   ]
 
-  MODES = %w[fm nfm dstar fusion dmr nxdn] # Modes that are supported during search.
+  MODES = %w[fm dstar fusion dmr nxdn] # Modes that are supported during search.
 
   belongs_to :user
 
