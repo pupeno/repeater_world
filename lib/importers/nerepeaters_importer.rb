@@ -46,61 +46,61 @@ class NerepeatersImporter < Importer
   private
 
   # TODO: move this to a generic place if we get other use cases.
-  US_STATES = {"AK" => "Alaska",
-               "AL" => "Alabama",
-               "AR" => "Arkansas",
-               "AS" => "American Samoa",
-               "AZ" => "Arizona",
-               "CA" => "California",
-               "CO" => "Colorado",
-               "CT" => "Connecticut",
-               "DC" => "District of Columbia",
-               "DE" => "Delaware",
-               "FL" => "Florida",
-               "GA" => "Georgia",
-               "GU" => "Guam",
-               "HI" => "Hawaii",
-               "IA" => "Iowa",
-               "ID" => "Idaho",
-               "IL" => "Illinois",
-               "IN" => "Indiana",
-               "KS" => "Kansas",
-               "KY" => "Kentucky",
-               "LA" => "Louisiana",
-               "MA" => "Massachusetts",
-               "MD" => "Maryland",
-               "ME" => "Maine",
-               "MI" => "Michigan",
-               "MN" => "Minnesota",
-               "MO" => "Missouri",
-               "MS" => "Mississippi",
-               "MT" => "Montana",
-               "NC" => "North Carolina",
-               "ND" => "North Dakota",
-               "NE" => "Nebraska",
-               "NH" => "New Hampshire",
-               "NJ" => "New Jersey",
-               "NM" => "New Mexico",
-               "NV" => "Nevada",
-               "NY" => "New York",
-               "OH" => "Ohio",
-               "OK" => "Oklahoma",
-               "OR" => "Oregon",
-               "PA" => "Pennsylvania",
-               "PR" => "Puerto Rico",
-               "RI" => "Rhode Island",
-               "SC" => "South Carolina",
-               "SD" => "South Dakota",
-               "TN" => "Tennessee",
-               "TX" => "Texas",
-               "UT" => "Utah",
-               "VA" => "Virginia",
-               "VI" => "Virgin Islands",
-               "VT" => "Vermont",
-               "WA" => "Washington",
-               "WI" => "Wisconsin",
-               "WV" => "West Virginia",
-               "WY" => "Wyoming"}
+  US_STATES = { "AK" => "Alaska",
+                "AL" => "Alabama",
+                "AR" => "Arkansas",
+                "AS" => "American Samoa",
+                "AZ" => "Arizona",
+                "CA" => "California",
+                "CO" => "Colorado",
+                "CT" => "Connecticut",
+                "DC" => "District of Columbia",
+                "DE" => "Delaware",
+                "FL" => "Florida",
+                "GA" => "Georgia",
+                "GU" => "Guam",
+                "HI" => "Hawaii",
+                "IA" => "Iowa",
+                "ID" => "Idaho",
+                "IL" => "Illinois",
+                "IN" => "Indiana",
+                "KS" => "Kansas",
+                "KY" => "Kentucky",
+                "LA" => "Louisiana",
+                "MA" => "Massachusetts",
+                "MD" => "Maryland",
+                "ME" => "Maine",
+                "MI" => "Michigan",
+                "MN" => "Minnesota",
+                "MO" => "Missouri",
+                "MS" => "Mississippi",
+                "MT" => "Montana",
+                "NC" => "North Carolina",
+                "ND" => "North Dakota",
+                "NE" => "Nebraska",
+                "NH" => "New Hampshire",
+                "NJ" => "New Jersey",
+                "NM" => "New Mexico",
+                "NV" => "Nevada",
+                "NY" => "New York",
+                "OH" => "Ohio",
+                "OK" => "Oklahoma",
+                "OR" => "Oregon",
+                "PA" => "Pennsylvania",
+                "PR" => "Puerto Rico",
+                "RI" => "Rhode Island",
+                "SC" => "South Carolina",
+                "SD" => "South Dakota",
+                "TN" => "Tennessee",
+                "TX" => "Texas",
+                "UT" => "Utah",
+                "VA" => "Virginia",
+                "VI" => "Virgin Islands",
+                "VT" => "Vermont",
+                "WA" => "Washington",
+                "WI" => "Wisconsin",
+                "WV" => "West Virginia",
+                "WY" => "Wyoming" }
 
   # Columns
   TX_FREQUENCY = 0
@@ -110,13 +110,13 @@ class NerepeatersImporter < Importer
   MODE = 4
   CALL_SIGN = 5
   ACCESS_CODE = 6
-  ACCESS_CODE_2 = 7
+  ACCESS_CODE_2 = 7 # What is this exactly? We are ignoring it for now.
   COUNTY = 9 # Is it county? no idea. We are not importing it.
   COMMENT = 12
 
   def import_repeater(raw_repeater)
     repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[CALL_SIGN].upcase,
-      tx_frequency: raw_repeater[TX_FREQUENCY].to_f * 10**6)
+                                              tx_frequency: raw_repeater[TX_FREQUENCY].to_f * 10 ** 6)
 
     # Only update repeaters that were sourced from nerepeater.com.
     if repeater.persisted? && repeater.source != SOURCE
@@ -129,6 +129,7 @@ class NerepeatersImporter < Importer
     repeater.locality = raw_repeater[CITY]
     repeater.name = "#{repeater.locality} #{repeater.call_sign}"
     import_mode(repeater, raw_repeater)
+    import_access_code(repeater, raw_repeater)
 
     fill_band(repeater)
     repeater.country_id = "us"
@@ -141,21 +142,21 @@ class NerepeatersImporter < Importer
   def import_rx_frequency(repeater, raw_repeater)
     # https://rptr.amateur-radio.net/offset.html
     # TODO: make this generic if there are generic rules.
-    offsets = [{min: 28_000_000, max: 29_700_000, neg_offset: -100_000}, # TODO: find the exact ones, I just guessed here.
-      {min: 51_000_000, max: 52_000_000, neg_offset: -500_000},
-      {min: 52_000_000, max: 54_000_000, neg_offset: -1_000_000},
-      {min: 144_510_000, max: 144_890_000, pos_offset: +600_000},
-      {min: 145_110_000, max: 145_490_000, neg_offset: -600_000},
-      {min: 146_000_000, max: 146_390_000, pos_offset: +600_000},
-      {min: 146_400_000, max: 146_500_000, pos_offset: +1_000_000, neg_offset: -1_500_000},
-      {min: 146_610_000, max: 147_390_000, pos_offset: +600_000, neg_offset: -600_000}, # This one is modified because the data wasn't consistent.
-      {min: 147_400_000, max: 147_600_000, neg_offset: -1_000_000},
-      {min: 147_600_000, max: 147_990_000, neg_offset: -600_000},
-      {min: 223_000_000, max: 225_000_000, neg_offset: -1_600_000},
-      {min: 440_000_000, max: 450_000_000, pos_offset: 5_000_000, neg_offset: -5_000_000},
-      {min: 902_000_000, max: 928_000_000, neg_offset: -12_000_000},
-      {min: 927_000_000, max: 928_000_000, neg_offset: -25_000_000},
-      {min: 1240_000_000, max: 1300_000_000, neg_offset: -20_000_000}] # TODO: find the exact ones, I just guessed here.
+    offsets = [{ min: 28_000_000, max: 29_700_000, neg_offset: -100_000 }, # TODO: find the exact ones, I just guessed here.
+               { min: 51_000_000, max: 52_000_000, neg_offset: -500_000 },
+               { min: 52_000_000, max: 54_000_000, neg_offset: -1_000_000 },
+               { min: 144_510_000, max: 144_890_000, pos_offset: +600_000 },
+               { min: 145_110_000, max: 145_490_000, neg_offset: -600_000 },
+               { min: 146_000_000, max: 146_390_000, pos_offset: +600_000 },
+               { min: 146_400_000, max: 146_500_000, pos_offset: +1_000_000, neg_offset: -1_500_000 },
+               { min: 146_610_000, max: 147_390_000, pos_offset: +600_000, neg_offset: -600_000 }, # This one is modified because the data wasn't consistent.
+               { min: 147_400_000, max: 147_600_000, neg_offset: -1_000_000 },
+               { min: 147_600_000, max: 147_990_000, neg_offset: -600_000 },
+               { min: 223_000_000, max: 225_000_000, neg_offset: -1_600_000 },
+               { min: 440_000_000, max: 450_000_000, pos_offset: 5_000_000, neg_offset: -5_000_000 },
+               { min: 902_000_000, max: 928_000_000, neg_offset: -12_000_000 },
+               { min: 927_000_000, max: 928_000_000, neg_offset: -25_000_000 },
+               { min: 1240_000_000, max: 1300_000_000, neg_offset: -20_000_000 }] # TODO: find the exact ones, I just guessed here.
     if raw_repeater[RX_OFFSET].in? %w[- +] # Standard offsets.
       offsets.each do |offset|
         if repeater.tx_frequency >= offset[:min] && repeater.tx_frequency <= offset[:max]
@@ -281,15 +282,66 @@ class NerepeatersImporter < Importer
     end
   end
 
+  def import_access_code(repeater, raw_repeater)
+    access_code = raw_repeater[ACCESS_CODE]
+    if access_code.blank?
+      access_code = raw_repeater[ACCESS_CODE_2]
+    end
+    access_code = access_code.strip if access_code.respond_to? :strip
+
+    if (repeater.fm? || repeater.nfm?) && access_code.to_f&.in?(Repeater::CTCSS_TONES)
+      repeater.fm_ctcss_tone = access_code.to_f
+    elsif repeater.modes2 == Set[:fm, :p25] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
+      # TODO: import the first part correctly, it's likely for P25.
+      repeater.fm_ctcss_tone = access_code.split("/").second.to_f
+    elsif repeater.modes2 == Set[:fm, :nxdn] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
+      # TODO: import the first part correctly, it's likely for NXDN.
+      repeater.fm_ctcss_tone = access_code.split("/").second.to_f
+    elsif repeater.modes2 == Set[:nfm, :nxdn] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
+      # TODO: import the first part correctly, it's likely for NXDN.
+      repeater.fm_ctcss_tone = access_code.split("/").second.to_f
+    elsif repeater.modes2 == Set[:nfm, :p25] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
+      # TODO: import the first part correctly, it's likely for P25.
+      repeater.fm_ctcss_tone = access_code.split("/").second.to_f
+    elsif repeater.modes2 == Set[:fm, :p25] && access_code.in?(%w[NAC353/D244])
+      # TODO: import the first part correctly, it's likely for P25.
+      # TODO: what's the second part? What are these D numbers?
+    elsif repeater.modes2 == Set[:nfm, :p25] && access_code.in?(%w[NAC250/D244])
+      # TODO: import the first part correctly, it's likely for P25.
+      # TODO: what's the second part? What are these D numbers?
+    elsif repeater.modes2 == Set[:fm, :dstar] &&
+      access_code.split("/").first.in?(%w[A B C]) &&
+      access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
+      repeater.fm_ctcss_tone = access_code.split("/").second.to_f
+      repeater.dstar_port = access_code.split("/").first.in?(%w[A B C])
+    elsif repeater.dmr? && (access_code =~ /CC[0-9]/ || access_code =~ /CC1[0-5]/)
+      repeater.dmr_color_code = access_code.gsub("CC", "").to_i
+    elsif repeater.dmr? && access_code.in?(Repeater::DMR_COLOR_CODES)
+      repeater.dmr_color_code = access_code
+    elsif repeater.dstar? && access_code.in?(%w[A B C])
+      repeater.dstar_port = access_code
+    elsif repeater.nxdn? && access_code.in?(%w[RAN1 RAN11 RAN2])
+      # TODO: import these correctly.
+    elsif repeater.p25? && access_code.in?(["NAC223"])
+      # TODO: import these correctly.
+    elsif (repeater.fm? || repeater.nfm?) && access_code.in?(%w[D244 D432 D023 D073 D411 D031 D051 D245 D271])
+      # TODO: what is this?
+    elsif access_code.blank?
+      # Nothing we can do here really, we have no idea.
+    else
+      raise "Unknown access code \"#{access_code}\" (extracted form \"#{raw_repeater[ACCESS_CODE]}\" and \"#{raw_repeater[ACCESS_CODE_2]}\") when importing repeater #{raw_repeater}"
+    end
+  end
+
   def fill_band(repeater)
     # TODO: this can probably be generalized and moved to the Repeater model.
-    bands = [{min: 28_000_000, max: 29_700_000, band: Repeater::BAND_10M},
-      {min: 50_000_000, max: 54_000_000, band: Repeater::BAND_6M},
-      {min: 144_000_000, max: 148_000_000, band: Repeater::BAND_2M},
-      {min: 222_000_000, max: 225_000_000, band: Repeater::BAND_1_25M},
-      {min: 420_000_000, max: 450_000_000, band: Repeater::BAND_70CM},
-      {min: 902_000_000, max: 928_000_000, band: Repeater::BAND_33CM},
-      {min: 1240_000_000, max: 1300_000_000, band: Repeater::BAND_23CM}]
+    bands = [{ min: 28_000_000, max: 29_700_000, band: Repeater::BAND_10M },
+             { min: 50_000_000, max: 54_000_000, band: Repeater::BAND_6M },
+             { min: 144_000_000, max: 148_000_000, band: Repeater::BAND_2M },
+             { min: 222_000_000, max: 225_000_000, band: Repeater::BAND_1_25M },
+             { min: 420_000_000, max: 450_000_000, band: Repeater::BAND_70CM },
+             { min: 902_000_000, max: 928_000_000, band: Repeater::BAND_33CM },
+             { min: 1240_000_000, max: 1300_000_000, band: Repeater::BAND_23CM }]
     bands.each do |band|
       if repeater.tx_frequency >= band[:min] && repeater.tx_frequency < band[:max]
         repeater.band = band[:band]
