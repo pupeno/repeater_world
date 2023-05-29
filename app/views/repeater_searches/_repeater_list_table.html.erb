@@ -61,7 +61,7 @@ You should have received a copy of the GNU Affero General Public License along w
             <%= repeater.band %>
           </td>
           <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500">
-            <%= repeater.modes.join(", ") %>
+            <%= modes(repeater).join(", ") %>
           </td>
           <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500">
             <%= render partial: "shared/card/boolean", locals: { value: repeater.operational } %>

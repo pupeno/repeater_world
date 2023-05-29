@@ -24,7 +24,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <% end %>
         <%= card_entry(label: "Keeper", value: repeater.call_sign, optional: true) %>
         <%= card_entry(label: "Band", value: repeater.band, optional: true) %>
-        <%= card_entry(label: "Modes", value: repeater.modes.join(", ")) %>
+        <%= card_entry(label: "Modes", value: modes(repeater).join(", ")) %>
         <%= card_entry(label: "Operational", value: repeater.operational) %>
         <%= card_entry(label: "TX Frequency", value: repeater.tx_frequency) do %>
           <%= frequency_in_mhz(repeater.tx_frequency) %>
@@ -81,7 +81,7 @@ You should have received a copy of the GNU Affero General Public License along w
               info: "<h1 class='font-bold text-lg link'>#{repeater.name}</h1>
                 <p class='link'>#{repeater.call_sign}</p>
                 <p>Band: <span class='font-bold'>#{h repeater.band}</span></p>
-                <p>Modes: <span class='font-bold'>#{h repeater.modes.join(", ")}</span></p>
+                <p>Modes: <span class='font-bold'>#{h modes(repeater).join(", ")}</span></p>
                 <p>Frequency: <span class='font-bold'>#{h frequency_in_mhz(repeater.tx_frequency)} #{h frequency_offset_in_khz(repeater.tx_frequency, repeater.rx_frequency)}</span></p>
                 <p>Location: <span class='font-bold'>#{h repeater.location_in_words}</span></p>
                 <p>Lat: <span class='font-bold'>#{h repeater.latitude}</span>,
