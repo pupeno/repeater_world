@@ -22,4 +22,17 @@ module RepeaterHelper
     raw_offset = ((rx_frequency.to_f - tx_frequency) / (10**3)).to_i
     "#{sign}#{raw_offset}kHz"
   end
+
+  def modes(repeater)
+    modes = []
+    modes << "FM" if repeater.fm?
+    modes << "NFM" if repeater.nfm?
+    modes << "D-Star" if repeater.dstar?
+    modes << "Fusion" if repeater.fusion?
+    modes << "DMR" if repeater.dmr?
+    modes << "NXDN" if repeater.nxdn?
+    modes << "P25" if repeater.p25?
+    modes << "TETRA" if repeater.tetra?
+    modes
+  end
 end

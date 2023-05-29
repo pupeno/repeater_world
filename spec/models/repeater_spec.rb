@@ -88,6 +88,7 @@ end
 #  dmr_color_code             :integer
 #  dmr_network                :string
 #  dstar                      :boolean
+#  dstar_port                 :string
 #  fm                         :boolean
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean
@@ -98,6 +99,7 @@ end
 #  locality                   :string
 #  location                   :geography        point, 4326
 #  name                       :string
+#  nfm                        :boolean
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean

@@ -23,14 +23,14 @@ You should have received a copy of the GNU Affero General Public License along w
           <%= link_to repeater.name, repeater, class: "link" %>
         </h3>
         <p class="mt-1 max-w-2xl text-sm text-gray-500">
-          <%= repeater.band %> <%= repeater.modes.to_sentence %>
+          <%= repeater.band %> <%= modes(repeater).to_sentence %>
         </p>
       </div>
       <div class="border-t border-gray-200 px-2 py-5 sm:p-0">
         <dl class="sm:divide-y sm:divide-gray-200">
           <%= card_entry(label: "Call Sign", value: repeater.call_sign ) %>
           <%= card_entry(label: "Band", value: repeater.band, optional: true) %>
-          <%= card_entry(label: "Modes", value: repeater.modes.join(", ") ) %>
+          <%= card_entry(label: "Modes", value: modes(repeater).join(", ") ) %>
           <%= card_entry(label: "Operational", value: repeater.operational) %>
           <%= card_entry(label: "TX Frequency", value: repeater.tx_frequency) do %>
             <%= frequency_in_mhz(repeater.tx_frequency) %>
