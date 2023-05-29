@@ -50,7 +50,7 @@ RSpec.describe NerepeatersImporter do
       repeater.source = nil
       repeater.redistribution_limitations = nil
       repeater.save!
-      repeater = Repeater.find_by(call_sign: "WM1P")
+      repeater = Repeater.find_by(call_sign: "AA1TT")
       repeater.band = Repeater::BAND_23CM
       repeater.save!
       create(:repeater, :full, call_sign: "N1PAH", tx_frequency: 145_000_001, source: NerepeatersImporter::SOURCE)
@@ -64,8 +64,8 @@ RSpec.describe NerepeatersImporter do
       expect(Repeater.where(call_sign: "N1PAH").count).to eq(5)
       repeater = Repeater.find_by(call_sign: "N1MYY") # This one didn't change.
       expect(repeater.band).to eq(Repeater::BAND_23CM)
-      repeater = Repeater.find_by(call_sign: "WM1P") # This one did
-      expect(repeater.band).to eq(Repeater::BAND_6M)
+      repeater = Repeater.find_by(call_sign: "AA1TT") # This one did
+      expect(repeater.band).to eq(Repeater::BAND_1_25M)
       repeater = Repeater.find_by(call_sign: "N1PAH", tx_frequency: 145_000_001) # This one got deleted
       expect(repeater).to be(nil)
     end
