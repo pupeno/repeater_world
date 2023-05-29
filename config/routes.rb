@@ -29,6 +29,8 @@ Rails.application.routes.draw do
   end
   resources :repeaters, only: [:show]
   resources :suggested_repeaters, only: [:new, :create]
+  get "/directory", to: "directory#countries"
+  get "/directory/:country_id", to: "directory#by_country", as: "directory_by_country"
 
   # User and profile.
   devise_for :users
@@ -89,6 +91,8 @@ end
 #                                 repeater GET    /repeaters/:id(.:format)                                                                          repeaters#show
 #                      suggested_repeaters POST   /suggested_repeaters(.:format)                                                                    suggested_repeaters#create
 #                   new_suggested_repeater GET    /suggested_repeaters/new(.:format)                                                                suggested_repeaters#new
+#                                directory GET    /directory(.:format)                                                                              directory#countries
+#                     directory_by_country GET    /directory/:country_id(.:format)                                                                  directory#by_country
 #                         new_user_session GET    /users/sign_in(.:format)                                                                          devise/sessions#new
 #                             user_session POST   /users/sign_in(.:format)                                                                          devise/sessions#create
 #                     destroy_user_session DELETE /users/sign_out(.:format)                                                                         devise/sessions#destroy
