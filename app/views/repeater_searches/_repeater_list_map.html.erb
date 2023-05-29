@@ -22,7 +22,7 @@ You should have received a copy of the GNU Affero General Public License along w
          info: "<h1 class='font-bold text-lg link'>#{link_to repeater.name, repeater}</h1>
                 <p class='link'>#{link_to repeater.call_sign, repeater}</p>
                 <p>Band: <span class='font-bold'>#{h repeater.band}</span></p>
-                <p>Modes: <span class='font-bold'>#{h repeater.modes.join(", ")}</span></p>
+                <p>Modes: <span class='font-bold'>#{h modes(repeater).join(", ")}</span></p>
                 <p>Frequency: <span class='font-bold'>#{h frequency_in_mhz(repeater.tx_frequency)} #{h frequency_offset_in_khz(repeater.tx_frequency, repeater.rx_frequency)}</span></p>
                 <p>Location: <span class='font-bold'>#{h repeater.location_in_words}</span></p>
                 <p>Lat: <span class='font-bold'>#{h repeater.latitude}</span>,

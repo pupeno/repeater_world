@@ -18,11 +18,13 @@ class Repeater < ApplicationRecord
     BAND_6M = "6m",
     BAND_4M = "4m",
     BAND_2M = "2m",
+    BAND_1_25M = "1.25m",
     BAND_70CM = "70cm",
+    BAND_33CM = "33cm",
     BAND_23CM = "23cm"
   ]
 
-  MODES = %w[fm dstar fusion dmr nxdn p25 tetra]
+  MODES = %w[fm nfm dstar fusion dmr nxdn p25 tetra]
 
   CTCSS_TONES = [
     67.0, 69.3, 71.9, 74.4, 77.0, 79.7, 82.5, 85.4, 88.5, 91.5, 94.8, 97.4, 100.0, 103.5, 107.2, 110.9, 114.8, 118.8,
@@ -63,12 +65,15 @@ class Repeater < ApplicationRecord
   end
 
   def modes
-    modes = []
-    modes << "FM" if fm?
-    modes << "D-Star" if dstar?
-    modes << "Fusion" if fusion?
-    modes << "DMR" if dmr?
-    modes << "NXDN" if nxdn?
+    modes = Set.new
+    modes << :fm if fm?
+    modes << :nfm if nfm?
+    modes << :dstar if dstar?
+    modes << :fusion if fusion?
+    modes << :dmr if dmr?
+    modes << :nxdn if nxdn?
+    modes << :p25 if p25?
+    modes << :tetra if tetra?
     modes
   end
 
@@ -95,6 +100,7 @@ class Repeater < ApplicationRecord
       field :band
       field :tx_frequency
       field :fm
+      field :nfm
       field :dstar
       field :fusion
       field :dmr
@@ -120,6 +126,7 @@ end
 #  dmr_color_code             :integer
 #  dmr_network                :string
 #  dstar                      :boolean
+#  dstar_port                 :string
 #  fm                         :boolean
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean
@@ -130,6 +137,7 @@ end
 #  locality                   :string
 #  location                   :geography        point, 4326
 #  name                       :string
+#  nfm                        :boolean
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean
