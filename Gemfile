@@ -32,7 +32,7 @@ gem "jbuilder", "~> 2.11"
 gem "kaminari", "~> 1.2"
 gem "pg", "~> 1.4" # Use postgresql as the database for Active Record
 gem "postmark-rails", "~> 0.22"
-gem "puma", "~> 6.1" # Use the Puma web server [https://github.com/puma/puma]
+gem "puma", "~> 6.3" # Use the Puma web server [https://github.com/puma/puma]
 gem "rails", "~> 7.0" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails_admin", "~> 3.1"
 gem "sassc-rails", "~> 2.1" # Asked by rails_admin... but it's not a dependency??? the world is complicated.
