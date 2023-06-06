@@ -23,18 +23,18 @@ class Importer
   end
 
   def import
-    @logger.info "Importing repeaters from #{source}"
+    @logger.info "Importing repeaters from #{self.class.source}"
     ignored_due_to_source_count, created_or_updated_ids, repeaters_deleted_count = import_data
-    @logger.info "Done importing from #{source}. #{created_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{repeaters_deleted_count} deleted."
+    @logger.info "Done importing from #{self.class.source}. #{created_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{repeaters_deleted_count} deleted."
+  end
+
+  def self.source
+    raise NotImplementedError.new("Importer subclasses must implement this method.")
   end
 
   private
 
   def import_data
-    raise NotImplementedError.new("Importer subclasses must implement this method.")
-  end
-
-  def source
     raise NotImplementedError.new("Importer subclasses must implement this method.")
   end
 

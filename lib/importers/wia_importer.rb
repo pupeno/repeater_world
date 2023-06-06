@@ -13,6 +13,10 @@
 # <https://www.gnu.org/licenses/>.
 
 class WiaImporter < Importer
+  def self.source
+    "https://www.wia.org.au/members/repeaters/data/"
+  end
+
   private
 
   EXPORT_URL = "https://www.wia.org.au/members/repeaters/data/"
@@ -40,6 +44,8 @@ class WiaImporter < Importer
       rescue
         raise "Failed to import record on line #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
       end
+
+      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).delete_all
     end
 
     [ignored_due_to_source_count, created_or_updated_ids, repeaters_deleted_count]
@@ -55,8 +61,8 @@ class WiaImporter < Importer
     repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
 
     # Only update repeaters that were sourced from this same source.
-    if repeater.persisted? && repeater.source != source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{source.inspect}"
+    if repeater.persisted? && repeater.source != self.class.source
+      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
       return [:ignored_due_to_source, repeater]
     end
     repeater.name = raw_repeater[:mnemonic] if raw_repeater[:mnemonic].present? && raw_repeater[:mnemonic].strip != "-"
@@ -103,7 +109,7 @@ class WiaImporter < Importer
     repeater.notes = notes.compact.join("\n")
 
     repeater.country_id = "au"
-    repeater.source = source
+    repeater.source = self.class.source
     repeater.save!
 
     [:created_or_updated, repeater]
@@ -125,7 +131,7 @@ class WiaImporter < Importer
 
   def get_pdf_url
     if @pdf_url.blank?
-      wia_html_url = download_file(EXPORT_URL, "wia.html");
+      wia_html_url = download_file(EXPORT_URL, "wia.html")
       html = File.read(wia_html_url)
       doc = Nokogiri::HTML(html)
       link = doc.css('a[href$=".pdf"]').first
@@ -137,9 +143,5 @@ class WiaImporter < Importer
       @pdf_url = URI.join(EXPORT_URL, link["href"].gsub(" ", "%20")).to_s # TODO: find a better way to achieve this that gsub.
     end
     @pdf_url
-  end
-
-  def source
-    "https://www.wia.org.au/members/repeaters/data/"
   end
 end
