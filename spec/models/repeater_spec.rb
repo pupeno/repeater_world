@@ -109,12 +109,12 @@ end
 #  region                     :string
 #  rx_antenna                 :string
 #  rx_antenna_polarization    :string
-#  rx_frequency               :integer          not null
+#  rx_frequency               :bigint           not null
 #  source                     :string
 #  tetra                      :boolean
 #  tx_antenna                 :string
 #  tx_antenna_polarization    :string
-#  tx_frequency               :integer          not null
+#  tx_frequency               :bigint           not null
 #  tx_power                   :integer
 #  utc_offset                 :string
 #  web_site                   :string
