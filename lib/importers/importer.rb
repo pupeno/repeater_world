@@ -23,15 +23,25 @@ class Importer
   end
 
   def import
-    raise NotImplementedError.new("Importer subclasses must implement #import")
+    @logger.info "Importing repeaters from #{self.class.source}"
+    ignored_due_to_source_count, created_or_updated_ids, repeaters_deleted_count = import_data
+    @logger.info "Done importing from #{self.class.source}. #{created_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{repeaters_deleted_count} deleted."
+  end
+
+  def self.source
+    raise NotImplementedError.new("Importer subclasses must implement this method.")
   end
 
   private
 
+  def import_data
+    raise NotImplementedError.new("Importer subclasses must implement this method.")
+  end
+
   def download_file(url, dest)
     dest = File.join(@working_directory, dest)
     if !File.exist?(dest)
-      @logger.info "Downloading #{url}"
+      @logger.info "Downloading #{url} to #{dest}"
       dirname = File.dirname(dest)
       FileUtils.mkdir_p(dirname) if !File.directory?(dirname)
       src_stream = URI.parse(url).open({"User-Agent" => USER_AGENT})
