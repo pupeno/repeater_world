@@ -26,7 +26,11 @@ class RepeaterSearchesController < ApplicationController
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s] || {}))
     if repeater_search_params[:s].present?
       @repeaters = @repeater_search.run
-      @repeaters = @repeaters.page(params[:p] || 1) if @selected_tab != "map"
+      @repeaters = if @selected_tab == "map"
+        @repeaters.where("location IS NOT NULL")
+      else
+        @repeaters.page(params[:p] || 1)
+      end
     end
 
     if params[:export]
@@ -80,7 +84,11 @@ class RepeaterSearchesController < ApplicationController
       @repeater_search.assign_attributes(repeater_search_params[:s])
     end
     @repeaters = @repeater_search.run
-    @repeaters = @repeaters.page(params[:p] || 1) if @selected_tab != "map"
+    @repeaters = if @selected_tab == "map"
+      @repeaters.where("location IS NOT NULL")
+    else
+      @repeaters.page(params[:p] || 1)
+    end
     if params[:export]
       @export_url = export_repeater_search_url(@repeater_search, e: repeater_search_params[:e])
     end
