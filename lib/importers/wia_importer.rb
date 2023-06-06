@@ -69,7 +69,7 @@ class WiaImporter < Importer
     repeater.name ||= "#{raw_repeater[:location]} #{raw_repeater[:call]}"
 
     repeater.rx_frequency = raw_repeater[:input].to_f * 10**6
-    repeater.tx_power = raw_repeater[:power].to_i if raw_repeater[:power].is_a? Numeric
+    repeater.tx_power = raw_repeater[:erp] if raw_repeater[:erp].is_a? Numeric
     repeater.fm = true # Massive assumption here, since it's not part of the data.
     repeater.fm_ctcss_tone = raw_repeater[:tone] if raw_repeater[:tone].is_a? Numeric
 
@@ -79,7 +79,7 @@ class WiaImporter < Importer
       repeater.latitude = raw_repeater[:latitude]
       repeater.longitude = raw_repeater[:longitude]
     end
-    repeater.altitude_asl = raw_repeater[:hasl]
+    repeater.altitude_asl = raw_repeater[:hasl] if raw_repeater[:hasl].is_a? Numeric
 
     # According to https://www.wia.org.au/members/repeaters/data/documents/Repeater%20Directory%20230304.pdf
     # Statuses are:
@@ -88,14 +88,14 @@ class WiaImporter < Importer
     # P: Proposed
     # X: Currently off Air
     # U: License Pending
-    repeater.operational = raw_repeater[:status] == "O"
+    repeater.operational = raw_repeater[:s] == "O"
 
     notes = []
     note_numbers = [raw_repeater[:notes], raw_repeater[15]].compact.join(", ") # They used comas to separate notes in the CSV, so they ended up as different columns.
     if note_numbers.present?
       notes << "#{note_numbers} in #{get_pdf_url}"
     end
-    notes << case raw_repeater[:status]
+    notes << case raw_repeater[:s]
     when "T"
       "Status: Testing"
     when "P"
