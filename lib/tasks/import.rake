@@ -18,6 +18,7 @@ task :import_repeaters, [:stdout] => :environment do |_t, _args|
   UkrepeatersImporter.new.import
   SralfiImporter.new.import
   NerepeatersImporter.new.import
+  WiaImporter.new.import
 end
 
 desc "Import repeaters from ukrepeaters.net, https://ukrepeater.net/csvfiles.html"
@@ -36,4 +37,10 @@ desc "Import repeaters from nerepeaters.com, http://www.nerepeaters.com"
 task :import_nerepeaters, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
   NerepeatersImporter.new.import
+end
+
+desc "Import repeaters from WIA, https://www.wia.org.au"
+task :import_wiarepeaters, [:stdout] => :environment do |_t, _args|
+  Rails.logger = Logger.new($stdout)
+  WiaImporter.new.import
 end

@@ -33,6 +33,11 @@ export default class extends Controller {
     let bounds = new google.maps.LatLngBounds()
 
     const markers = this.markersValue.map(marker => {
+      if(typeof marker.lat !== "number" || typeof marker.lng !== "number") {
+        console.log("Invalid marker: ", marker)
+        return null
+      }
+
       let isInfoWindowOpen = false
       const infoWindow = new google.maps.InfoWindow({
         content: marker.info,
@@ -53,7 +58,7 @@ export default class extends Controller {
       bounds.extend(new google.maps.LatLng(marker.lat, marker.lng))
 
       return mapMarker
-    })
+    }).filter(x => x)
 
     new MarkerClusterer({markers, map})
 

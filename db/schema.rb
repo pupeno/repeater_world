@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_28_193613) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_06_101116) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -81,8 +81,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_28_193613) do
     t.string "keeper"
     t.boolean "operational"
     t.text "notes"
-    t.integer "tx_frequency", null: false
-    t.integer "rx_frequency", null: false
+    t.bigint "tx_frequency", null: false
+    t.bigint "rx_frequency", null: false
     t.boolean "fm"
     t.decimal "fm_ctcss_tone"
     t.boolean "fm_tone_squelch"

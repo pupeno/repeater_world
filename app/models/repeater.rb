@@ -21,7 +21,27 @@ class Repeater < ApplicationRecord
     BAND_1_25M = "1.25m",
     BAND_70CM = "70cm",
     BAND_33CM = "33cm",
-    BAND_23CM = "23cm"
+    BAND_23CM = "23cm",
+    BAND_13CM = "13cm",
+    BAND_9CM = "9cm",
+    BAND_6CM = "6cm",
+    BAND_3CM = "3cm"
+  ]
+
+  # These are a mix of various band plans to ensure coverage. It can be expanded to cover more regions.
+  BAND_FREQUENCIES = [
+    {min: 28_000_000, max: 29_700_000, band: BAND_10M},
+    {min: 50_000_000, max: 54_000_000, band: BAND_6M},
+    {min: 70_000_000, max: 70_500_000, band: BAND_4M},
+    {min: 144_000_000, max: 148_000_000, band: BAND_2M},
+    {min: 222_000_000, max: 225_000_000, band: BAND_1_25M},
+    {min: 420_000_000, max: 450_000_000, band: BAND_70CM},
+    {min: 902_000_000, max: 928_000_000, band: BAND_33CM},
+    {min: 1_240_000_000, max: 1_300_000_000, band: BAND_23CM},
+    {min: 2_300_000_000, max: 2_450_000_000, band: BAND_13CM},
+    {min: 3_300_000_000, max: 3_600_000_000, band: BAND_9CM},
+    {min: 5_650_000_000, max: 5_850_000_000, band: BAND_6CM},
+    {min: 10_000_000_000, max: 10_500_000_000, band: BAND_3CM}
   ]
 
   MODES = %w[fm nfm dstar fusion dmr nxdn p25 tetra]
@@ -43,6 +63,8 @@ class Repeater < ApplicationRecord
   validates :rx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/flexpointtech/repeater_world/issues/20
   validates :fm_ctcss_tone, inclusion: CTCSS_TONES, allow_blank: true
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
+
+  before_validation :ensure_band_is_set
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
@@ -90,6 +112,17 @@ class Repeater < ApplicationRecord
       value = "http://#{value}"
     end
     super(value)
+  end
+
+  def ensure_band_is_set
+    if band.blank? && tx_frequency.present?
+      BAND_FREQUENCIES.each do |band_frequency|
+        if tx_frequency >= band_frequency[:min] && tx_frequency <= band_frequency[:max]
+          self.band = band_frequency[:band]
+          break
+        end
+      end
+    end
   end
 
   rails_admin do
@@ -147,12 +180,12 @@ end
 #  region                     :string
 #  rx_antenna                 :string
 #  rx_antenna_polarization    :string
-#  rx_frequency               :integer          not null
+#  rx_frequency               :bigint           not null
 #  source                     :string
 #  tetra                      :boolean
 #  tx_antenna                 :string
 #  tx_antenna_polarization    :string
-#  tx_frequency               :integer          not null
+#  tx_frequency               :bigint           not null
 #  tx_power                   :integer
 #  utc_offset                 :string
 #  web_site                   :string
