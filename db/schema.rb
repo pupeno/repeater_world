@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_06_101116) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_16_153823) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -119,6 +119,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_06_101116) do
     t.boolean "fm_tone_burst"
     t.boolean "nfm"
     t.string "dstar_port"
+    t.datetime "geocoded_at"
+    t.string "geocoded_by"
+    t.string "geocoded_address"
+    t.string "geocoded_locality"
+    t.string "geocoded_region"
+    t.string "geocoded_post_code"
+    t.string "geocoded_country_id"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["country_id"], name: "index_repeaters_on_country_id"
     t.index ["location"], name: "index_repeaters_on_location", using: :gist
