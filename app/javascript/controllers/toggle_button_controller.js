@@ -19,11 +19,8 @@ export default class extends Controller {
   connect() {
     this.checkbox = this.element.querySelectorAll('input[type=checkbox]')[0]
     this.label = this.element
-
     this.checkbox.addEventListener("change", this.updateButtonState.bind(this))
-
     this.updateButtonState()
-    // this.label.classList.remove("bg-gray-200", "text-gray-800")
   }
 
   disconnect() {
