@@ -26,8 +26,8 @@ module ApplicationHelper
     "https://www.gravatar.com/avatar/#{Digest::MD5.hexdigest email}?d=mp"
   end
 
-  def badge_checkbox(form, name, label)
-    render partial: "shared/badge_checkbox",
+  def toggle_button(form, name, label)
+    render partial: "shared/toggle_button",
       locals: {form: form, name: name, label: label}
   end
 
