@@ -12,9 +12,13 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div data-controller="badge-checkbox" class="inline-block">
-  <%= form.check_box name, class: "hidden" %>
-  <%= form.label name, label, class: "inline-flex items-center rounded-md m-px cursor-pointer
-                                      bg-gray-200 text-gray-800 transition-all
-                                      px-2.5 py-0.5 text-md font-medium" %>
-</div>
+<%= form.label name,
+               class: "inline-flex
+                       mx-1 py-3 px-3
+                       rounded-md
+                       text-sm font-semibold
+                       focus:outline-none",
+               data: { controller: "toggle-button" } do %>
+  <%= form.check_box name, class: "sr-only", aria: { labelledby: "#{name}-actual-label" } %>
+  <span id="<%= "#{name}-actual-label" %>"><%= label %></span>
+<% end %>

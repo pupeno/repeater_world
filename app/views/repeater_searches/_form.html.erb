@@ -48,20 +48,26 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
   <% end %>
 
-  <div class="my-3">
+  <div class="my-3"
+       data-controller="multi-select-toggle-button-group"
+       data-multi-select-toggle-button-group-all-value="band_all">
     Band:
+    <%= toggle_button form, "band_all", "All" %>
     <% RepeaterSearch::BANDS.each do |band| %>
-      <%= badge_checkbox form, "band_#{band}", band %>
+      <%= toggle_button form, "band_#{band}", band %>
     <% end %>
   </div>
 
-  <div class="my-3">
+  <div class="my-3"
+       data-controller="multi-select-toggle-button-group"
+       data-multi-select-toggle-button-group-all-value="mode_all">
     Mode:
-    <%= badge_checkbox form, :fm, "FM" %>
-    <%= badge_checkbox form, :dstar, "D-Star" %>
-    <%= badge_checkbox form, :fusion, "Fusion" %>
-    <%= badge_checkbox form, :dmr, "DMR" %>
-    <%= badge_checkbox form, :nxdn, "NXDN" %>
+    <%= toggle_button form, "mode_all", "All" %>
+    <%= toggle_button form, :fm, "FM" %>
+    <%= toggle_button form, :dstar, "D-Star" %>
+    <%= toggle_button form, :fusion, "Fusion" %>
+    <%= toggle_button form, :dmr, "DMR" %>
+    <%= toggle_button form, :nxdn, "NXDN" %>
   </div>
 
   <div class="my-3" data-controller="distance-to-coordinates">
