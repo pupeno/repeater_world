@@ -21,6 +21,8 @@ services:
       - repeater.world
     envVars:
       - fromGroup: repeater_world
+      - key: SECRET_KEY_BASE
+        sync: false
       - key: DATABASE_URL
         fromDatabase:
           name: repeater_world-db
@@ -46,6 +48,8 @@ services:
       - key: FATHOM_ID
         sync: false
       - key: GOOGLE_MAPS_API_KEY
+        sync: false
+      - key: POSTMARK_API_TOKEN
         sync: false
 # Uncomment this when starting to use proper background jobs.
 #  - type: worker
