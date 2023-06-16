@@ -45,6 +45,8 @@ services:
         sync: false
       - key: FATHOM_ID
         sync: false
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
 # Uncomment this when starting to use proper background jobs.
 #  - type: worker
 #    name: repeater_world-background
