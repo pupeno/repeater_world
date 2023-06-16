@@ -13,7 +13,7 @@
 # <https://www.gnu.org/licenses/>.
 
 desc "Import repeaters from all sources"
-task :import_repeaters, [:stdout] => :environment do |_t, _args|
+task :import_all, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
   UkrepeatersImporter.new.import
   SralfiImporter.new.import
