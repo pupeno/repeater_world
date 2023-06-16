@@ -20,29 +20,21 @@ class Api::Next::RepeatersController < ApplicationController
     # bit. Once we're happy with the model, we'll change the version to "v1" and then we'll be stuck with it.
 
     @repeaters = Repeater.all.includes(:country)
+    @fields = [
+      :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency, :fm, :nfm,
+      :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch, :dstar, :dstar_port, :fusion, :dmr, :dmr_color_code,
+      :dmr_network, :nxdn, :p25, :tetra, :latitude, :longitude, :grid_square, :address, :locality, :region,
+      :post_code, :country_id, :tx_power, :tx_antenna, :tx_antenna_polarization, :rx_antenna,
+      :rx_antenna_polarization, :altitude_asl, :altitude_agl, :bearing, :utc_offset, :channel, :notes, :source,
+      :redistribution_limitations, :external_id
+    ]
 
     respond_to do |format|
       format.json { render }
       format.csv do
-        columns = [
-          :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency, :fm, :fm_tone_burst,
-          :fm_ctcss_tone, :fm_tone_squelch, :dstar, :fusion, :dmr, :dmr_color_code, :dmr_network, :nxdn, :p25, :tetra,
-          :latitude, :longitude, :grid_square, :address, :locality, :region, :post_code, :country_id, :tx_power,
-          :tx_antenna, :tx_antenna_polarization, :rx_antenna, :rx_antenna_polarization, :altitude_asl, :altitude_agl,
-          :bearing, :utc_offset, :channel, :notes, :source, :redistribution_limitations, :external_id
-        ]
-
-        csv = CSV.generate(headers: columns, write_headers: true) do |csv|
+        csv = CSV.generate(headers: @fields, write_headers: true) do |csv|
           @repeaters.each do |repeater|
-            csv << [repeater.name, repeater.call_sign, repeater.web_site, repeater.keeper, repeater.band,
-              repeater.operational, repeater.tx_frequency, repeater.rx_frequency, repeater.fm, repeater.fm_tone_burst,
-              repeater.fm_ctcss_tone, repeater.fm_tone_squelch, repeater.dstar, repeater.fusion, repeater.dmr,
-              repeater.dmr_color_code, repeater.dmr_network, repeater.nxdn, repeater.p25, repeater.tetra,
-              repeater.latitude, repeater.longitude, repeater.grid_square, repeater.address, repeater.locality,
-              repeater.region, repeater.post_code, repeater.country_id, repeater.tx_power, repeater.tx_antenna,
-              repeater.tx_antenna_polarization, repeater.rx_antenna, repeater.rx_antenna_polarization,
-              repeater.altitude_asl, repeater.altitude_agl, repeater.bearing, repeater.utc_offset, repeater.channel,
-              repeater.notes, repeater.source, repeater.redistribution_limitations, repeater.external_id]
+            csv << @fields.map { |column| repeater.send(column) }
           end
         end
 
