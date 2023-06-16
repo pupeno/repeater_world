@@ -14,15 +14,15 @@
 
 class RepeaterGeocoder
   def geocode
-    Rails.logger.info "There are #{Repeater.count} repeaters in the database."
+    repeater_count = Repeater.count
+    Rails.logger.info "There are #{repeater_count} repeaters in the database."
 
     # Collect all repeaters that need geocoding.
     repeaters = Repeater.where(
       "(address IS NOT NULL OR
-        locality IS NULL OR
-        region IS NULL OR
-        post_code IS NULL OR
-        country_id IS NULL) AND
+        locality IS NOT NULL OR
+        region IS NOT NULL OR
+        post_code IS NOT NULL) AND
        (location IS NULL OR
         ST_DWithin(location, :point, :distance) OR
         (geocoded_at IS NOT NULL AND geocoded_at < :geocoded_at) OR
@@ -31,13 +31,15 @@ class RepeaterGeocoder
          region != geocoded_region OR
          post_code != geocoded_post_code OR
          country_id != geocoded_country_id))",
-      { point: Geo.to_wkt(Geo.point(0, 0)),
-        distance: 0.1,
-        geocoded_at: 1.year.ago }
+      {point: Geo.to_wkt(Geo.point(0, 0)),
+       distance: 0.1,
+       geocoded_at: 1.year.ago}
     ).includes(:country)
 
-    Rails.logger.info "There are #{repeaters.count} repeaters to be geocoded."
+    repeaters_to_geocode_count = repeaters.count
+    Rails.logger.info "There are #{repeaters_to_geocode_count} repeaters to be geocoded."
 
+    geocoded_repeater_count = 0
     repeaters.each do |repeater|
       geocode = Geocoder.search(repeater.location_in_words).first
       if geocode.present?
@@ -52,9 +54,13 @@ class RepeaterGeocoder
         repeater.geocoded_country_id = repeater.country_id
         repeater.save!
         Rails.logger.info "Geocoded #{repeater}."
+        geocoded_repeater_count += 1
       end
     end
 
     Rails.logger.info "Done geocoding repeaters."
+    {geocoded_repeater_count: geocoded_repeater_count,
+     repeaters_to_geocode_count: repeaters_to_geocode_count,
+     repeater_count: repeater_count}
   end
 end
