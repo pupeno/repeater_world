@@ -65,7 +65,7 @@ class IrtsImporter < Importer
 
   def import_repeater(row)
     call_sign = row[CALL_SIGN].text.strip.upcase
-    tx_frequency = row[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.first.to_f * 10 ** 6
+    tx_frequency = row[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.first.to_f * 10**6
 
     repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
 
@@ -77,7 +77,7 @@ class IrtsImporter < Importer
     repeater.name = repeater.call_sign
 
     repeater.channel = row[CHANNEL].text.strip
-    repeater.rx_frequency = row[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.second.to_f * 10 ** 6
+    repeater.rx_frequency = row[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.second.to_f * 10**6
     import_mode_access_code(repeater, row[ACCESS].text.strip, row[NOTES].text.strip)
     import_location(repeater, row[LOCATION])
     repeater.notes = row[NOTES].text.strip
@@ -92,13 +92,13 @@ class IrtsImporter < Importer
   def import_mode_access_code(repeater, access, notes)
     access_codes = access.split("/")
     access_codes.each do |access_code|
-      if access_code.to_f == 1750.0
+      if access_code.to_d == BigDecimal("1750.0")
         repeater.fm = true
         repeater.fm_tone_burst = true
       elsif access_code.to_f.in? Repeater::CTCSS_TONES
         repeater.fm = true
         repeater.fm_ctcss_tone = access_code.to_f
-      elsif access_code.to_f == 110 # Assuming it's a typo and should be 110.9.
+      elsif access_code.to_d == 110 # Assuming it's a typo and should be 110.9.
         repeater.fm = true
         repeater.fm_ctcss_tone = 110.9
       elsif access_code.strip == "Wires X"
@@ -139,12 +139,12 @@ class IrtsImporter < Importer
   end
 
   def import_location(repeater, location)
-    location = location.xpath('text()').map(&:text)
+    location = location.xpath("text()").map(&:text)
 
     repeater.grid_square = location.last
 
     address = location[0..-2].join(",")
-    address = address.split(",").map { |x| x.strip.gsub(/\s+/, " ").gsub("\u00A0", ' ') }
+    address = address.split(",").map { |x| x.strip.gsub(/\s+/, " ").tr("\u00A0", " ") }
 
     if address.size == 1
       if address[0].start_with? "Co"
@@ -158,6 +158,5 @@ class IrtsImporter < Importer
       repeater.locality = address[0..-2].join(",")
       repeater.region = address[-1]
     end
-
   end
 end
