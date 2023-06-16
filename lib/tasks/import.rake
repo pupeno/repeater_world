@@ -13,13 +13,14 @@
 # <https://www.gnu.org/licenses/>.
 
 desc "Import repeaters from all sources"
-task :import_repeaters, [:stdout] => :environment do |_t, _args|
+task :import_all, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
   UkrepeatersImporter.new.import
   SralfiImporter.new.import
   NerepeatersImporter.new.import
   WiaImporter.new.import
   IrtsImporter.new.import
+  RepeaterGeocoder.new.geocode
 end
 
 desc "Import repeaters from ukrepeaters.net, https://ukrepeater.net/csvfiles.html"
@@ -50,4 +51,10 @@ desc "Import repeaters from IRTS, https://www.irts.ie"
 task :import_irts, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
   IrtsImporter.new.import
+end
+
+desc "Geocode all non-geocoded repeaters"
+task :geocode_repeaters, [:stdout] => :environment do |_t, _args|
+  Rails.logger = Logger.new($stdout)
+  RepeaterGeocoder.new.geocode
 end

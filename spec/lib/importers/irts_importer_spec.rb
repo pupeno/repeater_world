@@ -28,7 +28,7 @@ RSpec.describe IrtsImporter do
     Dir.mktmpdir("IrtsImporter") do |dir|
       expect do
         IrtsImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(71)
+      end.to change { Repeater.count }.by(44)
 
       expect(Repeater.where(call_sign: "EI0IPG").count).to eq(1)
 

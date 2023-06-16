@@ -65,6 +65,11 @@ class IrtsImporter < Importer
 
   def import_repeater(row)
     call_sign = row[CALL_SIGN].text.strip.upcase
+
+    if call_sign.start_with? "GB"
+      return [:ignored_due_to_broken_record, nil] # GB repeaters are being imported from UKRepeater.net.
+    end
+
     tx_frequency = row[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.first.to_f * 10**6
 
     repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)

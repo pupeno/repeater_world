@@ -94,6 +94,12 @@ end
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
 #  fusion                     :boolean
+#  geocoded_address           :string
+#  geocoded_at                :datetime
+#  geocoded_by                :string
+#  geocoded_locality          :string
+#  geocoded_post_code         :string
+#  geocoded_region            :string
 #  grid_square                :string
 #  keeper                     :string
 #  locality                   :string
@@ -122,6 +128,7 @@ end
 #  updated_at                 :datetime         not null
 #  country_id                 :string
 #  external_id                :string
+#  geocoded_country_id        :string
 #
 # Indexes
 #
