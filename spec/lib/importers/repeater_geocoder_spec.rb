@@ -26,6 +26,8 @@ RSpec.describe RepeaterGeocoder do
     ])
     Geocoder::Lookup::Test.add_stub("Atlantis, Italy", [])
 
+    Repeater.delete_all
+
     # None of these should get geocoded.
     create(:repeater, name: "No address")
     create(:repeater, name: "Manual location", latitude: 40, longitude: -74, locality: "New York", country_id: "us")
