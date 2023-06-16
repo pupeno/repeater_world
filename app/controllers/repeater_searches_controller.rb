@@ -27,7 +27,8 @@ class RepeaterSearchesController < ApplicationController
     if repeater_search_params[:s].present?
       @repeaters = @repeater_search.run
       @repeaters = if @selected_tab == "map"
-        @repeaters.where("location IS NOT NULL")
+        # Adding a "where" seems to break the includes(:country) in RepeaterSearch#run.
+        @repeaters.where("location IS NOT NULL").includes(:country)
       else
         @repeaters.page(params[:p] || 1)
       end
