@@ -40,7 +40,7 @@ task :import_nerepeaters, [:stdout] => :environment do |_t, _args|
 end
 
 desc "Import repeaters from WIA, https://www.wia.org.au"
-task :import_wiarepeaters, [:stdout] => :environment do |_t, _args|
+task :import_wia, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
   WiaImporter.new.import
 end
