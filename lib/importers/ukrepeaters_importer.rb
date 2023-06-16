@@ -189,8 +189,6 @@ class UkrepeatersImporter < Importer
 
       repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
 
-      @logger.info "Enriched #{repeater}." if repeater.changed?
-
       repeater.save!
       repeaters << repeater
     rescue
@@ -243,8 +241,6 @@ class UkrepeatersImporter < Importer
         raise "Unknown status #{raw_repeater[:status]}"
       end
 
-      @logger.info "Enriched #{repeater}." if repeater.changed?
-
       repeater.save!
       repeaters << repeater
     rescue
@@ -286,8 +282,6 @@ class UkrepeatersImporter < Importer
       else
         raise "Unknown status #{raw_repeater[:status]}"
       end
-
-      @logger.info "Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
       repeaters << repeater
