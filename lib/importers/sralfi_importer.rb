@@ -112,12 +112,6 @@ class SralfiImporter < Importer
     repeater.redistribution_limitations = data_limitations_sral_fi_url(host: "repeater.world", protocol: "https")
     repeater.country_id = "fi"
 
-    if repeater.new_record?
-      @logger.info "Creating #{repeater}."
-    elsif repeater.changed?
-      @logger.info "Updating #{repeater}."
-    end
-
     repeater.save!
 
     [:created_or_updated, repeater]

@@ -120,8 +120,6 @@ class UkrepeatersImporter < Importer
     repeater.source = SOURCE
     repeater.redistribution_limitations = data_limitations_ukrepeater_net_url(host: "repeater.world", protocol: "https")
 
-    @logger.info "Created #{repeater}." if repeater.new_record?
-
     repeater.save!
     repeater
   end
@@ -149,8 +147,6 @@ class UkrepeatersImporter < Importer
       repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"
       repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
       repeater.nxdn = true if raw_repeater[:nxdn]&.strip == "Y"
-
-      @logger.info "Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
       repeaters << repeater
@@ -192,8 +188,6 @@ class UkrepeatersImporter < Importer
       repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
 
       repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
-
-      @logger.info "Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
       repeaters << repeater
@@ -247,8 +241,6 @@ class UkrepeatersImporter < Importer
         raise "Unknown status #{raw_repeater[:status]}"
       end
 
-      @logger.info "Enriched #{repeater}." if repeater.changed?
-
       repeater.save!
       repeaters << repeater
     rescue
@@ -290,8 +282,6 @@ class UkrepeatersImporter < Importer
       else
         raise "Unknown status #{raw_repeater[:status]}"
       end
-
-      @logger.info "Enriched #{repeater}." if repeater.changed?
 
       repeater.save!
       repeaters << repeater
