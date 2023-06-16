@@ -47,6 +47,8 @@ class IrtsImporter < Importer
       rescue
         raise "Failed to import record #{row}"
       end
+
+      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).delete_all
     end
 
     [ignored_due_to_source_count, created_or_updated_ids, repeaters_deleted_count]
@@ -62,16 +64,8 @@ class IrtsImporter < Importer
   FREQUENCY_REGEX = /Output:[^\d]+([\d.]+)Input:[^\d]+([\d.]+)/
 
   def import_repeater(row)
-    # puts row
-    # puts row[CHANNEL].text.strip
-    # puts row[FREQUENCY].text.strip
-    # puts row[CALL_SIGN].text.strip
-    # puts row[ACCESS].text.strip
-    # puts row[LOCATION].text.strip
-    # puts row[NOTES].text.strip
-
     call_sign = row[CALL_SIGN].text.strip.upcase
-    tx_frequency = row[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.first.to_i * 10 ** 6
+    tx_frequency = row[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.first.to_f * 10 ** 6
 
     repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
 
@@ -82,7 +76,8 @@ class IrtsImporter < Importer
     end
     repeater.name = repeater.call_sign
 
-    repeater.rx_frequency = row[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.second.to_i * 10 ** 6
+    repeater.channel = row[CHANNEL].text.strip
+    repeater.rx_frequency = row[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.second.to_f * 10 ** 6
     import_mode_access_code(repeater, row[ACCESS].text.strip, row[NOTES].text.strip)
     import_location(repeater, row[LOCATION])
     repeater.notes = row[NOTES].text.strip
