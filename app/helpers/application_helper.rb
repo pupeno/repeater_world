@@ -26,9 +26,16 @@ module ApplicationHelper
     "https://www.gravatar.com/avatar/#{Digest::MD5.hexdigest email}?d=mp"
   end
 
-  def toggle_button(form, name, label)
+  def toggle_button(form, name, label, **kwargs)
+    klass = kwargs[:class] || ""
+    data = kwargs[:data] || {}
     render partial: "shared/toggle_button",
-      locals: {form: form, name: name, label: label}
+      locals: {form: form, name: name, label: label, class: klass, data: data}
+  end
+
+  def toggle_like_button(label, **kwargs)
+    render partial: "shared/toggle_like_button",
+      locals: {label: label, kwargs: kwargs}
   end
 
   def toggle_checkbox(form, name, check_box_html_options)
