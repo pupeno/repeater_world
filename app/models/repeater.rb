@@ -93,15 +93,7 @@ class Repeater < ApplicationRecord
   end
 
   def modes
-    modes = Set.new
-    modes << :fm if fm?
-    modes << :dstar if dstar?
-    modes << :fusion if fusion?
-    modes << :dmr if dmr?
-    modes << :nxdn if nxdn?
-    modes << :p25 if p25?
-    modes << :tetra if tetra?
-    modes
+    Set.new MODES.select { |mode| send("#{mode}?") }.map &:to_sym
   end
 
   def location_in_words
