@@ -27,8 +27,12 @@ module ApplicationHelper
   end
 
   def toggle_button(form, name, label, **kwargs)
+    klass = kwargs[:class] || ""
+    check_box_attrs = kwargs[:check_box_attrs] || {}
     render partial: "shared/toggle_button",
-      locals: {form: form, name: name, label: label, kwargs: kwargs}
+      locals: {form: form, name: name, label: label,
+               class: klass, check_box_attrs: check_box_attrs,
+               kwargs: kwargs}
   end
 
   def toggle_like_button(label, **kwargs)

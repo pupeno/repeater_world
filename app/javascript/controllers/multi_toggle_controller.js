@@ -16,18 +16,13 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static values = {
-    all: String
-  }
-
-  static targets = ["more"]
+  static targets = ["more", "all"]
 
   connect() {
-    this.allCheckbox = this.element.querySelectorAll(`input[type=checkbox][id*="${this.allValue}"]`)[0]
-    this.allCheckbox.addEventListener("change", this.updateStatusOfOtherButton.bind(this))
+    this.allTarget.addEventListener("change", this.updateStatusOfOtherButton.bind(this))
 
     this.otherCheckboxes = this.element.querySelectorAll(`input[type=checkbox]`)
-    this.otherCheckboxes = Array.from(this.otherCheckboxes).filter((checkbox) => checkbox !== this.allCheckbox)
+    this.otherCheckboxes = Array.from(this.otherCheckboxes).filter((checkbox) => checkbox !== this.allTarget)
     Array.from(this.otherCheckboxes).forEach((checkbox) => {
       checkbox.addEventListener("change", this.updateStatusOfAllButton.bind(this))
     })
@@ -37,7 +32,7 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.allCheckbox.removeEventListener("change", this.updateStatusOfOtherButton.bind(this))
+    this.allTarget.removeEventListener("change", this.updateStatusOfOtherButton.bind(this))
     Array.from(this.otherCheckboxes).forEach((checkbox) => {
       checkbox.removeEventListener("change", this.updateStatusOfAllButton.bind(this))
     })
@@ -45,9 +40,9 @@ export default class extends Controller {
 
   updateStatusOfAllButton() {
     let shouldCheck = Array.from(this.otherCheckboxes).filter((checkbox) => checkbox.checked).length === 0
-    if (shouldCheck !== this.allCheckbox.checked) {
-      this.allCheckbox.checked = shouldCheck
-      let controller = this.application.getControllerForElementAndIdentifier(this.allCheckbox.parentElement, "toggle-button")
+    if (shouldCheck !== this.allTarget.checked) {
+      this.allTarget.checked = shouldCheck
+      let controller = this.application.getControllerForElementAndIdentifier(this.allTarget.parentElement, "toggle-button")
       if (controller) {
         controller.updateButtonState()
       }
@@ -64,8 +59,8 @@ export default class extends Controller {
         }
       })
     } else {
-      this.allCheckbox.checked = true
-      let controller = this.application.getControllerForElementAndIdentifier(this.allCheckbox.parentElement, "toggle-button")
+      this.allTarget.checked = true
+      let controller = this.application.getControllerForElementAndIdentifier(this.allTarget.parentElement, "toggle-button")
       if (controller) {
         controller.updateButtonState()
       }

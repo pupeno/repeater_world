@@ -48,11 +48,9 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
   <% end %>
 
-  <div class="my-3"
-       data-controller="multi-toggle"
-       data-multi-toggle-all-value="band_all">
+  <div class="my-3" data-controller="multi-toggle">
     Band:
-    <%= toggle_button form, "band_all", "All" %>
+    <%= toggle_button form, "band_all", "All", check_box_attrs: {data: {multi_toggle_target: "all"}} %>
     <% RepeaterSearch::BANDS.each do |band| %>
       <%= toggle_button form, band[:method], band[:name], class: band[:secondary] ? "hidden" : "" %>
     <% end %>
@@ -61,11 +59,9 @@ You should have received a copy of the GNU Affero General Public License along w
                                    multi_toggle_target: "more" } %>
   </div>
 
-  <div class="my-3"
-       data-controller="multi-toggle"
-       data-multi-toggle-all-value="mode_all">
+  <div class="my-3" data-controller="multi-toggle">
     Mode:
-    <%= toggle_button form, "mode_all", "All" %>
+    <%= toggle_button form, "mode_all", "All", check_box_attrs: {data: {multi_toggle_target: "all"}} %>
     <%= toggle_button form, :fm, "FM" %>
     <%= toggle_button form, :dstar, "D-Star" %>
     <%= toggle_button form, :fusion, "Fusion" %>
