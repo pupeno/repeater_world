@@ -57,16 +57,9 @@ You should have received a copy of the GNU Affero General Public License along w
       <%= toggle_button form, band[:method], band[:name], class: band[:secondary] ? "hidden" : "" %>
     <% end %>
     <%# This needs to be kept in sync with the stile in _toggle_button.html.erb %>
-    <button class="inline-flex
-                   mx-1 py-3 px-3
-                   rounded-md
-                   text-sm font-semibold
-                   focus:outline-none
-                   ring-1 ring-inset ring-orange-300 bg-white text-gray-900 hover:bg-orange-50"
-            data-action="click->multi-select-toggle-button-group#showMore"
-            data-multi-select-toggle-button-group-target="more">
-      More
-    </button>
+    <%= toggle_like_button "More",
+                           data: { action: "click->multi-select-toggle-button-group#showMore",
+                                   multi_select_toggle_button_group_target: "more" } %>
   </div>
 
   <div class="my-3"

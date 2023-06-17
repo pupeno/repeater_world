@@ -27,9 +27,13 @@ module ApplicationHelper
   end
 
   def toggle_button(form, name, label, **kwargs)
-    puts kwargs
     render partial: "shared/toggle_button",
       locals: {form: form, name: name, label: label, **kwargs}
+  end
+
+  def toggle_like_button(label, **kwargs)
+    render partial: "shared/toggle_like_button",
+           locals: {label: label, kwargs: kwargs}
   end
 
   def toggle_checkbox(form, name, check_box_html_options)

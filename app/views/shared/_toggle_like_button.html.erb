@@ -12,16 +12,14 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<%# The style here needs to be kept in sync with _toggle_like_button.html.erb %>
-<%= form.label name,
-               class: "inline-flex
-                       mx-1 py-3 px-3
-                       rounded-md
-                       text-sm font-semibold
-                       focus:outline-none
-                       ring-1 ring-inset ring-orange-300 bg-white text-gray-900 hover:bg-orange-50
-                       #{local_assigns[:class]}",
-               data: { controller: "toggle-button" } do %>
-  <%= form.check_box name, class: "sr-only", aria: { labelledby: "#{name}-actual-label" } %>
-  <span id="<%= "#{name}-actual-label" %>"><%= label %></span>
-<% end %>
+<%# The reason this exist is to be able to have a non-toggle "More" button on multi toggles that looks the same as
+    the toggle buttons. This needs to be kept in sync with the stile in _toggle_button.html.erb %>
+<%= content_tag(:button,
+                label,
+                class: "inline-flex
+                   mx-1 py-3 px-3
+                   rounded-md
+                   text-sm font-semibold
+                   focus:outline-none
+                   ring-1 ring-inset ring-orange-300 bg-white text-gray-900 hover:bg-orange-50",
+                **kwargs) %>
