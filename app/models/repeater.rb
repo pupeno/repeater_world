@@ -44,12 +44,17 @@ class Repeater < ApplicationRecord
     {min: 10_000_000_000, max: 10_500_000_000, band: BAND_3CM}
   ]
 
-  MODES = %w[fm nfm dstar fusion dmr nxdn p25 tetra]
+  MODES = %w[fm dstar fusion dmr nxdn p25 tetra]
 
   CTCSS_TONES = [
     67.0, 69.3, 71.9, 74.4, 77.0, 79.7, 82.5, 85.4, 88.5, 91.5, 94.8, 97.4, 100.0, 103.5, 107.2, 110.9, 114.8, 118.8,
     123, 127.3, 131.8, 136.5, 141.3, 146.2, 151.4, 156.7, 162.2, 167.9, 173.8, 179.9, 186.2, 192.8, 203.5, 210.7, 218.1,
     225.7, 233.6, 241.8, 250.3
+  ]
+
+  FM_BANDWIDTHS = [
+    FM_WIDE = "wide",
+    FM_NARROW = "narrow"
   ]
 
   DMR_COLOR_CODES = (0..15).to_a
@@ -62,9 +67,10 @@ class Repeater < ApplicationRecord
   validates :tx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/flexpointtech/repeater_world/issues/20
   validates :rx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/flexpointtech/repeater_world/issues/20
   validates :fm_ctcss_tone, inclusion: CTCSS_TONES, allow_blank: true
+  validates :fm_bandwidth, inclusion: FM_BANDWIDTHS, if: :fm?
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
 
-  before_validation :ensure_band_is_set
+  before_validation :ensure_fields_are_set
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
@@ -89,7 +95,6 @@ class Repeater < ApplicationRecord
   def modes
     modes = Set.new
     modes << :fm if fm?
-    modes << :nfm if nfm?
     modes << :dstar if dstar?
     modes << :fusion if fusion?
     modes << :dmr if dmr?
@@ -114,7 +119,7 @@ class Repeater < ApplicationRecord
     super(value)
   end
 
-  def ensure_band_is_set
+  def ensure_fields_are_set
     if band.blank? && tx_frequency.present?
       BAND_FREQUENCIES.each do |band_frequency|
         if tx_frequency >= band_frequency[:min] && tx_frequency <= band_frequency[:max]
@@ -122,6 +127,9 @@ class Repeater < ApplicationRecord
           break
         end
       end
+    end
+    if fm_bandwidth.blank? && fm?
+      self.fm_bandwidth = FM_WIDE
     end
   end
 
@@ -133,7 +141,6 @@ class Repeater < ApplicationRecord
       field :band
       field :tx_frequency
       field :fm
-      field :nfm
       field :dstar
       field :fusion
       field :dmr
@@ -161,6 +168,7 @@ end
 #  dstar                      :boolean
 #  dstar_port                 :string
 #  fm                         :boolean
+#  fm_bandwidth               :string
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
@@ -176,7 +184,6 @@ end
 #  locality                   :string
 #  location                   :geography        point, 4326
 #  name                       :string
-#  nfm                        :boolean
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean
