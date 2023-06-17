@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_16_153823) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_17_074119) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -51,12 +51,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_153823) do
 
   create_table "repeater_searches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id"
-    t.boolean "band_10m"
-    t.boolean "band_6m"
-    t.boolean "band_4m"
-    t.boolean "band_2m"
-    t.boolean "band_70cm"
-    t.boolean "band_23cm"
+    t.boolean "band_10m", default: false, null: false
+    t.boolean "band_6m", default: false, null: false
+    t.boolean "band_4m", default: false, null: false
+    t.boolean "band_2m", default: false, null: false
+    t.boolean "band_70cm", default: false, null: false
+    t.boolean "band_23cm", default: false, null: false
     t.boolean "fm"
     t.boolean "dstar"
     t.boolean "fusion"
@@ -70,6 +70,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_153823) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.boolean "band_1_25m", default: false, null: false
+    t.boolean "band_33cm", default: false, null: false
+    t.boolean "band_13cm", default: false, null: false
+    t.boolean "band_9cm", default: false, null: false
+    t.boolean "band_6cm", default: false, null: false
+    t.boolean "band_3cm", default: false, null: false
     t.index ["user_id"], name: "index_repeater_searches_on_user_id"
   end
 
