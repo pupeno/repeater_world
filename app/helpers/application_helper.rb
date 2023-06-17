@@ -28,7 +28,7 @@ module ApplicationHelper
 
   def toggle_button(form, name, label, **kwargs)
     render partial: "shared/toggle_button",
-      locals: {form: form, name: name, label: label, **kwargs}
+      locals: {form: form, name: name, label: label, kwargs: kwargs}
   end
 
   def toggle_like_button(label, **kwargs)
