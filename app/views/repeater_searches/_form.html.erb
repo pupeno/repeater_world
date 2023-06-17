@@ -48,26 +48,27 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
   <% end %>
 
-  <div class="my-3"
-       data-controller="multi-select-toggle-button-group"
-       data-multi-select-toggle-button-group-all-value="band_all">
+  <div class="my-3" data-controller="multi-toggle">
     Band:
-    <%= toggle_button form, "band_all", "All" %>
+    <%= toggle_button form, "band_all", "All", data: { multi_toggle_target: "all" } %>
     <% RepeaterSearch::BANDS.each do |band| %>
-      <%= toggle_button form, "band_#{band}", band %>
+      <%= toggle_button form, band[:method], band[:name],
+                        class: band[:secondary] ? "hidden" : "",
+                        data: { multi_toggle_target: "toggle" } %>
     <% end %>
+    <%= toggle_like_button "More",
+                           data: { action: "click->multi-toggle#showMore",
+                                   multi_toggle_target: "more" } %>
   </div>
 
-  <div class="my-3"
-       data-controller="multi-select-toggle-button-group"
-       data-multi-select-toggle-button-group-all-value="mode_all">
+  <div class="my-3" data-controller="multi-toggle">
     Mode:
-    <%= toggle_button form, "mode_all", "All" %>
-    <%= toggle_button form, :fm, "FM" %>
-    <%= toggle_button form, :dstar, "D-Star" %>
-    <%= toggle_button form, :fusion, "Fusion" %>
-    <%= toggle_button form, :dmr, "DMR" %>
-    <%= toggle_button form, :nxdn, "NXDN" %>
+    <%= toggle_button form, "mode_all", "All", data: { multi_toggle_target: "all" } %>
+    <%= toggle_button form, :fm, "FM", data: { multi_toggle_target: "toggle" } %>
+    <%= toggle_button form, :dstar, "D-Star", data: { multi_toggle_target: "toggle" } %>
+    <%= toggle_button form, :fusion, "Fusion", data: { multi_toggle_target: "toggle" } %>
+    <%= toggle_button form, :dmr, "DMR", data: { multi_toggle_target: "toggle" } %>
+    <%= toggle_button form, :nxdn, "NXDN", data: { multi_toggle_target: "toggle" } %>
   </div>
 
   <div class="my-3" data-controller="distance-to-coordinates">

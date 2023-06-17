@@ -22,26 +22,14 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= link_to repeater_search.name, repeater_search %>
       </p>
 
-      <% if repeater_search.band_10m? %>
-        <%= badge "10m" %>
-      <% end %>
-      <% if repeater_search.band_6m? %>
-        <%= badge "6m" %>
-      <% end %>
-      <% if repeater_search.band_4m? %>
-        <%= badge "4m" %>
-      <% end %>
-      <% if repeater_search.band_2m? %>
-        <%= badge "2m" %>
-      <% end %>
-      <% if repeater_search.band_70cm? %>
-        <%= badge "70cm" %>
-      <% end %>
-      <% if repeater_search.band_23cm? %>
-        <%= badge "23cm" %>
-      <% end %>
       <% if repeater_search.all_bands? %>
         <%= badge "All Bands" %>
+      <% else %>
+        <% RepeaterSearch::BANDS.each do |band| %>
+          <% if repeater_search.send(band[:pred]) %>
+            <%= badge band[:name] %>
+          <% end %>
+        <% end %>
       <% end %>
 
       <% if repeater_search.fm? %>

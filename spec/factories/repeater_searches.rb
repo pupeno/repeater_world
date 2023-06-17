@@ -24,12 +24,18 @@ end
 # Table name: repeater_searches
 #
 #  id                      :uuid             not null, primary key
-#  band_10m                :boolean
-#  band_23cm               :boolean
-#  band_2m                 :boolean
-#  band_4m                 :boolean
-#  band_6m                 :boolean
-#  band_70cm               :boolean
+#  band_10m                :boolean          default(FALSE), not null
+#  band_13cm               :boolean          default(FALSE), not null
+#  band_1_25m              :boolean          default(FALSE), not null
+#  band_23cm               :boolean          default(FALSE), not null
+#  band_2m                 :boolean          default(FALSE), not null
+#  band_33cm               :boolean          default(FALSE), not null
+#  band_3cm                :boolean          default(FALSE), not null
+#  band_4m                 :boolean          default(FALSE), not null
+#  band_6cm                :boolean          default(FALSE), not null
+#  band_6m                 :boolean          default(FALSE), not null
+#  band_70cm               :boolean          default(FALSE), not null
+#  band_9cm                :boolean          default(FALSE), not null
 #  distance                :integer
 #  distance_to_coordinates :boolean
 #  distance_unit           :string
