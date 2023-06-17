@@ -18,16 +18,25 @@ class RepeaterSearch < ApplicationRecord
     MILES = "miles"
   ]
 
-  BANDS = [ # Bands that are supported during search.
-    BAND_10M = "10m",
-    BAND_6M = "6m",
-    BAND_4M = "4m",
-    BAND_2M = "2m",
-    # BAND_1_25M = "1.25m",
-    BAND_70CM = "70cm",
-    # BAND_33CM = "33cm",
-    BAND_23CM = "23cm"
+  # Bands that are supported during search.
+  BANDS = [
+    BAND_10M = {name: "10m", secondary: true},
+    BAND_6M = {name: "6m", secondary: true},
+    BAND_4M = {name: "4m", secondary: true},
+    BAND_2M = {name: "2m", secondary: false},
+    BAND_1_25M = {name: "1.25m", secondary: true},
+    BAND_70CM = {name: "70cm", secondary: false},
+    BAND_33CM = {name: "33cm", secondary: true},
+    BAND_23CM = {name: "23cm", secondary: true},
+    BAND_13CM = {name: "13cm", secondary: true},
+    BAND_9CM = {name: "9cm", secondary: true},
+    BAND_6CM = {name: "6cm", secondary: true},
+    BAND_3CM = {name: "3cm", secondary: true}
   ]
+  BANDS.each do |band|
+    band[:method] = :"band_#{band[:name].tr(".", "_")}"
+    band[:pred] = :"#{band[:method]}?"
+  end
 
   MODES = %w[fm dstar fusion dmr nxdn] # Modes that are supported during search.
 
@@ -46,7 +55,8 @@ class RepeaterSearch < ApplicationRecord
   def run
     repeaters = Repeater
 
-    bands = BANDS.filter { |band| send(:"band_#{band}?") }
+    bands = BANDS.filter { |band| send(band[:pred]) }
+      .map { |band| band[:name] }
     repeaters = repeaters.where(band: bands) if bands.present?
 
     modes = MODES.filter { |mode| send(:"#{mode}?") }
@@ -82,7 +92,7 @@ class RepeaterSearch < ApplicationRecord
   end
 
   def all_bands?
-    !band_10m? && !band_6m? && !band_4m? && !band_2m? && !band_70cm? && !band_23cm?
+    BANDS.map { |band| !send(band[:pred]) }.all?
   end
 
   def all_modes?

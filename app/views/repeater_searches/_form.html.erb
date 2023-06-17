@@ -54,7 +54,7 @@ You should have received a copy of the GNU Affero General Public License along w
     Band:
     <%= toggle_button form, "band_all", "All" %>
     <% RepeaterSearch::BANDS.each do |band| %>
-      <%= toggle_button form, "band_#{band}", band %>
+      <%= toggle_button form, band[:method], band[:name] %>
     <% end %>
   </div>
 

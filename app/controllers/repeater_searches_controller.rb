@@ -45,14 +45,12 @@ class RepeaterSearchesController < ApplicationController
     modes << "DMR" if @repeater_search.dmr?
     modes << "NXDN" if @repeater_search.nxdn?
     modes << "All modes" if modes.empty?
-    bands = []
-    bands << "10m" if @repeater_search.band_10m?
-    bands << "6m" if @repeater_search.band_6m?
-    bands << "4m" if @repeater_search.band_4m?
-    bands << "2m" if @repeater_search.band_2m?
-    bands << "70cm" if @repeater_search.band_70cm?
-    bands << "23cm" if @repeater_search.band_23cm?
-    bands << "all bands" if bands.empty?
+
+    bands = if @repeater_search.all_bands?
+      ["all bands"]
+    else
+      RepeaterSearch::BANDS.map { |band| band[:name] if @repeater_search.send(band[:method]) }.compact
+    end
     distance = "#{@repeater_search.distance}#{@repeater_search.distance_unit} of #{@repeater_search.latitude}, #{@repeater_search.longitude}" if @repeater_search.distance_to_coordinates
     @repeater_search.name = "#{modes.to_sentence} on #{bands.to_sentence} #{distance}".strip
   end
@@ -125,8 +123,8 @@ class RepeaterSearchesController < ApplicationController
   def repeater_search_params
     params.permit(
       :d,
-      s: Repeater::BANDS.map { |b| :"band_#{b}" } +
-        Repeater::MODES +
+      s: RepeaterSearch::BANDS.map { |band| band[:method] } +
+        RepeaterSearch::MODES +
         [:name, :distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
       e: [:format]
     )
