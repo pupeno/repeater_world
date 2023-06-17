@@ -21,9 +21,9 @@ export default class extends Controller {
   connect() {
     this.allTarget.addEventListener("change", this.updateStatusOfOtherButton.bind(this))
 
-    this.otherCheckboxes = this.element.querySelectorAll(`input[type=checkbox]`)
-    this.otherCheckboxes = Array.from(this.otherCheckboxes).filter((checkbox) => checkbox !== this.allTarget)
-    Array.from(this.otherCheckboxes).forEach((checkbox) => {
+    this.otherCheckboxes = Array.from(this.element.querySelectorAll(`input[type=checkbox]`))
+    this.otherCheckboxes = this.otherCheckboxes.filter((checkbox) => checkbox !== this.allTarget)
+    this.otherCheckboxes.forEach((checkbox) => {
       checkbox.addEventListener("change", this.updateStatusOfAllButton.bind(this))
     })
 
@@ -33,7 +33,7 @@ export default class extends Controller {
 
   disconnect() {
     this.allTarget.removeEventListener("change", this.updateStatusOfOtherButton.bind(this))
-    Array.from(this.otherCheckboxes).forEach((checkbox) => {
+    this.otherCheckboxes.forEach((checkbox) => {
       checkbox.removeEventListener("change", this.updateStatusOfAllButton.bind(this))
     })
   }
@@ -51,7 +51,7 @@ export default class extends Controller {
 
   updateStatusOfOtherButton(event) {
     if (event.target.checked) {
-      Array.from(this.otherCheckboxes).forEach((checkbox) => {
+      this.otherCheckboxes.forEach((checkbox) => {
         checkbox.checked = false
         let controller = this.application.getControllerForElementAndIdentifier(checkbox.parentElement, "toggle-button")
         if (controller) {
@@ -69,7 +69,7 @@ export default class extends Controller {
 
   showMore(event) {
     event.preventDefault()
-    Array.from(this.otherCheckboxes).forEach((checkbox) => {
+    this.otherCheckboxes.forEach((checkbox) => {
       checkbox.parentElement.classList.remove("hidden")
     })
     this.moreTarget.classList.add("hidden")
@@ -77,7 +77,7 @@ export default class extends Controller {
 
   // Show the buttons that are toggled on. The rest needs to click on "More" to be shown. See showMore()
   showButtonsThatArePressed() {
-    Array.from(this.otherCheckboxes).forEach((checkbox) => {
+    this.otherCheckboxes.forEach((checkbox) => {
       if (checkbox.parentElement.classList.contains("hidden") && checkbox.checked) {
         checkbox.parentElement.classList.remove("hidden")
       }
