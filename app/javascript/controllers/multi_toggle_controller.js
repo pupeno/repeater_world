@@ -14,15 +14,14 @@
  */
 
 import {Controller} from "@hotwired/stimulus"
+import {WHEN_CHECKED, WHEN_UNCHECKED} from "./toggle_button_controller"
 
 export default class extends Controller {
   static targets = ["more", "all", "toggle"]
 
   connect() {
-    this.allCheckBox = this.getCheckbox(this.allTarget)
     this.toggleCheckBoxes = this.toggleTargets.map(this.getCheckbox)
 
-    this.allCheckBox.addEventListener("change", this.updateStatusOfOtherButton.bind(this))
     this.toggleCheckBoxes.forEach((checkbox) => {
       checkbox.addEventListener("change", this.updateStatusOfAllButton.bind(this))
     })
@@ -32,29 +31,29 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.allCheckBox.removeEventListener("change", this.updateStatusOfOtherButton.bind(this))
     this.toggleCheckBoxes.forEach((checkbox) => {
       checkbox.removeEventListener("change", this.updateStatusOfAllButton.bind(this))
     })
   }
 
-  updateStatusOfAllButton() {
-    const shouldCheck = this.toggleTargets.filter((toggle) => this.getCheckbox(toggle).checked).length === 0
-    if (shouldCheck !== this.allCheckBox.checked) {
-      this.allCheckBox.checked = shouldCheck
-      this.application.getControllerForElementAndIdentifier(this.allTarget, "toggle-button")?.updateButtonState()
-    }
+  selectAll(event) {
+    event.preventDefault()
+    this.toggleTargets.forEach((toggle) => {
+      this.getCheckbox(toggle).checked = false
+      this.application.getControllerForElementAndIdentifier(toggle, "toggle-button")?.updateButtonState()
+    })
+    this.allTarget.classList.remove(...WHEN_UNCHECKED)
+    this.allTarget.classList.add(...WHEN_CHECKED)
   }
 
-  updateStatusOfOtherButton(event) {
-    if (event.target.checked) {
-      this.toggleTargets.forEach((toggle) => {
-        this.getCheckbox(toggle).checked = false
-        this.application.getControllerForElementAndIdentifier(toggle, "toggle-button")?.updateButtonState()
-      })
+  updateStatusOfAllButton() {
+    const anyButtonsChecked = this.toggleTargets.filter((toggle) => this.getCheckbox(toggle).checked).length !== 0
+    if (anyButtonsChecked) {
+      this.allTarget.classList.remove(...WHEN_CHECKED)
+      this.allTarget.classList.add(...WHEN_UNCHECKED)
     } else {
-      this.allCheckBox.checked = true
-      this.application.getControllerForElementAndIdentifier(this.allTarget, "toggle-button")?.updateButtonState()
+      this.allTarget.classList.remove(...WHEN_UNCHECKED)
+      this.allTarget.classList.add(...WHEN_CHECKED)
     }
   }
 

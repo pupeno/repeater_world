@@ -15,6 +15,10 @@
 
 import {Controller} from "@hotwired/stimulus"
 
+export const WHEN_CHECKED = ["ring-2", "ring-orange-600", "ring-offset-2", "bg-orange-600", "text-white", "hover:bg-orange-500"]
+
+export const WHEN_UNCHECKED = ["ring-1", "ring-inset", "ring-orange-300", "bg-white", "text-gray-900", "hover:bg-orange-50"]
+
 export default class extends Controller {
   connect() {
     this.checkbox = this.element.querySelectorAll('input[type=checkbox]')[0]
@@ -23,8 +27,8 @@ export default class extends Controller {
   }
 
   updateButtonState() {
-    const whenChecked = ["ring-2", "ring-orange-600", "ring-offset-2", "bg-orange-600", "text-white", "hover:bg-orange-500"]
-    const whenUnchecked = ["ring-1", "ring-inset", "ring-orange-300", "bg-white", "text-gray-900", "hover:bg-orange-50"]
+    const whenChecked = WHEN_CHECKED
+    const whenUnchecked = WHEN_UNCHECKED
 
     if (this.checkbox.checked) {
       this.label.classList.remove(...whenUnchecked)

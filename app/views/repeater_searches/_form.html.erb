@@ -50,7 +50,9 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <div class="my-3" data-controller="multi-toggle">
     Band:
-    <%= toggle_button form, "band_all", "All", data: { multi_toggle_target: "all" } %>
+    <%= toggle_like_button "All",
+                           data: { action: "click->multi-toggle#selectAll",
+                                   multi_toggle_target: "all" } %>
     <% RepeaterSearch::BANDS.each do |band| %>
       <%= toggle_button form, band[:name], band[:label],
                         class: band[:secondary] ? "hidden" : "",
@@ -63,7 +65,9 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <div class="my-3" data-controller="multi-toggle">
     Mode:
-    <%= toggle_button form, "mode_all", "All", data: { multi_toggle_target: "all" } %>
+    <%= toggle_like_button "All",
+                           data: { action: "click->multi-toggle#selectAll",
+                                   multi_toggle_target: "all" } %>
     <% RepeaterSearch::MODES.each do |mode| %>
       <%= toggle_button form, mode[:name], mode[:label],
                         class: mode[:secondary] ? "hidden" : "",
