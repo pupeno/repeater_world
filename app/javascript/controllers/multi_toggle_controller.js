@@ -19,8 +19,11 @@ export default class extends Controller {
   static targets = ["more", "all", "toggle"]
 
   connect() {
-    this.allTarget.addEventListener("change", this.updateStatusOfOtherButton.bind(this))
-    this.toggleTargets.forEach((checkbox) => {
+    this.allCheckBox = this.getCheckbox(this.allTarget)
+    this.toggleCheckBoxes = this.toggleTargets.map(this.getCheckbox)
+
+    this.allCheckBox.addEventListener("change", this.updateStatusOfOtherButton.bind(this))
+    this.toggleCheckBoxes.forEach((checkbox) => {
       checkbox.addEventListener("change", this.updateStatusOfAllButton.bind(this))
     })
 
@@ -29,17 +32,17 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.allTarget.removeEventListener("change", this.updateStatusOfOtherButton.bind(this))
-    this.toggleTargets.forEach((checkbox) => {
+    this.allCheckBox.removeEventListener("change", this.updateStatusOfOtherButton.bind(this))
+    this.toggleCheckBoxes.forEach((checkbox) => {
       checkbox.removeEventListener("change", this.updateStatusOfAllButton.bind(this))
     })
   }
 
   updateStatusOfAllButton() {
-    let shouldCheck = this.toggleTargets.filter((checkbox) => checkbox.checked).length === 0
-    if (shouldCheck !== this.allTarget.checked) {
-      this.allTarget.checked = shouldCheck
-      let controller = this.application.getControllerForElementAndIdentifier(this.allTarget.parentElement, "toggle-button")
+    let shouldCheck = this.toggleTargets.filter((toggle) => this.getCheckbox(toggle).checked).length === 0
+    if (shouldCheck !== this.allCheckBox.checked) {
+      this.allCheckBox.checked = shouldCheck
+      let controller = this.application.getControllerForElementAndIdentifier(this.allTarget, "toggle-button")
       if (controller) {
         controller.updateButtonState()
       }
@@ -48,16 +51,16 @@ export default class extends Controller {
 
   updateStatusOfOtherButton(event) {
     if (event.target.checked) {
-      this.toggleTargets.forEach((checkbox) => {
-        checkbox.checked = false
-        let controller = this.application.getControllerForElementAndIdentifier(checkbox.parentElement, "toggle-button")
+      this.toggleTargets.forEach((toggle) => {
+        this.getCheckbox(toggle).checked = false
+        let controller = this.application.getControllerForElementAndIdentifier(toggle, "toggle-button")
         if (controller) {
           controller.updateButtonState()
         }
       })
     } else {
-      this.allTarget.checked = true
-      let controller = this.application.getControllerForElementAndIdentifier(this.allTarget.parentElement, "toggle-button")
+      this.allCheckBox.checked = true
+      let controller = this.application.getControllerForElementAndIdentifier(this.allTarget, "toggle-button")
       if (controller) {
         controller.updateButtonState()
       }
@@ -66,18 +69,22 @@ export default class extends Controller {
 
   showMore(event) {
     event.preventDefault()
-    this.toggleTargets.forEach((checkbox) => {
-      checkbox.parentElement.classList.remove("hidden")
+    this.toggleTargets.forEach((toggle) => {
+      toggle.classList.remove("hidden")
     })
     this.moreTarget.classList.add("hidden")
   }
 
   // Show the buttons that are toggled on. The rest needs to click on "More" to be shown. See showMore()
   showButtonsThatArePressed() {
-    this.toggleTargets.forEach((checkbox) => {
-      if (checkbox.parentElement.classList.contains("hidden") && checkbox.checked) {
-        checkbox.parentElement.classList.remove("hidden")
+    this.toggleTargets.forEach((toggle) => {
+      if (toggle.classList.contains("hidden") && this.getCheckbox(toggle).checked) {
+        toggle.classList.remove("hidden")
       }
     })
+  }
+
+  getCheckbox(element) {
+    return element.querySelectorAll("input[type=checkbox]")[0]
   }
 }

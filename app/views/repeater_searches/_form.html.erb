@@ -50,11 +50,11 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <div class="my-3" data-controller="multi-toggle">
     Band:
-    <%= toggle_button form, "band_all", "All", check_box_attrs: { data: { multi_toggle_target: "all" } } %>
+    <%= toggle_button form, "band_all", "All", data: { multi_toggle_target: "all" } %>
     <% RepeaterSearch::BANDS.each do |band| %>
       <%= toggle_button form, band[:method], band[:name],
                         class: band[:secondary] ? "hidden" : "",
-                        check_box_attrs: { data: { multi_toggle_target: "toggle" } } %>
+                        data: { multi_toggle_target: "toggle" } %>
     <% end %>
     <%= toggle_like_button "More",
                            data: { action: "click->multi-toggle#showMore",
@@ -63,12 +63,12 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <div class="my-3" data-controller="multi-toggle">
     Mode:
-    <%= toggle_button form, "mode_all", "All", check_box_attrs: { data: { multi_toggle_target: "all" } } %>
-    <%= toggle_button form, :fm, "FM", check_box_attrs: { data: { multi_toggle_target: "toggle" } } %>
-    <%= toggle_button form, :dstar, "D-Star", check_box_attrs: { data: { multi_toggle_target: "toggle" } } %>
-    <%= toggle_button form, :fusion, "Fusion", check_box_attrs: { data: { multi_toggle_target: "toggle" } } %>
-    <%= toggle_button form, :dmr, "DMR", check_box_attrs: { data: { multi_toggle_target: "toggle" } } %>
-    <%= toggle_button form, :nxdn, "NXDN", check_box_attrs: { data: { multi_toggle_target: "toggle" } } %>
+    <%= toggle_button form, "mode_all", "All", data: { multi_toggle_target: "all" } %>
+    <%= toggle_button form, :fm, "FM", data: { multi_toggle_target: "toggle" } %>
+    <%= toggle_button form, :dstar, "D-Star", data: { multi_toggle_target: "toggle" } %>
+    <%= toggle_button form, :fusion, "Fusion", data: { multi_toggle_target: "toggle" } %>
+    <%= toggle_button form, :dmr, "DMR", data: { multi_toggle_target: "toggle" } %>
+    <%= toggle_button form, :nxdn, "NXDN", data: { multi_toggle_target: "toggle" } %>
   </div>
 
   <div class="my-3" data-controller="distance-to-coordinates">
