@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_17_074119) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_17_132347) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -57,11 +57,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_17_074119) do
     t.boolean "band_2m", default: false, null: false
     t.boolean "band_70cm", default: false, null: false
     t.boolean "band_23cm", default: false, null: false
-    t.boolean "fm"
-    t.boolean "dstar"
-    t.boolean "fusion"
-    t.boolean "dmr"
-    t.boolean "nxdn"
+    t.boolean "fm", default: false, null: false
+    t.boolean "dstar", default: false, null: false
+    t.boolean "fusion", default: false, null: false
+    t.boolean "dmr", default: false, null: false
+    t.boolean "nxdn", default: false, null: false
     t.boolean "distance_to_coordinates"
     t.integer "distance"
     t.string "distance_unit"
@@ -76,6 +76,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_17_074119) do
     t.boolean "band_9cm", default: false, null: false
     t.boolean "band_6cm", default: false, null: false
     t.boolean "band_3cm", default: false, null: false
+    t.boolean "p25", default: false, null: false
+    t.boolean "tetra", default: false, null: false
     t.index ["user_id"], name: "index_repeater_searches_on_user_id"
   end
 
