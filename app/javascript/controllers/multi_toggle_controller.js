@@ -39,13 +39,10 @@ export default class extends Controller {
   }
 
   updateStatusOfAllButton() {
-    let shouldCheck = this.toggleTargets.filter((toggle) => this.getCheckbox(toggle).checked).length === 0
+    const shouldCheck = this.toggleTargets.filter((toggle) => this.getCheckbox(toggle).checked).length === 0
     if (shouldCheck !== this.allCheckBox.checked) {
       this.allCheckBox.checked = shouldCheck
-      let controller = this.application.getControllerForElementAndIdentifier(this.allTarget, "toggle-button")
-      if (controller) {
-        controller.updateButtonState()
-      }
+      this.application.getControllerForElementAndIdentifier(this.allTarget, "toggle-button")?.updateButtonState()
     }
   }
 
@@ -53,17 +50,11 @@ export default class extends Controller {
     if (event.target.checked) {
       this.toggleTargets.forEach((toggle) => {
         this.getCheckbox(toggle).checked = false
-        let controller = this.application.getControllerForElementAndIdentifier(toggle, "toggle-button")
-        if (controller) {
-          controller.updateButtonState()
-        }
+        this.application.getControllerForElementAndIdentifier(toggle, "toggle-button")?.updateButtonState()
       })
     } else {
       this.allCheckBox.checked = true
-      let controller = this.application.getControllerForElementAndIdentifier(this.allTarget, "toggle-button")
-      if (controller) {
-        controller.updateButtonState()
-      }
+      this.application.getControllerForElementAndIdentifier(this.allTarget, "toggle-button")?.updateButtonState()
     }
   }
 
