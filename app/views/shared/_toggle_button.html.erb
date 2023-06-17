@@ -17,7 +17,9 @@ You should have received a copy of the GNU Affero General Public License along w
                        mx-1 py-3 px-3
                        rounded-md
                        text-sm font-semibold
-                       focus:outline-none",
+                       focus:outline-none
+                       ring-1 ring-inset ring-orange-300 bg-white text-gray-900 hover:bg-orange-50
+                       #{local_assigns[:class]}",
                data: { controller: "toggle-button" } do %>
   <%= form.check_box name, class: "sr-only", aria: { labelledby: "#{name}-actual-label" } %>
   <span id="<%= "#{name}-actual-label" %>"><%= label %></span>

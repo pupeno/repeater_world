@@ -20,6 +20,8 @@ export default class extends Controller {
     all: String
   }
 
+  static targets = ["more"]
+
   connect() {
     this.allCheckbox = this.element.querySelectorAll(`input[type=checkbox][id*="${this.allValue}"]`)[0]
     this.allCheckbox.addEventListener("change", this.updateStatusOfOtherButton.bind(this))
@@ -30,6 +32,7 @@ export default class extends Controller {
       checkbox.addEventListener("change", this.updateStatusOfAllButton.bind(this))
     })
 
+    this.showButtonsThatArePressed()
     this.updateStatusOfAllButton()
   }
 
@@ -61,5 +64,22 @@ export default class extends Controller {
       let controller = this.application.getControllerForElementAndIdentifier(this.allCheckbox.parentElement, "toggle-button")
       if (controller) controller.updateButtonState()
     }
+  }
+
+  showMore(event) {
+    event.preventDefault()
+    Array.from(this.otherCheckboxes).forEach((checkbox) => {
+      checkbox.parentElement.classList.remove("hidden")
+    })
+    this.moreTarget.classList.add("hidden")
+  }
+
+  // Show the buttons that are toggled on. The rest needs to click on "More" to be shown. See showMore()
+  showButtonsThatArePressed() {
+    Array.from(this.otherCheckboxes).forEach((checkbox) => {
+      if (checkbox.parentElement.classList.contains("hidden") && checkbox.checked) {
+        checkbox.parentElement.classList.remove("hidden")
+      }
+    })
   }
 }
