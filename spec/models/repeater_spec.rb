@@ -90,6 +90,7 @@ end
 #  dstar                      :boolean
 #  dstar_port                 :string
 #  fm                         :boolean
+#  fm_bandwidth               :string
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
@@ -105,7 +106,6 @@ end
 #  locality                   :string
 #  location                   :geography        point, 4326
 #  name                       :string
-#  nfm                        :boolean
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean

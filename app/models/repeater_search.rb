@@ -20,25 +20,37 @@ class RepeaterSearch < ApplicationRecord
 
   # Bands that are supported during search.
   BANDS = [
-    BAND_10M = {name: "10m", secondary: true},
-    BAND_6M = {name: "6m", secondary: true},
-    BAND_4M = {name: "4m", secondary: true},
-    BAND_2M = {name: "2m", secondary: false},
-    BAND_1_25M = {name: "1.25m", secondary: true},
-    BAND_70CM = {name: "70cm", secondary: false},
-    BAND_33CM = {name: "33cm", secondary: true},
-    BAND_23CM = {name: "23cm", secondary: true},
-    BAND_13CM = {name: "13cm", secondary: true},
-    BAND_9CM = {name: "9cm", secondary: true},
-    BAND_6CM = {name: "6cm", secondary: true},
-    BAND_3CM = {name: "3cm", secondary: true}
+    BAND_10M = {label: "10m", secondary: true},
+    BAND_6M = {label: "6m", secondary: true},
+    BAND_4M = {label: "4m", secondary: true},
+    BAND_2M = {label: "2m", secondary: false},
+    BAND_1_25M = {label: "1.25m", secondary: true},
+    BAND_70CM = {label: "70cm", secondary: false},
+    BAND_33CM = {label: "33cm", secondary: true},
+    BAND_23CM = {label: "23cm", secondary: true},
+    BAND_13CM = {label: "13cm", secondary: true},
+    BAND_9CM = {label: "9cm", secondary: true},
+    BAND_6CM = {label: "6cm", secondary: true},
+    BAND_3CM = {label: "3cm", secondary: true}
   ]
   BANDS.each do |band|
-    band[:method] = :"band_#{band[:name].tr(".", "_")}"
-    band[:pred] = :"#{band[:method]}?"
+    band[:name] = :"band_#{band[:label].tr(".", "_")}"
+    band[:pred] = :"#{band[:name]}?"
   end
 
-  MODES = %w[fm dstar fusion dmr nxdn] # Modes that are supported during search.
+  # Modes that are supported during search.
+  MODES = [
+    MODE_FM = {label: "FM", name: :fm, secondary: false},
+    MODE_DSTAR = {label: "D-Star", name: :dstar, secondary: false},
+    MODE_FUSION = {label: "Fusion", name: :fusion, secondary: false},
+    MODE_DMR = {label: "DMR", name: :dmr, secondary: false},
+    MODE_NXDN = {label: "NXDN", name: :nxdn, secondary: true},
+    MODE_P25 = {label: "P25", name: :p25, secondary: true},
+    MODE_TETRA = {label: "TETRA", name: :tetra, secondary: true}
+  ]
+  MODES.each do |mode|
+    mode[:pred] = :"#{mode[:name]}?"
+  end
 
   belongs_to :user
 
@@ -55,15 +67,14 @@ class RepeaterSearch < ApplicationRecord
   def run
     repeaters = Repeater
 
-    bands = BANDS.filter { |band| send(band[:pred]) }
-      .map { |band| band[:name] }
+    bands = BANDS.filter { |band| send(band[:pred]) }.map { |band| band[:label] }
     repeaters = repeaters.where(band: bands) if bands.present?
 
-    modes = MODES.filter { |mode| send(:"#{mode}?") }
+    modes = MODES.filter { |mode| send(mode[:pred]) }
     if modes.present?
-      cond = Repeater.where(modes.first => true)
+      cond = Repeater.where(modes.first[:name] => true)
       modes[1..].each do |mode|
-        cond = cond.or(Repeater.where(mode => true))
+        cond = cond.or(Repeater.where(mode[:name] => true))
       end
       repeaters = repeaters.merge(cond)
     end
@@ -96,7 +107,7 @@ class RepeaterSearch < ApplicationRecord
   end
 
   def all_modes?
-    !fm? && !dstar? && !fusion? && !dmr? && !nxdn?
+    MODES.map { |mode| !send(mode[:pred]) }.all?
   end
 end
 
@@ -120,14 +131,16 @@ end
 #  distance                :integer
 #  distance_to_coordinates :boolean
 #  distance_unit           :string
-#  dmr                     :boolean
-#  dstar                   :boolean
-#  fm                      :boolean
-#  fusion                  :boolean
+#  dmr                     :boolean          default(FALSE), not null
+#  dstar                   :boolean          default(FALSE), not null
+#  fm                      :boolean          default(FALSE), not null
+#  fusion                  :boolean          default(FALSE), not null
 #  latitude                :decimal(, )
 #  longitude               :decimal(, )
 #  name                    :string
-#  nxdn                    :boolean
+#  nxdn                    :boolean          default(FALSE), not null
+#  p25                     :boolean          default(FALSE), not null
+#  tetra                   :boolean          default(FALSE), not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  user_id                 :uuid

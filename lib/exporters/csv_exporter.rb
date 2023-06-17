@@ -16,12 +16,16 @@
 class CsvExporter < Exporter
   def export
     columns = [
-      :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency, :fm, :nfm,
-      :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch, :dstar, :dstar_port, :fusion, :dmr, :dmr_color_code,
-      :dmr_network, :nxdn, :p25, :tetra, :latitude, :longitude, :grid_square, :address, :locality, :region,
-      :post_code, :country_id, :tx_power, :tx_antenna, :tx_antenna_polarization, :rx_antenna,
-      :rx_antenna_polarization, :altitude_asl, :altitude_agl, :bearing, :utc_offset, :channel, :notes, :source,
-      :redistribution_limitations
+      :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency,
+      :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch, :fm_bandwidth,
+      :dstar, :dstar_port,
+      :fusion,
+      :dmr, :dmr_color_code, :dmr_network,
+      :nxdn, :p25, :tetra,
+      :latitude, :longitude, :grid_square, :address, :locality, :region, :post_code, :country_id,
+      :tx_power, :tx_antenna, :tx_antenna_polarization, :rx_antenna, :rx_antenna_polarization,
+      :altitude_asl, :altitude_agl, :bearing,
+      :utc_offset, :channel, :notes, :source, :redistribution_limitations
     ]
     column_names = columns.each_with_object({}) do |column, columns|
       columns[column] = column.to_s.tr("_", " ").titleize
@@ -32,7 +36,9 @@ class CsvExporter < Exporter
     column_names[:fm_tone_burst] = "Tone Burst"
     column_names[:fm_ctcss_tone] = "CTCSS Tone"
     column_names[:fm_tone_squelch] = "Tone Squelch"
+    column_names[:fm_bandwidth] = "Bandwidth"
     column_names[:dstar] = "D-Star"
+    column_names[:dstar_port] = "D-Star Port"
     column_names[:dmr] = "DMR"
     column_names[:dmr_color_code] = "DMR Color Code"
     column_names[:dmr_network] = "DMR Network"

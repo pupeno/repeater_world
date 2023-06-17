@@ -27,7 +27,7 @@ You should have received a copy of the GNU Affero General Public License along w
       <% else %>
         <% RepeaterSearch::BANDS.each do |band| %>
           <% if repeater_search.send(band[:pred]) %>
-            <%= badge band[:name] %>
+            <%= badge band[:label] %>
           <% end %>
         <% end %>
       <% end %>

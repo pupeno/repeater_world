@@ -44,10 +44,10 @@ FactoryBot.define do
 
       channel { "channel" }
       fm { true }
-      nfm { true }
       fm_ctcss_tone { Repeater::CTCSS_TONES.first }
       fm_tone_burst { true }
       fm_tone_squelch { true }
+      fm_bandwidth { Repeater::FM_WIDE }
       dstar { true }
       dstar_port { "C" }
       fusion { true }
@@ -103,6 +103,7 @@ end
 #  dstar                      :boolean
 #  dstar_port                 :string
 #  fm                         :boolean
+#  fm_bandwidth               :string
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
@@ -118,7 +119,6 @@ end
 #  locality                   :string
 #  location                   :geography        point, 4326
 #  name                       :string
-#  nfm                        :boolean
 #  notes                      :text
 #  nxdn                       :boolean
 #  operational                :boolean
