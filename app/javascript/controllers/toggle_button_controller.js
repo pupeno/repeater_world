@@ -29,7 +29,7 @@ export default class extends Controller {
 
   updateButtonState() {
     const whenChecked = ["ring-2", "ring-orange-600", "ring-offset-2", "bg-orange-600", "text-white", "hover:bg-orange-500"]
-    const whenUnchecked = ["ring-1", "ring-inset", "ring-gray-300", "bg-white", "text-gray-900", "hover:bg-gray-50"]
+    const whenUnchecked = ["ring-1", "ring-inset", "ring-orange-300", "bg-white", "text-gray-900", "hover:bg-orange-50"]
 
     if (this.checkbox.checked) {
       this.label.classList.remove(...whenUnchecked)
