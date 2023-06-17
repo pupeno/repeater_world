@@ -49,22 +49,21 @@ You should have received a copy of the GNU Affero General Public License along w
   <% end %>
 
   <div class="my-3"
-       data-controller="multi-select-toggle-button-group"
-       data-multi-select-toggle-button-group-all-value="band_all">
+       data-controller="multi-toggle"
+       data-multi-toggle-all-value="band_all">
     Band:
     <%= toggle_button form, "band_all", "All" %>
     <% RepeaterSearch::BANDS.each do |band| %>
       <%= toggle_button form, band[:method], band[:name], class: band[:secondary] ? "hidden" : "" %>
     <% end %>
-    <%# This needs to be kept in sync with the stile in _toggle_button.html.erb %>
     <%= toggle_like_button "More",
-                           data: { action: "click->multi-select-toggle-button-group#showMore",
-                                   multi_select_toggle_button_group_target: "more" } %>
+                           data: { action: "click->multi-toggle#showMore",
+                                   multi_toggle_target: "more" } %>
   </div>
 
   <div class="my-3"
-       data-controller="multi-select-toggle-button-group"
-       data-multi-select-toggle-button-group-all-value="mode_all">
+       data-controller="multi-toggle"
+       data-multi-toggle-all-value="mode_all">
     Mode:
     <%= toggle_button form, "mode_all", "All" %>
     <%= toggle_button form, :fm, "FM" %>
