@@ -14,7 +14,7 @@
  */
 
 import {Controller} from "@hotwired/stimulus"
-import {WHEN_CHECKED, WHEN_UNCHECKED} from "./toggle_button_controller"
+import {WHEN_CHECKED, WHEN_UNCHECKED} from "controllers/toggle_button_controller"
 
 export default class extends Controller {
   static targets = ["more", "all", "toggle"]
