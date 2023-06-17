@@ -72,6 +72,9 @@ export default class extends Controller {
         toggle.classList.remove("hidden")
       }
     })
+    if (this.toggleTargets.filter((toggle) => toggle.classList.contains("hidden")).length === 0) {
+      this.moreTarget.classList.add("hidden")
+    }
   }
 
   getCheckbox(element) {
