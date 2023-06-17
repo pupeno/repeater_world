@@ -47,7 +47,7 @@ class RepeaterSearchesController < ApplicationController
     bands = if @repeater_search.all_bands?
       ["all bands"]
     else
-      RepeaterSearch::BANDS.map { |band| band[:name] if @repeater_search.send(band[:method]) }.compact
+      RepeaterSearch::BANDS.map { |band| band[:label] if @repeater_search.send(band[:pred]) }.compact
     end
     distance = "#{@repeater_search.distance}#{@repeater_search.distance_unit} of #{@repeater_search.latitude}, #{@repeater_search.longitude}" if @repeater_search.distance_to_coordinates
     @repeater_search.name = "#{modes.to_sentence} on #{bands.to_sentence} #{distance}".strip
@@ -121,7 +121,7 @@ class RepeaterSearchesController < ApplicationController
   def repeater_search_params
     params.permit(
       :d,
-      s: RepeaterSearch::BANDS.map { |band| band[:method] } +
+      s: RepeaterSearch::BANDS.map { |band| band[:name] } +
         RepeaterSearch::MODES.map { |mode| mode[:name] } +
         [:name, :distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
       e: [:format]
