@@ -38,7 +38,19 @@ class RepeaterSearch < ApplicationRecord
     band[:pred] = :"#{band[:method]}?"
   end
 
-  MODES = %w[fm dstar fusion dmr nxdn] # Modes that are supported during search.
+  # Modes that are supported during search.
+  MODES = [
+    MODE_FM = {label: "FM", name: :fm, secondary: false},
+    MODE_DSTAR = {label: "D-Star", name: :dstar, secondary: false},
+    MODE_FUSION = {label: "Fusion", name: :fusion, secondary: false},
+    MODE_DMR = {label: "DMR", name: :dmr, secondary: false},
+    MODE_NXDN = {label: "NXDN", name: :nxdn, secondary: true},
+    MODE_P25 = {label: "P25", name: :p25, secondary: true},
+    MODE_TETRA = {label: "TETRA", name: :tetra, secondary: true}
+  ]
+  MODES.each do |mode|
+    mode[:pred] = :"#{mode[:name]}?"
+  end
 
   belongs_to :user
 
@@ -59,11 +71,11 @@ class RepeaterSearch < ApplicationRecord
       .map { |band| band[:name] }
     repeaters = repeaters.where(band: bands) if bands.present?
 
-    modes = MODES.filter { |mode| send(:"#{mode}?") }
+    modes = MODES.filter { |mode| send(mode[:pred]) }
     if modes.present?
-      cond = Repeater.where(modes.first => true)
+      cond = Repeater.where(modes.first[:name] => true)
       modes[1..].each do |mode|
-        cond = cond.or(Repeater.where(mode => true))
+        cond = cond.or(Repeater.where(mode[:name] => true))
       end
       repeaters = repeaters.merge(cond)
     end
@@ -96,7 +108,7 @@ class RepeaterSearch < ApplicationRecord
   end
 
   def all_modes?
-    !fm? && !dstar? && !fusion? && !dmr? && !nxdn?
+    MODES.map { |mode| !send(mode[:pred]) }.all?
   end
 end
 

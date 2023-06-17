@@ -124,7 +124,7 @@ class RepeaterSearchesController < ApplicationController
     params.permit(
       :d,
       s: RepeaterSearch::BANDS.map { |band| band[:method] } +
-        RepeaterSearch::MODES +
+        RepeaterSearch::MODES.map {|mode| mode[:name]} +
         [:name, :distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
       e: [:format]
     )

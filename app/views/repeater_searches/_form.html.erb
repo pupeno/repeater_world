@@ -64,11 +64,14 @@ You should have received a copy of the GNU Affero General Public License along w
   <div class="my-3" data-controller="multi-toggle">
     Mode:
     <%= toggle_button form, "mode_all", "All", data: { multi_toggle_target: "all" } %>
-    <%= toggle_button form, :fm, "FM", data: { multi_toggle_target: "toggle" } %>
-    <%= toggle_button form, :dstar, "D-Star", data: { multi_toggle_target: "toggle" } %>
-    <%= toggle_button form, :fusion, "Fusion", data: { multi_toggle_target: "toggle" } %>
-    <%= toggle_button form, :dmr, "DMR", data: { multi_toggle_target: "toggle" } %>
-    <%= toggle_button form, :nxdn, "NXDN", data: { multi_toggle_target: "toggle" } %>
+    <% RepeaterSearch::MODES.each do |mode| %>
+      <%= toggle_button form, mode[:name], mode[:label],
+                        class: mode[:secondary] ? "hidden" : "",
+                        data: { multi_toggle_target: "toggle" } %>
+    <% end %>
+    <%= toggle_like_button "More",
+                           data: { action: "click->multi-toggle#showMore",
+                                   multi_toggle_target: "more" } %>
   </div>
 
   <div class="my-3" data-controller="distance-to-coordinates">
