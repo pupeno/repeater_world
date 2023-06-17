@@ -48,7 +48,9 @@ export default class extends Controller {
     if (shouldCheck !== this.allCheckbox.checked) {
       this.allCheckbox.checked = shouldCheck
       let controller = this.application.getControllerForElementAndIdentifier(this.allCheckbox.parentElement, "toggle-button")
-      if (controller) controller.updateButtonState()
+      if (controller) {
+        controller.updateButtonState()
+      }
     }
   }
 
@@ -57,12 +59,16 @@ export default class extends Controller {
       Array.from(this.otherCheckboxes).forEach((checkbox) => {
         checkbox.checked = false
         let controller = this.application.getControllerForElementAndIdentifier(checkbox.parentElement, "toggle-button")
-        if (controller) controller.updateButtonState()
+        if (controller) {
+          controller.updateButtonState()
+        }
       })
     } else {
       this.allCheckbox.checked = true
       let controller = this.application.getControllerForElementAndIdentifier(this.allCheckbox.parentElement, "toggle-button")
-      if (controller) controller.updateButtonState()
+      if (controller) {
+        controller.updateButtonState()
+      }
     }
   }
 
