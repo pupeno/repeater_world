@@ -20,20 +20,8 @@ export default class extends Controller {
   static targets = ["more", "all", "toggle"]
 
   connect() {
-    this.toggleCheckBoxes = this.toggleTargets.map(this.getCheckbox)
-
-    this.toggleCheckBoxes.forEach((checkbox) => {
-      checkbox.addEventListener("change", this.updateStatusOfAllButton.bind(this))
-    })
-
     this.showButtonsThatArePressed()
     this.updateStatusOfAllButton()
-  }
-
-  disconnect() {
-    this.toggleCheckBoxes.forEach((checkbox) => {
-      checkbox.removeEventListener("change", this.updateStatusOfAllButton.bind(this))
-    })
   }
 
   selectAll(event) {
