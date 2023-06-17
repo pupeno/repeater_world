@@ -26,7 +26,6 @@ module RepeaterHelper
   def modes(repeater)
     modes = []
     modes << "FM" if repeater.fm?
-    modes << "NFM" if repeater.nfm?
     modes << "D-Star" if repeater.dstar?
     modes << "Fusion" if repeater.fusion?
     modes << "DMR" if repeater.dmr?

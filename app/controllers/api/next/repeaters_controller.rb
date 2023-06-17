@@ -21,12 +21,16 @@ class Api::Next::RepeatersController < ApplicationController
 
     @repeaters = Repeater.all.includes(:country)
     @fields = [
-      :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency, :fm, :nfm,
-      :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch, :dstar, :dstar_port, :fusion, :dmr, :dmr_color_code,
-      :dmr_network, :nxdn, :p25, :tetra, :latitude, :longitude, :grid_square, :address, :locality, :region,
-      :post_code, :country_id, :tx_power, :tx_antenna, :tx_antenna_polarization, :rx_antenna,
-      :rx_antenna_polarization, :altitude_asl, :altitude_agl, :bearing, :utc_offset, :channel, :notes, :source,
-      :redistribution_limitations, :external_id
+      :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency,
+      :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch, :fm_bandwidth,
+      :dstar, :dstar_port,
+      :fusion,
+      :dmr, :dmr_color_code, :dmr_network,
+      :nxdn, :p25, :tetra,
+      :latitude, :longitude, :grid_square, :address, :locality, :region, :post_code, :country_id,
+      :tx_power, :tx_antenna, :tx_antenna_polarization, :rx_antenna, :rx_antenna_polarization,
+      :altitude_asl, :altitude_agl, :bearing,
+      :utc_offset, :channel, :notes, :source, :redistribution_limitations, :external_id
     ]
 
     respond_to do |format|
