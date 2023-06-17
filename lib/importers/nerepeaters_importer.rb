@@ -219,7 +219,8 @@ class NerepeatersImporter < Importer
     if raw_repeater[MODE].blank?
       repeater.fm = true # We are just assuming it's FM otherwise we'll be throwing away most of the data.
     elsif raw_repeater[MODE].strip == "NFM"
-      repeater.nfm = true
+      repeater.fm = true
+      repeater.fm_bandwidth = Repeater::FM_NARROW
     elsif raw_repeater[MODE].strip == "D-STAR"
       repeater.dstar = true
     elsif raw_repeater[MODE].strip == "YSF"
@@ -237,13 +238,15 @@ class NerepeatersImporter < Importer
       repeater.fm = true
       repeater.dstar = true
     elsif raw_repeater[MODE].strip == "NXDN/NFM"
-      repeater.nfm = true
+      repeater.fm = true
+      repeater.fm_bandwidth = Repeater::FM_NARROW
       repeater.nxdn = true
     elsif raw_repeater[MODE].strip == "YSF/FM"
       repeater.fm = true
       repeater.fusion = true
     elsif raw_repeater[MODE].strip == "DMR/NFM"
-      repeater.nfm = true
+      repeater.fm = true
+      repeater.fm_bandwidth = Repeater::FM_NARROW
       repeater.dmr = true
     elsif raw_repeater[MODE].strip == "DMR/FM"
       repeater.fm = true
@@ -255,7 +258,8 @@ class NerepeatersImporter < Importer
       repeater.fm = true
       repeater.p25 = true
     elsif raw_repeater[MODE].strip == "P25/NFM"
-      repeater.nfm = true
+      repeater.fm = true
+      repeater.fm_bandwidth = Repeater::FM_NARROW
       repeater.p25 = true
     elsif raw_repeater[MODE].strip == "P25DMR/FM"
       repeater.fm = true
@@ -290,7 +294,7 @@ class NerepeatersImporter < Importer
     end
     access_code = access_code.strip if access_code.respond_to? :strip
 
-    if (repeater.fm? || repeater.nfm?) && access_code.to_f&.in?(Repeater::CTCSS_TONES)
+    if repeater.fm? && access_code.to_f&.in?(Repeater::CTCSS_TONES)
       repeater.fm_ctcss_tone = access_code.to_f
     elsif repeater.modes == Set[:fm, :p25] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
       # TODO: import the first part correctly, it's likely for P25.
@@ -298,16 +302,7 @@ class NerepeatersImporter < Importer
     elsif repeater.modes == Set[:fm, :nxdn] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
       # TODO: import the first part correctly, it's likely for NXDN.
       repeater.fm_ctcss_tone = access_code.split("/").second.to_f
-    elsif repeater.modes == Set[:nfm, :nxdn] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
-      # TODO: import the first part correctly, it's likely for NXDN.
-      repeater.fm_ctcss_tone = access_code.split("/").second.to_f
-    elsif repeater.modes == Set[:nfm, :p25] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
-      # TODO: import the first part correctly, it's likely for P25.
-      repeater.fm_ctcss_tone = access_code.split("/").second.to_f
-    elsif repeater.modes == Set[:fm, :p25] && access_code.in?(%w[NAC353/D244])
-      # TODO: import the first part correctly, it's likely for P25.
-      # TODO: what's the second part? What are these D numbers?
-    elsif repeater.modes == Set[:nfm, :p25] && access_code.in?(%w[NAC250/D244])
+    elsif repeater.modes == Set[:fm, :p25] && access_code.in?(%w[NAC353/D244 NAC250/D244])
       # TODO: import the first part correctly, it's likely for P25.
       # TODO: what's the second part? What are these D numbers?
     elsif repeater.modes == Set[:fm, :dstar] &&
@@ -325,7 +320,7 @@ class NerepeatersImporter < Importer
       # TODO: import these correctly.
     elsif repeater.p25? && access_code.in?(["NAC223"])
       # TODO: import these correctly.
-    elsif (repeater.fm? || repeater.nfm?) && access_code.in?(%w[D244 D432 D023 D073 D411 D031 D051 D245 D271])
+    elsif repeater.fm? && access_code.in?(%w[D244 D432 D023 D073 D411 D031 D051 D245 D271])
       # TODO: what is this?
     elsif access_code.blank?
       # Nothing we can do here really, we have no idea.

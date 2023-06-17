@@ -50,14 +50,16 @@ end
 #  distance                :integer
 #  distance_to_coordinates :boolean
 #  distance_unit           :string
-#  dmr                     :boolean
-#  dstar                   :boolean
-#  fm                      :boolean
-#  fusion                  :boolean
+#  dmr                     :boolean          default(FALSE), not null
+#  dstar                   :boolean          default(FALSE), not null
+#  fm                      :boolean          default(FALSE), not null
+#  fusion                  :boolean          default(FALSE), not null
 #  latitude                :decimal(, )
 #  longitude               :decimal(, )
 #  name                    :string
-#  nxdn                    :boolean
+#  nxdn                    :boolean          default(FALSE), not null
+#  p25                     :boolean          default(FALSE), not null
+#  tetra                   :boolean          default(FALSE), not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  user_id                 :uuid
