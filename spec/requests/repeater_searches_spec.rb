@@ -47,12 +47,41 @@ RSpec.describe "/repeater_searches", type: :request do
         expect(response.body).not_to include("4M FM")
       end
 
+      it "runs a search by coordinates" do
+        get search_url(s: attributes_for(
+          :repeater_search,
+          geosearch: true, geosearch_type: RepeaterSearch::GEOSEARCH_COORDINATES,
+          distance: 160, distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0
+        ))
+        expect(response).to be_successful
+        expect(response).to render_template(:new)
+        expect(response.body).to include("Search")
+        expect(response.body).to include("Save Search")
+        expect(response.body).to include("2M FM")
+        expect(response.body).not_to include("4M FM")
+      end
+
+      it "runs a search by my location" do
+        get search_url(s: attributes_for(
+          :repeater_search,
+          geosearch: true, geosearch_type: RepeaterSearch::GEOSEARCH_MY_LOCATION,
+          distance: 160, distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0
+        ))
+        expect(response).to be_successful
+        expect(response).to render_template(:new)
+        expect(response.body).to include("Search")
+        expect(response.body).to include("Save Search")
+        expect(response.body).to include("2M FM")
+        expect(response.body).not_to include("4M FM")
+      end
+
       it "runs a search with all possible options" do
         get search_url(s: attributes_for(
           :repeater_search,
           band_10m: true, band_6m: true, band_4m: true, band_2m: true, band_70cm: true, band_23cm: true,
           fm: true, dstar: true, fusion: true, dmr: true, nxdn: true,
-          distance_to_coordinates: true, distance: 1000, distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0
+          geosearch: true, geosearch_type: RepeaterSearch::GEOSEARCH_MY_LOCATION,
+          distance: 1000, distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0
         ))
         expect(response).to be_successful
         expect(response).to render_template(:new)
@@ -167,8 +196,9 @@ RSpec.describe "/repeater_searches", type: :request do
       end
 
       it "show a saved geo search in km" do
-        repeater_search = create(:repeater_search, distance_to_coordinates: true, distance: 10,
-          distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0,
+        repeater_search = create(:repeater_search,
+          geosearch: true, geosearch_type: RepeaterSearch::GEOSEARCH_MY_LOCATION,
+          distance: 10, distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0,
           user: @current_user)
         get repeater_search_url(repeater_search)
         expect(response).to be_successful
@@ -179,8 +209,9 @@ RSpec.describe "/repeater_searches", type: :request do
       end
 
       it "show a a saved geo search in miles" do
-        repeater_search = create(:repeater_search, distance_to_coordinates: true, distance: 100,
-          distance_unit: RepeaterSearch::MILES, latitude: 0, longitude: 0,
+        repeater_search = create(:repeater_search,
+          geosearch: true, geosearch_type: RepeaterSearch::GEOSEARCH_MY_LOCATION,
+          distance: 100, distance_unit: RepeaterSearch::MILES, latitude: 0, longitude: 0,
           user: @current_user)
         get repeater_search_url(repeater_search)
         expect(response).to be_successful

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_17_143028) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_18_091421) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -62,7 +62,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_17_143028) do
     t.boolean "fusion", default: false, null: false
     t.boolean "dmr", default: false, null: false
     t.boolean "nxdn", default: false, null: false
-    t.boolean "distance_to_coordinates"
+    t.boolean "geosearch"
     t.integer "distance"
     t.string "distance_unit"
     t.decimal "latitude"
@@ -78,6 +78,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_17_143028) do
     t.boolean "band_3cm", default: false, null: false
     t.boolean "p25", default: false, null: false
     t.boolean "tetra", default: false, null: false
+    t.string "geosearch_type"
     t.index ["user_id"], name: "index_repeater_searches_on_user_id"
   end
 
