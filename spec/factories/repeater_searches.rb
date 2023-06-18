@@ -44,6 +44,7 @@ end
 #  fusion         :boolean          default(FALSE), not null
 #  geosearch      :boolean
 #  geosearch_type :string
+#  grid_square    :string
 #  latitude       :decimal(, )
 #  longitude      :decimal(, )
 #  name           :string

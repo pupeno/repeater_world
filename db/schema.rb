@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_18_091421) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_18_125541) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -79,6 +79,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_18_091421) do
     t.boolean "p25", default: false, null: false
     t.boolean "tetra", default: false, null: false
     t.string "geosearch_type"
+    t.string "grid_square"
     t.index ["user_id"], name: "index_repeater_searches_on_user_id"
   end
 

@@ -25,12 +25,14 @@ class RepeaterSearchesController < ApplicationController
     defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s] || {}))
     if repeater_search_params[:s].present?
-      @repeaters = @repeater_search.run
-      @repeaters = if @selected_tab == "map"
-        # Adding a "where" seems to break the includes(:country) in RepeaterSearch#run.
-        @repeaters.where("location IS NOT NULL").includes(:country)
-      else
-        @repeaters.page(params[:p] || 1)
+      if @repeater_search.valid?
+        @repeaters = @repeater_search.run
+        @repeaters = if @selected_tab == "map"
+          # Adding a "where" seems to break the includes(:country) in RepeaterSearch#run.
+          @repeaters.where("location IS NOT NULL").includes(:country)
+        else
+          @repeaters.page(params[:p] || 1)
+        end
       end
     end
 
@@ -50,10 +52,12 @@ class RepeaterSearchesController < ApplicationController
       RepeaterSearch::BANDS.map { |band| band[:label] if @repeater_search.send(band[:pred]) }.compact
     end
     if @repeater_search.geosearch?
-      distance = if @repeater_search.geosearch_type == RepeaterSearch::GEOSEARCH_MY_LOCATION
+      distance = if @repeater_search.geosearch_type == RepeaterSearch::MY_LOCATION
         "#{@repeater_search.distance}#{@repeater_search.distance_unit} of my location (#{@repeater_search.latitude.round(1)}, #{@repeater_search.longitude.round(1)})"
-      else
+      elsif @repeater_search.geosearch_type == RepeaterSearch::COORDINATES
         "#{@repeater_search.distance}#{@repeater_search.distance_unit} of coordinates #{@repeater_search.latitude.round(3)}, #{@repeater_search.longitude.round(3)}"
+      elsif @repeater_search.geosearch_type == RepeaterSearch::GRID_SQUARE
+        "#{@repeater_search.distance}#{@repeater_search.distance_unit} of grid square #{@repeater_search.grid_square}"
       end
     end
     @repeater_search.name = "#{modes.to_sentence} on #{bands.to_sentence} #{distance}".strip.capitalize
@@ -129,7 +133,7 @@ class RepeaterSearchesController < ApplicationController
       :d,
       s: RepeaterSearch::BANDS.map { |band| band[:name] } +
         RepeaterSearch::MODES.map { |mode| mode[:name] } +
-        [:name, :geosearch, :distance, :distance_unit, :geosearch_type, :latitude, :longitude],
+        [:name, :geosearch, :distance, :distance_unit, :geosearch_type, :latitude, :longitude, :grid_square],
       e: [:format]
     )
   end

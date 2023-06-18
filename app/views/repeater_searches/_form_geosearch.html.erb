@@ -48,8 +48,9 @@ You should have received a copy of the GNU Affero General Public License along w
   <span class="text-gray-300"
         data-geosearch-target="controlled">of</span>
   <%= form.select :geosearch_type,
-                  { "my location" => RepeaterSearch::GEOSEARCH_MY_LOCATION,
-                    "the coordinates" => RepeaterSearch::GEOSEARCH_COORDINATES },
+                  { "my location" => RepeaterSearch::MY_LOCATION,
+                    "the coordinates" => RepeaterSearch::COORDINATES,
+                    "the grid square" => RepeaterSearch::GRID_SQUARE, },
                   {},
                   { class: "inline-block
                             mt-1 pl-3 pr-10
@@ -87,5 +88,15 @@ You should have received a copy of the GNU Affero General Public License along w
                           data: { geosearch_target: "longitude controlled",
                                   action: "click->geosearch#enable" } %>
     </div>
+  </div>
+  <div class="inline-block hidden"
+       data-geosearch-target="gridSquareFields">
+    <%= form.text_field :grid_square, class: "inline w-28
+                                              rounded-md border-0 ring-1 ring-inset ring-gray-300
+                                              px-2
+                                              sm:text-sm text-gray-300
+                                              focus:ring-2 focus:ring-orange-500",
+                        data: { geosearch_target: "grid_square controlled",
+                                action: "click->geosearch#enable" } %>
   </div>
 </div>
