@@ -40,13 +40,13 @@ class RepeaterSearch < ApplicationRecord
 
   # Modes that are supported during search.
   MODES = [
-    FM = { label: "FM", name: :fm, secondary: false},
-    DSTAR = { label: "D-Star", name: :dstar, secondary: false},
-    FUSION = { label: "Fusion", name: :fusion, secondary: false},
-    DMR = { label: "DMR", name: :dmr, secondary: false},
-    NXDN = { label: "NXDN", name: :nxdn, secondary: true},
-    P25 = { label: "P25", name: :p25, secondary: true},
-    TETRA = { label: "TETRA", name: :tetra, secondary: true}
+    FM = {label: "FM", name: :fm, secondary: false},
+    DSTAR = {label: "D-Star", name: :dstar, secondary: false},
+    FUSION = {label: "Fusion", name: :fusion, secondary: false},
+    DMR = {label: "DMR", name: :dmr, secondary: false},
+    NXDN = {label: "NXDN", name: :nxdn, secondary: true},
+    P25 = {label: "P25", name: :p25, secondary: true},
+    TETRA = {label: "TETRA", name: :tetra, secondary: true}
   ]
   MODES.each do |mode|
     mode[:pred] = :"#{mode[:name]}?"

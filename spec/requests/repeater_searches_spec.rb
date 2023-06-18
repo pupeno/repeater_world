@@ -47,7 +47,6 @@ RSpec.describe "/repeater_searches", type: :request do
         expect(response.body).not_to include("4M FM")
       end
 
-
       it "runs a search by my location" do
         get search_url(s: attributes_for(
           :repeater_search,
