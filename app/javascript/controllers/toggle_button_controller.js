@@ -23,10 +23,10 @@ export default class extends Controller {
   connect() {
     this.checkbox = this.element.querySelectorAll('input[type=checkbox]')[0]
     this.label = this.element
-    this.updateButtonState()
+    this.updateStyle()
   }
 
-  updateButtonState() {
+  updateStyle() {
     if (this.checkbox.checked) {
       this.label.classList.remove(...(WHEN_UNCHECKED))
       this.label.classList.add(...(WHEN_CHECKED))
