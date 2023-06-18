@@ -12,7 +12,7 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div class="my-3" data-controller="geosearch">
+<div class="geosearch my-3" data-controller="geosearch">
   <%= toggle_checkbox form, :distance_to_coordinates,
                       { data: { action: "change->geosearch#toggleEnableDisable",
                                 geosearch_target: "activator" } } %>
