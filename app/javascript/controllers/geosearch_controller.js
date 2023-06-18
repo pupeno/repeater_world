@@ -19,7 +19,9 @@ const GRAYED_OUT_TEXT = "text-gray-300"
 const NORMAL_TEXT = "text-gray-900"
 
 export default class extends Controller {
-  static targets = ["activator", "controlled", "type", "coordinatesFields", "latitude", "longitude"]
+  static targets = [
+    "activator", "controlled", "type", "coordinatesFields", "latitude", "longitude", "gridSquareFields"
+  ]
 
   connect() {
     this.updateState()
@@ -39,11 +41,16 @@ export default class extends Controller {
     }
     if (this.typeTarget.value === "my_location") {
       this.coordinatesFieldsTarget.classList.add("hidden")
+      this.gridSquareFieldsTarget.classList.add("hidden")
       if (this.activatorTarget.checked) {
         this.geolocate()
       }
     } else if (this.typeTarget.value === "coordinates") {
       this.coordinatesFieldsTarget.classList.remove("hidden")
+      this.gridSquareFieldsTarget.classList.add("hidden")
+    } else if (this.typeTarget.value === "grid_square") {
+      this.coordinatesFieldsTarget.classList.add("hidden")
+      this.gridSquareFieldsTarget.classList.remove("hidden")
     } else {
       throw `Unexpected type of geosearch : ${this.typeTarget.value}`
     }
