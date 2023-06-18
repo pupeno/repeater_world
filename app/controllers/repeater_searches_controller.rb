@@ -54,9 +54,9 @@ class RepeaterSearchesController < ApplicationController
     end
     if @repeater_search.geosearch?
       distance = if @repeater_search.geosearch_type == RepeaterSearch::MY_LOCATION
-        "#{@repeater_search.distance}#{@repeater_search.distance_unit} of my location (#{@repeater_search.latitude.round(1)}, #{@repeater_search.longitude.round(1)})"
+        "#{@repeater_search.distance}#{@repeater_search.distance_unit} of my location (#{@repeater_search.latitude&.round(1)}, #{@repeater_search.longitude&.round(1)})"
       elsif @repeater_search.geosearch_type == RepeaterSearch::COORDINATES
-        "#{@repeater_search.distance}#{@repeater_search.distance_unit} of coordinates #{@repeater_search.latitude.round(3)}, #{@repeater_search.longitude.round(3)}"
+        "#{@repeater_search.distance}#{@repeater_search.distance_unit} of coordinates #{@repeater_search.latitude&.round(3)}, #{@repeater_search.longitude&.round(3)}"
       elsif @repeater_search.geosearch_type == RepeaterSearch::GRID_SQUARE
         "#{@repeater_search.distance}#{@repeater_search.distance_unit} of grid square #{@repeater_search.grid_square}"
       end

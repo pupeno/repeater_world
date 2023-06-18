@@ -28,7 +28,14 @@ You should have received a copy of the GNU Affero General Public License along w
 
       <ul class="list-disc pl-4">
         <% repeater_search.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+          <li>
+            <%# It would be nice if errors weren't so broken in Rails :( %>
+            <% if error.attribute == :geosearch_type %>
+              Geographic search <%= error.message %>
+            <% else %>
+              <%= error.full_message %>
+            <% end %>
+          </li>
         <% end %>
       </ul>
     </div>
@@ -80,7 +87,7 @@ You should have received a copy of the GNU Affero General Public License along w
                                    multi_toggle_target: "more" } %>
   </div>
 
-  <%= render "form_geosearch", {form: form} %>
+  <%= render "form_geosearch", { form: form } %>
 
   <% if unsaved_changes %>
     <p>You have unsaved changes to your search.</p>

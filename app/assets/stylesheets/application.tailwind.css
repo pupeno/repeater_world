@@ -46,6 +46,15 @@
         @apply focus:ring-red-500 focus:border-red-500 border-red-300 text-red-900 placeholder-red-300;
     }
 
+    .geosearch .field_with_errors {
+        @apply inline-block;
+    }
+
+    .geosearch .field_with_errors input,
+    .geosearch .field_with_errors select {
+        @apply focus:ring-red-500 border-red-500 text-red-900 placeholder-red-300;
+    }
+
     /* Why? so that I can make the chevrons slightly lighter, from 6b7280 to D1D5DB (gray-300) */
     .geosearch select.text-gray-300 {
         background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23D1D5DB' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");

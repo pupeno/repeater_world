@@ -150,6 +150,8 @@ class RepeaterSearch < ApplicationRecord
     # to the geosearch_type field so that it's actually visible in the form.
     if geosearch? && geosearch_type == MY_LOCATION && (errors[:latitude].present? || errors[:longitude].present?)
       errors.add(:geosearch_type, "couldn't get valid coordinates for your location")
+      errors.delete(:latitude)
+      errors.delete(:longitude)
     end
 
     # If we are searching for grid square, populate the lat and long.
