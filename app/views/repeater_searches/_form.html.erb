@@ -81,48 +81,67 @@ You should have received a copy of the GNU Affero General Public License along w
   </div>
 
   <div class="my-3" data-controller="distance-to-coordinates">
-    <%= toggle_checkbox form, :distance_to_coordinates, { data: { distance_to_coordinates_target: "controller" } } %>
+    <%= toggle_checkbox form, :distance_to_coordinates,
+                        { data: { action: "change->distance-to-coordinates#toggleEnableDisable",
+                                  distance_to_coordinates_target: "activator" } } %>
 
-    <span data-distance-to-coordinates-target="controlled">Within</span>
-    <div class="inline-block relative mt-1 rounded-md shadow-sm w-36"
-         data-distance-to-coordinates-target="controlled">
-      <%= form.text_field :distance, class: "block w-full
-                                             rounded-md border-gray-300
-                                             pl-1 pr-20
-                                             focus:border-orange-500 focus:ring-orange-500
-                                             text-right sm:text-sm", placeholder: 0 %>
+    <span class="text-gray-300"
+          data-distance-to-coordinates-target="controlled">Within</span>
+
+    <div class="inline-block relative mt-1 rounded-md shadow-sm w-36">
+      <%= form.text_field :distance,
+                          placeholder: 0,
+                          class: "block w-full
+                                  rounded-md border-gray-300
+                                  pl-1 pr-20
+                                  text-right sm:text-sm text-gray-300
+                                  focus:border-orange-500 focus:ring-orange-500",
+                          data: { distance_to_coordinates_target: "controlled",
+                                  action: "click->distance-to-coordinates#enable" } %>
       <div class="absolute inset-y-0 right-0 flex items-center">
         <%= form.label :distance_unit, "Unit", class: "sr-only" %>
         <%= form.select :distance_unit,
                         RepeaterSearch::DISTANCE_UNITS, {}, {
                           class: "h-full rounded-md border-transparent bg-transparent
                                   py-0 pl-1 pr-7
-                                  focus:border-orange-500 focus:ring-orange-500 sm:text-sm" } %>
+                                  sm:text-sm text-gray-300
+                                  focus:border-orange-500 focus:ring-orange-500",
+                          data: { distance_to_coordinates_target: "controlled",
+                                  action: "click->distance-to-coordinates#enable" } } %>
       </div>
     </div>
 
-    <span data-distance-to-coordinates-target="controlled">of the coordinates:</span>
+    <span class="text-gray-300"
+          data-distance-to-coordinates-target="controlled">of the coordinates:</span>
+
     <div class="inline-flex items-baseline">
-      <%= form.label :latitude, "latitude", data: { distance_to_coordinates_target: "controlled" }, class: "mr-2" %>
+      <%= form.label :latitude, "latitude", class: "mr-2 text-gray-300",
+                     data: { distance_to_coordinates_target: "controlled" } %>
       <%= form.text_field :latitude, class: "inline w-28
                                              rounded-md border-gray-300
                                              px-2
-                                             focus:border-orange-500 focus:ring-orange-500
-                                             text-right sm:text-sm",
-                          data: { distance_to_coordinates_target: "controlled" } %>
+                                             text-right sm:text-sm text-gray-300
+                                             focus:border-orange-500 focus:ring-orange-500",
+                          data: { distance_to_coordinates_target: "controlled",
+                                  action: "click->distance-to-coordinates#enable" } %>
     </div>
-    <span data-distance-to-coordinates-target="controlled">&nbsp;and</span>
+
+    <span class="text-gray-300"
+          data-distance-to-coordinates-target="controlled">&nbsp;and</span>
 
     <div class="inline-flex items-baseline">
-      <%= form.label :longitude, "longitude", class: "mr-2",
+      <%= form.label :longitude, "longitude", class: "mr-2 text-gray-300",
                      data: { distance_to_coordinates_target: "controlled" } %>
       <%= form.text_field :longitude, class: "inline w-28
                                               rounded-md border-gray-300
                                               px-2
-                                              focus:border-orange-500 focus:ring-orange-500
-                                              text-right sm:text-sm",
-                          data: { distance_to_coordinates_target: "controlled" } %>
-      <span data-distance-to-coordinates-target="controlled">.</span>
+                                              text-right sm:text-sm text-gray-300
+                                              focus:border-orange-500 focus:ring-orange-500",
+                          data: { distance_to_coordinates_target: "controlled",
+                                  action: "click->distance-to-coordinates#enable" } %>
+
+      <span class="text-gray-300"
+            data-distance-to-coordinates-target="controlled">.</span>
     </div>
   </div>
 

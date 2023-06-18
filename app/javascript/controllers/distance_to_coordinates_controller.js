@@ -15,25 +15,39 @@
 
 import {Controller} from "@hotwired/stimulus"
 
+const GRAYED_OUT_TEXT = "text-gray-300"
+const NORMAL_TEXT = "text-gray-900"
+
 export default class extends Controller {
-  static targets = ["controller", "controlled"]
+  static targets = ["activator", "controlled"]
 
   connect() {
-    this.controllerTarget.addEventListener("change", this.toggleDisable.bind(this))
-
-    this.toggleDisable()
+    this.toggleEnableDisable()
   }
 
-  disconnect() {
-    this.controllerTarget.removeEventListener("change", this.toggleDisable.bind(this))
-  }
-
-  toggleDisable() {
-    const grayedOutText = "text-gray-300"
-    if (this.controllerTarget.checked) {
-      this.controlledTargets.forEach(x => x.classList.remove(grayedOutText))
+  toggleEnableDisable() {
+    if (this.activatorTarget.checked) {
+      this.enable()
     } else {
-      this.controlledTargets.forEach(x => x.classList.add(grayedOutText))
+      this.disable()
     }
+  }
+
+  enable() {
+    this.controlledTargets.forEach(element => {
+      element.classList.remove(GRAYED_OUT_TEXT)
+      element.classList.add(NORMAL_TEXT)
+    })
+    if (!this.activatorTarget.checked) {
+      this.activatorTarget.checked = true
+      this.activatorTarget.dispatchEvent(new Event("change"))
+    }
+  }
+
+  disable() {
+    this.controlledTargets.forEach(element => {
+      element.classList.remove(NORMAL_TEXT)
+      element.classList.add(GRAYED_OUT_TEXT)
+    })
   }
 }
