@@ -23,19 +23,16 @@ export default class extends Controller {
   connect() {
     this.checkbox = this.element.querySelectorAll('input[type=checkbox]')[0]
     this.label = this.element
-    this.updateButtonState()
+    this.updateStyle()
   }
 
-  updateButtonState() {
-    const whenChecked = WHEN_CHECKED
-    const whenUnchecked = WHEN_UNCHECKED
-
+  updateStyle() {
     if (this.checkbox.checked) {
-      this.label.classList.remove(...whenUnchecked)
-      this.label.classList.add(...whenChecked)
+      this.label.classList.remove(...(WHEN_UNCHECKED))
+      this.label.classList.add(...(WHEN_CHECKED))
     } else {
-      this.label.classList.remove(...whenChecked)
-      this.label.classList.add(...whenUnchecked)
+      this.label.classList.remove(...(WHEN_CHECKED))
+      this.label.classList.add(...(WHEN_UNCHECKED))
     }
 
     const whenDisabled = ["opacity-25", "cursor-not-allowed"]

@@ -51,7 +51,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= badge "All Modes" %>
       <% end %>
 
-      <% if repeater_search.distance_to_coordinates? %>
+      <% if repeater_search.geosearch? %>
         <%= badge "Geo" %>
       <% end %>
     </div>

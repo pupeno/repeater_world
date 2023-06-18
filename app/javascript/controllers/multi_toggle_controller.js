@@ -28,7 +28,7 @@ export default class extends Controller {
     event.preventDefault()
     this.toggleTargets.forEach((toggle) => {
       this.getCheckbox(toggle).checked = false
-      this.application.getControllerForElementAndIdentifier(toggle, "toggle-button")?.updateButtonState()
+      this.application.getControllerForElementAndIdentifier(toggle, "toggle-button")?.updateStyle()
     })
     this.allTarget.classList.remove(...WHEN_UNCHECKED)
     this.allTarget.classList.add(...WHEN_CHECKED)

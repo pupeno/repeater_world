@@ -49,8 +49,14 @@ class RepeaterSearchesController < ApplicationController
     else
       RepeaterSearch::BANDS.map { |band| band[:label] if @repeater_search.send(band[:pred]) }.compact
     end
-    distance = "#{@repeater_search.distance}#{@repeater_search.distance_unit} of #{@repeater_search.latitude}, #{@repeater_search.longitude}" if @repeater_search.distance_to_coordinates
-    @repeater_search.name = "#{modes.to_sentence} on #{bands.to_sentence} #{distance}".strip
+    if @repeater_search.geosearch?
+      distance = if @repeater_search.geosearch_type == RepeaterSearch::GEOSEARCH_MY_LOCATION
+        "#{@repeater_search.distance}#{@repeater_search.distance_unit} of my location (#{@repeater_search.latitude.round(1)}, #{@repeater_search.longitude.round(1)})"
+      else
+        "#{@repeater_search.distance}#{@repeater_search.distance_unit} of coordinates #{@repeater_search.latitude.round(3)}, #{@repeater_search.longitude.round(3)}"
+      end
+    end
+    @repeater_search.name = "#{modes.to_sentence} on #{bands.to_sentence} #{distance}".strip.capitalize
   end
 
   def export
@@ -123,7 +129,7 @@ class RepeaterSearchesController < ApplicationController
       :d,
       s: RepeaterSearch::BANDS.map { |band| band[:name] } +
         RepeaterSearch::MODES.map { |mode| mode[:name] } +
-        [:name, :distance_to_coordinates, :distance, :distance_unit, :latitude, :longitude],
+        [:name, :geosearch, :distance, :distance_unit, :geosearch_type, :latitude, :longitude],
       e: [:format]
     )
   end
