@@ -23,35 +23,36 @@ end
 #
 # Table name: repeater_searches
 #
-#  id                      :uuid             not null, primary key
-#  band_10m                :boolean          default(FALSE), not null
-#  band_13cm               :boolean          default(FALSE), not null
-#  band_1_25m              :boolean          default(FALSE), not null
-#  band_23cm               :boolean          default(FALSE), not null
-#  band_2m                 :boolean          default(FALSE), not null
-#  band_33cm               :boolean          default(FALSE), not null
-#  band_3cm                :boolean          default(FALSE), not null
-#  band_4m                 :boolean          default(FALSE), not null
-#  band_6cm                :boolean          default(FALSE), not null
-#  band_6m                 :boolean          default(FALSE), not null
-#  band_70cm               :boolean          default(FALSE), not null
-#  band_9cm                :boolean          default(FALSE), not null
-#  distance                :integer
-#  distance_to_coordinates :boolean
-#  distance_unit           :string
-#  dmr                     :boolean          default(FALSE), not null
-#  dstar                   :boolean          default(FALSE), not null
-#  fm                      :boolean          default(FALSE), not null
-#  fusion                  :boolean          default(FALSE), not null
-#  latitude                :decimal(, )
-#  longitude               :decimal(, )
-#  name                    :string
-#  nxdn                    :boolean          default(FALSE), not null
-#  p25                     :boolean          default(FALSE), not null
-#  tetra                   :boolean          default(FALSE), not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  user_id                 :uuid
+#  id             :uuid             not null, primary key
+#  band_10m       :boolean          default(FALSE), not null
+#  band_13cm      :boolean          default(FALSE), not null
+#  band_1_25m     :boolean          default(FALSE), not null
+#  band_23cm      :boolean          default(FALSE), not null
+#  band_2m        :boolean          default(FALSE), not null
+#  band_33cm      :boolean          default(FALSE), not null
+#  band_3cm       :boolean          default(FALSE), not null
+#  band_4m        :boolean          default(FALSE), not null
+#  band_6cm       :boolean          default(FALSE), not null
+#  band_6m        :boolean          default(FALSE), not null
+#  band_70cm      :boolean          default(FALSE), not null
+#  band_9cm       :boolean          default(FALSE), not null
+#  distance       :integer
+#  distance_unit  :string
+#  dmr            :boolean          default(FALSE), not null
+#  dstar          :boolean          default(FALSE), not null
+#  fm             :boolean          default(FALSE), not null
+#  fusion         :boolean          default(FALSE), not null
+#  geosearch      :boolean
+#  geosearch_type :string
+#  latitude       :decimal(, )
+#  longitude      :decimal(, )
+#  name           :string
+#  nxdn           :boolean          default(FALSE), not null
+#  p25            :boolean          default(FALSE), not null
+#  tetra          :boolean          default(FALSE), not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  user_id        :uuid
 #
 # Indexes
 #

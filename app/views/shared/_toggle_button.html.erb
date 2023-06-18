@@ -25,6 +25,6 @@ You should have received a copy of the GNU Affero General Public License along w
   <%= form.check_box name,
                      class: "sr-only",
                      aria: { labelledby: "#{name}-actual-label" },
-                     data: { action: "change->toggle-button#updateButtonState" } %>
+                     data: { action: "change->toggle-button#updateStyle" } %>
   <span id="<%= "#{name}-actual-label" %>"><%= label %></span>
 <% end %>
