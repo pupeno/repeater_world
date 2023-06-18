@@ -25,6 +25,7 @@ gem "countries", "~> 5.3"
 gem "devise", "~> 4.9"
 gem "devise-async", "~> 1.0"
 gem "dotenv-rails", "~> 2.8"
+gem "dx-grid", "~> 1.0"
 gem "factory_bot_rails", "~> 6.2" # To be able to generate sample data in staging (which is production).
 gem "faker", "~> 3.1" # To be able to generate sample data in staging (which is production).
 gem "geocoder", "~> 1.8"
