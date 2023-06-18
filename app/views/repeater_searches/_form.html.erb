@@ -19,16 +19,23 @@ You should have received a copy of the GNU Affero General Public License along w
               html: { data: { repeater_searches_target: "form",
                               save_url: save_url,
                               save_method: save_method } }) do |form| %>
-  <% show_name_field = repeater_search.persisted? || repeater_search.errors.present?
+  <% show_name_field = repeater_search.saving || repeater_search.persisted?
      unsaved_changes = repeater_search.persisted? && repeater_search.changed? %>
 
   <% if repeater_search.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2>We found <%= pluralize(repeater_search.errors.count, "error") %> in this search:</h2>
+      <h2>We couldn't run this search because:</h2>
 
       <ul class="list-disc pl-4">
         <% repeater_search.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+          <li>
+            <%# It would be nice if errors weren't so broken in Rails :( %>
+            <% if error.attribute == :geosearch_type %>
+              Geographic search <%= error.message %>
+            <% else %>
+              <%= error.full_message %>
+            <% end %>
+          </li>
         <% end %>
       </ul>
     </div>
@@ -80,7 +87,7 @@ You should have received a copy of the GNU Affero General Public License along w
                                    multi_toggle_target: "more" } %>
   </div>
 
-  <%= render "form_geosearch", {form: form} %>
+  <%= render "form_geosearch", { form: form } %>
 
   <% if unsaved_changes %>
     <p>You have unsaved changes to your search.</p>

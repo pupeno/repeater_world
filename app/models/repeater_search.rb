@@ -40,36 +40,52 @@ class RepeaterSearch < ApplicationRecord
 
   # Modes that are supported during search.
   MODES = [
-    MODE_FM = {label: "FM", name: :fm, secondary: false},
-    MODE_DSTAR = {label: "D-Star", name: :dstar, secondary: false},
-    MODE_FUSION = {label: "Fusion", name: :fusion, secondary: false},
-    MODE_DMR = {label: "DMR", name: :dmr, secondary: false},
-    MODE_NXDN = {label: "NXDN", name: :nxdn, secondary: true},
-    MODE_P25 = {label: "P25", name: :p25, secondary: true},
-    MODE_TETRA = {label: "TETRA", name: :tetra, secondary: true}
+    FM = {label: "FM", name: :fm, secondary: false},
+    DSTAR = {label: "D-Star", name: :dstar, secondary: false},
+    FUSION = {label: "Fusion", name: :fusion, secondary: false},
+    DMR = {label: "DMR", name: :dmr, secondary: false},
+    NXDN = {label: "NXDN", name: :nxdn, secondary: true},
+    P25 = {label: "P25", name: :p25, secondary: true},
+    TETRA = {label: "TETRA", name: :tetra, secondary: true}
   ]
   MODES.each do |mode|
     mode[:pred] = :"#{mode[:name]}?"
   end
 
   GEOSEARCH_TYPES = [
-    GEOSEARCH_MY_LOCATION = "my_location",
-    GEOSEARCH_COORDINATES = "coordinates"
+    MY_LOCATION = "my_location",
+    COORDINATES = "coordinates",
+    GRID_SQUARE = "grid_square"
   ]
 
-  belongs_to :user
+  attr_writer :saving
 
-  validates :name, presence: true
+  belongs_to :user, optional: true
+
+  validates :user, presence: true, if: :saving
+  validates :name, presence: true, if: :saving
   validates :distance, presence: true, if: :geosearch?
-  validates :distance_unit, presence: true, if: :geosearch?
-  validates :latitude, presence: true, if: :geosearch?
-  validates :longitude, presence: true, if: :geosearch?
   validates :distance, numericality: {greater_than: 0}, allow_blank: true
+  validates :distance_unit, presence: true, if: :geosearch?
   validates :distance_unit, inclusion: DISTANCE_UNITS, allow_blank: true
+  validates :latitude, presence: true, if: :lat_and_long_required?
   validates :latitude, numericality: true, allow_blank: true
+  validates :longitude, presence: true, if: :lat_and_long_required?
   validates :longitude, numericality: true, allow_blank: true
+  validates :grid_square, presence: true, if: :grid_square_required?
+  validate :grid_square_format_valid
+
+  after_validation :geosearch_post_processing
 
   def run
+    orig_saving = saving
+    self.saving = false
+    invalid = !valid?
+    self.saving = orig_saving
+    if invalid
+      raise ActiveRecord::RecordInvalid.new(self)
+    end
+
     repeaters = Repeater
 
     bands = BANDS.filter { |band| send(band[:pred]) }.map { |band| band[:label] }
@@ -114,6 +130,39 @@ class RepeaterSearch < ApplicationRecord
   def all_modes?
     MODES.map { |mode| !send(mode[:pred]) }.all?
   end
+
+  def lat_and_long_required?
+    geosearch? && (geosearch_type == COORDINATES || geosearch_type == MY_LOCATION)
+  end
+
+  def grid_square_format_valid
+    if grid_square.present? && !DX::Grid.valid?(grid_square)
+      errors.add(:grid_square, "is not a valid grid square")
+    end
+  end
+
+  def grid_square_required?
+    geosearch? && geosearch_type == GRID_SQUARE
+  end
+
+  def geosearch_post_processing
+    # If we are searching for my location and we didn't get valid latitude and longitude from the browser, add an error
+    # to the geosearch_type field so that it's actually visible in the form.
+    if geosearch? && geosearch_type == MY_LOCATION && (errors[:latitude].present? || errors[:longitude].present?)
+      errors.add(:geosearch_type, "couldn't get valid coordinates for your location")
+      errors.delete(:latitude)
+      errors.delete(:longitude)
+    end
+
+    # If we are searching for grid square, populate the lat and long.
+    if geosearch? && geosearch_type == GRID_SQUARE && errors[:grid_square].blank?
+      self.latitude, self.longitude = DX::Grid.decode(grid_square)
+    end
+  end
+
+  def saving
+    @saving.nil? ? true : @saving
+  end
 end
 
 # == Schema Information
@@ -141,6 +190,7 @@ end
 #  fusion         :boolean          default(FALSE), not null
 #  geosearch      :boolean
 #  geosearch_type :string
+#  grid_square    :string
 #  latitude       :decimal(, )
 #  longitude      :decimal(, )
 #  name           :string
