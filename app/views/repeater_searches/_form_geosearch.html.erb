@@ -13,7 +13,7 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <div class="geosearch my-3" data-controller="geosearch">
-  <%= toggle_checkbox form, :distance_to_coordinates,
+  <%= toggle_checkbox form, :geosearch,
                       { data: { action: "change->geosearch#toggleEnableDisable",
                                 geosearch_target: "activator" } } %>
 

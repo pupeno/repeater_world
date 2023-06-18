@@ -52,7 +52,7 @@ RSpec.describe "/repeater_searches", type: :request do
           :repeater_search,
           band_10m: true, band_6m: true, band_4m: true, band_2m: true, band_70cm: true, band_23cm: true,
           fm: true, dstar: true, fusion: true, dmr: true, nxdn: true,
-          distance_to_coordinates: true, distance: 1000, distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0
+          geosearch: true, distance: 1000, distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0
         ))
         expect(response).to be_successful
         expect(response).to render_template(:new)
@@ -167,7 +167,7 @@ RSpec.describe "/repeater_searches", type: :request do
       end
 
       it "show a saved geo search in km" do
-        repeater_search = create(:repeater_search, distance_to_coordinates: true, distance: 10,
+        repeater_search = create(:repeater_search, geosearch: true, distance: 10,
           distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0,
           user: @current_user)
         get repeater_search_url(repeater_search)
@@ -179,7 +179,7 @@ RSpec.describe "/repeater_searches", type: :request do
       end
 
       it "show a a saved geo search in miles" do
-        repeater_search = create(:repeater_search, distance_to_coordinates: true, distance: 100,
+        repeater_search = create(:repeater_search, geosearch: true, distance: 100,
           distance_unit: RepeaterSearch::MILES, latitude: 0, longitude: 0,
           user: @current_user)
         get repeater_search_url(repeater_search)
