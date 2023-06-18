@@ -22,16 +22,16 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def new
-    defaults = { distance: 8, distance_unit: RepeaterSearch::KM }
+    defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s] || {}))
     if repeater_search_params[:s].present?
       @repeaters = @repeater_search.run
       @repeaters = if @selected_tab == "map"
-                     # Adding a "where" seems to break the includes(:country) in RepeaterSearch#run.
-                     @repeaters.where("location IS NOT NULL").includes(:country)
-                   else
-                     @repeaters.page(params[:p] || 1)
-                   end
+        # Adding a "where" seems to break the includes(:country) in RepeaterSearch#run.
+        @repeaters.where("location IS NOT NULL").includes(:country)
+      else
+        @repeaters.page(params[:p] || 1)
+      end
     end
 
     if params[:export]
@@ -39,21 +39,21 @@ class RepeaterSearchesController < ApplicationController
     end
 
     modes = if @repeater_search.all_modes?
-              ["all modes"]
-            else
-              RepeaterSearch::MODES.map { |band| band[:label] if @repeater_search.send(band[:pred]) }.compact
-            end
+      ["all modes"]
+    else
+      RepeaterSearch::MODES.map { |band| band[:label] if @repeater_search.send(band[:pred]) }.compact
+    end
 
     bands = if @repeater_search.all_bands?
-              ["all bands"]
-            else
-              RepeaterSearch::BANDS.map { |band| band[:label] if @repeater_search.send(band[:pred]) }.compact
-            end
+      ["all bands"]
+    else
+      RepeaterSearch::BANDS.map { |band| band[:label] if @repeater_search.send(band[:pred]) }.compact
+    end
     if @repeater_search.geosearch?
-      if @repeater_search.geosearch_type == RepeaterSearch::GEOSEARCH_MY_LOCATION
-        distance = "#{@repeater_search.distance}#{@repeater_search.distance_unit} of my location (#{@repeater_search.latitude.round(1)}, #{@repeater_search.longitude.round(1)})"
+      distance = if @repeater_search.geosearch_type == RepeaterSearch::GEOSEARCH_MY_LOCATION
+        "#{@repeater_search.distance}#{@repeater_search.distance_unit} of my location (#{@repeater_search.latitude.round(1)}, #{@repeater_search.longitude.round(1)})"
       else
-        distance = "#{@repeater_search.distance}#{@repeater_search.distance_unit} of coordinates #{@repeater_search.latitude.round(3)}, #{@repeater_search.longitude.round(3)}"
+        "#{@repeater_search.distance}#{@repeater_search.distance_unit} of coordinates #{@repeater_search.latitude.round(3)}, #{@repeater_search.longitude.round(3)}"
       end
     end
     @repeater_search.name = "#{modes.to_sentence} on #{bands.to_sentence} #{distance}".strip.capitalize
@@ -63,7 +63,7 @@ class RepeaterSearchesController < ApplicationController
     if params[:id].present?
       @repeater_search = RepeaterSearch.new(repeater_search_params[:s])
     else
-      defaults = { distance: 8, distance_unit: RepeaterSearch::KM }
+      defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
       @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s]))
     end
     exporter_class = Exporters::EXPORTER_FOR[repeater_search_params[:e][:format].to_sym]
@@ -88,10 +88,10 @@ class RepeaterSearchesController < ApplicationController
     end
     @repeaters = @repeater_search.run
     @repeaters = if @selected_tab == "map"
-                   @repeaters.where("location IS NOT NULL")
-                 else
-                   @repeaters.page(params[:p] || 1)
-                 end
+      @repeaters.where("location IS NOT NULL")
+    else
+      @repeaters.page(params[:p] || 1)
+    end
     if params[:export]
       @export_url = export_repeater_search_url(@repeater_search, e: repeater_search_params[:e])
     end

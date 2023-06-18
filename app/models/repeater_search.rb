@@ -52,7 +52,7 @@ class RepeaterSearch < ApplicationRecord
     mode[:pred] = :"#{mode[:name]}?"
   end
 
-  GEOSEARCH_TYPES =[
+  GEOSEARCH_TYPES = [
     GEOSEARCH_MY_LOCATION = "my_location",
     GEOSEARCH_COORDINATES = "coordinates"
   ]
