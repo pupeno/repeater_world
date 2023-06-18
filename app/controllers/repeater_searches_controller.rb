@@ -24,6 +24,7 @@ class RepeaterSearchesController < ApplicationController
   def new
     defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
     @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s] || {}))
+    @repeater_search.saving = false
     if repeater_search_params[:s].present?
       if @repeater_search.valid?
         @repeaters = @repeater_search.run

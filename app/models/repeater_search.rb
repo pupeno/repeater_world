@@ -58,9 +58,12 @@ class RepeaterSearch < ApplicationRecord
     GRID_SQUARE = "grid_square"
   ]
 
+  attr_writer :saving
+
   belongs_to :user, optional: true
 
-  validates :name, presence: true
+  validates :user, presence: true, if: :saving
+  validates :name, presence: true, if: :saving
   validates :distance, presence: true, if: :geosearch?
   validates :distance, numericality: {greater_than: 0}, allow_blank: true
   validates :distance_unit, presence: true, if: :geosearch?
@@ -75,9 +78,14 @@ class RepeaterSearch < ApplicationRecord
   after_validation :geosearch_post_processing
 
   def run
-    if !valid?
+    orig_saving = saving
+    self.saving = false
+    invalid = !valid?
+    self.saving = orig_saving
+    if invalid
       raise ActiveRecord::RecordInvalid.new(self)
     end
+
     repeaters = Repeater
 
     bands = BANDS.filter { |band| send(band[:pred]) }.map { |band| band[:label] }
@@ -148,6 +156,10 @@ class RepeaterSearch < ApplicationRecord
     if geosearch? && geosearch_type == GRID_SQUARE && errors[:grid_square].blank?
       self.latitude, self.longitude = DX::Grid.decode(grid_square)
     end
+  end
+
+  def saving
+    @saving.nil? ? true : @saving
   end
 end
 
