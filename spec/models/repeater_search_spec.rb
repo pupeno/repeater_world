@@ -64,9 +64,9 @@ RSpec.describe RepeaterSearch, type: :model do
 
   it "should validate formats when my location geosearching" do
     repeater_search = create(:repeater_search,
-      geosearch: true, geosearch_type: RepeaterSearch::MY_LOCATION,
-      distance: 10, distance_unit: RepeaterSearch::KM,
-      latitude: 10.01, longitude: 20.02)
+                             geosearch: true, geosearch_type: RepeaterSearch::MY_LOCATION,
+                             distance: 10, distance_unit: RepeaterSearch::KM,
+                             latitude: 10.01, longitude: 20.02)
     expect(repeater_search).to be_valid
 
     # Distance can neither be missing nor be invalid.
@@ -118,9 +118,9 @@ RSpec.describe RepeaterSearch, type: :model do
 
   it "should validate formats when coordinate geosearching" do
     repeater_search = create(:repeater_search,
-      geosearch: true, geosearch_type: RepeaterSearch::COORDINATES,
-      distance: 10, distance_unit: RepeaterSearch::KM,
-      latitude: 10.01, longitude: 20.02)
+                             geosearch: true, geosearch_type: RepeaterSearch::COORDINATES,
+                             distance: 10, distance_unit: RepeaterSearch::KM,
+                             latitude: 10.01, longitude: 20.02)
     expect(repeater_search).to be_valid
 
     # Distance can neither be missing nor be invalid.
@@ -168,9 +168,9 @@ RSpec.describe RepeaterSearch, type: :model do
 
   it "should validate formats when grid square geosearching" do
     repeater_search = create(:repeater_search,
-      geosearch: true, geosearch_type: RepeaterSearch::GRID_SQUARE,
-      distance: 10, distance_unit: RepeaterSearch::KM,
-      grid_square: "FN22ab")
+                             geosearch: true, geosearch_type: RepeaterSearch::GRID_SQUARE,
+                             distance: 10, distance_unit: RepeaterSearch::KM,
+                             grid_square: "FN22ab")
     expect(repeater_search).to be_valid
 
     # Distance can neither be missing nor be invalid.
@@ -214,6 +214,12 @@ RSpec.describe RepeaterSearch, type: :model do
     expect(repeater_search).to be_valid
     repeater_search.grid_square = "FN22ab"
     expect(repeater_search).to be_valid
+  end
+
+  it "should not run search when it's invalid" do
+    repeater_search = create(:repeater_search)
+    repeater_search.geosearch = true
+    expect { repeater_search.run }.to raise_error(ActiveRecord::RecordInvalid)
   end
 end
 
