@@ -12,18 +12,41 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div class="contents"
-     data-controller="repeater">
-  <%= tabbed_view tabs: [{ title: "Cards", name: "cards", url: @cards_url, icon: "fa-solid fa-table" },
-                         { title: "Map", name: "map", url: @map_url, icon: "fa-solid fa-map-location-dot" },
-                         { title: "Table", name: "table", url: @table_url, icon: "fa-solid fa-table-list" }],
-                  selected_tab: @selected_tab do |selected_tab| %>
-    <% if selected_tab == "cards" %>
-      <%= render "repeater_list_cards", repeaters: repeaters %>
-    <% elsif @selected_tab == "map" %>
-      <%= render "repeater_list_map", repeaters: repeaters %>
-    <% elsif @selected_tab == "table" %>
-      <%= render "repeater_list_table", repeaters: repeaters %>
+<% if !repeaters.nil? && repeaters.empty? %>
+  <div class="w-screen flex items-center justify-center">
+    <div class="text-center">
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">No repeaters found</h1>
+      <p class="mt-6 text-base leading-7 text-gray-600">Sorry, we couldn't find any repeaters matching your search.</p>
+      <p class="mt-6 text-base leading-7 text-gray-600">
+        If you know of a repeater we are missing, you can
+        <%= link_to "suggest it to us", new_suggested_repeater_url, class: "link" %>.
+      </p>
+      <p class="mt-6 text-base leading-7 text-gray-600">
+        We are still hard at work
+        <%= link_to "finding new sources of repeaters to import", "https://github.com/flexpointtech/repeater_world/issues?q=is%3Aissue+is%3Aopen+label%3Aimporter", class: "link" %>.
+      </p>
+      <p class="mt-6 text-base leading-7 text-gray-600">
+        You can help us by
+        <% link_to "pointing to a source of repeaters we can import", "https://github.com/flexpointtech/repeater_world/issues/new", class: "link" %>
+        and/or by asking your local organization to share their data with us.
+        <%= link_to "suggest it to us", new_suggested_repeater_url, class: "link" %>.
+      </p>
+    </div>
+  </div>
+<% elsif repeaters.present? %>
+  <div class="contents"
+       data-controller="repeater">
+    <%= tabbed_view tabs: [{ title: "Cards", name: "cards", url: @cards_url, icon: "fa-solid fa-table" },
+                           { title: "Map", name: "map", url: @map_url, icon: "fa-solid fa-map-location-dot" },
+                           { title: "Table", name: "table", url: @table_url, icon: "fa-solid fa-table-list" }],
+                    selected_tab: @selected_tab do |selected_tab| %>
+      <% if selected_tab == "cards" %>
+        <%= render "repeater_list_cards", repeaters: repeaters %>
+      <% elsif @selected_tab == "map" %>
+        <%= render "repeater_list_map", repeaters: repeaters %>
+      <% elsif @selected_tab == "table" %>
+        <%= render "repeater_list_table", repeaters: repeaters %>
+      <% end %>
     <% end %>
-  <% end %>
-</div>
+  </div>
+<% end %>
