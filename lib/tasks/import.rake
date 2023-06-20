@@ -15,11 +15,15 @@
 desc "Import repeaters from all sources"
 task :import_all, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
+
   UkrepeatersImporter.new.import
   SralfiImporter.new.import
   NerepeatersImporter.new.import
   WiaImporter.new.import
   IrtsImporter.new.import
+
+  IrlpImporter.new.import # Keep it at the bottom, since we don't access code and other sources might have them in better shape
+
   RepeaterGeocoder.new.geocode
 end
 
