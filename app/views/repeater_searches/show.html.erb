@@ -12,7 +12,7 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div class="max-w-7xl px-10"
+<div class="flex-grow w-full px-10 flex flex-col"
      data-controller="repeater-searches">
   <%= render "shared/flash_messages" %>
 
@@ -21,8 +21,6 @@ You should have received a copy of the GNU Affero General Public License along w
              search_url: repeater_search_url(@repeater_search),
              save_url: repeater_search_url(@repeater_search),
              save_method: "patch" %>
-</div>
 
-<div class="mx-auto w-full p-10">
-  <%= render "repeater_list", repeaters: @repeaters if @repeaters.present? %>
+  <%= render "repeater_list", repeaters: @repeaters %>
 </div>
