@@ -65,6 +65,7 @@ class WiaImporter < Importer
       @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
       return [:ignored_due_to_source, repeater]
     end
+
     repeater.name = raw_repeater[:mnemonic] if raw_repeater[:mnemonic].present? && raw_repeater[:mnemonic].strip != "-"
     repeater.name ||= "#{raw_repeater[:location]} #{raw_repeater[:call]}"
 

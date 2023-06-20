@@ -61,7 +61,6 @@ class Repeater < ApplicationRecord
 
   belongs_to :country
 
-  validates :name, presence: true
   validates :call_sign, presence: true
   validates :band, presence: true, inclusion: BANDS
   validates :tx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
@@ -74,6 +73,10 @@ class Repeater < ApplicationRecord
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
+  end
+
+  def name
+    super || [locality, call_sign].compact.join(" ")
   end
 
   def latitude
