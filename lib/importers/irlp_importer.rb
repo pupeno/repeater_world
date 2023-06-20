@@ -109,8 +109,8 @@ class IrlpImporter < Importer
     repeater.locality = raw_repeater["City"]
     repeater.region = raw_repeater["Prov./St"]
     repeater.country_id = COUNTRY_CODES[raw_repeater["Country"]] || raise("Unknown country: #{raw_repeater["Country"]}")
-    repeater.latitude = raw_repeater["lat"] unless raw_repeater["lat"] == 0
-    repeater.longitude = raw_repeater["long"] unless raw_repeater["long"] == 0
+    repeater.latitude = raw_repeater["lat"].to_f unless raw_repeater["lat"].blank? || raw_repeater["lat"] == "0"
+    repeater.longitude = raw_repeater["long"].to_f unless raw_repeater["long"].blank? || raw_repeater["long"] == "0"
 
     repeater.external_id = raw_repeater["Record"]
     repeater.keeper = raw_repeater["Owner"]
