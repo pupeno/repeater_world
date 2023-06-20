@@ -109,8 +109,15 @@ class IrlpImporter < Importer
     repeater.locality = raw_repeater["City"]
     repeater.region = raw_repeater["Prov./St"]
     repeater.country_id = COUNTRY_CODES[raw_repeater["Country"]] || raise("Unknown country: #{raw_repeater["Country"]}")
-    repeater.latitude = raw_repeater["lat"].to_f unless raw_repeater["lat"].blank? || raw_repeater["lat"] == "0"
-    repeater.longitude = raw_repeater["long"].to_f unless raw_repeater["long"].blank? || raw_repeater["long"] == "0"
+
+    latitude = to_f_or_nil(raw_repeater["lat"])
+    longitude = to_f_or_nil(raw_repeater["long"])
+    if latitude.present? && longitude.present? &&
+      (latitude != 0 || latitude != 0) && # One should be different to 0, since 0,0 is used to represent lack of data and there are no repeaters in null island
+      (latitude <= 90 && latitude >= -90) # There can't be latitudes above 90 or below -90, those are typos.
+      repeater.latitude = latitude
+      repeater.longitude = longitude
+    end
 
     repeater.external_id = raw_repeater["Record"]
     repeater.keeper = raw_repeater["Owner"]
@@ -121,6 +128,10 @@ class IrlpImporter < Importer
 
     [:created_or_updated, repeater]
   end
-end
 
-1_687_223_323
+  def to_f_or_nil(value)
+    Float(value)
+  rescue TypeError, ArgumentError
+    nil
+  end
+end
