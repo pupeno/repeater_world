@@ -53,6 +53,12 @@ task :import_irts, [:stdout] => :environment do |_t, _args|
   IrtsImporter.new.import
 end
 
+desc "Import repeaters from IRLP, https://www.irlp.net"
+task :import_irlp, [:stdout] => :environment do |_t, _args|
+  Rails.logger = Logger.new($stdout)
+  IrlpImporter.new.import
+end
+
 desc "Geocode all non-geocoded repeaters"
 task :geocode_repeaters, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
