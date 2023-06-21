@@ -65,6 +65,7 @@ RSpec.describe IrlpImporter do
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
       changed = Repeater.find_by(call_sign: "VE7RVN")
+      changed_rx_frequency_was = changed.rx_frequency
       changed.rx_frequency = 1_000_000
       changed.save!
 
@@ -86,7 +87,7 @@ RSpec.describe IrlpImporter do
 
       # This got updated.
       changed.reload
-      expect(changed.rx_frequency).to eq(449_275_000)
+      expect(changed.rx_frequency).to eq(changed_rx_frequency_was)
 
       # This one didn't change.
       independent.reload

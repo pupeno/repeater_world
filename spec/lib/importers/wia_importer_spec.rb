@@ -66,11 +66,13 @@ RSpec.describe WiaImporter do
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
       changed = Repeater.find_by(call_sign: "VK1RBH")
+      changed_rx_frequency_was = changed.rx_frequency
       changed.rx_frequency = 1_000_000
       changed.save!
 
       # This repeater represents one where a secondary source imported first, and this importer will override it.
       secondary_source = Repeater.find_by(call_sign: "VK3RRC")
+      secondary_source_rx_frequency_was = secondary_source.rx_frequency
       secondary_source.rx_frequency = 1_000_000
       secondary_source.source = IrlpImporter.source
       secondary_source.save!
@@ -93,11 +95,11 @@ RSpec.describe WiaImporter do
 
       # This got updated.
       changed.reload
-      expect(changed.rx_frequency).to eq(147_775_000)
+      expect(changed.rx_frequency).to eq(changed_rx_frequency_was)
 
       # This got updated.
       secondary_source.reload
-      expect(secondary_source.rx_frequency).to eq(146_375_000)
+      expect(secondary_source.rx_frequency).to eq(secondary_source_rx_frequency_was)
       expect(secondary_source.source).to eq(WiaImporter.source)
 
       # This one didn't change.
