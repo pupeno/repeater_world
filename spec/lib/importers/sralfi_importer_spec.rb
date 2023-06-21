@@ -134,13 +134,13 @@ RSpec.describe SralfiImporter do
       repeater = Repeater.find_by(call_sign: will_delete, tx_frequency: 145_000_001)
       expect(repeater).to be(nil)
 
-      # This one didn't change.
-      repeater = Repeater.find_by(call_sign: wont_update)
-      expect(repeater.rx_frequency).to eq(1_000_000)
-
       # This got updated.
       repeater = Repeater.find_by(call_sign: will_update)
       expect(repeater.rx_frequency).to eq(145_050_000)
+
+      # This one didn't change.
+      repeater = Repeater.find_by(call_sign: wont_update)
+      expect(repeater.rx_frequency).to eq(1_000_000)
     end
   end
 end

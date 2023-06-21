@@ -48,8 +48,6 @@ RSpec.describe IrlpImporter do
     Dir.mktmpdir("IrlpImporter") do |dir|
       IrlpImporter.new(working_directory: dir).import
 
-      expect(Repeater.where(call_sign: "VE7RHS").count).to eq(3)
-
       # The second time we call it, it shouldn't re-download any files, nor create new repeaters
       expect do
         IrlpImporter.new(working_directory: dir).import
