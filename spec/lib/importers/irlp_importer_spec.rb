@@ -61,36 +61,36 @@ RSpec.describe IrlpImporter do
 
       # This repeater simulates a previously imported repeater that is no longer in the source files, so we should
       # delete it to avoid stale data.
-      will_delete = create(:repeater, :full, call_sign: "VE7RHS", tx_frequency: 145_000_001, source: IrlpImporter.source)
+      deleted = create(:repeater, :full, call_sign: "VE7RHS", tx_frequency: 145_000_001, source: IrlpImporter.source)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      will_update = Repeater.find_by(call_sign: "VE7RVN")
-      will_update.rx_frequency = 1_000_000
-      will_update.save!
+      changed = Repeater.find_by(call_sign: "VE7RVN")
+      changed.rx_frequency = 1_000_000
+      changed.save!
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      wont_update = Repeater.find_by(call_sign: "VE7BYN")
-      wont_update.rx_frequency = 1_000_000
-      wont_update.source = nil
-      wont_update.save!
+      independent = Repeater.find_by(call_sign: "VE7BYN")
+      independent.rx_frequency = 1_000_000
+      independent.source = nil
+      independent.save!
 
       # Run the import and verify we removed one repeater but otherwise made no changes.
       expect do
         IrlpImporter.new(working_directory: dir).import
       end.to change { Repeater.count }.by(-1)
-        .and change { Repeater.where(call_sign: will_delete.call_sign, tx_frequency: will_delete.tx_frequency).count }.by(-1)
+        .and change { Repeater.where(call_sign: deleted.call_sign, tx_frequency: deleted.tx_frequency).count }.by(-1)
 
       # This one got deleted
-      expect { will_delete.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { deleted.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
       # This got updated.
-      will_update.reload
-      expect(will_update.rx_frequency).to eq(449_275_000)
+      changed.reload
+      expect(changed.rx_frequency).to eq(449_275_000)
 
       # This one didn't change.
-      wont_update.reload
-      expect(wont_update.rx_frequency).to eq(1_000_000)
+      independent.reload
+      expect(independent.rx_frequency).to eq(1_000_000)
     end
   end
 end

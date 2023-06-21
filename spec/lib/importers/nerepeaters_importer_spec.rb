@@ -61,36 +61,47 @@ RSpec.describe NerepeatersImporter do
 
       # This repeater simulates a previously imported repeater that is no longer in the source files, so we should
       # delete it to avoid stale data.
-      will_delete = create(:repeater, :full, call_sign: "N1PAH", tx_frequency: 145_000_001, source: NerepeatersImporter::SOURCE)
+      deleted = create(:repeater, :full, call_sign: "N1PAH", tx_frequency: 145_000_001, source: NerepeatersImporter::SOURCE)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      will_update = Repeater.find_by(call_sign: "AA1TT")
-      will_update.rx_frequency = 1_000_000
-      will_update.save!
+      changed = Repeater.find_by(call_sign: "AA1TT")
+      changed.rx_frequency = 1_000_000
+      changed.save!
+
+      # This repeater represents one where a secondary source imported first, and this importer will override it.
+      secondary_source = Repeater.find_by(call_sign: "W1MHL")
+      secondary_source.rx_frequency = 1_000_000
+      secondary_source.source = IrlpImporter.source
+      secondary_source.save!
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      wont_update = Repeater.find_by(call_sign: "N1MYY")
-      wont_update.rx_frequency = 1_000_000
-      wont_update.source = nil
-      wont_update.save!
+      independent = Repeater.find_by(call_sign: "N1MYY")
+      independent.rx_frequency = 1_000_000
+      independent.source = nil
+      independent.save!
 
       # Run the import and verify we removed one repeater but otherwise made no changes.
       expect do
         NerepeatersImporter.new(working_directory: dir).import
       end.to change { Repeater.count }.by(-1)
-        .and change { Repeater.where(call_sign: will_delete.call_sign, tx_frequency: will_delete.tx_frequency).count }.by(-1)
+        .and change { Repeater.where(call_sign: deleted.call_sign, tx_frequency: deleted.tx_frequency).count }.by(-1)
 
       # This one got deleted
-      expect { will_delete.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { deleted.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
       # This got updated.
-      will_update.reload
-      expect(will_update.rx_frequency).to eq(223_440_000)
+      changed.reload
+      expect(changed.rx_frequency).to eq(223_440_000)
+
+      # This got updated.
+      secondary_source.reload
+      expect(secondary_source.rx_frequency).to eq(146_040_000)
+      expect(secondary_source.source).to eq(NerepeatersImporter::SOURCE)
 
       # This one didn't change.
-      wont_update.reload
-      expect(wont_update.rx_frequency).to eq(1_000_000)
+      independent.reload
+      expect(independent.rx_frequency).to eq(1_000_000)
     end
   end
 end
