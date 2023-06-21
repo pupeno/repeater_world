@@ -61,18 +61,18 @@ RSpec.describe IrtsImporter do
       will_delete = "EI2TRR"
       create(:repeater, :full, call_sign: will_delete, tx_frequency: 145_000_001, source: IrtsImporter.source)
 
+      # This repeater represents one where the upstream data changed and should be updated by the importer.
+      will_update = "EI4SNR"
+      repeater = Repeater.find_by(call_sign: will_update)
+      repeater.rx_frequency = 1_000_000
+      repeater.save!
+
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
       wont_update = "EI4SMR"
       repeater = Repeater.find_by(call_sign: wont_update)
       repeater.rx_frequency = 1_000_000
       repeater.source = nil
-      repeater.save!
-
-      # This repeater represents one where the upstream data changed and should be updated by the importer.
-      will_update = "EI4SNR"
-      repeater = Repeater.find_by(call_sign: will_update)
-      repeater.rx_frequency = 1_000_000
       repeater.save!
 
       # Run the import and verify we removed one repeater but otherwise made no changes.
@@ -85,13 +85,13 @@ RSpec.describe IrtsImporter do
       repeater = Repeater.find_by(call_sign: will_delete, tx_frequency: 145_000_001)
       expect(repeater).to be(nil)
 
-      # This one didn't change.
-      repeater = Repeater.find_by(call_sign: wont_update)
-      expect(repeater.rx_frequency).to eq(1_000_000)
-
       # This got updated.
       repeater = Repeater.find_by(call_sign: will_update)
       expect(repeater.rx_frequency).to eq(70_475_000)
+
+      # This one didn't change.
+      repeater = Repeater.find_by(call_sign: wont_update)
+      expect(repeater.rx_frequency).to eq(1_000_000)
     end
   end
 end

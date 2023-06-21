@@ -110,18 +110,18 @@ RSpec.describe SralfiImporter do
       will_delete = "OH3RNE"
       create(:repeater, :full, call_sign: will_delete, tx_frequency: 145_000_001, source: SralfiImporter::SOURCE)
 
+      # This repeater represents one where the upstream data changed and should be updated by the importer.
+      will_update = "OH1RAA"
+      repeater = Repeater.find_by(call_sign: will_update)
+      repeater.rx_frequency = 1_000_000
+      repeater.save!
+
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
       wont_update = "OH0RAA"
       repeater = Repeater.find_by(call_sign: wont_update)
       repeater.rx_frequency = 1_000_000
       repeater.source = nil
-      repeater.save!
-
-      # This repeater represents one where the upstream data changed and should be updated by the importer.
-      will_update = "OH1RAA"
-      repeater = Repeater.find_by(call_sign: will_update)
-      repeater.rx_frequency = 1_000_000
       repeater.save!
 
       # Run the import and verify we removed one repeater but otherwise made no changes.
