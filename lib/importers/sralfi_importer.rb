@@ -72,7 +72,7 @@ class SralfiImporter < Importer
     )
 
     # Only update repeaters that were sourced from automatic.sral.fi.
-    if repeater.persisted? && repeater.source != SOURCE
+    if repeater.persisted? && repeater.source != SOURCE && repeater.source != IrlpImporter.source
       @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
       return [:ignored_due_to_source, repeater]
     end

@@ -119,7 +119,7 @@ class NerepeatersImporter < Importer
       tx_frequency: raw_repeater[TX_FREQUENCY].to_f * 10**6)
 
     # Only update repeaters that were sourced from nerepeater.com.
-    if repeater.persisted? && repeater.source != SOURCE
+    if repeater.persisted? && repeater.source != SOURCE && repeater.source != IrlpImporter.source
       @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
       return [:ignored_due_to_source, repeater]
     end
