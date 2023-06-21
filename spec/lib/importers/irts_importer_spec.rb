@@ -58,40 +58,36 @@ RSpec.describe IrtsImporter do
 
       # This repeater simulates a previously imported repeater that is no longer in the source files, so we should
       # delete it to avoid stale data.
-      will_delete = "EI2TRR"
-      create(:repeater, :full, call_sign: will_delete, tx_frequency: 145_000_001, source: IrtsImporter.source)
+      will_delete = create(:repeater, :full, call_sign: "EI2TRR", tx_frequency: 145_000_001, source: IrtsImporter.source)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      will_update = "EI4SNR"
-      repeater = Repeater.find_by(call_sign: will_update)
-      repeater.rx_frequency = 1_000_000
-      repeater.save!
+      will_update = Repeater.find_by(call_sign: "EI4SNR")
+      will_update.rx_frequency = 1_000_000
+      will_update.save!
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      wont_update = "EI4SMR"
-      repeater = Repeater.find_by(call_sign: wont_update)
-      repeater.rx_frequency = 1_000_000
-      repeater.source = nil
-      repeater.save!
+      wont_update = Repeater.find_by(call_sign: "EI4SMR")
+      wont_update.rx_frequency = 1_000_000
+      wont_update.source = nil
+      wont_update.save!
 
       # Run the import and verify we removed one repeater but otherwise made no changes.
       expect do
         IrtsImporter.new(working_directory: dir).import
       end.to change { Repeater.count }.by(-1)
-        .and change { Repeater.where(call_sign: will_delete, tx_frequency: 145_000_001).count }.by(-1)
+        .and change { Repeater.where(call_sign: will_delete.call_sign, tx_frequency: will_delete.tx_frequency).count }.by(-1)
 
       # This one got deleted
-      repeater = Repeater.find_by(call_sign: will_delete, tx_frequency: 145_000_001)
-      expect(repeater).to be(nil)
+      expect { will_delete.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
       # This got updated.
-      repeater = Repeater.find_by(call_sign: will_update)
-      expect(repeater.rx_frequency).to eq(70_475_000)
+      will_update.reload
+      expect(will_update.rx_frequency).to eq(70_475_000)
 
       # This one didn't change.
-      repeater = Repeater.find_by(call_sign: wont_update)
-      expect(repeater.rx_frequency).to eq(1_000_000)
+      wont_update.reload
+      expect(wont_update.rx_frequency).to eq(1_000_000)
     end
   end
 end

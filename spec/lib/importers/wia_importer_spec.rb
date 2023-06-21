@@ -17,8 +17,8 @@ require "rails_helper"
 RSpec.describe WiaImporter do
   before do
     Repeater.delete_all
-    files = {"https://www.wia.org.au/members/repeaters/data/" => "wia.html",
-             "https://www.wia.org.au/members/repeaters/data/documents/Repeater%20Directory%20230304.csv" => "wia.csv"}
+    files = { "https://www.wia.org.au/members/repeaters/data/" => "wia.html",
+              "https://www.wia.org.au/members/repeaters/data/documents/Repeater%20Directory%20230304.csv" => "wia.csv" }
     files.each do |url, local_file|
       file = double("file")
       local_file = Rails.root.join("spec", "factories", "wia_importer_data", local_file)
@@ -62,40 +62,36 @@ RSpec.describe WiaImporter do
 
       # This repeater simulates a previously imported repeater that is no longer in the source files, so we should
       # delete it to avoid stale data.
-      will_delete = "VK2RAG"
-      create(:repeater, :full, call_sign: will_delete, tx_frequency: 145_000_001, source: WiaImporter.source)
+      will_delete = create(:repeater, :full, call_sign: "VK2RAG", tx_frequency: 145_000_001, source: WiaImporter.source)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      will_update = "VK1RBH"
-      repeater = Repeater.find_by(call_sign: will_update)
-      repeater.rx_frequency = 1_000_000
-      repeater.save!
+      will_update = Repeater.find_by(call_sign: "VK1RBH")
+      will_update.rx_frequency = 1_000_000
+      will_update.save!
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      wont_update = "VK1RAC"
-      repeater = Repeater.find_by(call_sign: wont_update)
-      repeater.rx_frequency = 1_000_000
-      repeater.source = nil
-      repeater.save!
+      wont_update = Repeater.find_by(call_sign: "VK1RAC")
+      wont_update.rx_frequency = 1_000_000
+      wont_update.source = nil
+      wont_update.save!
 
       # Run the import and verify we removed one repeater but otherwise made no changes.
       expect do
         WiaImporter.new(working_directory: dir).import
       end.to change { Repeater.count }.by(-1)
-        .and change { Repeater.where(call_sign: will_delete, tx_frequency: 145_000_001).count }.by(-1)
+                                      .and change { Repeater.where(call_sign: will_delete.call_sign, tx_frequency: will_delete.tx_frequency).count }.by(-1)
 
       # This one got deleted
-      repeater = Repeater.find_by(call_sign: will_delete, tx_frequency: 145_000_001)
-      expect(repeater).to be(nil)
+      expect { will_delete.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
       # This got updated.
-      repeater = Repeater.find_by(call_sign: will_update)
-      expect(repeater.rx_frequency).to eq(147_775_000)
+      will_update.reload
+      expect(will_update.rx_frequency).to eq(147_775_000)
 
       # This one didn't change.
-      repeater = Repeater.find_by(call_sign: wont_update)
-      expect(repeater.rx_frequency).to eq(1_000_000)
+      wont_update.reload
+      expect(wont_update.rx_frequency).to eq(1_000_000)
     end
   end
 end
