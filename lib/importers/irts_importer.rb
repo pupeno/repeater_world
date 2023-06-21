@@ -75,7 +75,7 @@ class IrtsImporter < Importer
     repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
 
     # Only update repeaters that were sourced from this same source.
-    if repeater.persisted? && repeater.source != self.class.source
+    if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source
       @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
       return [:ignored_due_to_source, repeater]
     end

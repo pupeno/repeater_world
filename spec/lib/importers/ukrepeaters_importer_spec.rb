@@ -15,25 +15,28 @@
 require "rails_helper"
 
 RSpec.describe UkrepeatersImporter do
-  it "should import" do
+  before do
+    Repeater.delete_all
     files = {"https://ukrepeater.net/csvcreate3.php" => "repeaterlist3.csv",
              "https://ukrepeater.net/csvcreate_dv.php" => "repeaterlist_dv.csv",
              "https://ukrepeater.net/csvcreate_all.php" => "repeaterlist_all.csv",
              "https://ukrepeater.net/repeaterlist-alt.php" => "repeaterlist_alt2.csv",
              "https://ukrepeater.net/csvcreatewithstatus.php" => "repeaterlist_status.csv"}
-
     files.each do |url, local_file|
       file = double("file")
       local_file = Rails.root.join("spec", "factories", "ukrepeaters_importer_data", local_file)
       expect(file).to receive(:open).and_return(File.new(local_file))
       expect(URI).to receive(:parse).with(url).and_return(file)
     end
+  end
 
+  it "should import" do
     Dir.mktmpdir("ukrepeatersimporter") do |dir|
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
       end.to change { Repeater.count }.by(914)
 
+      # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_by(call_sign: "GB7DC")
       expect(repeater.name).to eq("Derby")
       expect(repeater.band).to eq(Repeater::BAND_70CM)
@@ -61,35 +64,69 @@ RSpec.describe UkrepeatersImporter do
       expect(repeater.post_code).to eq("DE21")
       expect(repeater.region).to eq("Central England")
       expect(repeater.utc_offset).to eq("0:00")
+    end
+  end
 
-      # The second time we call it, it shouldn't re-download any files, nor create new
-      # repeaters
+  it "should not import anything new on a second pass" do
+    Dir.mktmpdir("ukrepeatersimporter") do |dir|
+      UkrepeatersImporter.new(working_directory: dir).import
+
+      # The second time we call it, it shouldn't re-download any files, nor create new repeaters
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
       end.to change { Repeater.count }.by(0)
+    end
+  end
 
-      # Some repeaters change, some get disconnected from the source, other's don't.
-      repeater = Repeater.find_by(call_sign: "GB3HI")
-      repeater.band = Repeater::BAND_23CM
-      repeater.source = nil
-      repeater.redistribution_limitations = nil
-      repeater.save!
-      repeater = Repeater.find_by(call_sign: "GB3NL")
-      repeater.band = Repeater::BAND_23CM
-      repeater.save!
-      create(:repeater, :full, call_sign: "GB7DC", tx_frequency: 145_000_000, source: UkrepeatersImporter::SOURCE)
+  it "should respect the source values during import" do
+    Dir.mktmpdir("ukrepeatersimporter") do |dir|
+      UkrepeatersImporter.new(working_directory: dir).import
 
-      # The third time we call it, it shouldn't re-download any files, nor create new
-      # repeaters, but some get updated, some don't, and some get deleted.
+      # This repeater simulates a previously imported repeater that is no longer in the source files, so we should
+      # delete it to avoid stale data.
+      deleted = create(:repeater, :full, call_sign: "GB7DC", tx_frequency: 145_000_001, source: UkrepeatersImporter::SOURCE)
+
+      # This repeater represents one where the upstream data changed and should be updated by the importer.
+      changed = Repeater.find_by(call_sign: "GB3NL")
+      changed_rx_frequency_was = changed.rx_frequency
+      changed.rx_frequency = 1_000_000
+      changed.save!
+
+      # This repeater represents one where a secondary source imported first, and this importer will override it.
+      secondary_source = Repeater.find_by(call_sign: "GB3HF")
+      secondary_source_rx_frequency_was = secondary_source.rx_frequency
+      secondary_source.rx_frequency = 1_000_000
+      secondary_source.source = IrlpImporter.source
+      secondary_source.save!
+
+      # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
+      # source is now nil. This should never again be overwritten by the importer.
+      independent = Repeater.find_by(call_sign: "GB3HI")
+      independent.rx_frequency = 1_000_000
+      independent.source = nil
+      independent.save!
+
+      # Run the import and verify we removed one repeater but otherwise made no changes.
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
       end.to change { Repeater.count }.by(-1)
-      repeater = Repeater.find_by(call_sign: "GB3HI") # This one didn't change.
-      expect(repeater.band).to eq(Repeater::BAND_23CM)
-      repeater = Repeater.find_by(call_sign: "GB3NL") # This one did
-      expect(repeater.band).to eq(Repeater::BAND_2M)
-      repeater = Repeater.find_by(call_sign: "GB7DC", tx_frequency: 145_000_000) # This one got deleted
-      expect(repeater).to be(nil)
+        .and change { Repeater.where(call_sign: deleted.call_sign, tx_frequency: deleted.tx_frequency).count }.by(-1)
+
+      # This one got deleted
+      expect { deleted.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+      # This got updated.
+      changed.reload
+      expect(changed.rx_frequency).to eq(changed_rx_frequency_was)
+
+      # This got updated.
+      secondary_source.reload
+      expect(secondary_source.rx_frequency).to eq(secondary_source_rx_frequency_was)
+      expect(secondary_source.source).to eq(UkrepeatersImporter::SOURCE)
+
+      # This one didn't change.
+      independent.reload
+      expect(independent.rx_frequency).to eq(1_000_000)
     end
   end
 end

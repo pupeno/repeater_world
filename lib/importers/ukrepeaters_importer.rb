@@ -62,7 +62,7 @@ class UkrepeatersImporter < Importer
     repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[:callsign].upcase)
 
     # Only update repeaters that were sourced from ukrepeater.
-    if repeater.persisted? && repeater.source != SOURCE
+    if repeater.persisted? && repeater.source != SOURCE && repeater.source != IrlpImporter.source
       @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
       return repeater
     end
@@ -137,7 +137,7 @@ class UkrepeatersImporter < Importer
       if !repeater
         @logger.info "Repeater not found: #{raw_repeater[:call]} when importing #{raw_repeater}"
         next # TODO: create these repeaters.
-      elsif repeater.source != SOURCE
+      elsif repeater.source != SOURCE && repeater.source != IrlpImporter.source
         @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
         next
       end
@@ -172,7 +172,7 @@ class UkrepeatersImporter < Importer
       if !repeater
         @logger.info "Repeater not found: #{raw_repeater[:call]}"
         next # TODO: create these repeaters.
-      elsif repeater.source != SOURCE
+      elsif repeater.source != SOURCE && repeater.source != IrlpImporter.source
         @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
         next
       end
@@ -212,7 +212,7 @@ class UkrepeatersImporter < Importer
       if !repeater
         @logger.info "Repeater not found: #{raw_repeater[:call]}"
         next # TODO: create these repeaters.
-      elsif repeater.source != SOURCE
+      elsif repeater.source != SOURCE && repeater.source != IrlpImporter.source
         @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
         next
       end
@@ -264,7 +264,7 @@ class UkrepeatersImporter < Importer
       if !repeater
         @logger.info "Repeater not found: #{raw_repeater[:repeater]}"
         next # TODO: create these repeaters.
-      elsif repeater.source != SOURCE
+      elsif repeater.source != SOURCE && repeater.source != IrlpImporter.source
         @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
         next
       end
