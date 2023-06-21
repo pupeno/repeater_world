@@ -32,7 +32,7 @@ RSpec.describe SralfiImporter do
         SralfiImporter.new(working_directory: dir).import
       end.to change { Repeater.count }.by(141)
 
-      # Grab some  repeaters and verify they were imported correctly.
+      # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 145_575_000, dmr: true)
       expect(repeater.external_id).to eq("801")
       expect(repeater.name).to eq("Tampere VHF DMR")
