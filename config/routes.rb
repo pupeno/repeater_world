@@ -54,6 +54,9 @@ Rails.application.routes.draw do
   get "sitemap", to: "static#sitemap"
   get "404", to: "static#not_found"
 
+  # Redirections
+  get "open-source", to: redirect("/open-source-open-data")
+
   # Fail!
   get "fail", to: "static#fail"
   get "fail-fe", to: "static#fail_fe"
