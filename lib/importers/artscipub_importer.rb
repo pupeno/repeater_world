@@ -173,6 +173,23 @@ class ArtscipubImporter < Importer
     end
 
     repeater.external_id = raw_repeater[:external_id]
+
+    import_rx_frequency(raw_repeater, repeater)
+
+    import_country_region_post_code_locality(repeater, raw_repeater)
+    repeater.grid_square = raw_repeater[:grid_square] if raw_repeater[:grid_square].present?
+    if raw_repeater[:latitude].present? && raw_repeater[:longitude].present?
+      repeater.latitude = raw_repeater[:latitude]
+      repeater.longitude = raw_repeater[:longitude]
+    end
+
+    repeater.source = self.class.source
+    repeater.save!
+
+    [:created_or_updated, repeater]
+  end
+
+  def import_rx_frequency(raw_repeater, repeater)
     if raw_repeater[:input].present?
       repeater.rx_frequency = raw_repeater[:input].to_f * 10 ** 6
     else
@@ -198,7 +215,9 @@ class ArtscipubImporter < Importer
                                 # raise "Couldn't figure out rx frequency for tx frequency #{raw_repeater[:frequency]} in band #{repeater.band} in #{raw_repeater}"
                               end
     end
+  end
 
+  def import_country_region_post_code_locality(repeater, raw_repeater)
     location = raw_repeater[:location].split(",").map(&:strip).reject(&:empty?)
 
     if location.last.start_with?(".") # This is how non US locations are formatted.
@@ -245,12 +264,8 @@ class ArtscipubImporter < Importer
       repeater.country_id = "us"
       repeater.locality = location[0..-2].join(", ")
       repeater.region = location.last
+      repeater.post_code = raw_repeater[:zip_code] if raw_repeater[:zip_code].present? && raw_repeater[:zip_code] != "00000"
     end
-
-    repeater.source = self.class.source
-    repeater.save!
-
-    [:created_or_updated, repeater]
   end
 
   def figure_out_country(location)
