@@ -85,9 +85,7 @@ class ArtscipubImporter < Importer
         end
       end
       # File.write(raw_repeaters_file_name, JSON.generate(raw_repeaters))
-      File.open(raw_repeaters_file_name, 'wb') do |file|
-        file.write(Marshal.dump(raw_repeaters))
-      end
+      File.binwrite(raw_repeaters_file_name, Marshal.dump(raw_repeaters))
 
     else
       @logger.info "Skipping reading the files because #{raw_repeaters_file_name} is present."
@@ -125,31 +123,32 @@ class ArtscipubImporter < Importer
 
   def import_repeater(raw_repeater)
     if raw_repeater[:comments]&.downcase&.include?("noaa") || # Not importing NOAA weather stations. Should we?
-      raw_repeater[:web_site]&.downcase&.include?("noaa") || # Not importing NOAA weather stations. Should we?
-      raw_repeater[:web_site]&.downcase&.include?("weather.gov") || # Not importing NOAA weather stations. Should we?
-      raw_repeater[:call_sign].blank? || # Can't import a repeater without a call sign.
-      raw_repeater[:frequency].blank? || raw_repeater[:frequency].to_f < 1 || # Can't import a repeater without a frequency.
-      raw_repeater[:call_sign] =~ /[a-zA-Z]{3,4}[\-\s]?\d{3,4}/ || # Only interested in ham radio, not GMRS: https://github.com/flexpointtech/repeater_world/issues/264
-      raw_repeater[:comments]&.downcase&.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/flexpointtech/repeater_world/issues/264
-      raw_repeater[:web_site]&.downcase&.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/flexpointtech/repeater_world/issues/264
-      raw_repeater[:call_sign] == "k6yo" || # Frequency out of band plan, comment is Private Repeater. DMR
-      # raw_repeater[:call_sign] == "kan654" || # Frequency out of band plan, odd call sign.
-      # raw_repeater[:call_sign] == "KAA 494" || # Frequency out of band plan, odd call sign.
-      # raw_repeater[:call_sign] == "KAE0182" || # Frequency out of band plan, odd call sign.
-      (raw_repeater[:call_sign] == "W0OES" && raw_repeater[:frequency] == "462.675+") || # Frequency out of band plan.
-      (raw_repeater[:call_sign] == "W7YB" && raw_repeater[:frequency] == "148.88-") || # Frequency out of band plan.
-      (raw_repeater[:call_sign] == "N4GSM" && raw_repeater[:frequency] == "154.110-") || # Frequency out of band plan.
-      (raw_repeater[:call_sign] == "WX4CTC" && raw_repeater[:frequency] == "467.5875+") || # Frequency out of band plan.
-      (raw_repeater[:call_sign] == "K1KYI" && raw_repeater[:frequency] == "149.94-") || # Frequency out of band plan.
-      (raw_repeater[:call_sign] == "k5pc" && raw_repeater[:frequency] == "162.620-") || # Frequency out of band plan.
-      (raw_repeater[:call_sign] == "xe2lmc" && raw_repeater[:frequency] == "148.880-") || # Frequency out of band plan.
-      raw_repeater[:call_sign] == "koni" || # Frequency out of band plan, odd call sign.
-      raw_repeater[:call_sign] == "USCG Aux" || # Frequency out of band plan, odd call sign.
-      raw_repeater[:call_sign] == "WXL-51" || # What is this even?
-      raw_repeater[:call_sign] == "unknown" || # Frequency out of band plan, not a call sign.
-      raw_repeater[:call_sign] == "private" || # Frequency out of band plan, not a call sign.
-      raw_repeater[:call_sign] == "General" || # Frequency out of band plan, not a call sign.
-      raw_repeater[:call_sign] == "154.445" # Not a valid call sign, data entry error.
+        raw_repeater[:web_site]&.downcase&.include?("noaa") || # Not importing NOAA weather stations. Should we?
+        raw_repeater[:web_site]&.downcase&.include?("weather.gov") || # Not importing NOAA weather stations. Should we?
+        raw_repeater[:call_sign].blank? || # Can't import a repeater without a call sign.
+        raw_repeater[:frequency].blank? || raw_repeater[:frequency].to_f < 1 || # Can't import a repeater without a frequency.
+        raw_repeater[:call_sign] =~ /[a-zA-Z]{3,4}[-\s]?\d{3,4}/ || # Only interested in ham radio, not GMRS: https://github.com/flexpointtech/repeater_world/issues/264
+        raw_repeater[:comments]&.downcase&.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/flexpointtech/repeater_world/issues/264
+        raw_repeater[:web_site]&.downcase&.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/flexpointtech/repeater_world/issues/264
+        raw_repeater[:call_sign] == "k6yo" || # Frequency out of band plan, comment is Private Repeater. DMR
+        # raw_repeater[:call_sign] == "kan654" || # Frequency out of band plan, odd call sign.
+        # raw_repeater[:call_sign] == "KAA 494" || # Frequency out of band plan, odd call sign.
+        # raw_repeater[:call_sign] == "KAE0182" || # Frequency out of band plan, odd call sign.
+        (raw_repeater[:call_sign] == "W0OES" && raw_repeater[:frequency] == "462.675+") || # Frequency out of band plan.
+        (raw_repeater[:call_sign] == "W7YB" && raw_repeater[:frequency] == "148.88-") || # Frequency out of band plan.
+        (raw_repeater[:call_sign] == "N4GSM" && raw_repeater[:frequency] == "154.110-") || # Frequency out of band plan.
+        (raw_repeater[:call_sign] == "WX4CTC" && raw_repeater[:frequency] == "467.5875+") || # Frequency out of band plan.
+        (raw_repeater[:call_sign] == "K1KYI" && raw_repeater[:frequency] == "149.94-") || # Frequency out of band plan.
+        (raw_repeater[:call_sign] == "k5pc" && raw_repeater[:frequency] == "162.620-") || # Frequency out of band plan.
+        (raw_repeater[:call_sign] == "xe2lmc" && raw_repeater[:frequency] == "148.880-") || # Frequency out of band plan.
+        raw_repeater[:call_sign] == "koni" || # Frequency out of band plan, odd call sign.
+        raw_repeater[:call_sign] == "USCG Aux" || # Frequency out of band plan, odd call sign.
+        raw_repeater[:call_sign] == "WXL-51" || # What is this even?
+        raw_repeater[:call_sign] == "unknown" || # Frequency out of band plan, not a call sign.
+        raw_repeater[:call_sign] == "private" || # Frequency out of band plan, not a call sign..
+        raw_repeater[:pl_tone]&.downcase&.in?(["gone", "closed", "private"]) || # Closed repeaters.
+        raw_repeater[:call_sign] == "General" || # Frequency out of band plan, not a call sign.
+        raw_repeater[:call_sign] == "154.445" # Not a valid call sign, data entry error.
       # @logger.info "Not importing because of data issues: #{raw_repeater}"
       return [:ignored_due_to_broken_record, nil]
     end
@@ -163,7 +162,7 @@ class ArtscipubImporter < Importer
     end
 
     call_sign = raw_repeater[:call_sign].tr("Ø", "0").upcase
-    tx_frequency = raw_repeater[:frequency].to_f * 10 ** 6
+    tx_frequency = raw_repeater[:frequency].to_f * 10**6
     repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
 
     # Only update repeaters that were sourced from this same source.
@@ -174,14 +173,17 @@ class ArtscipubImporter < Importer
 
     repeater.external_id = raw_repeater[:external_id]
 
-    import_rx_frequency(raw_repeater, repeater)
+    import_rx_frequency(repeater, raw_repeater)
+    import_mode_and_access_codes(repeater, raw_repeater)
 
-    import_country_region_post_code_locality(repeater, raw_repeater)
+    import_address(repeater, raw_repeater)
     repeater.grid_square = raw_repeater[:grid_square] if raw_repeater[:grid_square].present?
     if raw_repeater[:latitude].present? && raw_repeater[:longitude].present?
       repeater.latitude = raw_repeater[:latitude]
       repeater.longitude = raw_repeater[:longitude]
     end
+
+    repeater.notes = raw_repeater[:comments] if raw_repeater[:comments].present?
 
     repeater.source = self.class.source
     repeater.save!
@@ -189,35 +191,187 @@ class ArtscipubImporter < Importer
     [:created_or_updated, repeater]
   end
 
-  def import_rx_frequency(raw_repeater, repeater)
+  def import_rx_frequency(repeater, raw_repeater)
     if raw_repeater[:input].present?
-      repeater.rx_frequency = raw_repeater[:input].to_f * 10 ** 6
+      repeater.rx_frequency = raw_repeater[:input].to_f * 10**6
     else
       repeater.ensure_fields_are_set
       repeater.rx_frequency = if repeater.band == Repeater::BAND_10M && raw_repeater[:frequency].last == "+"
-                                repeater.tx_frequency + 100_000 # This one might not exist.
-                              elsif repeater.band == Repeater::BAND_10M && raw_repeater[:frequency].last == "-"
-                                repeater.tx_frequency - 100_000
-                              elsif repeater.band == Repeater::BAND_2M && raw_repeater[:frequency].last == "+"
-                                repeater.tx_frequency + 600_000
-                              elsif repeater.band == Repeater::BAND_2M && raw_repeater[:frequency].last == "-"
-                                repeater.tx_frequency + 600_000
-                              elsif repeater.band == Repeater::BAND_1_25M && raw_repeater[:frequency].last == "+"
-                                repeater.tx_frequency - 1_600_000
-                              elsif repeater.band == Repeater::BAND_1_25M && raw_repeater[:frequency].last == "-"
-                                repeater.tx_frequency + 1_600_000
-                              elsif repeater.band == Repeater::BAND_70CM && raw_repeater[:frequency].last == "+"
-                                repeater.tx_frequency + 5_000_000
-                              elsif repeater.band == Repeater::BAND_70CM && raw_repeater[:frequency].last == "-"
-                                repeater.tx_frequency - 5_000_000
-                              else
-                                repeater.tx_frequency # There's at least one IRLP node without an input frequency. I think I need to improve my understanding of IRLP.
-                                # raise "Couldn't figure out rx frequency for tx frequency #{raw_repeater[:frequency]} in band #{repeater.band} in #{raw_repeater}"
-                              end
+        repeater.tx_frequency + 100_000 # This one might not exist.
+      elsif repeater.band == Repeater::BAND_10M && raw_repeater[:frequency].last == "-"
+        repeater.tx_frequency - 100_000
+      elsif repeater.band == Repeater::BAND_2M && raw_repeater[:frequency].last == "+"
+        repeater.tx_frequency + 600_000
+      elsif repeater.band == Repeater::BAND_2M && raw_repeater[:frequency].last == "-"
+        repeater.tx_frequency + 600_000
+      elsif repeater.band == Repeater::BAND_1_25M && raw_repeater[:frequency].last == "+"
+        repeater.tx_frequency - 1_600_000
+      elsif repeater.band == Repeater::BAND_1_25M && raw_repeater[:frequency].last == "-"
+        repeater.tx_frequency + 1_600_000
+      elsif repeater.band == Repeater::BAND_70CM && raw_repeater[:frequency].last == "+"
+        repeater.tx_frequency + 5_000_000
+      elsif repeater.band == Repeater::BAND_70CM && raw_repeater[:frequency].last == "-"
+        repeater.tx_frequency - 5_000_000
+      else
+        repeater.tx_frequency # There's at least one IRLP node without an input frequency. I think I need to improve my understanding of IRLP.
+        # raise "Couldn't figure out rx frequency for tx frequency #{raw_repeater[:frequency]} in band #{repeater.band} in #{raw_repeater}"
+      end
     end
   end
 
-  def import_country_region_post_code_locality(repeater, raw_repeater)
+  def import_mode_and_access_codes(repeater, raw_repeater)
+    pl_tone = raw_repeater[:pl_tone]&.downcase
+    if pl_tone.to_f.in?(Repeater::CTCSS_TONES)
+      repeater.fm = true
+      repeater.fm_ctcss_tone = pl_tone.to_f
+    elsif pl_tone == "71,9" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 71.9
+    elsif pl_tone == "79.9" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 79.7
+    elsif pl_tone == "88" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 88.5
+    elsif pl_tone.in? ["98.4", "94.6"] # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 94.8
+    elsif pl_tone.in? ["94.7", "tx pl 97.4"] # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 97.4
+    elsif pl_tone.in? ["[100.0]", "[100]"] # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 100.0
+    elsif pl_tone.in? ["105.3", "[103.5]", "103.0", "102.3", "103..5", "103.6"] # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 103.5
+    elsif pl_tone.in? ["107.9", "107.3", "102.7"] # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 107.2
+    elsif pl_tone.in? ["110", "110.5", "109.0"] # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 110.9
+    elsif pl_tone == "114.3" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 114.8
+    elsif pl_tone == "118.0" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 118.8
+    elsif pl_tone.in? ["023", "123.3", "123.5"] # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 123
+    elsif pl_tone == "[127.3]" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 127.3
+    elsif pl_tone.in? ["131", "131,8"] # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 131.8
+    elsif pl_tone == "130.5" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 136.5
+    elsif pl_tone == "141.0" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 141.3
+    elsif pl_tone.in? ["[146.2]", "146.3"] # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 146.2
+    elsif pl_tone == "161.1" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 162.2
+    elsif pl_tone.in? ["173", "ctcs 173.8"] # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 173.8
+    elsif pl_tone == "203.7" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 203.5
+    elsif pl_tone == "[pl 210.7]" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 210.7
+    elsif pl_tone == "248.8" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 241.8
+    elsif pl_tone == "254.1" # Likely a typo
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 250.3
+    elsif pl_tone.in?(["none", "no", "open", "n/a"])
+      repeater.fm = true
+      repeater.fm_tone_burst = true # Just guessing here.
+    elsif pl_tone.in?(["d-star", "dstar", "dv", "na [dstar]", "d star"]) ||
+        (pl_tone.blank? && raw_repeater[:comments].include?("D-STAR"))
+      repeater.dstar = true
+    elsif raw_repeater[:comments]&.include?("D-STAR GATEWAY DATA PORT A")
+      repeater.dstar = true
+      repeater.dstar_port = "A"
+    elsif pl_tone == "fusion" ||
+        raw_repeater[:comments] == "Yaesu Fusion repeater Digital code 009"
+      repeater.fusion = true
+    elsif pl_tone == "c4fm"
+      repeater.fm = true
+      repeater.fusion = true
+    elsif pl_tone.in? ["dmr", "[dmr]", "[dmr ]", "dmr digital", "dmr only", "dmr only!"]
+      repeater.dmr = true
+    elsif pl_tone == "dmr" && raw_repeater[:comments].include?("BrandMeister")
+      repeater.dmr = true
+      repeater.dmr_network = "Brandmeister"
+    elsif pl_tone.in? ["[cc 0]"]
+      repeater.dmr = true
+      repeater.dmr_color_code = 0
+    elsif pl_tone.in? ["dmr cc1", "[cc1]", "cc 1", "cc1 [csq]", "cc1", "[cc 1]", "color code 1", "color code 1 dmr",
+      "code 1"]
+      repeater.dmr = true
+      repeater.dmr_color_code = 1
+    elsif pl_tone.in? ["cc2", "cc 2"]
+      repeater.dmr = true
+      repeater.dmr_color_code = 2
+    elsif pl_tone.in? ["cc3", "cc 3", "[cc 3]", "cc 3 [cc3]"]
+      repeater.dmr = true
+      repeater.dmr_color_code = 3
+    elsif pl_tone == "[cc 4]"
+      repeater.dmr = true
+      repeater.dmr_color_code = 4
+    elsif pl_tone.in? ["[cc 7]", "cc7", "[cc7]"]
+      repeater.dmr = true
+      repeater.dmr_color_code = 7
+    elsif pl_tone.in? ["[cc 8]", "cc8", "[cc8]"]
+      repeater.dmr = true
+      repeater.dmr_color_code = 8
+    elsif pl_tone.in? ["[cc 9]", "cc9", "[cc9]"]
+      repeater.dmr = true
+      repeater.dmr_color_code = 9
+    elsif pl_tone == "[cc 11]"
+      repeater.dmr = true
+      repeater.dmr_color_code = 11
+    elsif pl_tone == "cc 11 ts 1 & ts 2" && raw_repeater[:comments].include?("BRANDMEISTER")
+      repeater.dmr = true
+      repeater.dmr_color_code = 11
+      repeater.dmr_network = "Brandmeister"
+    elsif pl_tone == "nxdn"
+      repeater.nxdn = true
+    elsif raw_repeater[:comments].include?("NXDN") && pl_tone.in?(["ran1", "ran 1", "[ran 1]"])
+      repeater.nxdn = true # TODO: properly import RAN1, but figure out what it is first.
+    elsif (pl_tone == "[cc1/nac293]" && raw_repeater[:comments].include?("DStar DMR Fusion P25")) || # TODO: properly import NAC293, but figure out what it is first.
+        (pl_tone == "[digital]" && raw_repeater[:comments].include?("DMR CC1 SLOT 1 TG 33033 LINKED TO YSF - 0 KP3AV REFLECTOR C4FM DISTAR P25"))
+      repeater.dstar = true
+      repeater.fusion = true
+      repeater.dmr = true
+      repeater.dmr_color_code = 1
+      repeater.p25 = true
+    elsif pl_tone.include?("dpl") || # No idea what this is...
+        pl_tone.include?("dcs") || # No idea what this is...
+        pl_tone.blank? || # Can't do much here.
+        pl_tone.downcase.in?(["23", "yes", "29.54", "448.35", "449.275", "52.35", "654", "[026]", "atv", "d 606", "d023n",
+          "d172", "d311", "d411", "d432", "data", "dts", "lafayette", "pl 218.1", "0", "a", "c",
+          "yes", "[dtmf]", "d051", "d732n", "[dtmf5]", "d263", "5z", "d174", "d245n", "[*]", "152d",
+          "293", "[nac]", "dtmf", "047", "073", "video", "[311]", "244", "tg99", "rock hill",
+          "[nac 293]", "csq", "d125n", "d455", "[dgid:00]", "432", "d047", "[visit srg]", "600",
+          "atikokan", "cochin"]) # No idea what this is...
+      # ...so not doing anything here.
+    else
+      raise "Unknown mode and access code for #{raw_repeater}."
+    end
+  end
+
+  def import_address(repeater, raw_repeater)
     location = raw_repeater[:location].split(",").map(&:strip).reject(&:empty?)
 
     if location.last.start_with?(".") # This is how non US locations are formatted.
