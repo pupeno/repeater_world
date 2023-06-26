@@ -204,20 +204,42 @@ class ArtscipubImporter < Importer
     if location.last.start_with?(".") # This is how non US locations are formatted.
       repeater.country_id = figure_out_country(location)
 
-      if repeater.country_id == "ca"
+      case repeater.country_id
+      when "ca"
         repeater.region = figure_out_canadian_province(location)
-        if location.length == 2
+        repeater.locality = location[0..-2].join(", ")
+      when "gb"
+        case location.last
+        when ".England"
+          repeater.locality = location[0..-2].join(", ")
+          repeater.region = "England"
+        when ".Norfolk-England"
+          repeater.locality = location[0..-2].join(", ")
+          repeater.region = "England"
+          # when ".Scotland" # Not actually imported since we already have them, likely from ukrepeaters.
+        else
+          raise "Unknown UK location: #{location.inspect}"
+        end
+      when "in"
+        case location.last
+        when ".india"
+          repeater.region = location[0..-2].join(", ")
+        when ".Tamilnadu", ".TAMILNADU"
+          repeater.locality = location[0..-2].join(", ")
+          repeater.region = "Tamil Nadu"
+        when ".TANIL NADU INDIA"
+          repeater.locality = location[0..-2].join(", ")
+          repeater.region = "Tamil Nadu"
+        end
+      else
+        if location.length == 2 # Second is the country.
+          repeater.region = location.first
+        elsif location.length == 3 # Third is the country.
           repeater.locality = location.first
+          repeater.region = location.second
         else
           raise "Unknown amount of location parts: #{location.inspect}"
         end
-      elsif location.length == 2 # Second is the country.
-        repeater.region = location.first
-      elsif location.length == 3 # Third is the country.
-        repeater.locality = location.first
-        repeater.region = location.second
-      else
-        raise "Unknown amount of location parts: #{location.inspect}"
       end
     else
       repeater.country_id = "us"
@@ -259,7 +281,7 @@ class ArtscipubImporter < Importer
       "mx"
     when ".Netherlands"
       "nl"
-    when ".Saipan"# ".NORTHERN-MARIANAS"
+    when ".Saipan" # ".NORTHERN-MARIANAS"
       "mp"
     when ".Poland"
       "pl"
