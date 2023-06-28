@@ -320,7 +320,7 @@ class ArtscipubImporter < Importer
       "code 1"]
       repeater.dmr = true
       repeater.dmr_color_code = 1
-    elsif pl_tone.in? ["cc2", "cc 2"]
+    elsif pl_tone.in? ["cc2", "cc 2", "[cc2]"]
       repeater.dmr = true
       repeater.dmr_color_code = 2
     elsif pl_tone.in? ["cc3", "cc 3", "[cc 3]", "cc 3 [cc3]"]
@@ -341,13 +341,16 @@ class ArtscipubImporter < Importer
     elsif pl_tone == "[cc 11]"
       repeater.dmr = true
       repeater.dmr_color_code = 11
+    elsif pl_tone == "cc12"
+      repeater.dmr = true
+      repeater.dmr_color_code = 12
     elsif pl_tone == "cc 11 ts 1 & ts 2" && raw_repeater[:comments].include?("BRANDMEISTER")
       repeater.dmr = true
       repeater.dmr_color_code = 11
       repeater.dmr_network = "Brandmeister"
     elsif pl_tone == "nxdn"
       repeater.nxdn = true
-    elsif raw_repeater[:comments].include?("NXDN") && pl_tone.in?(["ran1", "ran 1", "[ran 1]"])
+    elsif pl_tone.in?(["ran1", "ran 1", "[ran 1]", "ran01", "[ran2]", "[ran 11]"])
       repeater.nxdn = true # TODO: properly import RAN1, but figure out what it is first.
     elsif (pl_tone == "[cc1/nac293]" && raw_repeater[:comments].include?("DStar DMR Fusion P25")) || # TODO: properly import NAC293, but figure out what it is first.
         (pl_tone == "[digital]" && raw_repeater[:comments].include?("DMR CC1 SLOT 1 TG 33033 LINKED TO YSF - 0 KP3AV REFLECTOR C4FM DISTAR P25"))
@@ -364,7 +367,7 @@ class ArtscipubImporter < Importer
           "yes", "[dtmf]", "d051", "d732n", "[dtmf5]", "d263", "5z", "d174", "d245n", "[*]", "152d",
           "293", "[nac]", "dtmf", "047", "073", "video", "[311]", "244", "tg99", "rock hill",
           "[nac 293]", "csq", "d125n", "d455", "[dgid:00]", "432", "d047", "[visit srg]", "600",
-          "atikokan", "cochin"]) # No idea what this is...
+          "atikokan", "cochin", "d073", "[d031]", "[d 244n]"]) # No idea what this is...
       # ...so not doing anything here.
     else
       raise "Unknown mode and access code for #{raw_repeater}."
@@ -389,7 +392,9 @@ class ArtscipubImporter < Importer
         when ".Norfolk-England"
           repeater.locality = location[0..-2].join(", ")
           repeater.region = "England"
-          # when ".Scotland" # Not actually imported since we already have them, likely from ukrepeaters.
+        when ".Scotland" # Not actually imported since we already have them, likely from ukrepeaters.
+          repeater.locality = location[0..-2].join(", ")
+          repeater.region = "Scotland"
         else
           raise "Unknown UK location: #{location.inspect}"
         end
