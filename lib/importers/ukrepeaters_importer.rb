@@ -59,7 +59,7 @@ class UkrepeatersImporter < Importer
   # Create repeater from a record in voice_repeater_list.csv
   def create_repeater(raw_repeater)
     # For the UK, we treat the call sign as unique and the identifier of the repeater.
-    repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[:callsign].upcase)
+    repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[:callsign].upcase, tx_frequency: raw_repeater[:tx].to_f * 10**6)
 
     # Only update repeaters that were sourced from ukrepeater.
     if repeater.persisted? && repeater.source != SOURCE && repeater.source != IrlpImporter.source
@@ -74,7 +74,6 @@ class UkrepeatersImporter < Importer
     repeater.keeper = raw_repeater[:keeper]
 
     # How to access the repeater.
-    repeater.tx_frequency = raw_repeater[:tx].to_f * 10**6
     repeater.rx_frequency = raw_repeater[:rx].to_f * 10**6
     if raw_repeater[:code].present?
       if Repeater::CTCSS_TONES.include?(raw_repeater[:code].to_f)
