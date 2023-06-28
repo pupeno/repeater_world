@@ -14,6 +14,7 @@
  */
 
 import {Controller} from "@hotwired/stimulus"
+import * as Sentry from "@sentry/browser"
 import {MarkerClusterer} from "@googlemaps/markerclusterer"
 
 export default class extends Controller {
@@ -34,7 +35,7 @@ export default class extends Controller {
 
     const markers = this.markersValue.map(marker => {
       if(typeof marker.lat !== "number" || typeof marker.lng !== "number") {
-        console.log("Invalid marker: ", marker)
+        Sentry.captureMessage(`Invalid marker: ${marker}`)
         return null
       }
 
