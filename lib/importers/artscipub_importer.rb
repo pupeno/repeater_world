@@ -179,8 +179,15 @@ class ArtscipubImporter < Importer
     import_address(repeater, raw_repeater)
     repeater.grid_square = raw_repeater[:grid_square] if raw_repeater[:grid_square].present?
     if raw_repeater[:latitude].present? && raw_repeater[:longitude].present?
-      repeater.latitude = raw_repeater[:latitude]
-      repeater.longitude = raw_repeater[:longitude]
+      latitude = raw_repeater[:latitude].to_f
+      longitude = raw_repeater[:longitude].to_f
+
+      if (-90..90).cover?(latitude) && (-180..180).cover?(longitude) && latitude != 0 && longitude != 0
+        repeater.latitude = latitude
+        repeater.longitude = longitude
+      else
+        repeater.location = nil
+      end
     end
 
     repeater.notes = raw_repeater[:comments] if raw_repeater[:comments].present?
