@@ -26,7 +26,7 @@ module Exporters
     [["General", [["CSV", :csv]]]] + # At the beginning to avoid being sorted.
     [
       ["Baofeng", [
-        ["Baofeng UV-5R", :baofeng_uv5r]
+        ["Baofeng UV-5R", :baofeng_uv_5r]
       ].sort],
       ["Icom", [
         ["Icom IC-705", :icom_ic_705],
