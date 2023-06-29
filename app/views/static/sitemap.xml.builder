@@ -27,6 +27,10 @@ xml.urlset xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9" do
   end
 
   xml.url do
+    xml.loc map_legend_url
+  end
+
+  xml.url do
     xml.loc data_limitations_ukrepeater_net_url
   end
 

@@ -84,7 +84,7 @@ RSpec.describe UkrepeatersImporter do
 
       # This repeater simulates a previously imported repeater that is no longer in the source files, so we should
       # delete it to avoid stale data.
-      deleted = create(:repeater, :full, call_sign: "GB7DC", tx_frequency: 145_000_001, source: UkrepeatersImporter::SOURCE)
+      deleted = create(:repeater, :full, call_sign: "XX1XX", tx_frequency: 145_000_001, source: UkrepeatersImporter::SOURCE)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
       changed = Repeater.find_by(call_sign: "GB3NL")
