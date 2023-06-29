@@ -75,9 +75,11 @@ You should have received a copy of the GNU Affero General Public License along w
          data-controller="map"
          data-action="google-maps-callback@window->maps#initializeMap"
          data-map-markers-value="<%=
-           [{              lat: repeater.latitude,
+           [{ lat: repeater.latitude,
               lng: repeater.longitude,
               tooltip: repeater.call_sign,
+              band: repeater.band,
+              modes: repeater.modes,
               info: "<h1 class='font-bold text-lg link'>#{repeater.name}</h1>
                 <p class='link'>#{repeater.call_sign}</p>
                 <p>Band: <span class='font-bold'>#{h repeater.band}</span></p>
