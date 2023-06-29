@@ -22,7 +22,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= card_entry(label: "Web Site", value: repeater.web_site, optional: true) do %>
           <%= link_to repeater.web_site, repeater.web_site, class: "link" %>
         <% end %>
-        <%= card_entry(label: "Keeper", value: repeater.call_sign, optional: true) %>
+        <%= card_entry(label: "Keeper", value: repeater.keeper, optional: true) %>
         <%= card_entry(label: "Band", value: repeater.band, optional: true) %>
         <%= card_entry(label: "Modes", value: modes(repeater).join(", ")) %>
         <%= card_entry(label: "Operational", value: repeater.operational) %>
