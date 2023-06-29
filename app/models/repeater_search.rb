@@ -20,18 +20,18 @@ class RepeaterSearch < ApplicationRecord
 
   # Bands that are supported during search.
   BANDS = [
-    BAND_10M = {label: "10m", secondary: true},
-    BAND_6M = {label: "6m", secondary: true},
-    BAND_4M = {label: "4m", secondary: true},
-    BAND_2M = {label: "2m", secondary: false},
-    BAND_1_25M = {label: "1.25m", secondary: true},
-    BAND_70CM = {label: "70cm", secondary: false},
-    BAND_33CM = {label: "33cm", secondary: true},
-    BAND_23CM = {label: "23cm", secondary: true},
-    BAND_13CM = {label: "13cm", secondary: true},
-    BAND_9CM = {label: "9cm", secondary: true},
-    BAND_6CM = {label: "6cm", secondary: true},
-    BAND_3CM = {label: "3cm", secondary: true}
+    BAND_10M = { label: "10m", secondary: true },
+    BAND_6M = { label: "6m", secondary: true },
+    BAND_4M = { label: "4m", secondary: true },
+    BAND_2M = { label: "2m", secondary: false },
+    BAND_1_25M = { label: "1.25m", secondary: true },
+    BAND_70CM = { label: "70cm", secondary: false },
+    BAND_33CM = { label: "33cm", secondary: true },
+    BAND_23CM = { label: "23cm", secondary: true },
+    BAND_13CM = { label: "13cm", secondary: true },
+    BAND_9CM = { label: "9cm", secondary: true },
+    BAND_6CM = { label: "6cm", secondary: true },
+    BAND_3CM = { label: "3cm", secondary: true }
   ]
   BANDS.each do |band|
     band[:symbol] = :"#{band[:label]}"
@@ -41,25 +41,26 @@ class RepeaterSearch < ApplicationRecord
 
   # Modes that are supported during search.
   MODES = [
-    FM = {label: "FM", name: :fm, secondary: false},
-    DSTAR = {label: "D-Star", name: :dstar, secondary: false},
-    FUSION = {label: "Fusion", name: :fusion, secondary: false},
-    DMR = {label: "DMR", name: :dmr, secondary: false},
-    NXDN = {label: "NXDN", name: :nxdn, secondary: true},
-    P25 = {label: "P25", name: :p25, secondary: true},
-    TETRA = {label: "TETRA", name: :tetra, secondary: true}
+    FM = { label: "FM", name: :fm, secondary: false },
+    DSTAR = { label: "D-Star", name: :dstar, secondary: false },
+    FUSION = { label: "Fusion", name: :fusion, secondary: false },
+    DMR = { label: "DMR", name: :dmr, secondary: false },
+    NXDN = { label: "NXDN", name: :nxdn, secondary: true },
+    P25 = { label: "P25", name: :p25, secondary: true },
+    TETRA = { label: "TETRA", name: :tetra, secondary: true }
   ]
   MODES.each do |mode|
     mode[:symbol] = :"#{mode[:name]}"
     mode[:pred] = :"#{mode[:name]}?"
   end
-  MULTI_MODE = {label: "Multi", symbol: :multi}
+  MULTI_MODE = { label: "Multi", symbol: :multi }
   MODES_AND_MULTI = [MULTI_MODE] + MODES
 
   GEOSEARCH_TYPES = [
     MY_LOCATION = "my_location",
     COORDINATES = "coordinates",
-    GRID_SQUARE = "grid_square"
+    GRID_SQUARE = "grid_square",
+    PLACE = "place"
   ]
 
   attr_writer :saving
@@ -69,9 +70,10 @@ class RepeaterSearch < ApplicationRecord
   validates :user, presence: true, if: :saving
   validates :name, presence: true, if: :saving
   validates :distance, presence: true, if: :geosearch?
-  validates :distance, numericality: {greater_than: 0}, allow_blank: true
+  validates :distance, numericality: { greater_than: 0 }, allow_blank: true
   validates :distance_unit, presence: true, if: :geosearch?
   validates :distance_unit, inclusion: DISTANCE_UNITS, allow_blank: true
+  validates :place, presence: true, if: :place_required?
   validates :latitude, presence: true, if: :lat_and_long_required?
   validates :latitude, numericality: true, allow_blank: true
   validates :longitude, presence: true, if: :lat_and_long_required?
@@ -108,8 +110,8 @@ class RepeaterSearch < ApplicationRecord
       distance = self.distance * ((distance_unit == RepeaterSearch::MILES) ? 1609.34 : 1000)
       repeaters = repeaters.where(
         "ST_DWithin(location, :point, :distance)",
-        {point: Geo.to_wkt(Geo.point(latitude, longitude)),
-         distance: distance}
+        { point: Geo.to_wkt(Geo.point(latitude, longitude)),
+          distance: distance }
       ).all
     end
 
@@ -135,6 +137,10 @@ class RepeaterSearch < ApplicationRecord
     MODES.map { |mode| !send(mode[:pred]) }.all?
   end
 
+  def place_required?
+    geosearch? && geosearch_type == PLACE
+  end
+
   def lat_and_long_required?
     geosearch? && (geosearch_type == COORDINATES || geosearch_type == MY_LOCATION)
   end
@@ -156,6 +162,19 @@ class RepeaterSearch < ApplicationRecord
       errors.add(:geosearch_type, "couldn't get valid coordinates for your location")
       errors.delete(:latitude)
       errors.delete(:longitude)
+    end
+
+    # If we are searching for a place, populate the lat and long.
+    if geosearch? && geosearch_type == PLACE && errors[:place].blank?
+      results = Geocoder.search(place).first
+      if results.present?
+        self.latitude = results.latitude
+        self.longitude = results.longitude
+      else
+        self.latitude = nil
+        self.longitude = nil
+        errors.add(:place, "with that name, address or postcode couldn't be found")
+      end
     end
 
     # If we are searching for grid square, populate the lat and long.
@@ -200,6 +219,7 @@ end
 #  name           :string
 #  nxdn           :boolean          default(FALSE), not null
 #  p25            :boolean          default(FALSE), not null
+#  place          :string
 #  tetra          :boolean          default(FALSE), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
