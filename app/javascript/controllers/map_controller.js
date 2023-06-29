@@ -34,8 +34,8 @@ export default class extends Controller {
     let bounds = new google.maps.LatLngBounds()
 
     const markers = this.markersValue.map(marker => {
-      if(typeof marker.lat !== "number" || typeof marker.lng !== "number") {
-        Sentry.captureMessage(`Invalid marker: ${marker}`)
+      if (typeof marker.lat !== "number" || typeof marker.lng !== "number") {
+        Sentry.captureMessage(`Invalid coordinates for marker: ${marker}`)
         return null
       }
 
@@ -44,9 +44,17 @@ export default class extends Controller {
         content: marker.info,
         ariaLabel: "label",
       })
+      let mode = "multi"
+      if (marker.modes.length === 1) {
+        mode = marker.modes[0]
+      }
       const mapMarker = new google.maps.Marker({
         position: {lat: marker.lat, lng: marker.lng},
         title: marker.tooltip,
+        icon: {
+          url: MAP_MARKERS[marker.band][mode],
+          scaledSize: {width: 600 / 20, height: 1000 / 20}
+        }
       })
       mapMarker.addListener("click", () => {
         if (isInfoWindowOpen) {
