@@ -40,6 +40,9 @@ You should have received a copy of the GNU Affero General Public License along w
             RX Frequency
           </div>
         </th>
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter text-right">
+          CTCSS
+        </th>
         <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
           <div data-action="click->repeater#changeLocationFormat"
                class="cursor-pointer underline hover:text-orange-800">
@@ -73,6 +76,9 @@ You should have received a copy of the GNU Affero General Public License along w
           </td>
           <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
             <%= render "shared/repeater/rx_frequency", repeater: repeater %>
+          </td>
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
+            <%= repeater.fm_ctcss_tone if repeater.fm? %>
           </td>
           <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500">
             <%= render "shared/repeater/location", repeater: repeater %>
