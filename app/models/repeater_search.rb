@@ -34,6 +34,7 @@ class RepeaterSearch < ApplicationRecord
     BAND_3CM = {label: "3cm", secondary: true}
   ]
   BANDS.each do |band|
+    band[:symbol] = :"#{band[:label]}"
     band[:name] = :"band_#{band[:label].tr(".", "_")}"
     band[:pred] = :"#{band[:name]}?"
   end
@@ -49,8 +50,11 @@ class RepeaterSearch < ApplicationRecord
     TETRA = {label: "TETRA", name: :tetra, secondary: true}
   ]
   MODES.each do |mode|
+    mode[:symbol] = :"#{mode[:name]}"
     mode[:pred] = :"#{mode[:name]}?"
   end
+  MULTI_MODE = {label: "Multi", symbol: :multi}
+  MODES_AND_MULTI = [MULTI_MODE] + MODES
 
   GEOSEARCH_TYPES = [
     MY_LOCATION = "my_location",
