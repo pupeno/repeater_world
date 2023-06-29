@@ -19,18 +19,18 @@ You should have received a copy of the GNU Affero General Public License along w
                    border border-gray-200"
         id="<%= dom_id repeater %>">
       <div class="px-2 pt-5 pb-3 sm:px-3">
-        <h3 class="text-lg font-medium leading-6 text-gray-900">
+        <h3 class="text-xl font-medium leading-6 text-gray-900">
           <%= link_to repeater.name, repeater, class: "link" %>
         </h3>
         <p class="mt-1 max-w-2xl text-sm text-gray-500">
           <%= repeater.band %> <%= modes(repeater).to_sentence %>
         </p>
       </div>
-      <div class="border-t border-gray-200 px-2 py-5 sm:p-0">
+      <div class="border-t border-gray-200 px-2 py-5 sm:p-0 grow">
         <dl class="sm:divide-y sm:divide-gray-200">
-          <%= card_entry(label: "Call Sign", value: repeater.call_sign ) %>
+          <%= card_entry(label: "Call Sign", value: repeater.call_sign) %>
           <%= card_entry(label: "Band", value: repeater.band, optional: true) %>
-          <%= card_entry(label: "Modes", value: modes(repeater).join(", ") ) %>
+          <%= card_entry(label: "Modes", value: modes(repeater).join(", ")) %>
           <%= card_entry(label: "Operational", value: repeater.operational) %>
           <%= card_entry(label: "TX Frequency", value: repeater.tx_frequency) do %>
             <%= frequency_in_mhz(repeater.tx_frequency) %>
@@ -38,10 +38,16 @@ You should have received a copy of the GNU Affero General Public License along w
           <%= card_entry(label: "RX Frequency", value: repeater.rx_frequency) do %>
             <%= render "shared/repeater/rx_frequency", repeater: repeater %>
           <% end %>
+          <%= card_entry(label: "CTCSS", value: repeater.fm_ctcss_tone, optional: true) if repeater.fm? %>
           <%= card_entry(label: "Location") do %>
             <%= render "shared/repeater/location", repeater: repeater %>
           <% end %>
         </dl>
+      </div>
+      <div class="-mt-px flex divide-x divide-gray-200 justify-end ">
+        <div class="-ml-px flex w-0 flex-1">
+          <%= link_to "More Details", repeater, class: "link inline-flex flex-1 items-center justify-center py-4" %>
+        </div>
       </div>
     </li>
   <% end %>
