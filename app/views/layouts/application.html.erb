@@ -46,6 +46,12 @@ You should have received a copy of the GNU Affero General Public License along w
       const RENDER = <%= javascript_quoted_string_or_null(ENV["RENDER"]) %>;
       const RENDER_SERVICE_NAME = <%= javascript_quoted_string_or_null(ENV["RENDER_SERVICE_NAME"]) %>;
       const SENTRY_DSN = <%= javascript_quoted_string_or_null(ENV["SENTRY_DSN_FE"]) %>;
+      const MAP_MARKERS = <%= RepeaterSearch::BANDS.to_h do |band|
+       [band[:symbol], RepeaterSearch::MODES_AND_MULTI.to_h do |mode|
+         [mode[:symbol], image_url("map_markers/marker-#{band[:symbol]}-#{mode[:symbol]}.svg")]
+       end]
+     end.to_json.html_safe
+     %>;
     </script>
     <%= javascript_importmap_tags %>
 
@@ -101,6 +107,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
       <p class="text-center text-sm text-gray-400">
         <%= link_to "Open Source & Open Data", open_source_open_data_url, class: "underline hover:text-orange-800" %>
+        <%= link_to "Map Legend", map_legend_url, class: "underline hover:text-orange-800" %>
         <%= link_to "YouTube", "https://www.youtube.com/@RepeaterWorld", class: "underline hover:text-orange-800" %>
         <%= link_to "Report a Bug", "https://github.com/flexpointtech/repeater_world/issues/new", class: "underline hover:text-orange-800" %>
         <%= link_to "Privacy Policy", privacy_policy_url, class: "underline hover:text-orange-800" %>

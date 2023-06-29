@@ -44,7 +44,15 @@ class Repeater < ApplicationRecord
     {min: 10_000_000_000, max: 10_500_000_000, band: BAND_3CM}
   ]
 
-  MODES = %w[fm dstar fusion dmr nxdn p25 tetra]
+  MODES = [
+    FM = "fm",
+    DSTAR = "dstar",
+    FUSION = "fusion",
+    DMR = "dmr",
+    NXDN = "nxdn",
+    P25 = "p25",
+    TETRA = "tetra"
+  ]
 
   CTCSS_TONES = [
     67.0, 69.3, 71.9, 74.4, 77.0, 79.7, 82.5, 85.4, 88.5, 91.5, 94.8, 97.4, 100.0, 103.5, 107.2, 110.9, 114.8, 118.8,
