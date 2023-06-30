@@ -34,4 +34,13 @@ module RepeaterHelper
     modes << "TETRA" if repeater.tetra?
     modes
   end
+
+  def distance_in_unit(distance, unit)
+    distance = (distance / ((unit == "miles") ? 1609.34 : 1000)).round(2)
+    if unit == "miles"
+      "#{distance} miles"
+    else
+      "#{distance}km"
+    end
+  end
 end
