@@ -19,6 +19,7 @@ import {MarkerClusterer} from "@googlemaps/markerclusterer"
 
 export default class extends Controller {
   static values = {
+    home: Object,
     markers: Array
   }
 
@@ -29,9 +30,42 @@ export default class extends Controller {
   }
 
   initializeMap() {
-    let map = new google.maps.Map(this.element, {center: {lat: 0, lng: 0}, zoom: 2})
+    let center = {lat: 0, lng: 0}
+    if (this.hasHomeValue && this.homeValue.lat) {
+      center = {lat: this.homeValue.lat, lng: this.homeValue.lng}
+    } else if (this.markersValue[0]) {
+      center = {lat: this.markersValue[0].lat, lng: this.markersValue[0].lng}
+    }
+    let map = new google.maps.Map(this.element, {center: center, zoom: 2})
 
     let bounds = new google.maps.LatLngBounds()
+
+    if (this.hasHomeValue && this.homeValue.lat) {
+      let isInfoWindowOpen = false
+      let mapMarker = new google.maps.Marker({
+        map,
+        position: {lat: this.homeValue.lat, lng: this.homeValue.lng},
+        title: "This is where you are",
+        icon: {
+          url: CROSSHAIRS_MAP_MARKER,
+          scaledSize: {width: 40, height: 40},
+          anchor: {x: 20, y: 20}
+        }
+      })
+      const infoWindow = new google.maps.InfoWindow({
+        content: this.homeValue.info,
+        ariaLabel: "label",
+      })
+      mapMarker.addListener("click", () => {
+        if (isInfoWindowOpen) {
+          infoWindow.close()
+        } else {
+          infoWindow.open({anchor: mapMarker, map})
+        }
+        isInfoWindowOpen = !isInfoWindowOpen
+      })
+      bounds.extend(new google.maps.LatLng(this.homeValue.lat, this.homeValue.lng))
+    }
 
     const markers = this.markersValue.map(marker => {
       if (typeof marker.lat !== "number" || typeof marker.lng !== "number") {
@@ -56,7 +90,7 @@ export default class extends Controller {
         position: {lat: lat, lng: lng},
         title: marker.tooltip,
         icon: {
-          url: MAP_MARKERS[marker.band][mode],
+          url: REPEATER_MAP_MARKERS[marker.band][mode],
           scaledSize: {width: 600 / iconScalingFactor, height: 1000 / iconScalingFactor}
         }
       })

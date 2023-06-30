@@ -15,7 +15,19 @@ You should have received a copy of the GNU Affero General Public License along w
 <div class="w-full flex-grow min-h-[500px] bg-gray-300"
      data-controller="map"
      data-action="google-maps-callback@window->maps#initializeMap"
+     data-map-home-value="<%=
+       if @repeater_search.geosearch?
+         { lat: @repeater_search.latitude.to_f,
+           lng: @repeater_search.longitude.to_f,
+           info: "<h1 class='font-bold text-lg'>This is where you are</h1>
+                <p>Lat: <span class='font-bold'>#{h @repeater_search.latitude.round(2)}</span>,
+                   Long: <span class='font-bold'>#{h @repeater_search.longitude.round(2)}</span></p>" }.to_json
+       else
+         {}.to_json
+       end %>"
      data-map-markers-value="<%= repeaters.map do |repeater|
+       distance = repeater.respond_to?(:distance) ? "<p>Distance: <span class='font-bold'>#{h distance_in_unit(repeater.distance, @repeater_search.distance_unit)}</span></p>" : ""
+       azimuth = repeater.respond_to?(:azimuth) ? "<p>Azimuth: <span class='font-bold'>#{h repeater.azimuth.round}°</span></p>" : ""
        { lat: repeater.latitude,
          lng: repeater.longitude,
          tooltip: repeater.call_sign,
@@ -23,11 +35,11 @@ You should have received a copy of the GNU Affero General Public License along w
          modes: repeater.modes,
          info: "<h1 class='font-bold text-lg link'>#{link_to repeater.name, repeater}</h1>
                 <p class='link'>#{link_to repeater.call_sign, repeater}</p>
+                #{distance} #{azimuth}
                 <p>Band: <span class='font-bold'>#{h repeater.band}</span></p>
                 <p>Modes: <span class='font-bold'>#{h modes(repeater).join(", ")}</span></p>
                 <p>Frequency: <span class='font-bold'>#{h frequency_in_mhz(repeater.tx_frequency)} #{h frequency_offset_in_khz(repeater.tx_frequency, repeater.rx_frequency)}</span></p>
                 <p>Location: <span class='font-bold'>#{h repeater.location_in_words}</span></p>
                 <p>Lat: <span class='font-bold'>#{h repeater.latitude}</span>,
-                   Long: <span class='font-bold'>#{h repeater.longitude}</span</p>
-                <p>Grid square: <span class='font-bold'>#{h repeater.grid_square}<span></p>" }
+                   Long: <span class='font-bold'>#{h repeater.longitude}</span></p>" }
      end.to_json %>"></div>
