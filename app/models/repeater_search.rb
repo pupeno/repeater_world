@@ -107,22 +107,26 @@ class RepeaterSearch < ApplicationRecord
     end
 
     if geosearch?
+      repeaters = repeaters.select(self.class.sanitize_sql_array([<<-SQL, current_location: Geo.to_wkt(Geo.point(latitude, longitude))]))
+        #{repeaters.table_name}.*,
+        ST_Distance(:current_location, location) AS distance,
+        degrees(ST_Azimuth(:current_location, location)) AS azimuth
+      SQL
       distance = self.distance * ((distance_unit == RepeaterSearch::MILES) ? 1609.34 : 1000)
       repeaters = repeaters.where(
         "ST_DWithin(location, :point, :distance)",
         {point: Geo.to_wkt(Geo.point(latitude, longitude)),
          distance: distance}
       ).all
+      repeaters = repeaters.order(:distance)
     end
 
-    repeaters = repeaters.order(Arel.sql("
+    repeaters = repeaters.order(:name, :call_sign, Arel.sql("
         case
             when \"repeaters\".\"operational\" = true then 1
             when \"repeaters\".\"operational\" IS NULL then 2
             when \"repeaters\".\"operational\" = false then 3
         end"))
-
-    repeaters = repeaters.order("name, call_sign")
 
     repeaters.includes(:country)
 
