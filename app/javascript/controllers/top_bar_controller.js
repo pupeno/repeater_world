@@ -17,7 +17,7 @@ import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [
-    "desktopUserMenu", "desktopUserMenuButton",
+    "desktopExtraMenu", "desktopExtraMenuButton",
     "mobileMenu", "mobileMenuButton", "mobileOpenMenuButton", "mobileCloseMenuButton"
   ]
 
@@ -33,38 +33,38 @@ export default class extends Controller {
     if (this.isMobileMenuOpen()) {
       this.closeMobileMenu()
     }
-    if (this.isDesktopUserMenuOpen()) {
-      this.closeDesktopUserMenu()
+    if (this.isDesktopExtraMenuOpen()) {
+      this.closeDesktopExtraMenu()
     }
   }
 
-  toggleDesktopUserMenu(event) {
+  toggleDesktopExtraMenu(event) {
     event.stopImmediatePropagation()
-    if (this.isDesktopUserMenuOpen()) {
-      this.closeDesktopUserMenu()
+    if (this.isDesktopExtraMenuOpen()) {
+      this.closeDesktopExtraMenu()
     } else {
-      this.openDesktopUserMenu()
+      this.openDesktopExtraMenu()
     }
   }
 
-  isDesktopUserMenuOpen() {
-    return this.hasDesktopUserMenuTarget && !this.desktopUserMenuTarget.classList.contains("hidden")
+  isDesktopExtraMenuOpen() {
+    return this.hasDesktopExtraMenuTarget && !this.desktopExtraMenuTarget.classList.contains("hidden")
   }
 
-  closeDesktopUserMenu() {
+  closeDesktopExtraMenu() {
     // Button state.
-    this.desktopUserMenuButtonTarget.setAttribute("aria-expanded", false)
+    this.desktopExtraMenuButtonTarget.setAttribute("aria-expanded", false)
 
     // Actual menu.
-    this.desktopUserMenuTarget.classList.add("hidden")
+    this.desktopExtraMenuTarget.classList.add("hidden")
   }
 
-  openDesktopUserMenu() {
+  openDesktopExtraMenu() {
     // Button state.
-    this.desktopUserMenuButtonTarget.setAttribute("aria-expanded", true)
+    this.desktopExtraMenuButtonTarget.setAttribute("aria-expanded", true)
 
     // Actual menu.
-    this.desktopUserMenuTarget.classList.remove("hidden")
+    this.desktopExtraMenuTarget.classList.remove("hidden")
   }
 
   toggleMobileMenu(event) {

@@ -22,10 +22,6 @@ module ApplicationHelper
     end
   end
 
-  def gravatar_url(email)
-    "https://www.gravatar.com/avatar/#{Digest::MD5.hexdigest email}?d=mp"
-  end
-
   def toggle_button(form, name, label, **kwargs)
     klass = kwargs[:class] || ""
     data = kwargs[:data] || {}
