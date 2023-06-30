@@ -391,17 +391,17 @@ RSpec.describe RepeaterSearch, type: :model do
 
   it "should blank coordinates when geolocation fails" do
     Geocoder::Lookup::Test.add_stub("New York, NY, US",
-                                    [{"coordinates" => [40.7143528, -74.0059731],
-                                      "address" => "New York, NY, USA",
-                                      "state" => "New York",
-                                      "state_code" => "NY",
-                                      "country" => "United States",
-                                      "country_code" => "US"}])
+      [{"coordinates" => [40.7143528, -74.0059731],
+        "address" => "New York, NY, USA",
+        "state" => "New York",
+        "state_code" => "NY",
+        "country" => "United States",
+        "country_code" => "US"}])
     Geocoder::Lookup::Test.add_stub("Nowhere", [])
     @repeater_search = create(:repeater_search,
-                              geosearch: true, geosearch_type: RepeaterSearch::PLACE,
-                              distance: 10, distance_unit: RepeaterSearch::KM,
-                              place: "New York, NY, US")
+      geosearch: true, geosearch_type: RepeaterSearch::PLACE,
+      distance: 10, distance_unit: RepeaterSearch::KM,
+      place: "New York, NY, US")
     expect(@repeater_search).to be_valid
 
     @repeater_search.place = "Nowhere"
