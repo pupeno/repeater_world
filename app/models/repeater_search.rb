@@ -107,10 +107,10 @@ class RepeaterSearch < ApplicationRecord
     end
 
     if geosearch?
-      repeaters = repeaters.select(<<-SQL)
+      repeaters = repeaters.select(self.class.sanitize_sql_array([<<-SQL, current_location: Geo.to_wkt(Geo.point(latitude, longitude))]))
         #{repeaters.table_name}.*,
-        ST_Distance(location, '#{Geo.to_wkt(Geo.point(latitude, longitude))}') AS distance,
-        degrees(ST_Azimuth('#{Geo.to_wkt(Geo.point(latitude, longitude))}', location)) AS azimuth
+        ST_Distance(:current_location, location) AS distance,
+        degrees(ST_Azimuth(:current_location, location)) AS azimuth
       SQL
       distance = self.distance * ((distance_unit == RepeaterSearch::MILES) ? 1609.34 : 1000)
       repeaters = repeaters.where(
