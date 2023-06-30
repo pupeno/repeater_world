@@ -134,7 +134,7 @@ class RepeaterSearchesController < ApplicationController
       :d,
       s: RepeaterSearch::BANDS.map { |band| band[:name] } +
         RepeaterSearch::MODES.map { |mode| mode[:name] } +
-        [:name, :geosearch, :distance, :distance_unit, :geosearch_type, :latitude, :longitude, :grid_square],
+        [:name, :geosearch, :distance, :distance_unit, :geosearch_type, :place, :latitude, :longitude, :grid_square],
       e: [:format]
     )
   end

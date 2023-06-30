@@ -59,7 +59,8 @@ class RepeaterSearch < ApplicationRecord
   GEOSEARCH_TYPES = [
     MY_LOCATION = "my_location",
     COORDINATES = "coordinates",
-    GRID_SQUARE = "grid_square"
+    GRID_SQUARE = "grid_square",
+    PLACE = "place"
   ]
 
   attr_writer :saving
@@ -72,6 +73,7 @@ class RepeaterSearch < ApplicationRecord
   validates :distance, numericality: {greater_than: 0}, allow_blank: true
   validates :distance_unit, presence: true, if: :geosearch?
   validates :distance_unit, inclusion: DISTANCE_UNITS, allow_blank: true
+  validates :place, presence: true, if: :place_required?
   validates :latitude, presence: true, if: :lat_and_long_required?
   validates :latitude, numericality: true, allow_blank: true
   validates :longitude, presence: true, if: :lat_and_long_required?
@@ -135,6 +137,10 @@ class RepeaterSearch < ApplicationRecord
     MODES.map { |mode| !send(mode[:pred]) }.all?
   end
 
+  def place_required?
+    geosearch? && geosearch_type == PLACE
+  end
+
   def lat_and_long_required?
     geosearch? && (geosearch_type == COORDINATES || geosearch_type == MY_LOCATION)
   end
@@ -156,6 +162,19 @@ class RepeaterSearch < ApplicationRecord
       errors.add(:geosearch_type, "couldn't get valid coordinates for your location")
       errors.delete(:latitude)
       errors.delete(:longitude)
+    end
+
+    # If we are searching for a place, populate the lat and long.
+    if geosearch? && geosearch_type == PLACE && errors[:place].blank? && place != place_was
+      results = Geocoder.search(place).first
+      if results.present?
+        self.latitude = results.latitude
+        self.longitude = results.longitude
+      else
+        self.latitude = nil
+        self.longitude = nil
+        errors.add(:place, "with that name, address or postcode couldn't be found")
+      end
     end
 
     # If we are searching for grid square, populate the lat and long.
@@ -200,6 +219,7 @@ end
 #  name           :string
 #  nxdn           :boolean          default(FALSE), not null
 #  p25            :boolean          default(FALSE), not null
+#  place          :string
 #  tetra          :boolean          default(FALSE), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
