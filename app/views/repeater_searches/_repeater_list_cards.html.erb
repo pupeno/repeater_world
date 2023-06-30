@@ -28,6 +28,9 @@ You should have received a copy of the GNU Affero General Public License along w
       </div>
       <div class="border-t border-gray-200 px-2 py-5 sm:p-0 grow">
         <dl class="sm:divide-y sm:divide-gray-200">
+          <%= card_entry(label: "Distance", value: repeater.respond_to?(:distance) ? repeater.distance : nil, optional: true) do %>
+            <%= distance_in_unit(repeater.distance, @repeater_search.distance_unit) %>
+          <% end %>
           <%= card_entry(label: "Call Sign", value: repeater.call_sign) %>
           <%= card_entry(label: "Band", value: repeater.band, optional: true) %>
           <%= card_entry(label: "Modes", value: modes(repeater).join(", ")) %>
