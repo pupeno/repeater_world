@@ -60,22 +60,6 @@ You should have received a copy of the GNU Affero General Public License along w
       <script src="https://cdn.usefathom.com/script.js" data-site="<%= ENV["FATHOM_ID"] %>" defer></script>
     <% end %>
 
-    <%# Google analytics %>
-    <% if ENV["GOOGLE_ANALYTICS_ID"].present? %>
-      <!-- Global site tag (gtag.js) - Google Analytics -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= ENV["GOOGLE_ANALYTICS_ID"] %>"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-
-        gtag('js', new Date());
-        gtag('config', '<%= ENV["GOOGLE_ANALYTICS_ID"] %>');
-      </script>
-    <% end %>
-
     <%# Google maps: https://www.driftingruby.com/episodes/google-maps-api-with-stimulusjs %>
     <script>
       window.dispatchMapsEvent = function (...args) {
