@@ -15,7 +15,7 @@
 require "rails_helper"
 
 RSpec.describe RepeaterSearch, type: :model do
-  it "should validate formats when geosearch is false" do
+  it "should validate formats when not geosearching" do
     repeater_search = create(:repeater_search, geosearch: false)
     expect(repeater_search).to be_valid
 
@@ -33,6 +33,14 @@ RSpec.describe RepeaterSearch, type: :model do
     repeater_search.distance_unit = nil
     expect(repeater_search).to be_valid
     repeater_search.distance_unit = RepeaterSearch::KM
+    expect(repeater_search).to be_valid
+
+    # Place can be missing.
+    repeater_search.place = nil
+    expect(repeater_search).to be_valid
+    repeater_search.place = ""
+    expect(repeater_search).to be_valid
+    repeater_search.place = "New York, NY, US"
     expect(repeater_search).to be_valid
 
     # Latitude can be missing but not invalid.
@@ -85,6 +93,14 @@ RSpec.describe RepeaterSearch, type: :model do
     repeater_search.distance_unit = RepeaterSearch::KM
     expect(repeater_search).to be_valid
 
+    # Place can be missing.
+    repeater_search.place = nil
+    expect(repeater_search).to be_valid
+    repeater_search.place = ""
+    expect(repeater_search).to be_valid
+    repeater_search.place = "New York, NY, US"
+    expect(repeater_search).to be_valid
+
     # Latitude can neither be missing nor be invalid.
     repeater_search.latitude = "invalid"
     expect(repeater_search).to_not be_valid
@@ -102,6 +118,71 @@ RSpec.describe RepeaterSearch, type: :model do
     repeater_search.longitude = nil
     expect(repeater_search).to_not be_valid
     expect(repeater_search.errors[:geosearch_type]).to include("couldn't get valid coordinates for your location")
+    repeater_search.longitude = 20.02
+    expect(repeater_search).to be_valid
+
+    # Grid square can be missing but not invalid.
+    repeater_search.grid_square = "invalid"
+    expect(repeater_search).to_not be_valid
+    repeater_search.grid_square = nil
+    expect(repeater_search).to be_valid
+    repeater_search.grid_square = "FN22"
+    expect(repeater_search).to be_valid
+    repeater_search.grid_square = "FN22ab"
+    expect(repeater_search).to be_valid
+  end
+
+  it "should validate formats when place geosearching" do
+    Geocoder::Lookup::Test.add_stub("New York, NY, US",
+      [{"coordinates" => [40.7143528, -74.0059731],
+        "address" => "New York, NY, USA",
+        "state" => "New York",
+        "state_code" => "NY",
+        "country" => "United States",
+        "country_code" => "US"}])
+    repeater_search = create(:repeater_search,
+      geosearch: true, geosearch_type: RepeaterSearch::PLACE,
+      distance: 10, distance_unit: RepeaterSearch::KM,
+      place: "New York, NY, US")
+    expect(repeater_search).to be_valid
+
+    # Distance can neither be missing nor be invalid.
+    repeater_search.distance = "invalid"
+    expect(repeater_search).to_not be_valid
+    repeater_search.distance = nil
+    expect(repeater_search).to_not be_valid
+    repeater_search.distance = 10
+    expect(repeater_search).to be_valid
+
+    # Distance unit can neither be missing nor be invalid.
+    repeater_search.distance_unit = "invalid"
+    expect(repeater_search).to_not be_valid
+    repeater_search.distance_unit = nil
+    expect(repeater_search).to_not be_valid
+    repeater_search.distance_unit = RepeaterSearch::KM
+    expect(repeater_search).to be_valid
+
+    # Place can be missing.
+    repeater_search.place = nil
+    expect(repeater_search).to_not be_valid
+    repeater_search.place = ""
+    expect(repeater_search).to_not be_valid
+    repeater_search.place = "New York, NY, US"
+    expect(repeater_search).to be_valid
+
+    # Latitude can be missing but not invalid.
+    repeater_search.latitude = "invalid"
+    expect(repeater_search).to_not be_valid
+    repeater_search.latitude = nil
+    expect(repeater_search).to be_valid
+    repeater_search.latitude = 10.01
+    expect(repeater_search).to be_valid
+
+    # Longitude can be missing but not invalid.
+    repeater_search.longitude = "invalid"
+    expect(repeater_search).to_not be_valid
+    repeater_search.longitude = nil
+    expect(repeater_search).to be_valid
     repeater_search.longitude = 20.02
     expect(repeater_search).to be_valid
 
@@ -139,7 +220,15 @@ RSpec.describe RepeaterSearch, type: :model do
     repeater_search.distance_unit = RepeaterSearch::KM
     expect(repeater_search).to be_valid
 
-    # Latitude can neither be missing nor be invalid.
+    # Place can be missing.
+    repeater_search.place = nil
+    expect(repeater_search).to be_valid
+    repeater_search.place = ""
+    expect(repeater_search).to be_valid
+    repeater_search.place = "New York, NY, US"
+    expect(repeater_search).to be_valid
+
+    # Latitude can be missing but not invalid.
     repeater_search.latitude = "invalid"
     expect(repeater_search).to_not be_valid
     repeater_search.latitude = nil
@@ -187,6 +276,14 @@ RSpec.describe RepeaterSearch, type: :model do
     repeater_search.distance_unit = nil
     expect(repeater_search).to_not be_valid
     repeater_search.distance_unit = RepeaterSearch::KM
+    expect(repeater_search).to be_valid
+
+    # Place can be missing.
+    repeater_search.place = nil
+    expect(repeater_search).to be_valid
+    repeater_search.place = ""
+    expect(repeater_search).to be_valid
+    repeater_search.place = "New York, NY, US"
     expect(repeater_search).to be_valid
 
     # Latitude can be missing but not invalid.
