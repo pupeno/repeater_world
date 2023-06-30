@@ -14,6 +14,7 @@
  */
 
 import {Controller} from "@hotwired/stimulus"
+import {enter, leave} from "el-transition"
 
 export default class extends Controller {
   static targets = [
@@ -51,20 +52,20 @@ export default class extends Controller {
     return this.hasDesktopExtraMenuTarget && !this.desktopExtraMenuTarget.classList.contains("hidden")
   }
 
-  closeDesktopExtraMenu() {
-    // Button state.
-    this.desktopExtraMenuButtonTarget.setAttribute("aria-expanded", false)
-
-    // Actual menu.
-    this.desktopExtraMenuTarget.classList.add("hidden")
-  }
-
   openDesktopExtraMenu() {
     // Button state.
     this.desktopExtraMenuButtonTarget.setAttribute("aria-expanded", true)
 
     // Actual menu.
-    this.desktopExtraMenuTarget.classList.remove("hidden")
+    enter(this.desktopExtraMenuTarget)
+  }
+
+  closeDesktopExtraMenu() {
+    // Button state.
+    this.desktopExtraMenuButtonTarget.setAttribute("aria-expanded", false)
+
+    // Actual menu.
+    leave(this.desktopExtraMenuTarget)
   }
 
   toggleMobileMenu(event) {
@@ -80,16 +81,6 @@ export default class extends Controller {
     return this.mobileOpenMenuButtonTarget.classList.contains("hidden")
   }
 
-  closeMobileMenu() {
-    // Button state.
-    this.mobileCloseMenuButtonTarget.classList.add("hidden")
-    this.mobileOpenMenuButtonTarget.classList.remove("hidden")
-    this.mobileMenuButtonTarget.setAttribute("aria-expanded", false)
-
-    // Actual menu.
-    this.mobileMenuTarget.classList.add("hidden")
-  }
-
   openMobileMenu() {
     // Button state.
     this.mobileCloseMenuButtonTarget.classList.remove("hidden")
@@ -97,6 +88,16 @@ export default class extends Controller {
     this.mobileMenuButtonTarget.setAttribute("aria-expanded", true)
 
     // Actual menu.
-    this.mobileMenuTarget.classList.remove("hidden")
+    enter(this.mobileMenuTarget)
+  }
+
+  closeMobileMenu() {
+    // Button state.
+    this.mobileCloseMenuButtonTarget.classList.add("hidden")
+    this.mobileOpenMenuButtonTarget.classList.remove("hidden")
+    this.mobileMenuButtonTarget.setAttribute("aria-expanded", false)
+
+    // Actual menu.
+    leave(this.mobileMenuTarget)
   }
 }

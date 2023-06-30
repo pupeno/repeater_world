@@ -87,7 +87,13 @@ You should have received a copy of the GNU Affero General Public License along w
                  aria-orientation="vertical"
                  aria-labelledby="extra-menu-button"
                  tabindex="-1"
-                 data-top-bar-target="desktopExtraMenu">
+                 data-top-bar-target="desktopExtraMenu"
+                 data-transition-enter="transition ease-out duration-100"
+                 data-transition-enter-start="transform opacity-0 scale-95"
+                 data-transition-enter-end="transform opacity-100 scale-100"
+                 data-transition-leave="transition ease-in duration-75"
+                 data-transition-leave-start="transform opacity-100 scale-100"
+                 data-transition-leave-end="transform opacity-0 scale-95">
               <%= render "layouts/top_bar_desktop_extra_menu" %>
             </div>
           </div>
@@ -122,7 +128,13 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <%# Mobile menu that is hidden by default %>
   <div class="hidden"
-       data-top-bar-target="mobileMenu">
+       data-top-bar-target="mobileMenu"
+       data-transition-enter="transition ease-out duration-100"
+       data-transition-enter-start="transform opacity-0 translate-y-95"
+       data-transition-enter-end="transform opacity-100 translate-y-100"
+       data-transition-leave="transition ease-in duration-75"
+       data-transition-leave-start="transform opacity-100 translate-y-100"
+       data-transition-leave-end="transform opacity-0 translate-y-95">
     <div class="pt-2 pb-3 space-y-1">
       <%= render "layouts/top_bar_mobile_menu" %>
     </div>
