@@ -21,7 +21,7 @@ RSpec.describe CsvExporter do
     exporter = CsvExporter.new(Repeater.order(:call_sign, :tx_frequency))
 
     expect(exporter.export).to eq(<<~CSV)
-      Name,Call Sign,Web Site,Keeper,Band,Operational,Tx Frequency,Rx Frequency,FM,Tone Burst,CTCSS Tone,Tone Squelch,Bandwidth,D-Star,D-Star Port,Fusion,DMR,DMR Color Code,DMR Network,NXDN,P25,Tetra,Latitude,Longitude,Grid Square,Address,Locality,Region,Post Code,Country,Tx Power,Tx Antenna,Tx Antenna Polarization,Rx Antenna,Rx Antenna Polarization,Altitude Asl,Altitude Agl,Bearing,UTC Offset,Channel,Notes,Source,Redistribution Limitations
+      Name,Call Sign,Web Site,Keeper,Band,Operational,Tx Frequency,Rx Frequency,FM,Tone Burst,CTCSS Tone,Tone Squelch,Bandwidth,D-Star,D-Star Port,Fusion,DMR,DMR Color Code,DMR Network,NXDN,P25,Tetra,Latitude,Longitude,Grid Square,Address,Locality,Region,Post Code,Country Code,Tx Power,Tx Antenna,Tx Antenna Polarization,Rx Antenna,Rx Antenna Polarization,Altitude Asl,Altitude Agl,Bearing,UTC Offset,Channel,Notes,Source,Redistribution Limitations
       Repeater BL4NK,BL4NK,,,2m,,144962500,144362500,,,,,,,,,,,,,,,,,,,,,,gb,,,,,,,,,,,,,
       Repeater BL4NK,BL4NK,,,2m,,144970000,144370000,true,,,,wide,,,,,,,,,,,,,,,,,gb,,,,,,,,,,,,,
       Repeater FU11,FU11,https://website,K3EPR,2m,true,144962500,144362500,true,true,67.0,true,wide,true,C,true,true,1,Brandmeister,true,true,true,51.74,-3.42,IO81HR,address,city,region,PC,gb,50,tx_antenna,V,rx_antenna,V,200,150,bearing,05:00,channel,Notes,source,redistribution_limitations

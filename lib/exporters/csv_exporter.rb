@@ -43,6 +43,7 @@ class CsvExporter < Exporter
     column_names[:dmr_color_code] = "DMR Color Code"
     column_names[:dmr_network] = "DMR Network"
     column_names[:nxdn] = "NXDN"
+    column_names[:country_id] = "Country Code"
     column_names[:utc_offset] = "UTC Offset"
     column_names[:redistribution_limitations] = "Redistribution Limitations"
 
