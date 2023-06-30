@@ -12,8 +12,8 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-class AddGridSquareToRepeaterSearches < ActiveRecord::Migration[7.0]
+class AddPlaceToRepeaterSearches < ActiveRecord::Migration[7.0]
   def change
-    add_column :repeater_searches, :grid_square, :string
+    add_column :repeater_searches, :place, :string
   end
 end
