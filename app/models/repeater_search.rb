@@ -20,18 +20,18 @@ class RepeaterSearch < ApplicationRecord
 
   # Bands that are supported during search.
   BANDS = [
-    BAND_10M = { label: "10m", secondary: true },
-    BAND_6M = { label: "6m", secondary: true },
-    BAND_4M = { label: "4m", secondary: true },
-    BAND_2M = { label: "2m", secondary: false },
-    BAND_1_25M = { label: "1.25m", secondary: true },
-    BAND_70CM = { label: "70cm", secondary: false },
-    BAND_33CM = { label: "33cm", secondary: true },
-    BAND_23CM = { label: "23cm", secondary: true },
-    BAND_13CM = { label: "13cm", secondary: true },
-    BAND_9CM = { label: "9cm", secondary: true },
-    BAND_6CM = { label: "6cm", secondary: true },
-    BAND_3CM = { label: "3cm", secondary: true }
+    BAND_10M = {label: "10m", secondary: true},
+    BAND_6M = {label: "6m", secondary: true},
+    BAND_4M = {label: "4m", secondary: true},
+    BAND_2M = {label: "2m", secondary: false},
+    BAND_1_25M = {label: "1.25m", secondary: true},
+    BAND_70CM = {label: "70cm", secondary: false},
+    BAND_33CM = {label: "33cm", secondary: true},
+    BAND_23CM = {label: "23cm", secondary: true},
+    BAND_13CM = {label: "13cm", secondary: true},
+    BAND_9CM = {label: "9cm", secondary: true},
+    BAND_6CM = {label: "6cm", secondary: true},
+    BAND_3CM = {label: "3cm", secondary: true}
   ]
   BANDS.each do |band|
     band[:symbol] = :"#{band[:label]}"
@@ -41,19 +41,19 @@ class RepeaterSearch < ApplicationRecord
 
   # Modes that are supported during search.
   MODES = [
-    FM = { label: "FM", name: :fm, secondary: false },
-    DSTAR = { label: "D-Star", name: :dstar, secondary: false },
-    FUSION = { label: "Fusion", name: :fusion, secondary: false },
-    DMR = { label: "DMR", name: :dmr, secondary: false },
-    NXDN = { label: "NXDN", name: :nxdn, secondary: true },
-    P25 = { label: "P25", name: :p25, secondary: true },
-    TETRA = { label: "TETRA", name: :tetra, secondary: true }
+    FM = {label: "FM", name: :fm, secondary: false},
+    DSTAR = {label: "D-Star", name: :dstar, secondary: false},
+    FUSION = {label: "Fusion", name: :fusion, secondary: false},
+    DMR = {label: "DMR", name: :dmr, secondary: false},
+    NXDN = {label: "NXDN", name: :nxdn, secondary: true},
+    P25 = {label: "P25", name: :p25, secondary: true},
+    TETRA = {label: "TETRA", name: :tetra, secondary: true}
   ]
   MODES.each do |mode|
     mode[:symbol] = :"#{mode[:name]}"
     mode[:pred] = :"#{mode[:name]}?"
   end
-  MULTI_MODE = { label: "Multi", symbol: :multi }
+  MULTI_MODE = {label: "Multi", symbol: :multi}
   MODES_AND_MULTI = [MULTI_MODE] + MODES
 
   GEOSEARCH_TYPES = [
@@ -70,7 +70,7 @@ class RepeaterSearch < ApplicationRecord
   validates :user, presence: true, if: :saving
   validates :name, presence: true, if: :saving
   validates :distance, presence: true, if: :geosearch?
-  validates :distance, numericality: { greater_than: 0 }, allow_blank: true
+  validates :distance, numericality: {greater_than: 0}, allow_blank: true
   validates :distance_unit, presence: true, if: :geosearch?
   validates :distance_unit, inclusion: DISTANCE_UNITS, allow_blank: true
   validates :place, presence: true, if: :place_required?
@@ -115,8 +115,8 @@ class RepeaterSearch < ApplicationRecord
       distance = self.distance * ((distance_unit == RepeaterSearch::MILES) ? 1609.34 : 1000)
       repeaters = repeaters.where(
         "ST_DWithin(location, :point, :distance)",
-        { point: Geo.to_wkt(Geo.point(latitude, longitude)),
-          distance: distance }
+        {point: Geo.to_wkt(Geo.point(latitude, longitude)),
+         distance: distance}
       ).all
       repeaters = repeaters.order(:distance)
     end
