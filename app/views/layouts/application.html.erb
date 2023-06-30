@@ -41,6 +41,13 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <%# JavaScript %>
     <script>
+      <%# Copied from light_dark_switcher_controller.js to avoid FOUC %>
+      if (localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+
       const RAILS_ENV = <%= javascript_quoted_string_or_null(Rails.env) %>;
       const IS_PULL_REQUEST = <%= javascript_quoted_string_or_null(ENV["IS_PULL_REQUEST"]) %>;
       const RENDER = <%= javascript_quoted_string_or_null(ENV["RENDER"]) %>;
@@ -74,7 +81,8 @@ You should have received a copy of the GNU Affero General Public License along w
                                defer: true,
                                "data-turbolinks-eval": false %>
   </head>
-  <body class="min-h-screen flex flex-col">
+  <body class="min-h-screen flex flex-col dark:bg-gray-800"
+        data-controller="light-dark-switcher">
     <%= render "layouts/top_bar" %>
 
     <main class="py-10 flex-grow flex flex-col">

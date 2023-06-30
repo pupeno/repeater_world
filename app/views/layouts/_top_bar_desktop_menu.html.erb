@@ -18,3 +18,21 @@ You should have received a copy of the GNU Affero General Public License along w
 <%= top_bar_desktop_link "Support", "https://github.com/flexpointtech/repeater_world/discussions" %>
 <%= top_bar_desktop_link "Log in", new_user_session_url if !user_signed_in? %>
 <%= top_bar_desktop_link "Sign up", new_user_registration_url if !user_signed_in? %>
+<div class="inline-flex flex-col justify-center">
+  <button class="h-12 w-12
+                 rounded-md
+                 text-gray-900 font-medium
+                 ring-1 ring-inset ring-orange-300 bg-white hover:bg-orange-50
+                 dark:hidden"
+          data-action="click->light-dark-switcher#dark">
+    <i class="fa-solid fa-moon"></i>
+  </button>
+  <button class="h-12 w-12
+                 rounded-md
+                 text-gray-900 font-medium
+                 ring-1 ring-inset ring-orange-300 bg-white hover:bg-orange-50
+                 hidden dark:block"
+          data-action="click->light-dark-switcher#light">
+    <i class="fa-solid fa-sun"></i>
+  </button>
+</div>
