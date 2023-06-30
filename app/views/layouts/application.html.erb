@@ -100,7 +100,14 @@ You should have received a copy of the GNU Affero General Public License along w
       <p class="text-center text-sm text-gray-400">
         <%= link_to "Open Source & Open Data", open_source_open_data_url, class: "underline hover:text-orange-800" %>
         <%= link_to "Map Legend", map_legend_url, class: "underline hover:text-orange-800" %>
-        <%= link_to "YouTube", "https://www.youtube.com/@RepeaterWorld", class: "underline hover:text-orange-800" %>
+        <%= link_to "https://www.youtube.com/@RepeaterWorld", class: "underline hover:text-orange-800" do %>
+          <i class="fa-brands fa-youtube"></i>
+          YouTube
+        <% end %>
+        <%= link_to "https://www.facebook.com/RepeaterWorldApp", class: "underline hover:text-orange-800" do %>
+          <i class="fa-brands fa-facebook"></i>
+          Facebook
+        <% end %>
         <%= link_to "Report a Bug", "https://github.com/flexpointtech/repeater_world/issues/new", class: "underline hover:text-orange-800" %>
         <%= link_to "Privacy Policy", privacy_policy_url, class: "underline hover:text-orange-800" %>
         <%= link_to "Cookie Policy", cookie_policy_url, class: "underline hover:text-orange-800" %>
