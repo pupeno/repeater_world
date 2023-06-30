@@ -165,7 +165,7 @@ class RepeaterSearch < ApplicationRecord
     end
 
     # If we are searching for a place, populate the lat and long.
-    if geosearch? && geosearch_type == PLACE && errors[:place].blank?
+    if geosearch? && geosearch_type == PLACE && errors[:place].blank? && place != place_was
       results = Geocoder.search(place).first
       if results.present?
         self.latitude = results.latitude
