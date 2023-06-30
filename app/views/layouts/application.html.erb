@@ -46,12 +46,12 @@ You should have received a copy of the GNU Affero General Public License along w
       const RENDER = <%= javascript_quoted_string_or_null(ENV["RENDER"]) %>;
       const RENDER_SERVICE_NAME = <%= javascript_quoted_string_or_null(ENV["RENDER_SERVICE_NAME"]) %>;
       const SENTRY_DSN = <%= javascript_quoted_string_or_null(ENV["SENTRY_DSN_FE"]) %>;
-      const MAP_MARKERS = <%= RepeaterSearch::BANDS.to_h do |band|
-       [band[:symbol], RepeaterSearch::MODES_AND_MULTI.to_h do |mode|
-         [mode[:symbol], image_url("map_markers/marker-#{band[:symbol]}-#{mode[:symbol]}.svg")]
-       end]
-     end.to_json.html_safe
-     %>;
+      const CROSSHAIRS_MAP_MARKER = "<%= image_url("map_markers/crosshairs.svg") %>";
+      const REPEATER_MAP_MARKERS = <%= RepeaterSearch::BANDS.to_h do |band|
+          [band[:symbol], RepeaterSearch::MODES_AND_MULTI.to_h do |mode|
+            [mode[:symbol], image_url("map_markers/marker-#{band[:symbol]}-#{mode[:symbol]}.svg")]
+          end]
+        end.to_json.html_safe %>;
     </script>
     <%= javascript_importmap_tags %>
 

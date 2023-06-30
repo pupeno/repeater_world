@@ -32,7 +32,7 @@ You should have received a copy of the GNU Affero General Public License along w
             <%= distance_in_unit(repeater.distance, @repeater_search.distance_unit) %>
           <% end %>
           <%= card_entry(label: "Distance", value: repeater.respond_to?(:azimuth) ? repeater.azimuth : nil, optional: true) do %>
-            <%= repeater.azimuth.round(0) %>°
+            <%= repeater.azimuth.round %>°
           <% end %>
           <%= card_entry(label: "Call Sign", value: repeater.call_sign) %>
           <%= card_entry(label: "Band", value: repeater.band, optional: true) %>
