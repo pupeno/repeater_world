@@ -48,12 +48,16 @@ export default class extends Controller {
       if (marker.modes.length === 1) {
         mode = marker.modes[0]
       }
+      const iconScalingFactor = 20
+      let randomizationFactor = 0.001
+      let lat = marker.lat + Math.random() * randomizationFactor - randomizationFactor/2
+      let lng = marker.lng + Math.random() * randomizationFactor - randomizationFactor/2
       const mapMarker = new google.maps.Marker({
-        position: {lat: marker.lat, lng: marker.lng},
+        position: {lat: lat, lng: lng},
         title: marker.tooltip,
         icon: {
           url: MAP_MARKERS[marker.band][mode],
-          scaledSize: {width: 600 / 20, height: 1000 / 20}
+          scaledSize: {width: 600 / iconScalingFactor, height: 1000 / iconScalingFactor}
         }
       })
       mapMarker.addListener("click", () => {
