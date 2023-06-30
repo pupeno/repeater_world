@@ -107,7 +107,11 @@ class RepeaterSearch < ApplicationRecord
     end
 
     if geosearch?
-      repeaters = repeaters.select("#{repeaters.table_name}.*, ST_Distance(location, '#{Geo.to_wkt(Geo.point(latitude, longitude))}') AS distance")
+      repeaters = repeaters.select(<<-SQL)
+        #{repeaters.table_name}.*,
+        ST_Distance(location, '#{Geo.to_wkt(Geo.point(latitude, longitude))}') AS distance,
+        degrees(ST_Azimuth(location, '#{Geo.to_wkt(Geo.point(latitude, longitude))}')) AS azimuth
+      SQL
       distance = self.distance * ((distance_unit == RepeaterSearch::MILES) ? 1609.34 : 1000)
       repeaters = repeaters.where(
         "ST_DWithin(location, :point, :distance)",
