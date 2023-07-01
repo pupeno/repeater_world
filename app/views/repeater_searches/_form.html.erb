@@ -56,8 +56,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <% end %>
 
   <div class="my-3" data-controller="multi-toggle">
-    Band:
-    <%= toggle_like_button "All",
+    <%= toggle_like_button "All Bands",
                            data: { action: "click->multi-toggle#selectAll",
                                    multi_toggle_target: "all" } %>
     <% RepeaterSearch::BANDS.each do |band| %>
@@ -72,8 +71,7 @@ You should have received a copy of the GNU Affero General Public License along w
   </div>
 
   <div class="my-3" data-controller="multi-toggle">
-    Mode:
-    <%= toggle_like_button "All",
+    <%= toggle_like_button "All Modes",
                            data: { action: "click->multi-toggle#selectAll",
                                    multi_toggle_target: "all" } %>
     <% RepeaterSearch::MODES.each do |mode| %>
