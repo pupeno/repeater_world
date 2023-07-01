@@ -20,6 +20,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <div class="max-w-7xl mx-auto px-4">
     <div class="flex justify-between h-16">
+
       <%# Logo and name on the top left %>
       <div class="flex flex-row items-center">
         <%= link_to root_url, class: "contents" do %>
@@ -35,27 +36,26 @@ You should have received a copy of the GNU Affero General Public License along w
 
       <%# Right aligned content on the menu %>
       <div class="hidden md:flex flex-row">
+
+        <%# Top bar menu entries %>
         <div class="hidden md:flex flex-row md:space-x-4 lg:space-x-8">
           <%= render "layouts/top_bar_desktop_menu" %>
         </div>
 
+        <%# Top bar buttons. %>
         <div class="flex flex-row self-center md:ml-2 lg:ml-4 md:space-x-1 lg:space-x-2">
-          <button class="w-10 h-10 inline-flex items-center justify-center p-2 rounded-md
-                         focus:outline-none focus:ring-2
+          <button class="w-10 h-10 inline-flex items-center justify-center rounded-md
                          text-gray-400 bg-transparent
                          hover:text-gray-500 hover:bg-gray-100
-                         dark:hover:text-gray-300 dark:hover:bg-gray-700
-                         focus:ring-orange-500
+                         focus:outline-dotted focus:bg-orange-50 focus:text-gray-500 focus:bg-gray-100 outline-2 outline-orange-600
                          dark:hidden"
                   data-action="click->light-dark-switcher#dark">
             <i class="fa-solid fa-moon"></i>
           </button>
-          <button class="w-10 h-10 inline-flex items-center justify-center  rounded-md
-                         focus:outline-none focus:ring-2
+          <button class="w-10 h-10 inline-flex items-center justify-center rounded-md
                          text-gray-400 bg-transparent
-                         hover:text-gray-500 hover:bg-gray-100
-                         dark:hover:text-gray-300 dark:hover:bg-gray-700
-                         focus:ring-orange-500
+                         hover:text-gray-300 hover:bg-gray-700
+                         focus:outline-dotted focus:bg-orange-50 focus:text-gray-300 focus:bg-gray-700 outline-2 outline-orange-600
                          hidden dark:block"
                   data-action="click->light-dark-switcher#light">
             <i class="fa-solid fa-sun"></i>
@@ -63,11 +63,11 @@ You should have received a copy of the GNU Affero General Public License along w
           <div class="relative">
             <button type="button"
                     class="w-10 h-10 inline-flex items-center justify-center rounded-md
-                           focus:outline-none focus:ring-2
                            text-gray-400 bg-transparent
                            hover:text-gray-500 hover:bg-gray-100
                            dark:hover:text-gray-300 dark:hover:bg-gray-700
-                           focus:ring-orange-500"
+                           focus:outline-dotted focus:bg-orange-50 focus:text-gray-500 focus:bg-gray-100 outline-2 outline-orange-600
+                           dark:focus:text-gray-300 dark:focus:bg-gray-700"
                     aria-controls="mobile-menu"
                     aria-expanded="false"
                     data-action="click->top-bar#toggleDesktopExtraMenu"
@@ -81,8 +81,9 @@ You should have received a copy of the GNU Affero General Public License along w
               </div>
             </button>
             <div class="hidden z-10 origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg py-1
+                        focus:outline-none
                         bg-white dark:bg-gray-700
-                        ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        border border-gray-200 dark:border-gray-900"
                  role="menu"
                  aria-orientation="vertical"
                  aria-labelledby="extra-menu-button"
@@ -104,12 +105,12 @@ You should have received a copy of the GNU Affero General Public License along w
       <div class="-mr-2 flex items-center md:hidden">
         <%# Mobile menu button %>
         <button type="button"
-                class="w-10 h-10 inline-flex items-center justify-center p-2 rounded-md
-                       focus:outline-none focus:ring-2
+                class="w-10 h-10 inline-flex items-center justify-center rounded-md
                        text-gray-400 bg-transparent
                        hover:text-gray-500 hover:bg-gray-100
                        dark:hover:text-gray-300 dark:hover:bg-gray-700
-                       focus:ring-orange-500"
+                       focus:outline-dotted focus:bg-orange-50 focus:text-gray-500 focus:bg-gray-100 outline-2 outline-orange-600
+                       dark:focus:text-gray-300 dark:focus:bg-gray-700"
                 aria-controls="mobile-menu"
                 aria-expanded="false"
                 data-action="click->top-bar#toggleMobileMenu"
