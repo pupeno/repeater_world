@@ -14,11 +14,11 @@ You should have received a copy of the GNU Affero General Public License along w
 
 <div class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-md">
-    <h1 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Log in</h1>
+    <h1 class="mt-6 text-center text-3xl font-extrabold">Log in</h1>
   </div>
 
   <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-200">
+    <div class="py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-200">
       <%= render "shared/flash_messages" %>
 
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-6" }) do |f| %>
@@ -45,7 +45,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <% if devise_mapping.rememberable? %>
           <div class="flex items-center">
             <%= f.check_box :remember_me, class: "h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded" %>
-            <%= f.label :remember_me, class: "ml-2 block text-sm text-gray-900" %>
+            <%= f.label :remember_me, class: "ml-2 block text-sm" %>
           </div>
         <% end %>
 

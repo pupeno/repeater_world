@@ -28,7 +28,7 @@ module TopBarHelper
         focus:text-gray-800 focus:border-gray-800
         dark:focus:text-gray-200 dark:focus:border-gray-200
     CLASSES
-    kwargs[:class_active] = "border-orange-500 text-gray-900 dark:text-gray-100"
+    kwargs[:class_active] = "border-orange-500 dark:text-gray-100"
     kwargs[:role] = "menuitem"
     active_link_to(*args, **kwargs, &block)
   end

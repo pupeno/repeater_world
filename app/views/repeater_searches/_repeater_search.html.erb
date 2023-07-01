@@ -18,7 +18,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <div class="min-w-0">
     <div class="flex items-start gap-x-3">
-      <p class="text-sm font-semibold leading-6 text-gray-900">
+      <p class="text-sm font-semibold leading-6">
         <%= link_to repeater_search.name, repeater_search %>
       </p>
 
@@ -75,15 +75,15 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <div class="flex flex-none items-center gap-x-4">
     <%= dropdown_menu do %>
-      <%= link_to repeater_search, class: "block px-3 py-1 text-sm leading-6 text-gray-900",
+      <%= link_to repeater_search, class: "block px-3 py-1 text-sm leading-6",
                   role: "menuitem", tabindex: "-1" do %>
         <i class="fa-solid fa-eye mr-2"></i> Show <span class="sr-only"><%= repeater_search.name %></span>
       <% end %>
-      <%= link_to repeater_search, class: "block px-3 py-1 text-sm leading-6 text-gray-900",
+      <%= link_to repeater_search, class: "block px-3 py-1 text-sm leading-6",
                   role: "menuitem", tabindex: "-1" do %>
         <i class="fa-solid fa-pen mr-2"></i> Edit <span class="sr-only"><%= repeater_search.name %></span>
       <% end %>
-      <button class="block px-3 py-1 text-sm leading-6 text-gray-900"
+      <button class="block px-3 py-1 text-sm leading-6"
               role="menuitem" tabindex="-1"
               data-action="click->repeater-search-row#showDeletePopUp">
         <i class="fa-solid fa-trash mr-2"></i> Delete <span class="sr-only"><%= repeater_search.name %></span>

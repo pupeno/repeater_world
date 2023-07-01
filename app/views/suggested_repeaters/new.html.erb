@@ -32,7 +32,7 @@ You should have received a copy of the GNU Affero General Public License along w
       </div>
     <% end %>
 
-    <h2 class="text-xl font-bold leading-7 text-gray-900 sm:text-2xl mt-4">About you</h2>
+    <h2 class="text-xl font-bold leading-7 sm:text-2xl mt-4">About you</h2>
     <%= form_text_field form: form, field_name: :submitter_name, label: "Your name (optional)",
                         input_html_options: { autofocus: true } %>
     <%= form_email_field form: form, field_name: :submitter_email, label: "Your email (optional)" %>
@@ -42,7 +42,7 @@ You should have received a copy of the GNU Affero General Public License along w
     <%= form_textarea_field form: form, field_name: :submitter_notes,
                             help_text: "Private notes that will not be published. Anything you want to tell us about this repeater." %>
 
-    <h2 class="text-xl font-bold leading-7 text-gray-900 sm:text-2xl mt-20">About the repeater</h2>
+    <h2 class="text-xl font-bold leading-7 sm:text-2xl mt-20">About the repeater</h2>
     <%= form_text_field form: form, field_name: :name %>
     <%= form_text_field form: form, field_name: :call_sign %>
     <%= form_text_field form: form, field_name: :band,
@@ -61,7 +61,7 @@ You should have received a copy of the GNU Affero General Public License along w
       <div role="group" aria-labelledby="label-modes">
         <div class="sm:grid sm:grid-cols-3 sm:items-baseline sm:gap-4">
           <div>
-            <div class="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700" id="label-modes">
+            <div class="text-base font-medium sm:text-sm sm:text-gray-700" id="label-modes">
               What modes are supported by this repeater?
             </div>
           </div>

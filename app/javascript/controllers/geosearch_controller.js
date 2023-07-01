@@ -16,7 +16,6 @@
 import {Controller} from "@hotwired/stimulus"
 
 const GRAYED_OUT_TEXT = "text-gray-300"
-const NORMAL_TEXT = "text-gray-900"
 
 export default class extends Controller {
   static targets = [
@@ -32,11 +31,9 @@ export default class extends Controller {
     if (this.activatorTarget.checked) {
       this.controlledTargets.forEach(element => {
         element.classList.remove(GRAYED_OUT_TEXT)
-        element.classList.add(NORMAL_TEXT)
       })
     } else {
       this.controlledTargets.forEach(element => {
-        element.classList.remove(NORMAL_TEXT)
         element.classList.add(GRAYED_OUT_TEXT)
       })
     }
