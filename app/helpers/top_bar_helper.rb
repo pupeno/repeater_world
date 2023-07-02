@@ -16,7 +16,7 @@ module TopBarHelper
   def top_bar_desktop_link(*args, **kwargs, &block)
     kwargs[:class] = <<-CLASSES
       inline-flex items-center px-1 pt-1 border-b-4 font-medium
-      focus:outline-dotted focus:bg-orange-50 outline-2 outline-offset-[-2px] outline-orange-600
+      focus:outline focus:bg-orange-50 outline-2 outline-offset-[-2px] outline-orange-600
       dark:focus:bg-gray-700
     CLASSES
     kwargs[:class_inactive] = <<-CLASSES
@@ -35,7 +35,7 @@ module TopBarHelper
 
   DESKTOP_EXTRA_BASE_CLASS = <<-CLASSES
     block px-6 py-4 border-l-4 font-medium dark:text-gray-100
-    focus:outline-dotted outline-2 outline-offset-[-2px] outline-orange-600
+    focus:outline outline-2 outline-offset-[-2px] outline-orange-600
   CLASSES
   DESKTOP_EXTRA_INACTIVE_CLASS = <<-CLASSES
     border-transparent text-gray-600
@@ -64,7 +64,7 @@ module TopBarHelper
 
   MOBILE_BASE_CLASS = <<-CLASSES
     block pl-3 pr-4 py-4 border-l-4 font-medium
-    focus:outline-dotted outline-2 outline-offset-[-2px] outline-orange-600
+    focus:outline outline-2 outline-offset-[-2px] outline-orange-600
   CLASSES
   MOBILE_INACTIVE_CLASS = <<-CLASSES
     border-transparent text-gray-600
