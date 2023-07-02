@@ -51,6 +51,10 @@
     [multiple],[type=date],[type=datetime-local],[type=email],[type=month],[type=number],[type=password],[type=search],[type=tel],[type=text],[type=time],[type=url],[type=week],select,textarea {
         @apply bg-transparent;
     }
+    /* Make the select options work in dark mode, transparency doesn't work for them */
+    select option {
+        @apply bg-gray-50 dark:bg-gray-800;
+    }
 
     .field-text {
         @apply rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 border-gray-300;
