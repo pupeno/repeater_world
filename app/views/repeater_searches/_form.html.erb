@@ -42,7 +42,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <% end %>
 
   <% if show_name_field %>
-    <div class="my-3 flex flex-row items-baseline gap-3">
+    <div class="mb-3 flex flex-row items-baseline gap-3">
       <%= form.label :name, "Name:",
                      class: "mr-2" %>
       <div class="mt-1 sm:mt-0 grow">
@@ -55,7 +55,7 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
   <% end %>
 
-  <div class="my-3" data-controller="multi-toggle">
+  <div class="mb-3" data-controller="multi-toggle">
     <%= toggle_like_button "All Bands",
                            data: { action: "click->multi-toggle#selectAll",
                                    multi_toggle_target: "all" } %>
@@ -71,7 +71,7 @@ You should have received a copy of the GNU Affero General Public License along w
     </button>
   </div>
 
-  <div class="my-3" data-controller="multi-toggle">
+  <div class="mb-3" data-controller="multi-toggle">
     <%= toggle_like_button "All Modes",
                            data: { action: "click->multi-toggle#selectAll",
                                    multi_toggle_target: "all" } %>
