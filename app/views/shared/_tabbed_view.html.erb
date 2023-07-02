@@ -29,7 +29,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <nav class="-mb-px flex space-x-8" aria-label="Tabs">
           <% tabs.each do |tab| %>
             <%= link_to tab[:url],
-                        class: "group inline-flex items-center py-2 px-1 border-b-2 font-medium text-sm #{tab[:name] == selected_tab ? "border-orange-500 text-orange-600 " : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}" do %>
+                        class: "group inline-flex items-center py-2 px-1 border-b-2 font-medium #{tab[:name] == selected_tab ? "border-orange-500 text-orange-600 " : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}" do %>
               <i class="<%= tab[:icon] %>"></i>
               <span class="ml-3"><%= tab[:title] %></span>
             <% end %>

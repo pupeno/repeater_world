@@ -53,7 +53,7 @@
     }
 
     .field-text {
-        @apply sm:text-sm rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 border-gray-300;
+        @apply rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 border-gray-300;
     }
 
     .field_with_errors > .field-text {
@@ -61,7 +61,7 @@
     }
 
     .field-textarea {
-        @apply rounded-md shadow-sm sm:text-sm focus:ring-orange-500 focus:border-orange-500 border-gray-300;
+        @apply rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 border-gray-300;
     }
 
     .field_with_errors > .field-textarea {

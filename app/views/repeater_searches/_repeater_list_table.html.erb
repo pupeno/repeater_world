@@ -16,94 +16,94 @@ You should have received a copy of the GNU Affero General Public License along w
   <table class="min-w-full border-separate" style="border-spacing: 0">
     <thead class="bg-gray-50">
       <tr>
-        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold backdrop-blur backdrop-filter">
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left font-semibold backdrop-blur backdrop-filter">
           Name
         </th>
-        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold backdrop-blur backdrop-filter">
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left font-semibold backdrop-blur backdrop-filter">
           Call Sign
         </th>
         <% if repeaters.first&.respond_to?(:distance) %>
-          <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold backdrop-blur backdrop-filter text-right">
+          <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left font-semibold backdrop-blur backdrop-filter text-right">
             Distance
           </th>
         <% end %>
         <% if repeaters.first&.respond_to?(:azimuth) %>
-          <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold backdrop-blur backdrop-filter text-right">
+          <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left font-semibold backdrop-blur backdrop-filter text-right">
             Azimuth
           </th>
         <% end %>
-        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold backdrop-blur backdrop-filter text-right">
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left font-semibold backdrop-blur backdrop-filter text-right">
           Band
         </th>
-        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold backdrop-blur backdrop-filter">
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left font-semibold backdrop-blur backdrop-filter">
           Modes
         </th>
-        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold backdrop-blur backdrop-filter">
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left font-semibold backdrop-blur backdrop-filter">
           Operational
         </th>
-        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold backdrop-blur backdrop-filter text-right">
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left font-semibold backdrop-blur backdrop-filter text-right">
           TX Frequency
         </th>
-        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold backdrop-blur backdrop-filter text-right">
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left font-semibold backdrop-blur backdrop-filter text-right">
           <div data-action="click->repeater#toggleRxFrequencyFormat"
                class="cursor-pointer underline hover:text-orange-800">
             RX Frequency
           </div>
         </th>
-        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold backdrop-blur backdrop-filter text-right">
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left font-semibold backdrop-blur backdrop-filter text-right">
           CTCSS
         </th>
-        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold backdrop-blur backdrop-filter">
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left font-semibold backdrop-blur backdrop-filter">
           <div data-action="click->repeater#changeLocationFormat"
                class="cursor-pointer underline hover:text-orange-800">
             Location
           </div>
         </th>
-        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold backdrop-blur backdrop-filter">
+        <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left font-semibold backdrop-blur backdrop-filter">
         </th>
       </tr>
     </thead>
     <tbody class="bg-white">
       <% repeaters.each_with_index do |repeater, index| %>
         <tr class="<%= index.even? ? "bg-white" : "bg-gray-50" %>">
-          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm">
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4">
             <%= link_to repeater.name, repeater, class: "link font-bold" %>
           </td>
-          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm">
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4">
             <%= link_to repeater.call_sign, repeater, class: "link font-bold" %>
           </td>
           <% if repeater.respond_to?(:distance) %>
-            <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
+            <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-gray-500 text-right">
               <%= distance_in_unit(repeater.distance, @repeater_search.distance_unit) %>
             </td>
           <% end %>
           <% if repeater.respond_to?(:azimuth) %>
-            <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
+            <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-gray-500 text-right">
               <%= repeater.azimuth.round %>°
             </td>
           <% end %>
-          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-gray-500 text-right">
             <%= repeater.band %>
           </td>
-          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500">
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-gray-500">
             <%= modes(repeater).join(", ") %>
           </td>
-          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500">
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-gray-500">
             <%= render partial: "shared/card/boolean", locals: { value: repeater.operational } %>
           </td>
-          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-gray-500 text-right">
             <%= frequency_in_mhz(repeater.tx_frequency) %>
           </td>
-          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-gray-500 text-right">
             <%= render "shared/repeater/rx_frequency", repeater: repeater %>
           </td>
-          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500 text-right">
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-gray-500 text-right">
             <%= repeater.fm_ctcss_tone if repeater.fm? %>
           </td>
-          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm text-gray-500">
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-gray-500">
             <%= render "shared/repeater/location", repeater: repeater %>
           </td>
-          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4 text-sm">
+          <td class="whitespace-nowrap border-b border-gray-200 px-3 py-4">
             <%= link_to "More", repeater, class: "link" %>
           </td>
         </tr>

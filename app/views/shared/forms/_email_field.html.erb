@@ -13,12 +13,12 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-b sm:border-gray-200 py-3 sm:py-5">
-  <%= form.label field_name, label, class: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" %>
+  <%= form.label field_name, label, class: "block font-medium text-gray-700 sm:mt-px sm:pt-2" %>
   <div class="mt-1 sm:col-span-2 sm:mt-0">
     <%= form.email_field field_name,
                          **input_html_options.deep_merge({ class: [input_html_options[:class], "field-text block max-w-lg sm:max-w-sm w-full"] }) %>
     <% if help_text.present? %>
-      <p class="mt-2 text-sm text-gray-500"><%= help_text %></p>
+      <p class="mt-2 text-gray-500"><%= help_text %></p>
     <% end %>
   </div>
 </div>
