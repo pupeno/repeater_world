@@ -43,8 +43,8 @@ class RepeaterSearch < ApplicationRecord
   MODES = [
     FM = {label: "FM", name: :fm, secondary: false},
     DSTAR = {label: "D-Star", name: :dstar, secondary: false},
-    FUSION = {label: "Fusion", name: :fusion, secondary: false},
-    DMR = {label: "DMR", name: :dmr, secondary: false},
+    FUSION = {label: "Fusion", name: :fusion, secondary: true},
+    DMR = {label: "DMR", name: :dmr, secondary: true},
     NXDN = {label: "NXDN", name: :nxdn, secondary: true},
     P25 = {label: "P25", name: :p25, secondary: true},
     TETRA = {label: "TETRA", name: :tetra, secondary: true}
