@@ -41,7 +41,7 @@
 
     .button-secondary {
         @apply button-base
-        text-white bg-cyan-800
+        bg-cyan-300 dark:bg-cyan-800
         outline-cyan-700
         hover:bg-cyan-700
         focus:bg-cyan-700;
