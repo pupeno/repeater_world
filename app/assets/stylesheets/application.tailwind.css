@@ -19,7 +19,7 @@
 
 @layer components {
     .link {
-        @apply underline text-orange-600 hover:text-orange-800;
+        @apply underline text-orange-600 hover:text-orange-800 dark:text-orange-500 dark:hover:text-orange-300;
     }
 
     .button-base {
