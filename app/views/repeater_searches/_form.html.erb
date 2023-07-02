@@ -65,9 +65,10 @@ You should have received a copy of the GNU Affero General Public License along w
                         data: { action: "click->multi-toggle#updateStatusOfAllButton",
                                 multi_toggle_target: "toggle" } %>
     <% end %>
-    <%= toggle_like_button "More",
-                           data: { action: "click->multi-toggle#showMore",
-                                   multi_toggle_target: "more" } %>
+
+    <button class="button" data-action="click->multi-toggle#showMore" data-multi-toggle-target="more">
+      More Bands
+    </button>
   </div>
 
   <div class="my-3" data-controller="multi-toggle">
@@ -80,9 +81,10 @@ You should have received a copy of the GNU Affero General Public License along w
                         data: { action: "click->multi-toggle#updateStatusOfAllButton",
                                 multi_toggle_target: "toggle" } %>
     <% end %>
-    <%= toggle_like_button "More",
-                           data: { action: "click->multi-toggle#showMore",
-                                   multi_toggle_target: "more" } %>
+
+    <button class="button" data-action="click->multi-toggle#showMore" data-multi-toggle-target="more">
+      More Modes
+    </button>
   </div>
 
   <%= render "form_geosearch", { form: form } %>
@@ -101,7 +103,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <% if !@repeaters.nil? %>
     <% if !user_signed_in? %> <%# Not logged in, the save search button invites you to sign up. %>
       <div class="inline">
-        <button type="button" class="button" data-action="click->repeater-searches#showAuthBeforeSavePopUp">
+        <button type="button" class="button-secondary" data-action="click->repeater-searches#showAuthBeforeSavePopUp">
           <i class="fa-regular fa-bookmark mr-2"></i>
           Save Search
         </button>
@@ -109,7 +111,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <% elsif show_name_field %> <%# logged in and the search has already been saved, or is being saved %>
       <div class="inline">
-        <button type="submit" class="button" data-action="click->repeater-searches#saveSearch">
+        <button type="submit" class="button-secondary" data-action="click->repeater-searches#saveSearch">
           <i class="fa-regular fa-bookmark mr-2"></i>
           Save Search
         </button>
@@ -117,7 +119,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <% else %>  <%# logged in but this search is not saved yet %>
       <div class="inline">
-        <button type="button" class="button" data-action="click->repeater-searches#showFirstSavePopUp">
+        <button type="button" class="button-secondary" data-action="click->repeater-searches#showFirstSavePopUp">
           <i class="fa-regular fa-bookmark mr-2"></i>
           Save Search
         </button>
