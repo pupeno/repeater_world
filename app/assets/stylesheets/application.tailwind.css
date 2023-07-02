@@ -28,7 +28,7 @@
         font-semibold
         rounded-md
         outline-2 outline-offset-2
-        focus:outline;
+        focus-within:outline;
     }
 
     .button {
