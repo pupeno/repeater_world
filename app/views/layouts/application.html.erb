@@ -98,7 +98,6 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <footer>
       <%= render "layouts/cookie_popup" %>
-
       <p class="text-center text-sm text-gray-400">
         <%= link_to "Open Source & Open Data", open_source_open_data_url, class: "underline hover:text-orange-800" %>
         <%= link_to "Map Legend", map_legend_url, class: "underline hover:text-orange-800" %>
@@ -121,6 +120,17 @@ You should have received a copy of the GNU Affero General Public License along w
         10362469)<br/>
         20-22 Wenlock Road, London, N1 7GU, England, United Kingdom
       </p>
+      <% if Rails.env.development? %>
+        <p class="text-center text-sm text-gray-400">
+          Width:
+          <span class="sm:hidden">&lt;sm</span>
+          <span class="hidden sm:inline md:hidden">sm</span>
+          <span class="hidden md:inline lg:hidden">md</span>
+          <span class="hidden lg:inline xl:hidden">lg</span>
+          <span class="hidden xl:inline 2xl:hidden">xl</span>
+          <span class="hidden 2xl:inline">2xl</span>
+        </p>
+      <% end %>
     </footer>
   </body>
 </html>
