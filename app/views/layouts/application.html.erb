@@ -81,47 +81,68 @@ You should have received a copy of the GNU Affero General Public License along w
                                defer: true,
                                "data-turbolinks-eval": false %>
   </head>
-  <body class="min-h-screen flex flex-col
+  <body class="flex flex-col
                bg-gray-50 text-gray-900
                dark:bg-gray-800 dark:text-gray-200"
         data-controller="light-dark-switcher">
-    <%= render "layouts/top_bar" %>
+    <div class="min-h-screen flex flex-col">
+      <%= render "layouts/top_bar" %>
 
-    <main class="py-2 grow flex flex-col">
-      <% if !@flash_messages_shown %>
-        <div class="mx-10">
-          <%= render "shared/flash_messages" %>
+      <main class="py-2 grow flex flex-col">
+        <% if !@flash_messages_shown %>
+          <div class="mx-10">
+            <%= render "shared/flash_messages" %>
+          </div>
+        <% end %>
+        <%= yield %>
+      </main>
+
+      <footer class="bg-gray-200 dark:bg-gray-900
+                     text-gray-600 dark:text-gray-300">
+        <nav class="mx-4
+                    my-2 md:my-4 lg:my-6 xl:my-8
+                    flex justify-center flex-wrap
+                    gap-x-4 lg:gap-x-8 xl:gap-x-10
+                    gap-y-2 lg:gap-y-6 xl:gap-y-8
+                    text-sm"
+             aria-label="Footer">
+          <%= link_to "Open", open_source_open_data_url, class: "hover:text-orange-500 hover:underline" %>
+          <%= link_to "Map Legend", map_legend_url, class: "hover:text-orange-500 hover:underline"  %>
+          <%= link_to "Report a Bug", "https://github.com/flexpointtech/repeater_world/issues/new", class: "hover:text-orange-500 hover:underline"  %>
+          <%= link_to "Privacy Policy", privacy_policy_url, class: "hover:text-orange-500 hover:underline"  %>
+          <%= link_to "Cookie Policy", cookie_policy_url, class: "hover:text-orange-500 hover:underline"  %>
+          <%= link_to "Directory", directory_url, class: "hover:text-orange-500 hover:underline"  %>
+          <%= mail_to "info@repeater.world", "Email Us", class: "hover:text-orange-500 hover:underline"  %>
+        </nav>
+
+        <div class="mx-4
+                    my-2 md:my-4 lg:my-6 xl:my-8
+                    flex justify-center space-x-10
+                    text-2xl">
+          <%= link_to "https://www.youtube.com/@RepeaterWorld", class: "hover:text-orange-500" do %>
+            <span class="sr-only">YouTube</span>
+            <i class="fa-brands fa-youtube"></i>
+          <% end %>
+          <%= link_to "https://www.facebook.com/RepeaterWorldApp", class: "hover:text-orange-500" do %>
+            <span class="sr-only">Facebook</span>
+            <i class="fa-brands fa-facebook"></i>
+          <% end %>
         </div>
-      <% end %>
-      <%= yield %>
-    </main>
+      </footer>
+    </div>
 
-    <footer>
-      <%= render "layouts/cookie_popup" %>
-      <p class="text-center text-sm text-gray-400">
-        <%= link_to "Open Source & Open Data", open_source_open_data_url, class: "underline hover:text-orange-800" %>
-        <%= link_to "Map Legend", map_legend_url, class: "underline hover:text-orange-800" %>
-        <%= link_to "https://www.youtube.com/@RepeaterWorld", class: "underline hover:text-orange-800" do %>
-          <i class="fa-brands fa-youtube"></i>
-          YouTube
-        <% end %>
-        <%= link_to "https://www.facebook.com/RepeaterWorldApp", class: "underline hover:text-orange-800" do %>
-          <i class="fa-brands fa-facebook"></i>
-          Facebook
-        <% end %>
-        <%= link_to "Report a Bug", "https://github.com/flexpointtech/repeater_world/issues/new", class: "underline hover:text-orange-800" %>
-        <%= link_to "Privacy Policy", privacy_policy_url, class: "underline hover:text-orange-800" %>
-        <%= link_to "Cookie Policy", cookie_policy_url, class: "underline hover:text-orange-800" %>
-        <%= link_to "Directory", directory_url, class: "underline hover:text-orange-800" %>
-        <%= mail_to "info@repeater.world", "Contact Us", class: "underline hover:text-orange-800" %>
+    <footer class="bg-gray-200 dark:bg-gray-900
+                   text-center text-xs text-gray-500">
+      <p class="mt-10">
+        &copy; <%= Time.zone.now.year %> Flexpoint Tech Ltd. All rights reserved.
       </p>
-      <p class="p-2 text-center text-xs text-gray-300">
-        Flexpoint Tech Ltd is a company registered England and Wales (Company No.
-        10362469)<br/>
-        20-22 Wenlock Road, London, N1 7GU, England, United Kingdom
+      <p class="mt-2">
+        Flexpoint Tech Ltd is a company registered England and Wales (Company No. 10362469) 20-22 Wenlock Road, London,
+        N1 7GU, England, United Kingdom
       </p>
+
       <% if Rails.env.development? %>
-        <p class="text-center text-sm text-gray-400">
+        <p class="text-center">
           Width:
           <span class="sm:hidden">&lt;sm</span>
           <span class="hidden sm:inline md:hidden">sm</span>
