@@ -13,6 +13,14 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <%# This is the top bar of the application, the one containing the menu. %>
+
+<% top_bar_button_classes = "w-10 h-10 inline-flex items-center justify-center rounded-md
+                             text-gray-400 bg-transparent
+                             hover:text-gray-500 hover:bg-gray-100
+                             dark:hover:text-gray-300 dark:hover:bg-gray-700
+                             focus:outline focus:bg-orange-50 focus:text-gray-500 focus:bg-gray-100 outline-2 outline-orange-600
+                             dark:focus:text-gray-300 dark:focus:bg-gray-700" %>
+
 <nav class="border-b border-gray-200 dark:border-gray-700"
      data-controller="top-bar">
 
@@ -42,39 +50,26 @@ You should have received a copy of the GNU Affero General Public License along w
 
         <%# Top bar buttons. %>
         <div class="flex flex-row self-center md:ml-2 lg:ml-4 md:space-x-1 lg:space-x-2">
-          <button class="w-10 h-10 inline-flex items-center justify-center rounded-md
-                         text-gray-400 bg-transparent
-                         hover:text-gray-500 hover:bg-gray-100
-                         focus:outline focus:bg-orange-50 focus:text-gray-500 focus:bg-gray-100 outline-2 outline-orange-600
-                         dark:hidden"
+          <button class="<%= top_bar_button_classes %> dark:hidden"
                   data-action="click->light-dark-switcher#dark">
             <i class="fa-solid fa-moon"></i>
           </button>
-          <button class="w-10 h-10 inline-flex items-center justify-center rounded-md
-                         text-gray-400 bg-transparent
-                         hover:text-gray-300 hover:bg-gray-700
-                         focus:outline focus:bg-orange-50 focus:text-gray-300 focus:bg-gray-700 outline-2 outline-orange-600
-                         hidden dark:block"
+          <button class="<%= top_bar_button_classes %> hidden dark:block"
                   data-action="click->light-dark-switcher#light">
             <i class="fa-solid fa-sun"></i>
           </button>
           <div class="relative">
             <button type="button"
-                    class="w-10 h-10 inline-flex items-center justify-center rounded-md
-                           text-gray-400 bg-transparent
-                           hover:text-gray-500 hover:bg-gray-100
-                           dark:hover:text-gray-300 dark:hover:bg-gray-700
-                           focus:outline focus:bg-orange-50 focus:text-gray-500 focus:bg-gray-100 outline-2 outline-orange-600
-                           dark:focus:text-gray-300 dark:focus:bg-gray-700"
+                    class="<%= top_bar_button_classes %>"
                     aria-controls="mobile-menu"
                     aria-expanded="false"
                     data-action="click->top-bar#toggleDesktopExtraMenu"
                     data-top-bar-target="desktopExtraMenuButton">
               <span class="sr-only">Open main menu</span>
-              <div data-top-bar-target="mobileOpenMenuButton" aria-hidden="true">
+              <div data-top-bar-target="desktopOpenMenuButton" aria-hidden="true">
                 <i class="fa-solid fa-bars"></i>
               </div>
-              <div class="hidden" data-top-bar-target="mobileCloseMenuButton" aria-hidden="true">
+              <div class="hidden" data-top-bar-target="desktopCloseMenuButton" aria-hidden="true">
                 <i class="fa-solid fa-times"></i>
               </div>
             </button>
@@ -103,23 +98,18 @@ You should have received a copy of the GNU Affero General Public License along w
       <div class="-mr-2 flex items-center md:hidden">
         <%# Mobile menu button %>
         <button type="button"
-                class="w-10 h-10 inline-flex items-center justify-center rounded-md
-                       text-gray-400 bg-transparent
-                       hover:text-gray-500 hover:bg-gray-100
-                       dark:hover:text-gray-300 dark:hover:bg-gray-700
-                       focus:outline focus:bg-orange-50 focus:text-gray-500 focus:bg-gray-100 outline-2 outline-orange-600
-                       dark:focus:text-gray-300 dark:focus:bg-gray-700"
+                class="<%= top_bar_button_classes %>"
                 aria-controls="mobile-menu"
                 aria-expanded="false"
                 data-action="click->top-bar#toggleMobileMenu"
                 data-top-bar-target="mobileMenuButton">
           <span class="sr-only">Open main menu</span>
-          <div data-top-bar-target="mobileOpenMenuButton" aria-hidden="true">
+          <span data-top-bar-target="mobileOpenMenuButton" aria-hidden="true">
             <i class="fa-solid fa-bars"></i>
-          </div>
-          <div class="hidden" data-top-bar-target="mobileCloseMenuButton" aria-hidden="true">
+          </span>
+          <span class="hidden" data-top-bar-target="mobileCloseMenuButton" aria-hidden="true">
             <i class="fa-solid fa-times"></i>
-          </div>
+          </span>
         </button>
       </div>
     </div>

@@ -18,7 +18,7 @@ import {enter, leave} from "el-transition"
 
 export default class extends Controller {
   static targets = [
-    "desktopExtraMenu", "desktopExtraMenuButton",
+    "desktopExtraMenu", "desktopExtraMenuButton", "desktopOpenMenuButton", "desktopCloseMenuButton",
     "mobileMenu", "mobileMenuButton", "mobileOpenMenuButton", "mobileCloseMenuButton"
   ]
 
@@ -54,6 +54,8 @@ export default class extends Controller {
 
   openDesktopExtraMenu() {
     // Button state.
+    this.desktopCloseMenuButtonTarget.classList.remove("hidden")
+    this.desktopOpenMenuButtonTarget.classList.add("hidden")
     this.desktopExtraMenuButtonTarget.setAttribute("aria-expanded", true)
 
     // Actual menu.
@@ -62,6 +64,8 @@ export default class extends Controller {
 
   closeDesktopExtraMenu() {
     // Button state.
+    this.desktopCloseMenuButtonTarget.classList.add("hidden")
+    this.desktopOpenMenuButtonTarget.classList.remove("hidden")
     this.desktopExtraMenuButtonTarget.setAttribute("aria-expanded", false)
 
     // Actual menu.
