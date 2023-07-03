@@ -59,7 +59,7 @@
     }
 
     /* Make the select options work in dark mode, transparency doesn't work for them */
-    select option {
+    select option, select optgroup {
         @apply bg-gray-50 dark:bg-gray-800;
     }
 

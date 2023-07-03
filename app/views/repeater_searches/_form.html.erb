@@ -154,11 +154,11 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <% if !user_signed_in? %> <%# Pop up for when the user is not logged in. %>
     <%= pop_up title: "Save Search", data: { repeater_searches_target: "authBeforeSavePopUp" } do %>
-      <p class="text-gray-500 mb-2">
+      <p class="mb-2">
         A saved search allows you to easily re-run it later with updated information and also be notified when a change
         happens (new repeater pops up, or one goes down).
       </p>
-      <p class="text-gray-500">
+      <p class="">
         To be able to save a search, you need to log in or sign up to be able to access the saved searches later.
       </p>
       <div class="mt-5 sm:mt-6
@@ -176,7 +176,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <% elsif !show_name_field %> <%# Pop up for when the search is not yet saved (and not being saved). %>
     <%= pop_up title: "Save Search", data: { repeater_searches_target: "firstSavePopUp" } do %>
-      <p class="text-gray-500 mb-2">
+      <p class="mb-2">
         To save a search you need to give it a name, something that'll help you remember what it is.
       </p>
       <div class="flex items-baseline gap-3 justify-items-stretch">
