@@ -22,7 +22,7 @@ You should have received a copy of the GNU Affero General Public License along w
     <%= render "shared/forms/error_summary", resource: resource %>
 
     <div>
-      <%= f.label :current_password, class: "block font-medium text-gray-700" %>
+      <%= f.label :current_password, class: "block text-gray-700 dark:text-gray-300" %>
       <div class="mt-1">
         <%= f.password_field :current_password,
                              autocomplete: "current-password",
@@ -34,7 +34,7 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
 
     <div>
-      <%= f.label :password, class: "block font-medium text-gray-700" %>
+      <%= f.label :password, class: "block text-gray-700 dark:text-gray-300" %>
       <div class="mt-1">
         <%= f.password_field :password,
                              autocomplete: "new-password",
@@ -46,7 +46,7 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
 
     <div>
-      <%= f.label :password_confirmation, class: "block font-medium text-gray-700" %>
+      <%= f.label :password_confirmation, class: "block text-gray-700 dark:text-gray-300" %>
       <div class="mt-1">
         <%= f.password_field :password_confirmation,
                              autocomplete: "new-password",
