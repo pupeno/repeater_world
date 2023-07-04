@@ -69,7 +69,7 @@ RSpec.describe "/repeater_searches", type: :request do
         ))
         expect(response).to be_successful
         expect(response).to render_template(:new)
-        expect(response.body).to include("Geographic search couldn&#39;t get valid coordinates for your location")
+        expect(response.body).to include("We couldn&#39;t get valid coordinates for your location")
       end
 
       it "runs a search by coordinates" do

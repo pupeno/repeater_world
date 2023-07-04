@@ -163,7 +163,7 @@ class RepeaterSearch < ApplicationRecord
     # If we are searching for my location and we didn't get valid latitude and longitude from the browser, add an error
     # to the geosearch_type field so that it's actually visible in the form.
     if geosearch? && geosearch_type == MY_LOCATION && (errors[:latitude].present? || errors[:longitude].present?)
-      errors.add(:geosearch_type, "couldn't get valid coordinates for your location")
+      errors.add(:base, "We couldn't get valid coordinates for your location")
       errors.delete(:latitude)
       errors.delete(:longitude)
     end
