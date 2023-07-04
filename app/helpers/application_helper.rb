@@ -35,12 +35,6 @@ module ApplicationHelper
       locals: {label: label, class: klass, kwargs: kwargs}
   end
 
-  def toggle_checkbox(form, name, check_box_html_options)
-    render partial: "shared/toggle_checkbox",
-      locals: {form: form, name: name,
-               check_box_html_options: check_box_html_options}
-  end
-
   def pop_up(title:, links: [], **args, &block)
     render partial: "shared/pop_up",
       locals: {title: title,
