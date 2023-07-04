@@ -65,8 +65,7 @@
 
     .field-text,
     .field-textarea {
-        @apply text-gray-300 dark:text-gray-700
-        rounded-md border border-gray-300 dark:border-gray-600
+        @apply rounded-md border border-gray-300 dark:border-gray-600
         focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500;
     }
 

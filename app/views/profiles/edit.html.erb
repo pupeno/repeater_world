@@ -18,93 +18,13 @@ You should have received a copy of the GNU Affero General Public License along w
   <%= render "shared/flash_messages" %>
 
   <%= form_with(model: current_user, url: profile_url) do |form| %>
-    <%# Validation errors, if any. %>
-    <% if current_user.errors.any? %>
-      <div class="bg-red-50 text-red-600 px-3 py-2 rounded-lg mt-3">
-        <p>We encountered <%= pluralize(current_user.errors.count, "error") %> trying to save your profile</p>
-        <ul class="list-disc list-inside">
-          <% current_user.errors.each do |error| %>
-            <li><%= error.full_message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+    <%= render "shared/forms/error_summary", resource: current_user %>
 
-    <%# These four divs ended up not looking very nice. Tailwind UI is prepared for a multi-section complex form and this
-    # is a leftover from there. Maybe we should simplify that. %>
-    <div class="space-y-8 divide-y divide-gray-200"> <%# Wraps the whole form, minus hidden fields and validation errors. %>
-      <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
-        <div class="pt-8 space-y-6 sm:pt-10 sm:space-y-5"> <%# Starts one form section, of which we have only one. %>
-          <div class="space-y-6 sm:space-y-5">
+    <%= form_email_field form: form, field_name: :email %>
 
-            <%# Email field %>
-            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <%= form.label :email, class: "block font-medium text-gray-700 sm:mt-px sm:pt-2" %>
-              <div class="mt-1 sm:mt-0 sm:col-span-2">
-                <%= form.text_field :email,
-                                    placeholder: "sam@example.com",
-                                    class: "field-text block max-w-lg sm:max-w-sm w-full" %>
-                <% current_user.errors.where(:email).each do |error| %>
-                  <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
-                <% end %>
-              </div>
-              <div class="mt-1 sm:mt-0 sm:col-span-2">
-                <% current_user.errors.where(:email).each do |error| %>
-                  <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
-                <% end %>
-                <% if current_user.unconfirmed_email.present? %>
-                  <p class="mt-2">Your email is being changed to <%= current_user.unconfirmed_email %>, check
-                    your inbox for the verification.</p>
-                <% end %>
-              </div>
-            </div>
-
-            <% if false %>
-              <%# Name field, disabled until we add the field %>
-              <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <%= form.label :name, class: "block font-medium text-gray-700 sm:mt-px sm:pt-2" %>
-                <div class="mt-1 sm:mt-0 sm:col-span-2">
-                  <%= form.text_field :name,
-                                      placeholder: "John Smith",
-                                      class: "field-text block max-w-lg sm:max-w-sm w-full" %>
-                  <% current_user.errors.where(:name).each do |error| %>
-                    <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
-                  <% end %>
-                </div>
-                <div class="mt-1 sm:mt-0 sm:col-span-2">
-                  <% current_user.errors.where(:name).each do |error| %>
-                    <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
-                  <% end %>
-                </div>
-              </div>
-
-              <%# Nickname field, disabled until we add the field %>
-              <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <%= form.label :nickname, class: "block font-medium text-gray-700 sm:mt-px sm:pt-2" %>
-                <div class="mt-1 sm:mt-0 sm:col-span-2">
-                  <%= form.text_field :nickname,
-                                      placeholder: "Johnny",
-                                      class: "field-text block max-w-lg sm:max-w-sm w-full" %>
-                  <% current_user.errors.where(:nickname).each do |error| %>
-                    <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
-                  <% end %>
-                </div>
-                <div class="mt-1 sm:mt-0 sm:col-span-2">
-                  <% current_user.errors.where(:nickname).each do |error| %>
-                    <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      </div>
-
-      <div class="pt-5">
-        <div class="flex justify-end">
-          <%= form.submit "Save",
-                          class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500" %>
-        </div>
+    <div class="pt-5">
+      <div class="flex justify-end">
+        <%= form.submit "Save", class: "button" %>
       </div>
     </div>
   <% end %>
