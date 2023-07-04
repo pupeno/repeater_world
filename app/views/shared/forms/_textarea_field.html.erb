@@ -12,15 +12,18 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-b sm:border-gray-200 py-3 sm:py-5">
-  <%= form.label field_name, label, class: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" %>
+<div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-b border-gray-200 dark:border-gray-700 py-3 sm:py-5">
+  <%= form.label field_name, label, class: "block text-gray-700 dark:text-gray-300 sm:mt-px sm:pt-2" %>
   <div class="mt-1 sm:col-span-2 sm:mt-0">
     <%= form.text_area field_name,
                        **{ rows: 4 }
                          .deep_merge(input_html_options)
                          .deep_merge({ class: [input_html_options[:class], "field-textarea block w-full max-w-lg"] }) %>
     <% if help_text.present? %>
-      <p class="mt-2 text-sm text-gray-500"><%= help_text %></p>
+      <p class="mt-2 text-gray-500 dark:text-gray-400"><%= help_text %></p>
+    <% end %>
+    <% form.object.errors.where(field_name).each do |error| %>
+      <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
     <% end %>
   </div>
 </div>

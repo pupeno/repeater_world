@@ -12,8 +12,19 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<%# Keep synchronized with top_bar_mobile_user_menu so that we offer the same options on desktop and mobile. %>
+<% if resource.errors.any? %>
+  <div id="error_explanation" class="mx-1 mb-2 px-3 py-2
+                                     bg-red-50 dark:bg-red-900/25
+                                     text-red-500 dark:text-red-200
+                                     rounded-lg">
+    <h2>
+      Encountered <%= pluralize(resource.errors.count, "error") %>:
+    </h2>
 
-<%= top_bar_desktop_user_link "My Profile", edit_profile_url %>
-<%= top_bar_desktop_user_link "Change your password", edit_user_registration_path %>
-<%= button_to "Log out", destroy_user_session_path, class: top_bar_desktop_user_button_class, method: :delete %>
+    <ul class="list-disc list-inside">
+      <% resource.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

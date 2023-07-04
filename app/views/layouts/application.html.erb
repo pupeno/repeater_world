@@ -12,7 +12,7 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>
       <% if content_for? :head_title %>
@@ -41,6 +41,13 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <%# JavaScript %>
     <script>
+      <%# Copied from light_dark_switcher_controller.js to avoid FOUC %>
+      if (localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+
       const RAILS_ENV = <%= javascript_quoted_string_or_null(Rails.env) %>;
       const IS_PULL_REQUEST = <%= javascript_quoted_string_or_null(ENV["IS_PULL_REQUEST"]) %>;
       const RENDER = <%= javascript_quoted_string_or_null(ENV["RENDER"]) %>;
@@ -60,22 +67,6 @@ You should have received a copy of the GNU Affero General Public License along w
       <script src="https://cdn.usefathom.com/script.js" data-site="<%= ENV["FATHOM_ID"] %>" defer></script>
     <% end %>
 
-    <%# Google analytics %>
-    <% if ENV["GOOGLE_ANALYTICS_ID"].present? %>
-      <!-- Global site tag (gtag.js) - Google Analytics -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= ENV["GOOGLE_ANALYTICS_ID"] %>"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-
-        gtag('js', new Date());
-        gtag('config', '<%= ENV["GOOGLE_ANALYTICS_ID"] %>');
-      </script>
-    <% end %>
-
     <%# Google maps: https://www.driftingruby.com/episodes/google-maps-api-with-stimulusjs %>
     <script>
       window.dispatchMapsEvent = function (...args) {
@@ -90,31 +81,75 @@ You should have received a copy of the GNU Affero General Public License along w
                                defer: true,
                                "data-turbolinks-eval": false %>
   </head>
-  <body class="min-h-screen flex flex-col">
-    <%= render "layouts/top_bar" %>
+  <body class="flex flex-col
+               bg-gray-50 text-gray-900
+               dark:bg-gray-800 dark:text-gray-200"
+        data-controller="light-dark-switcher">
+    <div class="min-h-screen flex flex-col">
+      <%= render "layouts/top_bar" %>
 
-    <main class="py-10 flex-grow flex flex-col">
-      <% if !@flash_messages_shown %>
-        <div class="mx-10">
-          <%= render "shared/flash_messages" %>
-        </div>
-      <% end %>
-      <%= yield %>
-    </main>
+      <main class="py-2 grow flex flex-col">
+        <% if !@flash_messages_shown %>
+          <div class="mx-10">
+            <%= render "shared/flash_messages" %>
+          </div>
+        <% end %>
+        <%= yield %>
+      </main>
 
-    <footer>
       <%= render "layouts/cookie_popup" %>
 
-      <p class="text-center text-sm text-gray-400">
-        <%= link_to "Open Source & Open Data", open_source_open_data_url, class: "underline hover:text-orange-800" %>
-        <%= link_to "Map Legend", map_legend_url, class: "underline hover:text-orange-800" %>
-        <%= link_to "YouTube", "https://www.youtube.com/@RepeaterWorld", class: "underline hover:text-orange-800" %>
-        <%= link_to "Report a Bug", "https://github.com/pupeno/repeater_world/issues/new", class: "underline hover:text-orange-800" %>
-        <%= link_to "Privacy Policy", privacy_policy_url, class: "underline hover:text-orange-800" %>
-        <%= link_to "Cookie Policy", cookie_policy_url, class: "underline hover:text-orange-800" %>
-        <%= link_to "Directory", directory_url, class: "underline hover:text-orange-800" %>
-        <%= mail_to "info@repeater.world", "Contact Us", class: "underline hover:text-orange-800" %>
+      <footer class="bg-gray-200 dark:bg-gray-900
+                     text-gray-600 dark:text-gray-300">
+        <nav class="mx-4
+                    my-2 md:my-4 lg:my-6 xl:my-8
+                    flex justify-center flex-wrap
+                    gap-x-4 lg:gap-x-8 xl:gap-x-10
+                    gap-y-2 lg:gap-y-6 xl:gap-y-8
+                    text-sm"
+             aria-label="Footer">
+          <%= link_to "Open", open_source_open_data_url, class: "hover:text-orange-500 hover:underline" %>
+          <%= link_to "Map Legend", map_legend_url, class: "hover:text-orange-500 hover:underline" %>
+          <%= link_to "Report a Bug", "https://github.com/pupeno/repeater_world/issues/new", class: "hover:text-orange-500 hover:underline" %>
+          <%= link_to "Privacy Policy", privacy_policy_url, class: "hover:text-orange-500 hover:underline" %>
+          <%= link_to "Cookie Policy", cookie_policy_url, class: "hover:text-orange-500 hover:underline" %>
+          <%= link_to "Directory", directory_url, class: "hover:text-orange-500 hover:underline" %>
+          <%= mail_to "info@repeater.world", "Email Us", class: "hover:text-orange-500 hover:underline" %>
+        </nav>
+
+        <div class="mx-4
+                    my-2 md:my-4 lg:my-6 xl:my-8
+                    flex justify-center space-x-10
+                    text-2xl">
+          <%= link_to "https://www.youtube.com/@RepeaterWorld", class: "hover:text-orange-500" do %>
+            <span class="sr-only">YouTube</span>
+            <i class="fa-brands fa-youtube"></i>
+          <% end %>
+          <%= link_to "https://www.facebook.com/RepeaterWorldApp", class: "hover:text-orange-500" do %>
+            <span class="sr-only">Facebook</span>
+            <i class="fa-brands fa-facebook"></i>
+          <% end %>
+        </div>
+      </footer>
+    </div>
+
+    <footer class="bg-gray-200 dark:bg-gray-900
+                   text-center text-xs text-gray-500">
+      <p class="mt-10">
+        &copy; <%= Time.zone.now.year %> Pablo Fernandez. All rights reserved.
       </p>
+
+      <% if Rails.env.development? %>
+        <p class="text-center">
+          Width:
+          <span class="sm:hidden">&lt;sm</span>
+          <span class="hidden sm:inline md:hidden">sm</span>
+          <span class="hidden md:inline lg:hidden">md</span>
+          <span class="hidden lg:inline xl:hidden">lg</span>
+          <span class="hidden xl:inline 2xl:hidden">xl</span>
+          <span class="hidden 2xl:inline">2xl</span>
+        </p>
+      <% end %>
     </footer>
   </body>
 </html>

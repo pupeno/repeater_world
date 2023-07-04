@@ -22,31 +22,36 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <%# Notice message %>
   <% if flash.key? :notice %>
-    <div class="bg-green-100 border-l-4 border-green-700 p-4 my-4"
-         data-controller="flash-message"
-         data-flash-message-target="flashMessage">
-      <div class="flex">
-        <%# Icon %>
-        <div class="flex-shrink-0">
-          <i class="fa-solid fa-circle-info text-green-700 text-3xl"></i>
-        </div>
+    <div class="w-full px-2
+                flex flex-row justify-center">
+      <div class="max-w-7xl grow p-3 my-2
+                  bg-green-100 dark:bg-green-900
+                  border-l-4 border-green-700 dark:border-green-500"
+           data-controller="flash-message"
+           data-flash-message-target="flashMessage">
+        <div class="flex">
+          <%# Icon %>
+          <div class="shrink-0">
+            <i class="fa-solid fa-circle-info text-3xl text-green-700 dark:text-green-400"></i>
+          </div>
 
-        <%# Message %>
-        <div class="ml-3">
-          <p class="text-sm text-green-800">
-            <%= flash.notice %>
-          </p>
-        </div>
+          <%# Message %>
+          <div class="ml-3 mt-1 grow">
+            <p class="text-green-800 dark:text-green-300">
+              <%= flash.notice %>
+            </p>
+          </div>
 
-        <%# Close button %>
-        <div class="ml-auto pl-3">
-          <div class="-mx-1.5 -my-1.5">
-            <button class="inline-flex p-1.5
-                           bg-green-100 rounded-md
-                           items-center justify-center
+          <%# Close button %>
+          <div class="shrink-0 ml-auto pl-3">
+            <button class="w-8 h-8
+                           inline-flex items-center justify-center
+                           rounded-md
                            text-green-500
-                           hover:bg-green-200
-                           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-100 focus:ring-green-600"
+                           hover:text-green-700 hover:bg-green-200
+                           dark:hover:text-green-300 dark:hover:bg-green-800
+                           focus:outline focus:bg-green-200 focus:text-green-500 outline-2 outline-green-600
+                           dark:focus:text-green-300 dark:focus:bg-green-800"
                     data-action="click->flash-message#close">
               <span class="sr-only">Dismiss</span>
               <i class="fa-solid fa-times text-xl"></i>
@@ -59,30 +64,36 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <%# Alert message %>
   <% if flash.key? :alert %>
-    <div class="bg-red-100 border-l-4 border-red-700 p-4 my-4"
-         data-controller="flash-message"
-         data-flash-message-target="flashMessage">
-      <div class="flex">
-        <%# Icon %>
-        <div class="flex-shrink-0">
-          <i class="fa-solid fa-circle-exclamation text-red-700 text-3xl"></i>
-        </div>
+    <div class="w-full px-2
+                flex flex-row justify-center">
+      <div class="max-w-7xl grow p-3 my-2
+                  bg-red-100 dark:bg-red-950/30
+                  border-l-4 border-red-700 dark:border-red-500"
+           data-controller="flash-message"
+           data-flash-message-target="flashMessage">
+        <div class="flex">
+          <%# Icon %>
+          <div class="shrink-0">
+            <i class="fa-solid fa-circle-info text-3xl text-red-700 dark:text-red-600"></i>
+          </div>
 
-        <%# Message %>
-        <div class="ml-3">
-          <p class="text-sm text-red-800">
-            <%= flash.alert %>
-          </p>
-        </div>
+          <%# Message %>
+          <div class="ml-3 mt-1 grow">
+            <p class="text-red-800 dark:text-red-400">
+              <%= flash.alert %>
+            </p>
+          </div>
 
-        <%# Close button %>
-        <div class="ml-auto pl-3">
-          <div class="-mx-1.5 -my-1.5">
-            <button class="inline-flex p-1.5
-                           bg-red-100 rounded-md
-                           text-red-500
-                           hover:bg-red-200
-                           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-100 focus:ring-red-600"
+          <%# Close button %>
+          <div class="shrink-0 ml-auto pl-3">
+            <button class="w-8 h-8
+                           inline-flex items-center justify-center
+                           rounded-md
+                           text-red-500 dark:text-red-600
+                           hover:text-red-700 hover:bg-red-200
+                           dark:hover:text-red-300 dark:hover:bg-red-900/50
+                           focus:outline focus:bg-red-200 focus:text-red-500 outline-2 outline-red-600
+                           dark:focus:text-red-300 dark:focus:bg-red-900/50"
                     data-action="click->flash-message#close">
               <span class="sr-only">Dismiss</span>
               <i class="fa-solid fa-times text-xl"></i>

@@ -12,10 +12,16 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<%# Keep synchronized with top_bar_mobile_menu so that we offer the same options on desktop and mobile. %>
-<%= top_bar_desktop_link "Search", root_url, active: :exact %>
-<%= top_bar_desktop_link "Your Searches", repeater_searches_url if user_signed_in? %>
-<%= top_bar_desktop_link "Add a Repeater", new_suggested_repeater_url %>
-<%= top_bar_desktop_link "Support", "https://github.com/pupeno/repeater_world/discussions" %>
-<%= top_bar_desktop_link "Log in", new_user_session_url if !user_signed_in? %>
-<%= top_bar_desktop_link "Sign up", new_user_registration_url if !user_signed_in? %>
+<%# top_bar_mobile_menu should have the same items as top_bar_desktop_menu+top_bar_extra_menu %>
+<%= top_bar_desktop_link root_url, active: :exact do %>
+  <i class="fa-solid fa-magnifying-glass mr-3"></i>
+  Search
+<% end %>
+<%= top_bar_desktop_link new_suggested_repeater_url do %>
+  <i class="fa-solid fa-plus mr-3"></i>
+  Add a Repeater
+<% end %>
+<%= top_bar_desktop_link new_user_registration_url do %>
+  <i class="fa-solid fa-right-to-bracket mr-3"></i>
+  Sign up
+<% end unless user_signed_in? %>

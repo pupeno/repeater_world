@@ -12,16 +12,27 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<%# This is the top bar of the application, the one containing the menu and the user menu. %>
-<nav class="bg-white border-b border-gray-200"
+<%# This is the top bar of the application, the one containing the menu. %>
+
+<% top_bar_button_classes = "w-10 h-10 inline-flex items-center justify-center rounded-md
+                             text-gray-400 bg-transparent
+                             hover:text-gray-500 hover:bg-gray-100
+                             dark:hover:text-gray-300 dark:hover:bg-gray-700
+                             focus:outline focus:text-gray-500 focus:bg-gray-100 outline-2 outline-orange-600
+                             dark:focus:text-gray-300 dark:focus:bg-gray-700" %>
+
+<nav class="border-b border-gray-200 dark:border-gray-700"
      data-controller="top-bar">
 
   <div class="max-w-7xl mx-auto px-4">
     <div class="flex justify-between h-16">
+
       <%# Logo and name on the top left %>
       <div class="flex flex-row items-center">
         <%= link_to root_url, class: "contents" do %>
-          <%= image_tag "isotype.svg", class: "h-8" %>
+          <svg class="h-8 fill-gray-800 dark:fill-gray-200" viewBox="0 0 384 512">
+            <path d="M112 24c0-13.3-10.7-24-24-24S64 10.7 64 24V96H48C21.5 96 0 117.5 0 144V300.1c0 12.7 5.1 24.9 14.1 33.9l3.9 3.9c9 9 14.1 21.2 14.1 33.9V464c0 26.5 21.5 48 48 48H304c26.5 0 48-21.5 48-48V371.9c0-12.7 5.1-24.9 14.1-33.9l3.9-3.9c9-9 14.1-21.2 14.1-33.9V144c0-26.5-21.5-48-48-48H320c0-17.7-14.3-32-32-32s-32 14.3-32 32H224c0-17.7-14.3-32-32-32s-32 14.3-32 32H112V24zm0 136H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/>
+          </svg>
         <% end %>
         <%= link_to root_url, class: "contents" do %>
           <span class="ml-3 text-xl whitespace-nowrap">Repeater World</span>
@@ -29,51 +40,75 @@ You should have received a copy of the GNU Affero General Public License along w
       </div>
 
       <%# Right aligned content on the menu %>
-      <div class="hidden md:ml-6 md:flex md:space-x-4 lg:space-x-8">
-        <%= render "layouts/top_bar_desktop_menu" %>
+      <div class="hidden md:flex flex-row">
 
-        <%# User menu that appears only when the user is signed in. %>
-        <% if user_signed_in? %>
-          <div class="relative self-center">
-            <div>
-              <button type="button"
-                      class="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                      data-action="click->top-bar#toggleDesktopUserMenu"
-                      data-top-bar-target="desktopUserMenuButton">
-                <span class="sr-only">Open user menu</span>
-                <img class="h-8 w-8 rounded-full" src="<%= gravatar_url current_user.email %>" alt="<%= current_user.name %>'s photo">
-              </button>
-            </div>
-            <div class="hidden z-10 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+        <%# Top bar menu entries %>
+        <div class="hidden md:flex flex-row md:space-x-4 lg:space-x-8">
+          <%= render "layouts/top_bar_desktop_menu" %>
+        </div>
+
+        <%# Top bar buttons. %>
+        <div class="flex flex-row self-center md:ml-2 lg:ml-4 md:space-x-1 lg:space-x-2">
+          <button class="<%= top_bar_button_classes %> dark:hidden"
+                  data-action="click->light-dark-switcher#dark">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <button class="<%= top_bar_button_classes %> hidden dark:block"
+                  data-action="click->light-dark-switcher#light">
+            <i class="fa-solid fa-sun"></i>
+          </button>
+          <div class="relative">
+            <button type="button"
+                    class="<%= top_bar_button_classes %>"
+                    aria-controls="mobile-menu"
+                    aria-expanded="false"
+                    data-action="click->top-bar#toggleDesktopExtraMenu"
+                    data-top-bar-target="desktopExtraMenuButton">
+              <span class="sr-only">Open main menu</span>
+              <span data-top-bar-target="desktopOpenMenuButton" aria-hidden="true">
+                <i class="fa-solid fa-bars"></i>
+              </span>
+              <span class="hidden" data-top-bar-target="desktopCloseMenuButton" aria-hidden="true">
+                <i class="fa-solid fa-times"></i>
+              </span>
+            </button>
+            <div class="hidden z-10 origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg py-1
+                        focus:outline-none
+                        bg-gray-100 dark:bg-gray-700
+                        border border-gray-200 dark:border-gray-900"
                  role="menu"
                  aria-orientation="vertical"
-                 aria-labelledby="user-menu-button"
+                 aria-labelledby="extra-menu-button"
                  tabindex="-1"
-                 data-top-bar-target="desktopUserMenu">
-              <%= render "layouts/top_bar_desktop_user_menu" %></div>
+                 data-top-bar-target="desktopExtraMenu"
+                 data-transition-enter="transition ease-out duration-100"
+                 data-transition-enter-start="transform opacity-0 scale-95"
+                 data-transition-enter-end="transform opacity-100 scale-100"
+                 data-transition-leave="transition ease-in duration-75"
+                 data-transition-leave-start="transform opacity-100 scale-100"
+                 data-transition-leave-end="transform opacity-0 scale-95">
+              <%= render "layouts/top_bar_desktop_extra_menu" %>
+            </div>
           </div>
-
-        <% end %>
+        </div>
       </div>
 
       <%# Mobile version of the top bar. %>
       <div class="-mr-2 flex items-center md:hidden">
         <%# Mobile menu button %>
         <button type="button"
-                class="w-10 h-10 bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                class="<%= top_bar_button_classes %>"
                 aria-controls="mobile-menu"
                 aria-expanded="false"
                 data-action="click->top-bar#toggleMobileMenu"
                 data-top-bar-target="mobileMenuButton">
           <span class="sr-only">Open main menu</span>
-          <div data-top-bar-target="mobileOpenMenuButton" aria-hidden="true">
+          <span data-top-bar-target="mobileOpenMenuButton" aria-hidden="true">
             <i class="fa-solid fa-bars"></i>
-          </div>
-          <div class="hidden" data-top-bar-target="mobileCloseMenuButton" aria-hidden="true">
+          </span>
+          <span class="hidden" data-top-bar-target="mobileCloseMenuButton" aria-hidden="true">
             <i class="fa-solid fa-times"></i>
-          </div>
+          </span>
         </button>
       </div>
     </div>
@@ -81,29 +116,15 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <%# Mobile menu that is hidden by default %>
   <div class="hidden"
-       data-top-bar-target="mobileMenu">
+       data-top-bar-target="mobileMenu"
+       data-transition-enter="transition ease-out duration-100"
+       data-transition-enter-start="transform opacity-0 translate-y-95"
+       data-transition-enter-end="transform opacity-100 translate-y-100"
+       data-transition-leave="transition ease-in duration-75"
+       data-transition-leave-start="transform opacity-100 translate-y-100"
+       data-transition-leave-end="transform opacity-0 translate-y-95">
     <div class="pt-2 pb-3 space-y-1">
       <%= render "layouts/top_bar_mobile_menu" %>
     </div>
-
-    <%# User menu when in mobile mode. %>
-    <% if user_signed_in? %>
-      <div class="pt-4 pb-3 border-t border-gray-200">
-
-        <%# Little profile snippet with gravatar, email, name, etc %>
-        <div class="flex items-center px-4">
-          <div class="flex-shrink-0">
-            <img class="h-10 w-10 rounded-full" src="<%= gravatar_url current_user.email %>" alt="<%= current_user.name %>'s photo">
-          </div>
-          <div class="ml-3">
-            <div class="text-base font-medium text-gray-800"><%= current_user.name %></div>
-            <div class="text-sm font-medium text-gray-500"><%= current_user.email %></div>
-          </div>
-        </div>
-
-        <div class="mt-3 space-y-1">
-          <%= render "layouts/top_bar_mobile_user_menu" %></div>
-      </div>
-    <% end %>
   </div>
 </nav>

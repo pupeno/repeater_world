@@ -22,28 +22,6 @@ module ApplicationHelper
     end
   end
 
-  def gravatar_url(email)
-    "https://www.gravatar.com/avatar/#{Digest::MD5.hexdigest email}?d=mp"
-  end
-
-  def toggle_button(form, name, label, **kwargs)
-    klass = kwargs[:class] || ""
-    data = kwargs[:data] || {}
-    render partial: "shared/toggle_button",
-      locals: {form: form, name: name, label: label, class: klass, data: data}
-  end
-
-  def toggle_like_button(label, **kwargs)
-    render partial: "shared/toggle_like_button",
-      locals: {label: label, kwargs: kwargs}
-  end
-
-  def toggle_checkbox(form, name, check_box_html_options)
-    render partial: "shared/toggle_checkbox",
-      locals: {form: form, name: name,
-               check_box_html_options: check_box_html_options}
-  end
-
   def pop_up(title:, links: [], **args, &block)
     render partial: "shared/pop_up",
       locals: {title: title,
