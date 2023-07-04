@@ -15,9 +15,9 @@
 
 import {Controller} from "@hotwired/stimulus"
 
-export const WHEN_CHECKED = ["ring-2", "ring-orange-600", "ring-offset-2", "bg-orange-600", "text-white", "hover:bg-orange-500"]
+export const WHEN_CHECKED = ["ring-2", "bg-orange-300", "dark:bg-orange-700", "hover:bg-orange-400", "focus-within:bg-orange-400"]
 
-export const WHEN_UNCHECKED = ["ring-1", "ring-inset", "ring-orange-300", "bg-white", "text-gray-900", "hover:bg-orange-50"]
+export const WHEN_UNCHECKED = ["ring-0", "bg-orange-50", "dark:bg-orange-900", "hover:bg-orange-100", "focus-within:bg-orange-50"]
 
 export default class extends Controller {
   connect() {

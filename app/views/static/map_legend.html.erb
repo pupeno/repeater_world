@@ -20,11 +20,11 @@ You should have received a copy of the GNU Affero General Public License along w
     <table class="min-w-full border-separate" style="border-spacing: 0">
       <thead class="bg-gray-50">
         <tr>
-          <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-1 pl-4 pr-2 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+          <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-1 pl-4 pr-2 text-left font-semibold backdrop-blur backdrop-filter">
             Band
           </th>
           <% RepeaterSearch::MODES_AND_MULTI.each do |mode| %>
-            <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-1 py-2 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter w-16">
+            <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-1 py-2 text-center font-semibold backdrop-blur backdrop-filter w-16">
               <%= mode[:label] %>
             </th>
           <% end %>
@@ -33,11 +33,11 @@ You should have received a copy of the GNU Affero General Public License along w
       <tbody class="bg-white">
         <% RepeaterSearch::BANDS.each_with_index do |band, index| %>
           <tr class="<%= index.even? ? "bg-white" : "bg-gray-50" %>">
-            <td class="whitespace-nowrap border-b border-gray-200 px-1 pl-4 pr-2 text-sm text-gray-900">
+            <td class="whitespace-nowrap border-b border-gray-200 px-1 pl-4 pr-2">
               <%= band[:label] %>
             </td>
             <% RepeaterSearch::MODES_AND_MULTI.each do |mode| %>
-              <td class="whitespace-nowrap border-b border-gray-200 px-1 py-2 text-sm text-gray-900 text-center">
+              <td class="whitespace-nowrap border-b border-gray-200 px-1 py-2 text-center">
                 <%= image_tag("map_markers/marker-#{band[:symbol]}-#{mode[:symbol]}.svg", style: "width: 30px", class: "inline-block") %>
               </td>
             <% end %>

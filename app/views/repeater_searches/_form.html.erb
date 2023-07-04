@@ -22,69 +22,54 @@ You should have received a copy of the GNU Affero General Public License along w
   <% show_name_field = repeater_search.saving || repeater_search.persisted?
      unsaved_changes = repeater_search.persisted? && repeater_search.changed? %>
 
-  <% if repeater_search.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2>We couldn't run this search because:</h2>
-
-      <ul class="list-disc pl-4">
-        <% repeater_search.errors.each do |error| %>
-          <li>
-            <%# It would be nice if errors weren't so broken in Rails :( %>
-            <% if error.attribute == :geosearch_type %>
-              Geographic search <%= error.message %>
-            <% else %>
-              <%= error.full_message %>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render "shared/forms/error_summary", resource: @repeater_search %>
 
   <% if show_name_field %>
-    <div class="my-3 flex flex-row items-baseline gap-3">
+    <div class="mb-3 flex flex-row items-baseline gap-3">
       <%= form.label :name, "Name:",
                      class: "mr-2" %>
       <div class="mt-1 sm:mt-0 grow">
         <%= form.text_field :name,
                             class: "field-text w-full" %>
         <% repeater_search.errors.where(:name).each do |error| %>
-          <p class="mt-2 text-sm text-red-600"><%= error.full_message %></p>
+          <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
         <% end %>
       </div>
     </div>
   <% end %>
 
-  <div class="my-3" data-controller="multi-toggle">
-    Band:
-    <%= toggle_like_button "All",
+  <div class="mb-3" data-controller="multi-toggle">
+    <%= toggle_like_button "All Bands",
+                           class: "px-2 sm:px-5 md:px-7",
                            data: { action: "click->multi-toggle#selectAll",
                                    multi_toggle_target: "all" } %>
     <% RepeaterSearch::BANDS.each do |band| %>
       <%= toggle_button form, band[:name], band[:label],
-                        class: band[:secondary] ? "hidden" : "",
+                        class: "#{band[:secondary] ? "hidden" : ""} px-2 sm:px-5 md:px-7",
                         data: { action: "click->multi-toggle#updateStatusOfAllButton",
                                 multi_toggle_target: "toggle" } %>
     <% end %>
-    <%= toggle_like_button "More",
-                           data: { action: "click->multi-toggle#showMore",
-                                   multi_toggle_target: "more" } %>
+
+    <button class="button-secondary px-2" data-action="click->multi-toggle#showMore" data-multi-toggle-target="more">
+      More Bands
+    </button>
   </div>
 
-  <div class="my-3" data-controller="multi-toggle">
-    Mode:
-    <%= toggle_like_button "All",
+  <div class="mb-3" data-controller="multi-toggle">
+    <%= toggle_like_button "All Modes",
+                           class: "px-2 sm:px-5 md:px-7",
                            data: { action: "click->multi-toggle#selectAll",
                                    multi_toggle_target: "all" } %>
     <% RepeaterSearch::MODES.each do |mode| %>
       <%= toggle_button form, mode[:name], mode[:label],
-                        class: mode[:secondary] ? "hidden" : "",
+                        class: "#{mode[:secondary] ? "hidden" : ""} px-2 sm:px-5 md:px-7",
                         data: { action: "click->multi-toggle#updateStatusOfAllButton",
                                 multi_toggle_target: "toggle" } %>
     <% end %>
-    <%= toggle_like_button "More",
-                           data: { action: "click->multi-toggle#showMore",
-                                   multi_toggle_target: "more" } %>
+
+    <button class="button-secondary px-2" data-action="click->multi-toggle#showMore" data-multi-toggle-target="more">
+      More Modes
+    </button>
   </div>
 
   <%= render "form_geosearch", { form: form } %>
@@ -94,7 +79,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <% end %>
 
   <div class="inline">
-    <button type="submit" class="button">
+    <button type="submit" class="button px-2">
       <i class="fa-solid fa-magnifying-glass mr-2"></i>
       Search
     </button>
@@ -103,7 +88,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <% if !@repeaters.nil? %>
     <% if !user_signed_in? %> <%# Not logged in, the save search button invites you to sign up. %>
       <div class="inline">
-        <button type="button" class="button" data-action="click->repeater-searches#showAuthBeforeSavePopUp">
+        <button type="button" class="button-secondary px-2" data-action="click->repeater-searches#showAuthBeforeSavePopUp">
           <i class="fa-regular fa-bookmark mr-2"></i>
           Save Search
         </button>
@@ -111,7 +96,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <% elsif show_name_field %> <%# logged in and the search has already been saved, or is being saved %>
       <div class="inline">
-        <button type="submit" class="button" data-action="click->repeater-searches#saveSearch">
+        <button type="submit" class="button-secondary px-2" data-action="click->repeater-searches#saveSearch">
           <i class="fa-regular fa-bookmark mr-2"></i>
           Save Search
         </button>
@@ -119,7 +104,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <% else %>  <%# logged in but this search is not saved yet %>
       <div class="inline">
-        <button type="button" class="button" data-action="click->repeater-searches#showFirstSavePopUp">
+        <button type="button" class="button-secondary px-2" data-action="click->repeater-searches#showFirstSavePopUp">
           <i class="fa-regular fa-bookmark mr-2"></i>
           Save Search
         </button>
@@ -127,7 +112,7 @@ You should have received a copy of the GNU Affero General Public License along w
     <% end %>
 
     <div class="inline">
-      <button type="button" class="button-secondary" data-action="click->repeater-searches#showExportPopUp">
+      <button type="button" class="button-secondary px-2" data-action="click->repeater-searches#showExportPopUp">
         <i class="fa-solid fa-cloud-arrow-down mr-2"></i>
         Export
       </button>
@@ -154,11 +139,11 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <% if !user_signed_in? %> <%# Pop up for when the user is not logged in. %>
     <%= pop_up title: "Save Search", data: { repeater_searches_target: "authBeforeSavePopUp" } do %>
-      <p class="text-sm text-gray-500 mb-2">
+      <p class="mb-2">
         A saved search allows you to easily re-run it later with updated information and also be notified when a change
         happens (new repeater pops up, or one goes down).
       </p>
-      <p class="text-sm text-gray-500">
+      <p class="">
         To be able to save a search, you need to log in or sign up to be able to access the saved searches later.
       </p>
       <div class="mt-5 sm:mt-6
@@ -176,7 +161,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <% elsif !show_name_field %> <%# Pop up for when the search is not yet saved (and not being saved). %>
     <%= pop_up title: "Save Search", data: { repeater_searches_target: "firstSavePopUp" } do %>
-      <p class="text-sm text-gray-500 mb-2">
+      <p class="mb-2">
         To save a search you need to give it a name, something that'll help you remember what it is.
       </p>
       <div class="flex items-baseline gap-3 justify-items-stretch">
@@ -184,7 +169,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <div class="mt-1 sm:mt-0 grow">
           <%= form.text_field :name, class: "field-text w-full" %>
           <% repeater_search.errors.where(:name).each do |error| %>
-            <p class="mt-2 text-sm text-red-600"><%= error.full_message %></p>
+            <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
           <% end %>
         </div>
       </div>
@@ -205,7 +190,6 @@ You should have received a copy of the GNU Affero General Public License along w
                      class: "grow
                              mt-1 py-2 pl-3
                              rounded-md border-gray-300
-                             text-base sm:text-sm
                              focus:border-orange-500 focus:outline-none focus:ring-orange-500 ") %>
     </div>
     <div class="mt-5 sm:mt-6

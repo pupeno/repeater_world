@@ -25,12 +25,17 @@ You should have received a copy of the GNU Affero General Public License along w
   <span class="pt-4 px-2
                border-t-2 border-orange-500
                inline-flex items-center
-               text-sm font-medium text-orange-600" aria-current="page"><%= page %></span>
+               font-medium
+               text-orange-600 dark:text-orange-500" aria-current="page"><%= page %></span>
 <% else %>
   <%= link_to page, url, remote: remote, rel: page.rel,
               class: "pt-4 px-2
                       border-t-2 border-transparent
                       inline-flex items-center
-                      text-sm font-medium text-gray-500
-                      hover:text-gray-700 hover:border-gray-300" %>
+                      font-medium
+                      text-gray-500 dark:text-gray-400
+                      hover:text-gray-800 hover:border-gray-300 dark:hover:text-gray-200 hover:border-gray-500
+                      focus:outline outline-2 outline-orange-600
+                      focus:text-gray-800 focus:border-gray-300
+                      dark:focus:text-gray-200 dark:focus:border-gray-500" %>
 <% end %>

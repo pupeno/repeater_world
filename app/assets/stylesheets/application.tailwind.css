@@ -19,31 +19,62 @@
 
 @layer components {
     .link {
-        @apply underline text-orange-600 hover:text-orange-800;
+        @apply underline text-orange-600 hover:text-orange-800 dark:text-orange-600 dark:hover:text-orange-300;
+    }
+
+    .button-base {
+        @apply inline-block
+        m-1 py-3 px-7
+        font-semibold
+        rounded-md
+        outline-2 outline-offset-2
+        focus-within:outline;
     }
 
     .button {
-        @apply rounded-lg py-3 px-5 text-white inline-block font-medium cursor-pointer bg-orange-600;
+        @apply button-base
+        text-white bg-orange-500
+        outline-orange-600
+        dark:outline-orange-400
+        hover:bg-orange-600
+        dark:hover:bg-orange-400
+        focus:bg-orange-600
+        dark:focus:bg-orange-400;
     }
 
     .button-secondary {
-        @apply button bg-orange-900;
+        @apply button-base
+        bg-cyan-300 dark:bg-cyan-800
+        outline-cyan-400
+        dark:outline-cyan-700
+        hover:bg-cyan-400
+        dark:hover:bg-cyan-700
+        focus:bg-cyan-400
+        dark:focus:bg-cyan-700;
     }
 
-    .field-text {
-        @apply sm:text-sm rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 border-gray-300;
+    /* Override Tailwinds white background, with transparent background, which makes dark mode behave correctly */
+    [multiple], [type=date], [type=datetime-local], [type=email], [type=month], [type=number], [type=password], [type=search], [type=tel], [type=text], [type=time], [type=url], [type=week], select, textarea {
+        @apply bg-transparent;
     }
 
-    .field_with_errors > .field-text {
-        @apply focus:ring-red-500 focus:border-red-500 border-red-300 text-red-900 placeholder-red-300;
+    /* Make the select options work in dark mode, transparency doesn't work for them */
+    select option, select optgroup {
+        @apply bg-gray-50 dark:bg-gray-800;
     }
 
+    .field-text,
     .field-textarea {
-        @apply rounded-md shadow-sm sm:text-sm focus:ring-orange-500 focus:border-orange-500 border-gray-300;
+        @apply rounded-md border border-gray-300 dark:border-gray-600
+        focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500;
     }
 
-    .field_with_errors > .field-textarea {
-        @apply focus:ring-red-500 focus:border-red-500 border-red-300 text-red-900 placeholder-red-300;
+    .field_with_errors > .field-text,
+    .field_with_errors > .field-textarea{
+        @apply text-red-900 dark:text-red-200 placeholder-red-300 dark:placeholder-red-500
+        bg-red-50 dark:bg-red-900/25
+        border border-red-500 dark:border-red-500
+        focus:outline-red-500 focus:outline-red-500 focus:border;
     }
 
     .geosearch .field_with_errors {
@@ -52,11 +83,17 @@
 
     .geosearch .field_with_errors input,
     .geosearch .field_with_errors select {
-        @apply focus:ring-red-500 border-red-500 text-red-900 placeholder-red-300;
+        @apply text-red-900
+        border-2 border-red-500 placeholder-red-300
+        focus:outline-red-500 focus:outline-red-500;
     }
 
     /* Why? so that I can make the chevrons slightly lighter, from 6b7280 to D1D5DB (gray-300) */
-    .geosearch select.text-gray-300 {
+    .geosearch select.chevron-gray-300, :is(.dark .geosearch select.dark\:chevron-gray-300) {
         background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23D1D5DB' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+    }
+
+    .geosearch select.chevron-gray-700, :is(.dark .geosearch select.dark\:chevron-gray-700) {
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%233f3f46' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
     }
 }
