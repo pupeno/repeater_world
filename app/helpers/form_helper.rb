@@ -54,12 +54,12 @@ module FormHelper
     klass = kwargs.delete(:class) || ""
     data = kwargs.delete(:data) || {}
     render partial: "shared/forms/toggle_button",
-           locals: {form: form, name: name, label: label, class: klass, data: data, kwargs: kwargs}
+      locals: {form: form, name: name, label: label, class: klass, data: data, kwargs: kwargs}
   end
 
   def toggle_like_button(label, **kwargs)
     klass = kwargs.delete(:class) || ""
     render partial: "shared/forms/toggle_like_button",
-           locals: {label: label, class: klass, kwargs: kwargs}
+      locals: {label: label, class: klass, kwargs: kwargs}
   end
 end
