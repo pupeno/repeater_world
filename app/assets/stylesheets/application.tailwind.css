@@ -24,7 +24,7 @@
 
     .button-base {
         @apply inline-block
-        m-1 py-3 px-2
+        m-1 py-3 px-7
         font-semibold
         rounded-md
         outline-2 outline-offset-2

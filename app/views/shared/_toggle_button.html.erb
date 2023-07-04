@@ -22,7 +22,8 @@ You should have received a copy of the GNU Affero General Public License along w
                        hover:bg-orange-100
                        focus-within:bg-orange-50
                        #{local_assigns[:class]}",
-               data: { controller: "toggle-button", **data } do %>
+               data: { controller: "toggle-button", **data },
+               **kwargs do %>
   <%= form.check_box name,
                      class: "sr-only",
                      aria: { labelledby: "#{name}-actual-label" },

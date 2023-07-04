@@ -40,32 +40,34 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <div class="mb-3" data-controller="multi-toggle">
     <%= toggle_like_button "All Bands",
+                           class: "px-2",
                            data: { action: "click->multi-toggle#selectAll",
                                    multi_toggle_target: "all" } %>
     <% RepeaterSearch::BANDS.each do |band| %>
       <%= toggle_button form, band[:name], band[:label],
-                        class: band[:secondary] ? "hidden" : "",
+                        class: "#{band[:secondary] ? "hidden" : ""} px-2",
                         data: { action: "click->multi-toggle#updateStatusOfAllButton",
                                 multi_toggle_target: "toggle" } %>
     <% end %>
 
-    <button class="button-secondary" data-action="click->multi-toggle#showMore" data-multi-toggle-target="more">
+    <button class="button-secondary px-2" data-action="click->multi-toggle#showMore" data-multi-toggle-target="more">
       More Bands
     </button>
   </div>
 
   <div class="mb-3" data-controller="multi-toggle">
     <%= toggle_like_button "All Modes",
+                           class: "px-2",
                            data: { action: "click->multi-toggle#selectAll",
                                    multi_toggle_target: "all" } %>
     <% RepeaterSearch::MODES.each do |mode| %>
       <%= toggle_button form, mode[:name], mode[:label],
-                        class: mode[:secondary] ? "hidden" : "",
+                        class: "#{mode[:secondary] ? "hidden" : ""} px-2",
                         data: { action: "click->multi-toggle#updateStatusOfAllButton",
                                 multi_toggle_target: "toggle" } %>
     <% end %>
 
-    <button class="button-secondary" data-action="click->multi-toggle#showMore" data-multi-toggle-target="more">
+    <button class="button-secondary px-2" data-action="click->multi-toggle#showMore" data-multi-toggle-target="more">
       More Modes
     </button>
   </div>
@@ -77,7 +79,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <% end %>
 
   <div class="inline">
-    <button type="submit" class="button">
+    <button type="submit" class="button px-2">
       <i class="fa-solid fa-magnifying-glass mr-2"></i>
       Search
     </button>
@@ -86,7 +88,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <% if !@repeaters.nil? %>
     <% if !user_signed_in? %> <%# Not logged in, the save search button invites you to sign up. %>
       <div class="inline">
-        <button type="button" class="button-secondary" data-action="click->repeater-searches#showAuthBeforeSavePopUp">
+        <button type="button" class="button-secondary px-2" data-action="click->repeater-searches#showAuthBeforeSavePopUp">
           <i class="fa-regular fa-bookmark mr-2"></i>
           Save Search
         </button>
@@ -94,7 +96,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <% elsif show_name_field %> <%# logged in and the search has already been saved, or is being saved %>
       <div class="inline">
-        <button type="submit" class="button-secondary" data-action="click->repeater-searches#saveSearch">
+        <button type="submit" class="button-secondary px-2" data-action="click->repeater-searches#saveSearch">
           <i class="fa-regular fa-bookmark mr-2"></i>
           Save Search
         </button>
@@ -102,7 +104,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <% else %>  <%# logged in but this search is not saved yet %>
       <div class="inline">
-        <button type="button" class="button-secondary" data-action="click->repeater-searches#showFirstSavePopUp">
+        <button type="button" class="button-secondary px-2" data-action="click->repeater-searches#showFirstSavePopUp">
           <i class="fa-regular fa-bookmark mr-2"></i>
           Save Search
         </button>
@@ -110,7 +112,7 @@ You should have received a copy of the GNU Affero General Public License along w
     <% end %>
 
     <div class="inline">
-      <button type="button" class="button-secondary" data-action="click->repeater-searches#showExportPopUp">
+      <button type="button" class="button-secondary px-2" data-action="click->repeater-searches#showExportPopUp">
         <i class="fa-solid fa-cloud-arrow-down mr-2"></i>
         Export
       </button>

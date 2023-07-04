@@ -23,15 +23,16 @@ module ApplicationHelper
   end
 
   def toggle_button(form, name, label, **kwargs)
-    klass = kwargs[:class] || ""
-    data = kwargs[:data] || {}
+    klass = kwargs.delete(:class) || ""
+    data = kwargs.delete(:data) || {}
     render partial: "shared/toggle_button",
-      locals: {form: form, name: name, label: label, class: klass, data: data}
+      locals: {form: form, name: name, label: label, class: klass, data: data, kwargs: kwargs}
   end
 
   def toggle_like_button(label, **kwargs)
+    klass = kwargs.delete(:class) || ""
     render partial: "shared/toggle_like_button",
-      locals: {label: label, kwargs: kwargs}
+      locals: {label: label, class: klass, kwargs: kwargs}
   end
 
   def toggle_checkbox(form, name, check_box_html_options)
