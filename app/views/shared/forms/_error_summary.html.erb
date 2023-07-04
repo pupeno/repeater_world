@@ -13,8 +13,14 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <% if resource.errors.any? %>
-  <div class="bg-red-50 text-red-600 px-3 py-2 rounded-lg mt-3">
-    <p>We encountered <%= pluralize(resource.errors.count, "error") %>:</p>
+  <div id="error_explanation" class="my-3 px-3 py-2
+                                     bg-red-50 dark:bg-red-900/25
+                                     text-red-500 dark:text-red-200
+                                     rounded-lg">
+    <h2>
+      Encountered <%= pluralize(resource.errors.count, "error") %>:
+    </h2>
+
     <ul class="list-disc list-inside">
       <% resource.errors.each do |error| %>
         <li><%= error.full_message %></li>

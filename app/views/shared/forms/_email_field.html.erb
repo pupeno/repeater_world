@@ -20,5 +20,8 @@ You should have received a copy of the GNU Affero General Public License along w
     <% if help_text.present? %>
       <p class="mt-2 text-gray-500 dark:text-gray-400"><%= help_text %></p>
     <% end %>
+    <% form.object.errors.where(field_name).each do |error| %>
+      <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
+    <% end %>
   </div>
 </div>

@@ -18,19 +18,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <%= render "shared/flash_messages" %>
 
   <%= form_with(model: @suggested_repeater, class: "contents") do |form| %>
-    <% if @suggested_repeater.errors.any? %>
-      <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-        <h2>
-          <%= pluralize(@suggested_repeater.errors.count, "error") %> prevented this new repeater from being saved:
-        </h2>
-
-        <ul>
-          <% @suggested_repeater.errors.each do |error| %>
-            <li><%= error.full_message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+    <%= render "shared/forms/error_summary", resource: @suggested_repeater %>
 
     <h2 class="text-xl font-bold leading-7 sm:text-2xl mt-4">About you</h2>
     <%= form_text_field form: form, field_name: :submitter_name, label: "Your name (optional)",

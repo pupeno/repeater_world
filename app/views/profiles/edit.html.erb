@@ -45,12 +45,12 @@ You should have received a copy of the GNU Affero General Public License along w
                                     placeholder: "sam@example.com",
                                     class: "field-text block max-w-lg sm:max-w-sm w-full" %>
                 <% current_user.errors.where(:email).each do |error| %>
-                  <p class="mt-2 text-red-600"><%= error.full_message %></p>
+                  <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
                 <% end %>
               </div>
               <div class="mt-1 sm:mt-0 sm:col-span-2">
                 <% current_user.errors.where(:email).each do |error| %>
-                  <p class="mt-2 text-red-600"><%= error.full_message %></p>
+                  <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
                 <% end %>
                 <% if current_user.unconfirmed_email.present? %>
                   <p class="mt-2">Your email is being changed to <%= current_user.unconfirmed_email %>, check
@@ -68,12 +68,12 @@ You should have received a copy of the GNU Affero General Public License along w
                                       placeholder: "John Smith",
                                       class: "field-text block max-w-lg sm:max-w-sm w-full" %>
                   <% current_user.errors.where(:name).each do |error| %>
-                    <p class="mt-2 text-red-600"><%= error.full_message %></p>
+                    <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
                   <% end %>
                 </div>
                 <div class="mt-1 sm:mt-0 sm:col-span-2">
                   <% current_user.errors.where(:name).each do |error| %>
-                    <p class="mt-2 text-red-600"><%= error.full_message %></p>
+                    <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
                   <% end %>
                 </div>
               </div>
@@ -86,12 +86,12 @@ You should have received a copy of the GNU Affero General Public License along w
                                       placeholder: "Johnny",
                                       class: "field-text block max-w-lg sm:max-w-sm w-full" %>
                   <% current_user.errors.where(:nickname).each do |error| %>
-                    <p class="mt-2 text-red-600"><%= error.full_message %></p>
+                    <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
                   <% end %>
                 </div>
                 <div class="mt-1 sm:mt-0 sm:col-span-2">
                   <% current_user.errors.where(:nickname).each do |error| %>
-                    <p class="mt-2 text-red-600"><%= error.full_message %></p>
+                    <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
                   <% end %>
                 </div>
               </div>

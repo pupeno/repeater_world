@@ -59,10 +59,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <%# Field for searching by place %>
   <div class="contents hidden" data-geosearch-target="placeFields">
     <%= form.text_field :place,
-                        class: "inline w-80 px-2 mt-1
-                                rounded-md border border-gray-300 dark:border-gray-600
-                                focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
-                                text-gray-300 dark:text-gray-700",
+                        class: "inline w-80 px-2 mt-1 field-text",
                         data: { geosearch_target: "controlled",
                                 action: "click->geosearch#enable" } %>
   </div>
@@ -73,10 +70,7 @@ You should have received a copy of the GNU Affero General Public License along w
       <%= form.label :latitude, "latitude", class: "mr-2 text-gray-300 dark:text-gray-700",
                      data: { geosearch_target: "controlled" } %>
       <%= form.text_field :latitude,
-                          class: "inline w-28 px-2 mt-1
-                                  rounded-md border border-gray-300 dark:border-gray-600
-                                  focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
-                                  text-right text-gray-300 dark:text-gray-700",
+                          class: "inline w-28 px-2 mt-1 field-text",
                           data: { geosearch_target: "latitude controlled",
                                   action: "click->geosearch#enable" } %>
     </div>
@@ -88,10 +82,7 @@ You should have received a copy of the GNU Affero General Public License along w
       <%= form.label :longitude, "longitude", class: "mr-2 text-gray-300 dark:text-gray-700",
                      data: { geosearch_target: "controlled" } %>
       <%= form.text_field :longitude,
-                          class: "inline w-28 px-2 mt-1
-                                  rounded-md border border-gray-300 dark:border-gray-600
-                                  focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
-                                  text-right text-gray-300 dark:text-gray-700",
+                          class: "inline w-28 px-2 mt-1 field-text",
                           data: { geosearch_target: "longitude controlled",
                                   action: "click->geosearch#enable" } %>
     </div>
@@ -100,10 +91,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <%# Field for searching by grid square. %>
   <div class="contents hidden" data-geosearch-target="gridSquareFields">
     <%= form.text_field :grid_square,
-                        class: "inline w-28 px-2 mt-1
-                                rounded-md border border-gray-300 dark:border-gray-600
-                                focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
-                                text-gray-300 dark:text-gray-700",
+                        class: "inline w-28 px-2 mt-1 field-text",
                         data: { geosearch_target: "controlled",
                                 action: "click->geosearch#enable" } %>
   </div>

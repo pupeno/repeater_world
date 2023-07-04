@@ -22,24 +22,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <% show_name_field = repeater_search.saving || repeater_search.persisted?
      unsaved_changes = repeater_search.persisted? && repeater_search.changed? %>
 
-  <% if repeater_search.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2>We couldn't run this search because:</h2>
-
-      <ul class="list-disc pl-4">
-        <% repeater_search.errors.each do |error| %>
-          <li>
-            <%# It would be nice if errors weren't so broken in Rails :( %>
-            <% if error.attribute == :geosearch_type %>
-              Geographic search <%= error.message %>
-            <% else %>
-              <%= error.full_message %>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render "shared/forms/error_summary", resource: @repeater_search %>
 
   <% if show_name_field %>
     <div class="mb-3 flex flex-row items-baseline gap-3">
@@ -49,7 +32,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= form.text_field :name,
                             class: "field-text w-full" %>
         <% repeater_search.errors.where(:name).each do |error| %>
-          <p class="mt-2 text-red-600"><%= error.full_message %></p>
+          <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
         <% end %>
       </div>
     </div>
@@ -184,7 +167,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <div class="mt-1 sm:mt-0 grow">
           <%= form.text_field :name, class: "field-text w-full" %>
           <% repeater_search.errors.where(:name).each do |error| %>
-            <p class="mt-2 text-red-600"><%= error.full_message %></p>
+            <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
           <% end %>
         </div>
       </div>

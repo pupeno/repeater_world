@@ -19,7 +19,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
 
-    <%= render "users/shared/error_messages", resource: resource %>
+    <%= render "shared/forms/error_summary", resource: resource %>
 
     <div>
       <%= f.label :current_password, class: "block font-medium text-gray-700" %>
@@ -28,7 +28,7 @@ You should have received a copy of the GNU Affero General Public License along w
                              autocomplete: "current-password",
                              class: "field-text block max-w-lg sm:max-w-sm w-full" %>
         <% resource.errors.where(:current_password).each do |error| %>
-          <p class="mt-2 text-red-600"><%= error.full_message %></p>
+          <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
         <% end %>
       </div>
     </div>
@@ -40,7 +40,7 @@ You should have received a copy of the GNU Affero General Public License along w
                              autocomplete: "new-password",
                              class: "field-text block max-w-lg sm:max-w-sm w-full" %>
         <% resource.errors.where(:password).each do |error| %>
-          <p class="mt-2 text-red-600"><%= error.full_message %></p>
+          <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
         <% end %>
       </div>
     </div>
@@ -52,7 +52,7 @@ You should have received a copy of the GNU Affero General Public License along w
                              autocomplete: "new-password",
                              class: "field-text block max-w-lg sm:max-w-sm w-full" %>
         <% resource.errors.where(:password_confirmation).each do |error| %>
-          <p class="mt-2 text-red-600"><%= error.full_message %></p>
+          <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
         <% end %>
       </div>
     </div>
