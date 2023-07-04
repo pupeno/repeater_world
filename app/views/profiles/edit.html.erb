@@ -20,7 +20,21 @@ You should have received a copy of the GNU Affero General Public License along w
   <%= form_with(model: current_user, url: profile_url) do |form| %>
     <%= render "shared/forms/error_summary", resource: current_user %>
 
-    <%= form_email_field form: form, field_name: :email %>
+    <%# Not using form_email_field due to the if current_user.unconfirmed_email.present? part %>
+    <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-b border-gray-200 dark:border-gray-700 py-3 sm:py-5">
+      <%= form.label :email, class: "block text-gray-700 dark:text-gray-300 sm:mt-px sm:pt-2" %>
+      <div class="mt-1 sm:col-span-2 sm:mt-0">
+        <%= form.email_field :email,
+                             class: "field-text block max-w-lg sm:max-w-sm w-full" %>
+        <% form.object.errors.where(:email).each do |error| %>
+          <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
+        <% end %>
+        <% if current_user.unconfirmed_email.present? %>
+          <p class="mt-2 text-gray-500 dark:text-gray-400">Your email is being changed to <%= current_user.unconfirmed_email %>, check
+            your inbox for the verification.</p>
+        <% end %>
+      </div>
+    </div>
 
     <div class="pt-5">
       <div class="flex justify-end">
