@@ -13,10 +13,10 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <div id="<%= dom_id repeater %>" data-controller="repeater">
-  <div class="overflow-hidden shadow sm:rounded-lg border border-gray-200
+<div class="shadow md:rounded-lg md:border border-gray-200 dark:divide-gray-700
               flex flex-col sm:flex-row">
     <div class="flex-1 px-4 py-5 sm:p-0">
-      <dl class="divide-y divide-gray-200">
+      <dl class="divide-y divide-gray-200 dark:divide-gray-700">
         <%= card_entry(label: "Name", value: repeater.name) %>
         <%= card_entry(label: "Call Sign", value: repeater.call_sign) %>
         <%= card_entry(label: "Web Site", value: repeater.web_site, optional: true) do %>
@@ -71,7 +71,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= card_entry(label: "Source", value: repeater.source, optional: true) %>
       </dl>
     </div>
-    <div class="flex-1 min-h-[500px] place-self-stretch bg-gray-300"
+    <div class="flex-1 min-h-[500px] place-self-stretch bg-gray-300 bg-gray-200 dark:bg-gray-600 md:rounded-r-lg"
          data-controller="map"
          data-action="google-maps-callback@window->maps#initializeMap"
          data-map-markers-value="<%=
