@@ -1,4 +1,4 @@
-<%# Copyright 2023, Pablo Fernandez
+<%# Copyright 2023, Flexpoint Tech
 
 This file is part of Repeater World.
 
@@ -13,51 +13,27 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <%# top_bar_mobile_menu should have the same items as top_bar_desktop_menu+top_bar_extra_menu %>
-<%= top_bar_mobile_link root_url, active: :exact do %>
-  <i class="fa-solid fa-magnifying-glass mr-2"></i>
-  Search
-<% end %>
-<%= top_bar_mobile_link new_suggested_repeater_url do %>
-  <i class="fa-solid fa-plus mr-2"></i>
-  Add a Repeater
-<% end %>
-<%= top_bar_mobile_link new_user_registration_url do %>
-  <i class="fa-solid fa-right-to-bracket mr-2"></i>
-  Sign up
-<% end unless user_signed_in? %>
-
-<%= top_bar_mobile_link "https://github.com/flexpointtech/repeater_world/discussions" do %>
+<%= top_bar_desktop_extra_link "https://github.com/flexpointtech/repeater_world/discussions" do %>
   <i class="fa-solid fa-bell-concierge mr-2"></i>
   Support
 <% end %>
-<%= top_bar_mobile_link new_user_session_url do %>
+<%= top_bar_desktop_extra_link new_user_session_url do %>
   <i class="fa-solid fa-right-to-bracket mr-2"></i>
   Log in
 <% end unless user_signed_in? %>
-<%= top_bar_mobile_link repeater_searches_url do %>
+<%= top_bar_desktop_extra_link repeater_searches_url do %>
   <i class="fa-solid fa-magnifying-glass mr-2"></i>
   My Searches
 <% end if user_signed_in? %>
-<%= top_bar_mobile_link edit_profile_url do %>
+<%= top_bar_desktop_extra_link edit_profile_url do %>
   <i class="fa-solid fa-user mr-2"></i>
   My Profile
 <% end if user_signed_in? %>
-<%= top_bar_mobile_link edit_user_registration_path do %>
+<%= top_bar_desktop_extra_link edit_user_registration_path do %>
   <i class="fa-solid fa-key mr-2"></i>
   Change My Password
 <% end if user_signed_in? %>
-<%= button_to destroy_user_session_path, class: top_bar_mobile_button_class, method: :delete do %>
+<%= button_to destroy_user_session_path, class: top_bar_desktop_extra_button_class, method: :delete do %>
   <i class="fa-solid fa-right-from-bracket mr-2"></i>
   Log out
 <% end if user_signed_in? %>
-
-<button class="<%= top_bar_mobile_button_class %> dark:hidden"
-        data-action="click->light-dark-switcher#dark">
-  <i class="fa-solid fa-moon mr-2"></i>
-  Switch to Dark Mode
-</button>
-<button class="<%= top_bar_mobile_button_class %> hidden dark:block"
-        data-action="click->light-dark-switcher#light">
-  <i class="fa-solid fa-sun mr-2"></i>
-  Switch to Light Mode
-</button>

@@ -14,14 +14,16 @@ You should have received a copy of the GNU Affero General Public License along w
 
 <%# The style here needs to be kept in sync with _toggle_like_button.html.erb %>
 <%= form.label name,
-               class: "inline-flex
-                       mx-1 py-3 px-3
-                       rounded-md
-                       text-sm font-semibold
-                       focus:outline-none
-                       ring-1 ring-inset ring-orange-300 bg-white text-gray-900 hover:bg-orange-50
+               class: "button-base
+                       bg-orange-50 dark:bg-orange-900
+                       border border-orange-500
+                       ring-0 ring-orange-500 ring-inset
+                       outline-orange-500
+                       hover:bg-orange-100
+                       focus-within:bg-orange-50
                        #{local_assigns[:class]}",
-               data: { controller: "toggle-button", **data } do %>
+               data: { controller: "toggle-button", **data },
+               **kwargs do %>
   <%= form.check_box name,
                      class: "sr-only",
                      aria: { labelledby: "#{name}-actual-label" },

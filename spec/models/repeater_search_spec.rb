@@ -127,10 +127,10 @@ RSpec.describe RepeaterSearch, type: :model do
       # Latitude can neither be missing nor be invalid.
       @repeater_search.latitude = "invalid"
       expect(@repeater_search).to_not be_valid
-      expect(@repeater_search.errors[:geosearch_type]).to include("couldn't get valid coordinates for your location")
+      expect(@repeater_search.errors[:base]).to include("We couldn't get valid coordinates for your location")
       @repeater_search.latitude = nil
       expect(@repeater_search).to_not be_valid
-      expect(@repeater_search.errors[:geosearch_type]).to include("couldn't get valid coordinates for your location")
+      expect(@repeater_search.errors[:base]).to include("We couldn't get valid coordinates for your location")
       @repeater_search.latitude = 10.01
       expect(@repeater_search).to be_valid
     end
@@ -139,10 +139,10 @@ RSpec.describe RepeaterSearch, type: :model do
       # Longitude can neither be missing nor be invalid.
       @repeater_search.longitude = "invalid"
       expect(@repeater_search).to_not be_valid
-      expect(@repeater_search.errors[:geosearch_type]).to include("couldn't get valid coordinates for your location")
+      expect(@repeater_search.errors[:base]).to include("We couldn't get valid coordinates for your location")
       @repeater_search.longitude = nil
       expect(@repeater_search).to_not be_valid
-      expect(@repeater_search.errors[:geosearch_type]).to include("couldn't get valid coordinates for your location")
+      expect(@repeater_search.errors[:base]).to include("We couldn't get valid coordinates for your location")
       @repeater_search.longitude = 20.02
       expect(@repeater_search).to be_valid
     end

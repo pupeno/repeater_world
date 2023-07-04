@@ -15,8 +15,9 @@
 
 import {Controller} from "@hotwired/stimulus"
 
-const GRAYED_OUT_TEXT = "text-gray-300"
-const NORMAL_TEXT = "text-gray-900"
+const GRAYED_OUT_TEXT = ["text-gray-300", "dark:text-gray-700"]
+const GRAYED_OUT_SELECT = ["chevron-gray-300", "dark:chevron-gray-700"]
+const NOT_GRAYED_OUT_SELECT = ["dark:chevron-gray-300", "chevron-gray-700"]
 
 export default class extends Controller {
   static targets = [
@@ -31,13 +32,19 @@ export default class extends Controller {
   updateState() {
     if (this.activatorTarget.checked) {
       this.controlledTargets.forEach(element => {
-        element.classList.remove(GRAYED_OUT_TEXT)
-        element.classList.add(NORMAL_TEXT)
+        element.classList.remove(...GRAYED_OUT_TEXT)
+        if (element.tagName === "SELECT") {
+          element.classList.remove(...GRAYED_OUT_SELECT)
+          element.classList.add(...NOT_GRAYED_OUT_SELECT)
+        }
       })
     } else {
       this.controlledTargets.forEach(element => {
-        element.classList.remove(NORMAL_TEXT)
-        element.classList.add(GRAYED_OUT_TEXT)
+        element.classList.add(...GRAYED_OUT_TEXT)
+        if (element.tagName === "SELECT") {
+          element.classList.add(...GRAYED_OUT_SELECT)
+          element.classList.remove(...NOT_GRAYED_OUT_SELECT)
+        }
       })
     }
     if (this.typeTarget.value === "my_location") {

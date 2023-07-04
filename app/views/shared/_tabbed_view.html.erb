@@ -12,30 +12,33 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div data-controller="tabs">
-  <div class="py-3">
-    <div class="sm:hidden">
-      <label for="display_mode_tabs" class="sr-only">Select a tab</label>
-      <select id="display_mode_tabs"
-              name="display_mode_tabs"
-              class="block w-full rounded-md border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-              data-action="tabs#switch">
-        <%= options_for_select(tabs.each_with_object({}) { |tab, result| result[tab[:title]] = tab[:url] },
-                               tabs.find { |tab| tab[:name] == selected_tab }[:url]) %>
-      </select>
-    </div>
-    <div class="hidden sm:block">
-      <div class="border-b border-gray-200">
-        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-          <% tabs.each do |tab| %>
-            <%= link_to tab[:url],
-                        class: "group inline-flex items-center py-2 px-1 border-b-2 font-medium text-sm #{tab[:name] == selected_tab ? "border-orange-500 text-orange-600 " : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}" do %>
-              <i class="<%= tab[:icon] %>"></i>
-              <span class="ml-3"><%= tab[:title] %></span>
-            <% end %>
+<div class="py-3"
+     data-controller="tabs">
+  <div class="px-2 sm:hidden">
+    <label for="display_mode_tabs" class="sr-only">Select a tab</label>
+    <select id="display_mode_tabs"
+            name="display_mode_tabs"
+            class="block w-full
+                   rounded-md border border-gray-300 dark:border-gray-600
+                   focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
+                   dark:chevron-gray-300 chevron-gray-700"
+            data-action="tabs#switch">
+      <%= options_for_select(tabs.each_with_object({}) { |tab, result| result[tab[:title]] = tab[:url] },
+                             tabs.find { |tab| tab[:name] == selected_tab }[:url]) %>
+    </select>
+  </div>
+  <div class="hidden sm:block">
+    <div class="border-b border-gray-200 dark:border-gray-600">
+      <nav class="sm:px-2 md:px-4 lg:px-6 -mb-px flex space-x-8" aria-label="Tabs">
+        <% tabs.each do |tab| %>
+          <%= link_to tab[:url],
+                      class: "group inline-flex items-center py-2 px-1 border-b-2 font-medium focus:outline focus:bg-orange-50 outline-2 outline-orange-600 dark:focus:bg-gray-700
+                              #{tab[:name] == selected_tab ? "border-orange-600 text-orange-600 dark:border-orange-400 dark:text-orange-400" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:hover:text-gray-300 dark:hover:border-gray-500 focus:text-gray-700 focus:border-gray-300 dark:focus:text-gray-300 dark:focus:border-gray-500"}" do %>
+            <i class="<%= tab[:icon] %>"></i>
+            <span class="ml-3"><%= tab[:title] %></span>
           <% end %>
-        </nav>
-      </div>
+        <% end %>
+      </nav>
     </div>
   </div>
 </div>
