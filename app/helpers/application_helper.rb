@@ -22,19 +22,6 @@ module ApplicationHelper
     end
   end
 
-  def toggle_button(form, name, label, **kwargs)
-    klass = kwargs.delete(:class) || ""
-    data = kwargs.delete(:data) || {}
-    render partial: "shared/toggle_button",
-      locals: {form: form, name: name, label: label, class: klass, data: data, kwargs: kwargs}
-  end
-
-  def toggle_like_button(label, **kwargs)
-    klass = kwargs.delete(:class) || ""
-    render partial: "shared/toggle_like_button",
-      locals: {label: label, class: klass, kwargs: kwargs}
-  end
-
   def pop_up(title:, links: [], **args, &block)
     render partial: "shared/pop_up",
       locals: {title: title,

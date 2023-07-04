@@ -49,4 +49,17 @@ module FormHelper
                input_html_options: input_html_options,
                help_text: help_text}
   end
+
+  def toggle_button(form, name, label, **kwargs)
+    klass = kwargs.delete(:class) || ""
+    data = kwargs.delete(:data) || {}
+    render partial: "shared/forms/toggle_button",
+           locals: {form: form, name: name, label: label, class: klass, data: data, kwargs: kwargs}
+  end
+
+  def toggle_like_button(label, **kwargs)
+    klass = kwargs.delete(:class) || ""
+    render partial: "shared/forms/toggle_like_button",
+           locals: {label: label, class: klass, kwargs: kwargs}
+  end
 end
