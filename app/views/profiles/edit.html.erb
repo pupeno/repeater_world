@@ -30,7 +30,8 @@ You should have received a copy of the GNU Affero General Public License along w
           <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
         <% end %>
         <% if current_user.unconfirmed_email.present? %>
-          <p class="mt-2 text-gray-500 dark:text-gray-400">Your email is being changed to <%= current_user.unconfirmed_email %>, check
+          <p class="mt-2 text-gray-500 dark:text-gray-400">Your email is being changed
+            to <%= current_user.unconfirmed_email %>, check
             your inbox for the verification.</p>
         <% end %>
       </div>

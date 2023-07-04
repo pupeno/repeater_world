@@ -31,7 +31,7 @@ You should have received a copy of the GNU Affero General Public License along w
             <%= f.password_field :password,
                                  autofocus: true,
                                  autocomplete: "new-password",
-                                 class: "field-text block max-w-lg sm:max-w-sm w-full"%>
+                                 class: "field-text block max-w-lg sm:max-w-sm w-full" %>
             <% resource.errors.where(:password).each do |error| %>
               <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
             <% end %>
