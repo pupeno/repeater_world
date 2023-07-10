@@ -16,15 +16,21 @@
 import {Controller} from "@hotwired/stimulus"
 import Cookies from "js-cookie"
 
+// The name of the cookie has the date, so any updates to the cookie policy also changes this date, causing all previous
+// cookie consent to go away.
+const COOKIE_NAME = "accept-cookies-2023-07-10"
+
 export default class extends Controller {
   connect() {
-    if (!Cookies.get("accept-cookies")) {
+    console.log(COOKIE_NAME)
+    console.log(Cookies.get(COOKIE_NAME))
+    if (!Cookies.get(COOKIE_NAME)) {
       this.element.classList.remove("hidden")
     }
   }
 
   acceptCookies() {
-    Cookies.set("accept-cookies", true)
+    Cookies.set(COOKIE_NAME, true, {expires: 3650, sameSite: 'strict'})
     this.element.classList.add("hidden")
   }
 }
