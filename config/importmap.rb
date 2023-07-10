@@ -16,6 +16,7 @@ pin "@sentry-internal/tracing", to: "https://ga.jspm.io/npm:@sentry-internal/tra
 pin "@sentry/browser", to: "https://ga.jspm.io/npm:@sentry/browser@7.57.0/esm/index.js"
 pin "@sentry/core", to: "https://ga.jspm.io/npm:@sentry/core@7.57.0/esm/index.js"
 pin "@sentry/replay", to: "https://ga.jspm.io/npm:@sentry/replay@7.57.0/esm/index.js"
+pin "@sentry/tracing", to: "https://ga.jspm.io/npm:@sentry/tracing@7.57.0/esm/index.js"
 pin "@sentry/utils", to: "https://ga.jspm.io/npm:@sentry/utils@7.57.0/esm/index.js"
 pin "@sentry/utils/esm/buildPolyfills", to: "https://ga.jspm.io/npm:@sentry/utils@7.57.0/esm/buildPolyfills/index.js"
 pin "el-transition", to: "https://ga.jspm.io/npm:el-transition@0.0.7/index.js"
