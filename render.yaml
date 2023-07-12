@@ -11,25 +11,21 @@ databases:
 envVarGroups:
   - name: repeater_world
     envVars:
-      - key: SECRET_KEY_BASE
-        sync: false
-      - key: DELIVER_EMAILS
-        value: true
-        previewValue: false
-      - key: SAFE_EMAIL_DEST
-        value: "staging@repeater.world"
       - key: ALLOW_SAMPLE_DATA_GENERATION
         value: false
         previewValue: true
-      - key: SENTRY_DSN
-        sync: false
-      - key: SENTRY_DSN_FE
-        sync: false
-      - key: FATHOM_ID
-        sync: false
-      - key: GOOGLE_MAPS_API_KEY
+      - key: DELIVER_EMAILS
+        value: true
+        previewValue: false
+      - key: GOOGLE_GEOCODING_API_KEY
         sync: false
       - key: POSTMARK_API_TOKEN
+        sync: false
+      - key: SAFE_EMAIL_DEST
+        value: "staging@repeater.world"
+      - key: SECRET_KEY_BASE
+        sync: false
+      - key: SENTRY_DSN
         sync: false
 
 services:
@@ -49,6 +45,12 @@ services:
         fromDatabase:
           name: repeater_world-db
           property: connectionString
+      - key: FATHOM_ID
+        sync: false
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
+      - key: SENTRY_DSN_FE
+        sync: false
 
   - type: cron
     name: repeater_world-import_all
