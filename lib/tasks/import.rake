@@ -16,13 +16,53 @@ desc "Import repeaters from all sources"
 task :import_all, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
 
-  UkrepeatersImporter.new.import
-  SralfiImporter.new.import
-  NerepeatersImporter.new.import
-  WiaImporter.new.import
-  IrtsImporter.new.import
+  begin
+    UkrepeatersImporter.new.import
+  rescue => e
+    Rails.logger.error(e.message)
+    Sentry.capture_exception(e)
+  end
+  begin
+    SralfiImporter.new.import
+    Rails.logger.error(e.message)
+  rescue => e
+    Sentry.capture_exception(e)
+  end
+  begin
+    NerepeatersImporter.new.import
+    Rails.logger.error(e.message)
+  rescue => e
+    Rails.logger.error(e.message)
+    Sentry.capture_exception(e)
+  end
+  begin
+    Rails.logger.error(e.message)
+    WiaImporter.new.import
+  rescue => e
+    Rails.logger.error(e.message)
+    Sentry.capture_exception(e)
+  end
+  begin
+    IrtsImporter.new.import
+  rescue => e
+    Rails.logger.error(e.message)
+    Sentry.capture_exception(e)
+  end
 
-  IrlpImporter.new.import # Keep it at the bottom, since we don't access code and other sources might have them in better shape
+  # Keep it at the bottom, since we don't access code and other sources might have them in better shape
+  begin
+    IrlpImporter.new.import
+  rescue => e
+    Rails.logger.error(e.message)
+    Sentry.capture_exception(e)
+  end
+
+  begin
+    RepeaterGeocoder.new.geocode
+  rescue => e
+    Rails.logger.error(e.message)
+    Sentry.capture_exception(e)
+  end
 end
 
 desc "Import repeaters from ukrepeaters.net, https://ukrepeater.net/csvfiles.html"

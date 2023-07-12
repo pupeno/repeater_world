@@ -14,6 +14,7 @@
 
 class RepeaterGeocoder
   def geocode
+    Rails.logger.info "Geocoding all repeaters that need it."
     repeater_count = Repeater.count
     Rails.logger.info "There are #{repeater_count} repeaters in the database."
 
