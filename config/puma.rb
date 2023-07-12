@@ -48,13 +48,12 @@ if ENV.fetch("RAILS_ENV") == "production"
   # References:
   # * https://medium.com/@CGA1123/reducing-rails-memory-usage-by-15-56090b6294bd
   # * https://github.com/puma/puma/issues/2393
-  # workers ENV.fetch("WEB_CONCURRENCY", 4) # https://render.com/docs/deploy-rails#update-your-app-for-render
+  workers ENV.fetch("WEB_CONCURRENCY", 4) # https://render.com/docs/deploy-rails#update-your-app-for-render
 
   # Use the `preload_app!` method when specifying a `workers` number.
   # This directive tells Puma to first boot the application and load code
   # before forking the application. This takes advantage of Copy On Write
   # process behavior so workers use less memory.
-
   preload_app! # https://render.com/docs/deploy-rails#update-your-app-for-render
 end
 
