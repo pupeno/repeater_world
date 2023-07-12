@@ -53,7 +53,7 @@ services:
   - type: cron
     name: repeater_world-import_all
     runtime: ruby
-    schedule: "0 0 6 * * ?" # every day at 6am UTC
+    schedule: "0 6 * * ?" # every day at 6am UTC
     buildCommand: "./bin/render-build.sh"
     startCommand: rake import_all
     envVars:
@@ -66,7 +66,7 @@ services:
   - type: cron
     name: repeater_world-import_artscipub
     runtime: ruby
-    schedule: "0 0 2 ? * SAT" # every Saturday at 2am UTC
+    schedule: "0 2 ? * SAT" # every Saturday at 2am UTC
     buildCommand: "./bin/render-build.sh"
     startCommand: rake import_artscipub
     envVars:
