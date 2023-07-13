@@ -12,28 +12,26 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div class="py-3 sm:py-5 sm:border-b border-gray-200 dark:border-gray-700">
-  <div role="group" aria-labelledby="label-modes">
-    <div class="sm:grid sm:grid-cols-3 sm:items-baseline sm:gap-4">
-      <div>
-        <div class="font-medium text-gray-700 dark:text-gray-300" id="label-modes">
-          <%= label %>
+<div>
+  <div class="block font-medium" id="label-modes">
+    <%= label %>
+  </div>
+  <div class="mt-2">
+    <div class="max-w-lg space-y-4">
+      <% fields.each do |field| %>
+        <div class="relative flex items-start">
+          <div class="flex h-5 items-center">
+            <%= form.check_box field[:name], class: "h-6 w-6 rounded text-orange-500 dark:bg-gray-700 focus:ring-0 focus:ring-offset-0 focus:outline-2 focus:outline-offset-2 focus:outline-orange-500" %>
+          </div>
+          <div class="ml-3">
+            <%= form.label field[:name], field[:label], class: "font-medium text-gray-700 dark:text-gray-300" %>
+          </div>
         </div>
-      </div>
-      <div class="mt-4 sm:col-span-2 sm:mt-0">
-        <div class="max-w-lg space-y-4">
-          <% fields.each do |field| %>
-            <div class="relative flex items-start">
-              <div class="flex h-5 items-center">
-                <%= form.check_box field[:name], class: "h-6 w-6 rounded text-orange-500 dark:bg-gray-700 focus:ring-0 focus:ring-offset-0 focus:outline-2 focus:outline-offset-2 focus:outline-orange-500" %>
-              </div>
-              <div class="ml-3">
-                <%= form.label field[:name], field[:label], class: "font-medium text-gray-700 dark:text-gray-300" %>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      </div>
+      <% end %>
     </div>
+
+    <% if help_text.present? %>
+      <p class="mt-3 text-gray-500 dark:text-gray-400"><%= help_text %></p>
+    <% end %>
   </div>
 </div>

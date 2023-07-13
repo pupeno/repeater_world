@@ -17,92 +17,143 @@ You should have received a copy of the GNU Affero General Public License along w
 <div class="w-full sm:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <%= render "shared/flash_messages" %>
 
-  <%= form_with(model: @suggested_repeater, class: "contents") do |form| %>
+  <%= form_with(model: @suggested_repeater, class: "contents space-y-12") do |form| %>
     <%= render "shared/forms/error_summary", resource: @suggested_repeater %>
 
-    <h2 class="text-xl font-bold leading-7 sm:text-2xl mt-4">About you</h2>
-    <%= form_text_field form: form, field_name: :submitter_name, label: "Your name (optional)",
-                        input_html_options: { autofocus: true } %>
-    <%= form_email_field form: form, field_name: :submitter_email, label: "Your email (optional)",
-                         help_text: "You can submit repeater anonymously, but it really helps if we can contact you for more details." %>
-    <%= form_text_field form: form, field_name: :submitter_call_sign, label: "Your call sign (optional)" %>
-    <%= form_boolean_field form: form, field_name: :submitter_keeper, label: "Are you the keeper of this repeater?",
-                           second_label: "Yes, I'm the keeper." %>
-    <%= form_textarea_field form: form, field_name: :submitter_notes,
-                            help_text: "Private notes that will not be published. Anything you want to tell us about this repeater." %>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
+      <div>
+        <h2 class="text-lg font-semibold leading-7">About You</h2>
+        <p class="mt-1  text-gray-500 dark:text-gray-400">
+          Some details about you, completely optional, but if you provide them, we can get in touch for any follow ups.
+        </p>
+      </div>
 
-    <h2 class="text-xl font-bold leading-7 sm:text-2xl mt-20">About the repeater</h2>
-    <%= form_text_field form: form, field_name: :name %>
-    <%= form_text_field form: form, field_name: :call_sign %>
-    <%= form_text_field form: form, field_name: :keeper, label: "Keeper's call sign" %>
-    <%= form_textarea_field form: form, field_name: :notes,
-                            help_text: "This will be in the public record of the repeater." %>
-    <%= form_text_field form: form, field_name: :web_site %>
-    <%= form_text_field form: form, field_name: :tx_frequency, label: "TX frequency",
-                        help_text: "The frequency the repeater transmits on, use Hz or include the unit please." %>
-    <%= form_text_field form: form, field_name: :rx_frequency, label: "RX frequency",
-                        help_text: "The frequency the repeater receives on or an offset (start with + or -). Use Hz or include the unit please" %>
+      <div class="flex flex-col gap-y-8 md:col-span-2">
+        <%= form_text_field form: form, field_name: :submitter_name, label: "Your name (optional)",
+                            input_html_options: { autofocus: false } %>
+        <%= form_email_field form: form, field_name: :submitter_email, label: "Your email (optional)",
+                             help_text: "You can submit repeater anonymously, but it really helps if we can contact you for more details." %>
+        <%= form_text_field form: form, field_name: :submitter_call_sign, label: "Your call sign (optional)" %>
+        <%= form_boolean_field form: form, field_name: :submitter_keeper, label: "Are you the keeper of this repeater?",
+                               second_label: "Yes, I'm the keeper." %>
+        <%= form_textarea_field form: form, field_name: :submitter_notes,
+                                help_text: "Private notes that will not be published. Anything you want to tell us about this repeater." %>
+      </div>
+    </div>
 
-    <%= form_multi_boolean_field form: form,
-                                 label: "What modes are supported by this repeater?",
-                                 fields: [{ name: :fm, label: "FM" },
-                                          { name: :dstar, label: "D-Star" },
-                                          { name: :fusion, label: "Fusion" },
-                                          { name: :dmr, label: "DMR" },
-                                          { name: :nxdn, label: "NXDN" },
-                                          { name: :p25, label: "P25" },
-                                          { name: :tetra, label: "Tetra" }] %>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
+      <div>
+        <h2 class="text-lg font-semibold leading-7">Repeater Essentials</h2>
+      </div>
 
-    <h3 class="text-xl font-bold leading-7 sm:text-lg mt-20">FM</h3>
-    <p>Only applicable if the repeater supports FM.</p>
-    <%= form_boolean_field form: form, field_name: :fm_tone_burst, label: "Tone burst?",
-                           second_label: "Yes, this repeater uses tone burst." %>
-    <%= form_select_field form: form, field_name: :fm_ctcss_tone,
-                          choices: Repeater::CTCSS_TONES,
-                          options: { include_blank: "None" },
-                          label: "CTCSS tone" %>
+      <div class="flex flex-col gap-y-8 md:col-span-2">
+        <%= form_text_field form: form, field_name: :name %>
+        <%= form_text_field form: form, field_name: :call_sign %>
+        <%= form_text_field form: form, field_name: :keeper, label: "Keeper's call sign" %>
+        <%= form_textarea_field form: form, field_name: :notes,
+                                help_text: "This will be in the public record of the repeater." %>
+        <%= form_text_field form: form, field_name: :web_site %>
+        <%= form_text_field form: form, field_name: :tx_frequency, label: "TX frequency",
+                            help_text: "The frequency the repeater transmits on, use Hz or include the unit please." %>
+        <%= form_text_field form: form, field_name: :rx_frequency, label: "RX frequency",
+                            help_text: "The frequency the repeater receives on or an offset (start with + or -). Use Hz or include the unit please" %>
 
-    <h3 class="text-xl font-bold leading-7 sm:text-lg mt-20">D-Star</h3>
-    <p>Only applicable if the repeater supports D-Star.</p>
-    <%= form_text_field form: form, field_name: :dstar_port, label: "Port" %>
+        <%= form_multi_boolean_field form: form,
+                                     label: "What modes are supported by this repeater?",
+                                     fields: [{ name: :fm, label: "FM" },
+                                              { name: :dstar, label: "D-Star" },
+                                              { name: :fusion, label: "Fusion" },
+                                              { name: :dmr, label: "DMR" },
+                                              { name: :nxdn, label: "NXDN" },
+                                              { name: :p25, label: "P25" },
+                                              { name: :tetra, label: "Tetra" }] %>
+      </div>
+    </div>
 
-    <h3 class="text-xl font-bold leading-7 sm:text-lg mt-20">DMR</h3>
-    <p>Only applicable if the repeater supports DMR.</p>
-    <%= form_select_field form: form, field_name: :dmr_color_code,
-                          choices: Repeater::DMR_COLOR_CODES,
-                          options: { include_blank: "None" },
-                          label: "Color Code" %>
-    <%= form_text_field form: form, field_name: :dmr_network, label: "DMR Connectivity",
-                        help_text: "Likely something like BRANDMEISTER or freeDMR, but there are many others." %>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
+      <div>
+        <h2 class="text-lg font-semibold leading-7">FM</h2>
+        <p class="mt-1  text-gray-500 dark:text-gray-400">Only applicable if the repeater supports FM.</p>
+      </div>
 
-    <h3 class="text-xl font-bold leading-7 sm:text-lg mt-20">Location</h3>
-    <p>Without the location, the repeater will be impossible to find.</p>
-    <%= form_text_field form: form, field_name: :latitude, help_text: "If you know it, if not, we'll figure it out from the address or grid square" %>
-    <%= form_text_field form: form, field_name: :longitude, help_text: "If you know it, if not, we'll figure it out from the address or grid square" %>
-    <%= form_text_field form: form, field_name: :address, help_text: "Address where the repeater is, if known." %>
-    <%= form_text_field form: form, field_name: :locality, label: "City or town" %>
-    <%= form_text_field form: form, field_name: :region, label: "State or province", help_text: "Or any other region demarcation" %>
-    <%= form_text_field form: form, field_name: :post_code, label: "Post code or ZIP" %>
-    <%= form_text_field form: form, field_name: :country %>
-    <%= form_text_field form: form, field_name: :grid_square %>
+      <div class="flex flex-col gap-y-8 md:col-span-2">
 
-    <h3 class="text-xl font-bold leading-7 sm:text-lg mt-20">Other</h3>
-    <p>Nice-to-haves, if you know them.</p>
+        <%= form_boolean_field form: form, field_name: :fm_tone_burst, label: "Tone burst?",
+                               second_label: "Yes, this repeater uses tone burst." %>
+        <%= form_select_field form: form, field_name: :fm_ctcss_tone,
+                              choices: Repeater::CTCSS_TONES,
+                              options: { include_blank: "None" },
+                              label: "CTCSS tone" %>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
+      <div>
+        <h2 class="text-lg font-semibold leading-7">D-Star</h2>
+        <p class="mt-1  text-gray-500 dark:text-gray-400">Only applicable if the repeater supports D-Star.</p>
+      </div>
 
-    <%= form_text_field form: form, field_name: :tx_antenna, label: "TX antenna", help_text: "Model or any details about the transmit antenna." %>
-    <%= form_select_field form: form, field_name: :tx_antenna_polarization, choices: %w[vertical horizontal],
-                          options: { include_blank: "Unknown" }, label: "TX antenna polarization" %>
-    <%= form_text_field form: form, field_name: :tx_power, label: "TX power", help_text: "Use watts or include the unit please." %>
-    <%= form_text_field form: form, field_name: :rx_antenna, label: "RX antenna", help_text: "Model or any details about the receive antenna." %>
-    <%= form_select_field form: form, field_name: :rx_antenna_polarization, choices: %w[vertical horizontal],
-                          options: { include_blank: "Unknown" }, label: "RX antenna polarization" %>
-    <%= form_text_field form: form, field_name: :bearing %>
-    <%= form_text_field form: form, field_name: :altitude_agl, label: "Altitude above ground level", help_text: "Please use meters or include the unit" %>
-    <%= form_text_field form: form, field_name: :altitude_asl, label: "Altitude above sea level", help_text: "Please use meters or include the unit" %>
-    <%= form_text_field form: form, field_name: :band,
-                        help_text: "Likely one of: #{Repeater::BANDS.to_sentence(last_word_connector: " or ")} or leave it blank, we'll figure it out from the frequencies." %>
-    <%= form_text_field form: form, field_name: :channel,
-                        help_text: "Not the frequency, this is for places where repeaters are assigned channels, like in the UK." %>
+      <div class="flex flex-col gap-y-8 md:col-span-2">
+        <%= form_text_field form: form, field_name: :dstar_port, label: "Port" %>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
+      <div>
+        <h2 class="text-lg font-semibold leading-7">DMR</h2>
+        <p class="mt-1  text-gray-500 dark:text-gray-400">Only applicable if the repeater supports DMR.</p>
+      </div>
+
+      <div class="flex flex-col gap-y-8 md:col-span-2">
+        <%= form_select_field form: form, field_name: :dmr_color_code,
+                              choices: Repeater::DMR_COLOR_CODES,
+                              options: { include_blank: "None" },
+                              label: "Color Code" %>
+        <%= form_text_field form: form, field_name: :dmr_network, label: "DMR Connectivity",
+                            help_text: "Likely something like BRANDMEISTER or freeDMR, but there are many others." %>
+
+      </div>
+    </div>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
+      <div>
+        <h2 class="text-lg font-semibold leading-7">Location</h2>
+        <p class="mt-1  text-gray-500 dark:text-gray-400">Without the location, the repeater will be impossible
+          to find.</p>
+      </div>
+
+      <div class="flex flex-col gap-y-8 md:col-span-2">
+        <%= form_text_field form: form, field_name: :latitude, help_text: "If you know it, if not, we'll figure it out from the address or grid square" %>
+        <%= form_text_field form: form, field_name: :longitude, help_text: "If you know it, if not, we'll figure it out from the address or grid square" %>
+        <%= form_text_field form: form, field_name: :address, help_text: "Address where the repeater is, if known." %>
+        <%= form_text_field form: form, field_name: :locality, label: "City or town" %>
+        <%= form_text_field form: form, field_name: :region, label: "State or province", help_text: "Or any other region demarcation" %>
+        <%= form_text_field form: form, field_name: :post_code, label: "Post code or ZIP" %>
+        <%= form_text_field form: form, field_name: :country %>
+        <%= form_text_field form: form, field_name: :grid_square %>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
+      <div>
+        <h2 class="text-lg font-semibold leading-7">Other</h2>
+        <p class="mt-1  text-gray-500 dark:text-gray-400">Nice-to-haves, if you know them.</p>
+      </div>
+
+      <div class="flex flex-col gap-y-8 md:col-span-2">
+        <%= form_text_field form: form, field_name: :tx_antenna, label: "TX antenna", help_text: "Model or any details about the transmit antenna." %>
+        <%= form_select_field form: form, field_name: :tx_antenna_polarization, choices: %w[vertical horizontal],
+                              options: { include_blank: "Unknown" }, label: "TX antenna polarization" %>
+        <%= form_text_field form: form, field_name: :tx_power, label: "TX power", help_text: "Use watts or include the unit please." %>
+        <%= form_text_field form: form, field_name: :rx_antenna, label: "RX antenna", help_text: "Model or any details about the receive antenna." %>
+        <%= form_select_field form: form, field_name: :rx_antenna_polarization, choices: %w[vertical horizontal],
+                              options: { include_blank: "Unknown" }, label: "RX antenna polarization" %>
+        <%= form_text_field form: form, field_name: :bearing %>
+        <%= form_text_field form: form, field_name: :altitude_agl, label: "Altitude above ground level", help_text: "Please use meters or include the unit" %>
+        <%= form_text_field form: form, field_name: :altitude_asl, label: "Altitude above sea level", help_text: "Please use meters or include the unit" %>
+        <%= form_text_field form: form, field_name: :band,
+                            help_text: "Likely one of: #{Repeater::BANDS.to_sentence(last_word_connector: " or ")} or leave it blank, we'll figure it out from the frequencies." %>
+        <%= form_text_field form: form, field_name: :channel,
+                            help_text: "Not the frequency, this is for places where repeaters are assigned channels, like in the UK." %>
+
+      </div>
+    </div>
 
     <div class="pt-5">
       <div class="flex justify-end">
