@@ -12,6 +12,36 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
+# TODO: move this to its own file.
+module RepeaterWorld
+  module Admin
+    module Actions
+      class MarkAsDone < RailsAdmin::Config::Actions::Base
+        RailsAdmin::Config::Actions.register(self)
+
+        register_instance_option(:member) { true }
+        register_instance_option(:visible?) { true }
+        register_instance_option(:pjax?) { true }
+        register_instance_option(:bulkable?) { true }
+        register_instance_option(:link_icon) { "fa-solid fa-check" }
+        register_instance_option(:http_methods) do
+          # I could not find a way to have Rails Admin generate icon/buttons for a post action, I don't think it can, so
+          # :get is actually modifying the record, which isn't great. TODO: improve this?
+          [:get, :post]
+        end
+
+        register_instance_option(:controller) {
+          ->(_rails_admin) {
+            @object.done_at = Time.now.utc
+            @object.save!
+            redirect_to_on_success
+          }
+        }
+      end
+    end
+  end
+end
+
 RailsAdmin.config do |config|
   config.main_app_name = ["Repeater World", "Admin"]
 
@@ -54,6 +84,8 @@ RailsAdmin.config do |config|
     ## With an audit adapter, you can add:
     # history_index
     # history_show
+
+    mark_as_done
   end
 
   config.label_methods << :to_s
