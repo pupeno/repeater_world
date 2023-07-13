@@ -63,18 +63,26 @@
         @apply bg-gray-50 dark:bg-gray-800;
     }
 
-    .field-text,
-    .field-textarea {
-        @apply rounded-md border border-gray-300 dark:border-gray-600
+    .field-text {
+        @apply py-1.5
+        rounded-md border shadow-sm border-gray-300 dark:border-gray-600
+        placeholder:text-gray-400 dark:placeholder-gray-500
         focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500;
     }
 
-    .field_with_errors > .field-text,
-    .field_with_errors > .field-textarea{
+
+    .field_with_errors > .field-text {
         @apply text-red-900 dark:text-red-200 placeholder-red-300 dark:placeholder-red-500
         bg-red-50 dark:bg-red-900/25
         border border-red-500 dark:border-red-500
         focus:outline-red-500 focus:outline-red-500 focus:border;
+    }
+
+    .field-boolean {
+        @apply h-6 w-6
+        rounded text-orange-500 dark:bg-gray-700
+        focus:ring-0 focus:ring-offset-0
+        focus:outline-2 focus:outline-offset-2 focus:outline-orange-500;
     }
 
     .geosearch .field_with_errors {
