@@ -17,7 +17,7 @@ import {Controller} from "@hotwired/stimulus"
 
 const GRAYED_OUT_TEXT = ["text-gray-300", "dark:text-gray-700"]
 const GRAYED_OUT_SELECT = ["chevron-gray-300", "dark:chevron-gray-700"]
-const NOT_GRAYED_OUT_SELECT = ["dark:chevron-gray-300", "chevron-gray-700"]
+const NOT_GRAYED_OUT_SELECT = ["chevron-gray-700", "dark:chevron-gray-300"]
 
 export default class extends Controller {
   static targets = [
