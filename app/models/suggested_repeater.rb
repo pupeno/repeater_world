@@ -26,6 +26,7 @@ class SuggestedRepeater < ApplicationRecord
       field :call_sign
       field :band
       field :tx_frequency
+      field :done_at
       field :created_at
     end
 
@@ -92,6 +93,11 @@ class SuggestedRepeater < ApplicationRecord
         field :bearing
         field :band
         field :channel
+      end
+
+      group "Internal" do
+        field :private_notes
+        field :done_at
       end
 
       group "Record" do
@@ -165,6 +171,11 @@ class SuggestedRepeater < ApplicationRecord
         field :band
         field :channel
       end
+
+      group "Internal" do
+        field :private_notes
+        field :done_at
+      end
     end
   end
 end
@@ -185,6 +196,7 @@ end
 #  dmr                     :boolean
 #  dmr_color_code          :string
 #  dmr_network             :string
+#  done_at                 :datetime
 #  dstar                   :boolean
 #  dstar_port              :string
 #  fm                      :boolean
