@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_13_194339) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_13_210700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -176,7 +176,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_13_194339) do
     t.string "locality"
     t.string "region"
     t.string "post_code"
-    t.string "country"
     t.boolean "fm_tone_burst"
     t.boolean "p25"
     t.boolean "tetra"
@@ -190,6 +189,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_13_194339) do
     t.string "bearing"
     t.string "dstar_port"
     t.datetime "done_at", precision: nil
+    t.string "country_id"
+    t.index ["country_id"], name: "index_suggested_repeaters_on_country_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -220,4 +221,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_13_194339) do
 
   add_foreign_key "repeater_searches", "users"
   add_foreign_key "repeaters", "countries"
+  add_foreign_key "suggested_repeaters", "countries"
 end
