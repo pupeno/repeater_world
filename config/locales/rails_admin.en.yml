@@ -1,0 +1,6 @@
+en:
+  admin:
+    actions:
+      mark_as_done:
+        menu: "Mark as Done"
+        done: "marked as done"
