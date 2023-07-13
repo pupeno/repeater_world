@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_13_062448) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_13_194339) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -189,6 +189,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_13_062448) do
     t.string "altitude_agl"
     t.string "bearing"
     t.string "dstar_port"
+    t.datetime "done_at", precision: nil
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

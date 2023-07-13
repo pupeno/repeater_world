@@ -75,6 +75,7 @@ end
 #  dmr                     :boolean
 #  dmr_color_code          :string
 #  dmr_network             :string
+#  done_at                 :datetime
 #  dstar                   :boolean
 #  dstar_port              :string
 #  fm                      :boolean
