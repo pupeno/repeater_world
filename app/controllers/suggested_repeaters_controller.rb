@@ -24,7 +24,8 @@ class SuggestedRepeatersController < ApplicationController
       from: "Repeater World <info@repeater.world>",
       to: "Repeater World <info@repeater.world>",
       subject: "New repeater added #{@suggested_repeater.name}",
-      body: "New repeater added #{@suggested_repeater.name}").deliver
+      body: "New repeater added #{@suggested_repeater.name}"
+    ).deliver
     redirect_to new_suggested_repeater_url,
       notice: "Thank you for helping us grow by adding a repeater. We'll review it and let you know when we added it. Do you have any other?"
     # At the moment, there's no case in which saving fails, since there's no validations, but in case that gets added
