@@ -21,8 +21,6 @@ class SuggestedRepeater < ApplicationRecord
 
   rails_admin do
     list do
-      field :submitter_name
-      field :submitter_call_sign
       field :country
       field :name
       field :call_sign
