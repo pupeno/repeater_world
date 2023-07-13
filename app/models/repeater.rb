@@ -68,6 +68,7 @@ class Repeater < ApplicationRecord
   DMR_COLOR_CODES = (0..15).to_a
 
   belongs_to :country
+  belongs_to :geocoded_country, class_name: "Country", optional: true
 
   validates :call_sign, presence: true
   validates :band, presence: true, inclusion: BANDS
@@ -147,8 +148,162 @@ class Repeater < ApplicationRecord
       field :dstar
       field :fusion
       field :dmr
-      field :nxdn
-      field :source
+    end
+
+    show do
+      group "Essentials" do
+        field :name
+        field :call_sign
+        field :keeper
+        field :notes
+        field :web_site
+        field :tx_frequency
+        field :rx_frequency
+        field :fm
+        field :dstar
+        field :fusion
+        field :dmr
+        field :nxdn
+        field :p25
+        field :tetra
+      end
+
+      group "FM" do
+        field :fm_tone_burst
+        field :fm_ctcss_tone
+        field :fm_tone_squelch
+      end
+
+      group "D-Star" do
+        field :dstar_port
+      end
+
+      group "DMR" do
+        field :dmr_color_code
+        field :dmr_network
+      end
+
+      group "Location" do
+        field :latitude
+        field :longitude
+        field :address
+        field :locality
+        field :region
+        field :post_code
+        field :country
+        field :grid_square
+        field :utc_offset
+      end
+
+      group "Gocoding" do
+        field :geocoded_at
+        field :geocoded_address
+        field :geocoded_locality
+        field :geocoded_region
+        field :geocoded_post_code
+        field :geocoded_country
+      end
+
+      group "Source" do
+        field :redistribution_limitations
+        field :source
+        field :external_id
+      end
+
+      group "Other" do
+        field :tx_antenna
+        field :tx_antenna_polarization
+        field :tx_power
+        field :rx_antenna
+        field :rx_antenna_polarization
+        field :altitude_agl
+        field :altitude_asl
+        field :bearing
+        field :band
+        field :channel
+      end
+
+      group "Record" do
+        field :id
+        field :created_at
+        field :updated_at
+      end
+    end
+
+    edit do
+      group "Essentials" do
+        field :name
+        field :call_sign
+        field :keeper
+        field :notes
+        field :web_site
+        field :tx_frequency
+        field :rx_frequency
+        field :fm
+        field :dstar
+        field :fusion
+        field :dmr
+        field :nxdn
+        field :p25
+        field :tetra
+      end
+
+      group "FM" do
+        field :fm_tone_burst
+        field :fm_ctcss_tone
+        field :fm_tone_squelch
+      end
+
+      group "D-Star" do
+        field :dstar_port
+      end
+
+      group "DMR" do
+        field :dmr_color_code
+        field :dmr_network
+      end
+
+      group "Location" do
+        field :latitude
+        field :longitude
+        field :address
+        field :locality
+        field :region
+        field :post_code
+        field :country
+        field :grid_square
+        field :utc_offset
+      end
+
+      group "Gocoding" do
+        field :geocoded_at
+        field :geocoded_address
+        field :geocoded_locality
+        field :geocoded_region
+        field :geocoded_post_code
+        field :geocoded_country
+      end
+
+      group "Source" do
+        field :redistribution_limitations
+        field :source
+        field :external_id do
+          label "External ID"
+        end
+      end
+
+      group "Other" do
+        field :tx_antenna
+        field :tx_antenna_polarization
+        field :tx_power
+        field :rx_antenna
+        field :rx_antenna_polarization
+        field :altitude_agl
+        field :altitude_asl
+        field :bearing
+        field :band
+        field :channel
+      end
     end
   end
 end

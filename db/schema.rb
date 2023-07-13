@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_29_123651) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_13_062448) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -178,6 +178,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_29_123651) do
     t.string "post_code"
     t.string "country"
     t.boolean "fm_tone_burst"
+    t.boolean "p25"
+    t.boolean "tetra"
+    t.string "tx_power"
+    t.string "tx_antenna"
+    t.string "tx_antenna_polarization"
+    t.string "rx_antenna"
+    t.string "rx_antenna_polarization"
+    t.string "altitude_asl"
+    t.string "altitude_agl"
+    t.string "bearing"
+    t.string "dstar_port"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
