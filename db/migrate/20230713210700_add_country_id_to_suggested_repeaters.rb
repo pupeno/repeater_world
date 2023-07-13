@@ -12,9 +12,9 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-class RenameDmrFieldsInRepeater < ActiveRecord::Migration[7.0]
+class AddCountryIdToSuggestedRepeaters < ActiveRecord::Migration[7.0]
   def change
-    rename_column :repeaters, :dmr_cc, :dmr_color_code
-    rename_column :repeaters, :dmr_con, :dmr_network
+    remove_column :suggested_repeaters, :country
+    add_reference :suggested_repeaters, :country, foreign_key: true, type: :string
   end
 end
