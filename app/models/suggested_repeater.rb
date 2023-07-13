@@ -16,6 +16,157 @@ class SuggestedRepeater < ApplicationRecord
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
   end
+
+  rails_admin do
+    list do
+      field :submitter_name
+      field :submitter_call_sign
+      field :country
+      field :name
+      field :call_sign
+      field :band
+      field :tx_frequency
+      field :created_at
+    end
+
+    show do
+      group "Submiter" do
+        field :submitter_name
+        field :submitter_email
+        field :submitter_call_sign
+        field :submitter_keeper
+        field :submitter_notes
+      end
+
+      group "Essentials" do
+        field :name
+        field :call_sign
+        field :keeper
+        field :notes
+        field :web_site
+        field :tx_frequency
+        field :rx_frequency
+        field :fm
+        field :dstar
+        field :fusion
+        field :dmr
+        field :nxdn
+        field :p25
+        field :tetra
+      end
+
+      group "FM" do
+        field :fm_tone_burst
+        field :fm_ctcss_tone
+        field :fm_tone_squelch
+      end
+
+      group "D-Star" do
+        field :dstar_port
+      end
+
+      group "DMR" do
+        field :dmr_color_code
+        field :dmr_network
+      end
+
+      group "Location" do
+        field :latitude
+        field :longitude
+        field :address
+        field :locality
+        field :region
+        field :post_code
+        field :country
+        field :grid_square
+      end
+
+      group "Other" do
+        field :tx_antenna
+        field :tx_antenna_polarization
+        field :tx_power
+        field :rx_antenna
+        field :rx_antenna_polarization
+        field :altitude_agl
+        field :altitude_asl
+        field :bearing
+        field :band
+        field :channel
+      end
+
+      group "Record" do
+        field :id
+        field :created_at
+        field :updated_at
+      end
+    end
+
+    edit do
+      group "Submiter" do
+        field :submitter_name
+        field :submitter_email
+        field :submitter_call_sign
+        field :submitter_keeper
+        field :submitter_notes
+      end
+
+      group "Essentials" do
+        field :name
+        field :call_sign
+        field :keeper
+        field :notes
+        field :web_site
+        field :tx_frequency
+        field :rx_frequency
+        field :fm
+        field :dstar
+        field :fusion
+        field :dmr
+        field :nxdn
+        field :p25
+        field :tetra
+      end
+
+      group "FM" do
+        field :fm_tone_burst
+        field :fm_ctcss_tone
+        field :fm_tone_squelch
+      end
+
+      group "D-Star" do
+        field :dstar_port
+      end
+
+      group "DMR" do
+        field :dmr_color_code
+        field :dmr_network
+      end
+
+      group "Location" do
+        field :latitude
+        field :longitude
+        field :address
+        field :locality
+        field :region
+        field :post_code
+        field :country
+        field :grid_square
+      end
+
+      group "Other" do
+        field :tx_antenna
+        field :tx_antenna_polarization
+        field :tx_power
+        field :rx_antenna
+        field :rx_antenna_polarization
+        field :altitude_agl
+        field :altitude_asl
+        field :bearing
+        field :band
+        field :channel
+      end
+    end
+  end
 end
 
 # == Schema Information
