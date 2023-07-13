@@ -13,7 +13,7 @@
 # <https://www.gnu.org/licenses/>.
 
 module FormHelper
-  def form_text_field(form:, field_name:, label: nil, input_html_options: {}, help_text: nil)
+  def form_text_field(form, field_name, label: nil, input_html_options: {}, help_text: nil)
     render partial: "shared/forms/text_field",
       locals: {form: form,
                field_name: field_name,
@@ -22,7 +22,7 @@ module FormHelper
                help_text: help_text}
   end
 
-  def form_email_field(form:, field_name:, label: nil, input_html_options: {}, help_text: nil)
+  def form_email_field(form, field_name, label: nil, input_html_options: {}, help_text: nil)
     render partial: "shared/forms/email_field",
       locals: {form: form,
                field_name: field_name,
@@ -31,7 +31,7 @@ module FormHelper
                help_text: help_text}
   end
 
-  def form_textarea_field(form:, field_name:, label: nil, input_html_options: {}, help_text: nil)
+  def form_textarea_field(form, field_name, label: nil, input_html_options: {}, help_text: nil)
     render partial: "shared/forms/textarea_field",
       locals: {form: form,
                field_name: field_name,
@@ -40,7 +40,7 @@ module FormHelper
                help_text: help_text}
   end
 
-  def form_boolean_field(form:, field_name:, label: nil, second_label: nil, input_html_options: {}, help_text: nil)
+  def form_boolean_field(form, field_name, label: nil, second_label: nil, input_html_options: {}, help_text: nil)
     render partial: "shared/forms/boolean_field",
       locals: {form: form,
                field_name: field_name,
@@ -50,7 +50,7 @@ module FormHelper
                help_text: help_text}
   end
 
-  def form_multi_boolean_field(form:, label: nil, fields: [], help_text: nil)
+  def form_multi_boolean_field(form, label: nil, fields: [], help_text: nil)
     render partial: "shared/forms/multi_boolean_field",
       locals: {form: form,
                label: label,
@@ -58,7 +58,7 @@ module FormHelper
                help_text: help_text}
   end
 
-  def form_select_field(form:, field_name:, choices:, options: nil, label: nil, input_html_options: {}, help_text: nil)
+  def form_select_field(form, field_name, choices:, options: {}, label: nil, input_html_options: {}, help_text: nil)
     render partial: "shared/forms/select_field",
       locals: {form: form,
                field_name: field_name,

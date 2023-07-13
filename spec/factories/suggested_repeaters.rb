@@ -53,7 +53,7 @@ FactoryBot.define do
     locality { "locality" }
     region { "region" }
     post_code { "post code" }
-    country { "country" }
+    country_id { "gb" }
 
     private_notes { "private notes" }
   end
@@ -71,7 +71,6 @@ end
 #  bearing                 :string
 #  call_sign               :string
 #  channel                 :string
-#  country                 :string
 #  dmr                     :boolean
 #  dmr_color_code          :string
 #  dmr_network             :string
@@ -111,4 +110,13 @@ end
 #  web_site                :string
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  country_id              :string
+#
+# Indexes
+#
+#  index_suggested_repeaters_on_country_id  (country_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (country_id => countries.id)
 #
