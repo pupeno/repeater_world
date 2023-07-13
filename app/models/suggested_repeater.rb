@@ -22,40 +22,51 @@ end
 #
 # Table name: suggested_repeaters
 #
-#  id                  :uuid             not null, primary key
-#  address             :string
-#  band                :string
-#  call_sign           :string
-#  channel             :string
-#  country             :string
-#  dmr                 :boolean
-#  dmr_color_code      :string
-#  dmr_network         :string
-#  dstar               :boolean
-#  fm                  :boolean
-#  fm_ctcss_tone       :string
-#  fm_tone_burst       :boolean
-#  fm_tone_squelch     :boolean
-#  fusion              :boolean
-#  grid_square         :string
-#  keeper              :string
-#  latitude            :string
-#  locality            :string
-#  longitude           :string
-#  name                :string
-#  notes               :text
-#  nxdn                :boolean
-#  post_code           :string
-#  private_notes       :text
-#  region              :string
-#  rx_frequency        :string
-#  submitter_call_sign :string
-#  submitter_email     :string
-#  submitter_keeper    :boolean
-#  submitter_name      :string
-#  submitter_notes     :text
-#  tx_frequency        :string
-#  web_site            :string
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
+#  id                      :uuid             not null, primary key
+#  address                 :string
+#  altitude_agl            :string
+#  altitude_asl            :string
+#  band                    :string
+#  bearing                 :string
+#  call_sign               :string
+#  channel                 :string
+#  country                 :string
+#  dmr                     :boolean
+#  dmr_color_code          :string
+#  dmr_network             :string
+#  dstar                   :boolean
+#  dstar_port              :string
+#  fm                      :boolean
+#  fm_ctcss_tone           :string
+#  fm_tone_burst           :boolean
+#  fm_tone_squelch         :boolean
+#  fusion                  :boolean
+#  grid_square             :string
+#  keeper                  :string
+#  latitude                :string
+#  locality                :string
+#  longitude               :string
+#  name                    :string
+#  notes                   :text
+#  nxdn                    :boolean
+#  p25                     :boolean
+#  post_code               :string
+#  private_notes           :text
+#  region                  :string
+#  rx_antenna              :string
+#  rx_antenna_polarization :string
+#  rx_frequency            :string
+#  submitter_call_sign     :string
+#  submitter_email         :string
+#  submitter_keeper        :boolean
+#  submitter_name          :string
+#  submitter_notes         :text
+#  tetra                   :boolean
+#  tx_antenna              :string
+#  tx_antenna_polarization :string
+#  tx_frequency            :string
+#  tx_power                :string
+#  web_site                :string
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
 #
