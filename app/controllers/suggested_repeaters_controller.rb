@@ -43,7 +43,7 @@ class SuggestedRepeatersController < ApplicationController
       :bearing,
       :call_sign,
       :channel,
-      :country,
+      :country_id,
       :dmr,
       :dmr_color_code,
       :dmr_network,

@@ -126,7 +126,9 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= form_text_field form: form, field_name: :locality, label: "City or town" %>
         <%= form_text_field form: form, field_name: :region, label: "State or province", help_text: "Or any other region demarcation" %>
         <%= form_text_field form: form, field_name: :post_code, label: "Post code or ZIP" %>
-        <%= form_text_field form: form, field_name: :country %>
+        <%= form_select_field form: form, field_name: :country_id,
+                              choices: Country.order(:name).map { |c| [c.name, c.id] },
+                              options: { include_blank: "Please, choose a country" }%>
         <%= form_text_field form: form, field_name: :grid_square %>
       </div>
     </div>

@@ -58,7 +58,7 @@ module FormHelper
                help_text: help_text}
   end
 
-  def form_select_field(form:, field_name:, choices:, options: nil, label: nil, input_html_options: {}, help_text: nil)
+  def form_select_field(form:, field_name:, choices:, options: {}, label: nil, input_html_options: {}, help_text: nil)
     render partial: "shared/forms/select_field",
       locals: {form: form,
                field_name: field_name,
