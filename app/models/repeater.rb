@@ -143,6 +143,7 @@ class Repeater < ApplicationRecord
       field :name
       field :call_sign
       field :band
+      field :operational
       field :tx_frequency
       field :fm
       field :dstar
@@ -159,6 +160,7 @@ class Repeater < ApplicationRecord
         field :web_site
         field :tx_frequency
         field :rx_frequency
+        field :operational
         field :fm
         field :dstar
         field :fusion
@@ -239,6 +241,7 @@ class Repeater < ApplicationRecord
         field :web_site
         field :tx_frequency
         field :rx_frequency
+        field :operational
         field :fm
         field :dstar
         field :fusion
