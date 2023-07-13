@@ -1,0 +1,39 @@
+<%# Copyright 2023, Flexpoint Tech
+
+This file is part of Repeater World.
+
+Repeater World is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+Public License as published by the Free Software Foundation, either version 3 of the License.
+
+Repeater World is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+details.
+
+You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
+<https://www.gnu.org/licenses/>.%>
+
+<div class="py-3 sm:py-5 sm:border-b border-gray-200 dark:border-gray-700">
+  <div role="group" aria-labelledby="label-modes">
+    <div class="sm:grid sm:grid-cols-3 sm:items-baseline sm:gap-4">
+      <div>
+        <div class="font-medium text-gray-700 dark:text-gray-300" id="label-modes">
+          <%= label %>
+        </div>
+      </div>
+      <div class="mt-4 sm:col-span-2 sm:mt-0">
+        <div class="max-w-lg space-y-4">
+          <% fields.each do |field| %>
+            <div class="relative flex items-start">
+              <div class="flex h-5 items-center">
+                <%= form.check_box field[:name], class: "h-6 w-6 rounded text-orange-500 dark:bg-gray-700 focus:ring-0 focus:ring-offset-0 focus:outline-2 focus:outline-offset-2 focus:outline-orange-500" %>
+              </div>
+              <div class="ml-3">
+                <%= form.label field[:name], field[:label], class: "font-medium text-gray-700 dark:text-gray-300" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

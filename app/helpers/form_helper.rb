@@ -50,6 +50,14 @@ module FormHelper
                help_text: help_text}
   end
 
+  def form_multi_boolean_field(form:, label: nil, fields: [], help_text: nil)
+    render partial: "shared/forms/multi_boolean_field",
+      locals: {form: form,
+               label: label,
+               fields: fields,
+               help_text: help_text}
+  end
+
   def toggle_button(form, name, label, **kwargs)
     klass = kwargs.delete(:class) || ""
     data = kwargs.delete(:data) || {}
