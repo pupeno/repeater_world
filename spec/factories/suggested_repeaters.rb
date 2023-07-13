@@ -53,7 +53,7 @@ FactoryBot.define do
     locality { "locality" }
     region { "region" }
     post_code { "post code" }
-    country { "country" }
+    country_id { "gb" }
 
     private_notes { "private notes" }
   end
