@@ -12,7 +12,7 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<%= render "shared/page_header", title: @suggested_repeater[:repeater_id].present? ? "Update Repeater #{@repeater.name}" : "Add a New Repeater" %>
+<%= render "shared/page_header", title: @suggested_repeater[:repeater_id].present? ? "Update Repeater #{@suggested_repeater.name}" : "Add a New Repeater" %>
 
 <div class="w-full sm:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <%= render "shared/flash_messages" %>
