@@ -12,11 +12,14 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-3
-            sm:flex sm:items-center sm:justify-between">
+<header class="max-w-7xl
+               px-4 sm:px-6 lg:px-8
+               mt-0 sm:mt-2 md:mt-4 lg:mt-6
+               mb-3
+               mx-auto sm:flex sm:items-center sm:justify-between">
   <% if local_assigns[:title] %>
     <div class="flex-1 min-w-0">
-      <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate"><%= title %></h1>
+      <h1 class="text-2xl sm:text-3xl font-bold leading-7  sm:truncate"><%= title %></h1>
     </div>
   <% end %>
   <% if local_assigns[:head_title] %>
