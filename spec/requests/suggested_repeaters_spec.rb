@@ -32,7 +32,7 @@ RSpec.describe "/suggested_repeaters", type: :request do
   it "creates a new suggested repeater" do
     attributes = attributes_for(:suggested_repeater)
     expect {
-      post suggested_repeaters_url, params: { suggested_repeater: attributes }
+      post suggested_repeaters_url, params: {suggested_repeater: attributes}
     }.to change(SuggestedRepeater, :count).by(1)
     expect(response).to redirect_to(new_suggested_repeater_url)
     suggested_repeater = SuggestedRepeater.last

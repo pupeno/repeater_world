@@ -49,7 +49,7 @@ class SuggestedRepeatersController < ApplicationController
       @suggested_repeater.post_code = @repeater.post_code
       @suggested_repeater.country_id = @repeater.country_id
       @suggested_repeater.grid_square = @repeater.grid_square
-      
+
       @suggested_repeater.tx_antenna = @repeater.tx_antenna
       @suggested_repeater.tx_antenna_polarization = @repeater.tx_antenna_polarization
       @suggested_repeater.tx_power = @repeater.tx_power
