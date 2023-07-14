@@ -87,12 +87,15 @@ end
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  country_id              :string
+#  repeater_id             :uuid
 #
 # Indexes
 #
-#  index_suggested_repeaters_on_country_id  (country_id)
+#  index_suggested_repeaters_on_country_id   (country_id)
+#  index_suggested_repeaters_on_repeater_id  (repeater_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (country_id => countries.id)
+#  fk_rails_...  (repeater_id => repeaters.id)
 #

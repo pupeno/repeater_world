@@ -87,7 +87,7 @@ class SampleDataGenerator
 
   def delete_data
     Rails.logger.info "Deleting data..."
-    table_names = [User, RepeaterSearch, Repeater].map(&:table_name)
+    table_names = [User, RepeaterSearch, Repeater, SuggestedRepeater].map(&:table_name)
     Rails.logger.info "  Truncating tables: #{table_names.join(", ")}"
     Admin.connection.truncate_tables(*table_names)
     Rails.logger.info "Done deleting data."
