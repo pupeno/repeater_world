@@ -12,7 +12,7 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<%= render "shared/page_header", title: "Add a New Repeater" %>
+<%= render "shared/page_header", title: @suggested_repeater[:repeater_id].present? ? "Update Repeater #{@repeater.name}" : "Add a New Repeater" %>
 
 <div class="w-full sm:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <%= render "shared/flash_messages" %>
@@ -47,6 +47,7 @@ You should have received a copy of the GNU Affero General Public License along w
       </div>
 
       <div class="flex flex-col gap-y-8 md:col-span-2">
+        <%= form.hidden_field :repeater_id %>
         <%= form_text_field form, :name %>
         <%= form_text_field form, :call_sign %>
         <%= form_text_field form, :keeper, label: "Keeper's call sign" %>
@@ -160,8 +161,13 @@ You should have received a copy of the GNU Affero General Public License along w
     <div class="pt-5">
       <div class="flex justify-end">
         <button type="submit" class="button">
-          <i class="fa-solid fa-plus mr-2"></i>
-          Add Repeater
+          <% if @suggested_repeater[:repeater_id].present? %>
+            <i class="fa-solid fa-pen-to-square mr-2"></i>
+            Update Repeater
+          <% else %>
+            <i class="fa-solid fa-plus mr-2"></i>
+            Add Repeater
+          <% end %>
         </button>
       </div>
     </div>
