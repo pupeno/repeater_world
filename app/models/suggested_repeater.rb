@@ -14,6 +14,7 @@
 
 class SuggestedRepeater < ApplicationRecord
   belongs_to :country
+  belongs_to :repeater, optional: true
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
@@ -22,6 +23,7 @@ class SuggestedRepeater < ApplicationRecord
   rails_admin do
     list do
       field :country
+      field :repeater
       field :name
       field :call_sign
       field :band
@@ -40,6 +42,7 @@ class SuggestedRepeater < ApplicationRecord
       end
 
       group "Essentials" do
+        field :repeater
         field :name
         field :call_sign
         field :keeper
@@ -117,6 +120,7 @@ class SuggestedRepeater < ApplicationRecord
       end
 
       group "Essentials" do
+        field :repeater
         field :name
         field :call_sign
         field :keeper
@@ -232,12 +236,15 @@ end
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  country_id              :string
+#  repeater_id             :uuid
 #
 # Indexes
 #
-#  index_suggested_repeaters_on_country_id  (country_id)
+#  index_suggested_repeaters_on_country_id   (country_id)
+#  index_suggested_repeaters_on_repeater_id  (repeater_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (country_id => countries.id)
+#  fk_rails_...  (repeater_id => repeaters.id)
 #
