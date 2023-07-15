@@ -68,6 +68,7 @@ class IrlpImporter < Importer
     "Italy" => "it",
     "Jamaica" => "jm",
     "Japan" => "jp",
+    "Korea, Republic of" => "kr",
     "Mexico" => "mx",
     "Montserrat" => "ms",
     "Netherlands" => "nl",
