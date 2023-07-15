@@ -43,7 +43,7 @@ class UkrepeatersImporter < Importer
 
     file_name = download_file("https://ukrepeater.net/csvcreate3.php", "repeaterlist3.csv")
     csv_file = CSV.table(file_name)
-    assert_fields(csv_file, [:callsign, :band, :channel, :tx, :rx, :modes, :qthr, :where, :postcode, :region, :ctcsscc, :keeper, :lat, :lon, nil], "https://ukrepeater.net/csvcreate3.php", file_name)
+    assert_fields(csv_file, [:callsign, :band, :channel, :tx, :rx, :modes, :qthr, :ngr, :where, :postcode, :region, :ctcsscc, :keeper, :lat, :lon, nil], "https://ukrepeater.net/csvcreate3.php", file_name)
 
     repeaters = []
     csv_file.each_with_index do |raw_repeater, line_number|
@@ -128,7 +128,7 @@ class UkrepeatersImporter < Importer
 
     file_name = download_file("https://ukrepeater.net/csvcreate_dv.php", "repeaterlist_dv.csv")
     csv_file = CSV.table(file_name)
-    assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :loc, :where, :dmr, :dstar, :fusion, :nxdn, nil], "https://ukrepeater.net/csvcreate_dv.php", file_name)
+    assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :qthr, :ngr, :where, :dmr, :dstar, :fusion, :nxdn, nil], "https://ukrepeater.net/csvcreate_dv.php", file_name)
 
     repeaters = []
     csv_file.each_with_index do |raw_repeater, line_number|
@@ -163,7 +163,7 @@ class UkrepeatersImporter < Importer
 
     file_name = download_file("https://ukrepeater.net/csvcreate_all.php", "repeaterlist_all.csv")
     csv_file = CSV.table(file_name)
-    assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :loc, :where, :analog, :dmr, :dstar, :fusion, nil], "https://ukrepeater.net/csvcreate_all.php", file_name)
+    assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :qthr, :ngr, :where, :analog, :dmr, :dstar, :fusion, nil], "https://ukrepeater.net/csvcreate_all.php", file_name)
 
     repeaters = []
     csv_file.each_with_index do |raw_repeater, line_number|
@@ -203,7 +203,7 @@ class UkrepeatersImporter < Importer
 
     file_name = download_file("https://ukrepeater.net/repeaterlist-alt.php", "repeaterlist_alt2.csv")
     csv_file = CSV.table(file_name)
-    assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :shift, :loc, :where, :reg, :ctcss, :dmrcc, :dmrcon, :lat, :lon, :status, :analg, :dmr, :dstar, :fusion, :nxdn, nil], "https://ukrepeater.net/repeaterlist-alt.php", file_name)
+    assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :shift, :qthr, :ngr, :where, :reg, :ctcss, :dmrcc, :dmrcon, :lat, :lon, :status, :analg, :dmr, :dstar, :fusion, :nxdn, nil], "https://ukrepeater.net/repeaterlist-alt.php", file_name)
 
     repeaters = []
     csv_file.each_with_index do |raw_repeater, line_number|
@@ -255,7 +255,7 @@ class UkrepeatersImporter < Importer
 
     file_name = download_file("https://ukrepeater.net/csvcreatewithstatus.php", "repeaterlist_status.csv")
     csv_file = CSV.table(file_name)
-    assert_fields(csv_file, [:repeater, :band, :channel, :tx, :rx, :modes, :qthr, :where, :region, :ctcsscc, :keeper, :status, nil], "https://ukrepeater.net/csvcreatewithstatus.php", file_name)
+    assert_fields(csv_file, [:repeater, :band, :channel, :tx, :rx, :modes, :qthr, :ngr, :where, :region, :ctcsscc, :keeper, :status, nil], "https://ukrepeater.net/csvcreatewithstatus.php", file_name)
 
     repeaters = []
     csv_file.each_with_index do |raw_repeater, line_number|
