@@ -34,7 +34,7 @@ RSpec.describe UkrepeatersImporter do
     Dir.mktmpdir("ukrepeatersimporter") do |dir|
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(921)
+      end.to change { Repeater.count }.by(929)
 
       # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_by(call_sign: "GB7DC")
@@ -56,7 +56,7 @@ RSpec.describe UkrepeatersImporter do
       expect(repeater.dmr_color_code).to eq(1)
       expect(repeater.dmr_network).to eq("BRANDMEISTER")
       expect(repeater.nxdn).to eq(true)
-      expect(repeater.grid_square).to eq("IO92GW")
+      expect(repeater.grid_square).to eq("IO92")
       expect(repeater.latitude).to eq(52.9)
       expect(repeater.longitude).to eq(-1.4)
       expect(repeater.country_id).to eq("gb")
