@@ -24,19 +24,17 @@ task :import_all, [:stdout] => :environment do |_t, _args|
   end
   begin
     SralfiImporter.new.import
-    Rails.logger.error(e.message)
   rescue => e
+    Rails.logger.error(e.message)
     Sentry.capture_exception(e)
   end
   begin
     NerepeatersImporter.new.import
-    Rails.logger.error(e.message)
   rescue => e
     Rails.logger.error(e.message)
     Sentry.capture_exception(e)
   end
   begin
-    Rails.logger.error(e.message)
     WiaImporter.new.import
   rescue => e
     Rails.logger.error(e.message)
