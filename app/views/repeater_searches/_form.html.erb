@@ -26,11 +26,9 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <% if show_name_field %>
     <div class="mb-3 flex flex-row items-baseline gap-3">
-      <%= form.label :name, "Name:",
-                     class: "mr-2" %>
+      <%= form.label :name, "Name:", class: "mr-2" %>
       <div class="mt-1 sm:mt-0 grow">
-        <%= form.text_field :name,
-                            class: "field-text w-full" %>
+        <%= form.text_field :name, class: "field-text w-full" %>
         <% repeater_search.errors.where(:name).each do |error| %>
           <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
         <% end %>
@@ -41,17 +39,16 @@ You should have received a copy of the GNU Affero General Public License along w
   <div class="mb-3 flex flex-row flex-wrap gap-2"
        data-controller="multi-toggle">
     <%= toggle_like_button "All Bands",
-                           class: "px-3 sm:px-5 md:px-7",
                            data: { action: "click->multi-toggle#selectAll",
                                    multi_toggle_target: "all" } %>
     <% RepeaterSearch::BANDS.each do |band| %>
       <%= toggle_button form, band[:name], band[:label],
-                        class: "#{band[:secondary] ? "hidden" : ""} px-3 sm:px-5 md:px-7",
+                        class: "#{band[:secondary] ? "hidden" : ""}",
                         data: { action: "click->multi-toggle#updateStatusOfAllButton",
                                 multi_toggle_target: "toggle" } %>
     <% end %>
 
-    <button class="button-secondary px-3 sm:px-5 md:px-7"
+    <button class="button-secondary"
             data-action="click->multi-toggle#showMore"
             data-multi-toggle-target="more">
       More Bands
@@ -61,17 +58,17 @@ You should have received a copy of the GNU Affero General Public License along w
   <div class="mb-3 flex flex-row flex-wrap gap-2"
        data-controller="multi-toggle">
     <%= toggle_like_button "All Modes",
-                           class: "px-2 sm:px-5 md:px-7",
+                           class: "",
                            data: { action: "click->multi-toggle#selectAll",
                                    multi_toggle_target: "all" } %>
     <% RepeaterSearch::MODES.each do |mode| %>
       <%= toggle_button form, mode[:name], mode[:label],
-                        class: "#{mode[:secondary] ? "hidden" : ""} px-2 sm:px-5 md:px-7",
+                        class: "#{mode[:secondary] ? "hidden" : ""}",
                         data: { action: "click->multi-toggle#updateStatusOfAllButton",
                                 multi_toggle_target: "toggle" } %>
     <% end %>
 
-    <button class="button-secondary px-2" data-action="click->multi-toggle#showMore" data-multi-toggle-target="more">
+    <button class="button-secondary" data-action="click->multi-toggle#showMore" data-multi-toggle-target="more">
       More Modes
     </button>
   </div>
@@ -83,33 +80,33 @@ You should have received a copy of the GNU Affero General Public License along w
   <% end %>
 
   <div class="flex flex-row flex-wrap gap-2">
-    <button type="submit" class="button px-2">
-      <i class="fa-solid fa-magnifying-glass mr-2"></i>
+    <button type="submit" class="button">
+      <i class="fa-solid fa-magnifying-glass"></i>
       Search
     </button>
 
     <% if !@repeaters.nil? %>
       <% if !user_signed_in? %> <%# Not logged in, the save search button invites you to sign up. %>
-        <button type="button" class="button-secondary px-2" data-action="click->repeater-searches#showAuthBeforeSavePopUp">
-          <i class="fa-regular fa-bookmark mr-2"></i>
+        <button type="button" class="button-secondary" data-action="click->repeater-searches#showAuthBeforeSavePopUp">
+          <i class="fa-regular fa-bookmark"></i>
           Save Search
         </button>
 
       <% elsif show_name_field %> <%# logged in and the search has already been saved, or is being saved %>
-        <button type="submit" class="button-secondary px-2" data-action="click->repeater-searches#saveSearch">
-          <i class="fa-regular fa-bookmark mr-2"></i>
+        <button type="submit" class="button-secondary" data-action="click->repeater-searches#saveSearch">
+          <i class="fa-regular fa-bookmark"></i>
           Save Search
         </button>
 
       <% else %>  <%# logged in but this search is not saved yet %>
-        <button type="button" class="button-secondary px-2" data-action="click->repeater-searches#showFirstSavePopUp">
-          <i class="fa-regular fa-bookmark mr-2"></i>
+        <button type="button" class="button-secondary" data-action="click->repeater-searches#showFirstSavePopUp">
+          <i class="fa-regular fa-bookmark"></i>
           Save Search
         </button>
       <% end %>
 
-      <button type="button" class="button-secondary px-2" data-action="click->repeater-searches#showExportPopUp">
-        <i class="fa-solid fa-cloud-arrow-down mr-2"></i>
+      <button type="button" class="button-secondary" data-action="click->repeater-searches#showExportPopUp">
+        <i class="fa-solid fa-cloud-arrow-down"></i>
         Export
       </button>
     <% end %>
@@ -117,8 +114,8 @@ You should have received a copy of the GNU Affero General Public License along w
     <% if unsaved_changes %>
       <%= link_to repeater_search,
                   type: "button",
-                  class: "button-secondary px-2" do %>
-        <i class="fa-solid fa-xmark mr-2"></i>
+                  class: "button-secondary" do %>
+        <i class="fa-solid fa-xmark"></i>
         Discard Changes
       <% end %>
     <% end %>
