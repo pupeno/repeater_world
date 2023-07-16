@@ -17,10 +17,10 @@ require "optparse"
 desc "Export repeaters to CSV"
 task :export, [:exporter] => :environment do |t, args|
   if args[:exporter].blank?
-    raise "Exporter needs to be specified"
+    raise "Exporter needs to be specified, for example: rake export[IcomIc705]"
   end
 
-  exporter = Object.const_get("#{args[:exporter]}Exporter").new(Repeater.all)
+  exporter = Object.const_get("#{args[:exporter]}Exporter").new(Repeater.where(country_id: "gb").all)
 
   puts exporter.export
 end
