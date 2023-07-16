@@ -18,6 +18,11 @@ import {Controller} from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["form", "authBeforeSavePopUp", "firstSavePopUp", "exportPopUp", "modalPanel", "exportLink"]
 
+  // Not sure why submitting on enter isn't working out of the box.
+  submit() {
+    this.formTarget.submit()
+  }
+
   exportLinkTargetConnected(target) {
     target.click()
     let url = new URL(location.href)
