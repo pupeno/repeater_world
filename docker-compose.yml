@@ -7,7 +7,7 @@ services:
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: repeater_world_development
+      POSTGRES_USER: repeater_world
       POSTGRES_PASSWORD: te6ahng1phi1uizaeGhahMof1
 # Uncomment this when starting to use proper background jobs.
 #  redis:
