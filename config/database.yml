@@ -7,7 +7,7 @@ default: &default
 
 non_production: &non_production
   <<: *default
-  username: repeater_world_development
+  username: repeater_world
   password: te6ahng1phi1uizaeGhahMof1
   host: localhost
   port: 5001
