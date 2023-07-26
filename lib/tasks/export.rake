@@ -20,7 +20,7 @@ task :export, [:exporter] => :environment do |t, args|
     raise "Exporter needs to be specified, for example: rake export[IcomIc705]"
   end
 
-  exporter = Object.const_get("#{args[:exporter]}Exporter").new(Repeater.where(country_id: "gb").all)
+  exporter = Object.const_get("#{args[:exporter]}Exporter").new(Repeater.all)
 
   puts exporter.export
 end
