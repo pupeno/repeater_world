@@ -18,7 +18,8 @@ You should have received a copy of the GNU Affero General Public License along w
               scope: :s,
               html: { data: { repeater_searches_target: "form",
                               save_url: save_url,
-                              save_method: save_method } }) do |form| %>
+                              save_method: save_method,
+                              action: "keypress.enter->repeater-searches#submit" } }) do |form| %>
   <% show_name_field = repeater_search.saving || repeater_search.persisted?
      unsaved_changes = repeater_search.persisted? && repeater_search.changed? %>
 
@@ -158,7 +159,7 @@ You should have received a copy of the GNU Affero General Public License along w
       <div class="flex items-baseline gap-3 justify-items-stretch">
         <%= form.label :name, "Name:", class: "mr-2" %>
         <div class="mt-1 sm:mt-0 grow">
-          <%= form.text_field :name, class: "field-text w-full" %>
+          <%= form.text_field :name, class: "field-text w-full", data: { action: "keypress.enter->repeater-searches#saveSearch" } %>
           <% repeater_search.errors.where(:name).each do |error| %>
             <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
           <% end %>
