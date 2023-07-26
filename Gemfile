@@ -15,7 +15,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.1.2"
+ruby "3.2.2"
 
 gem "active_link_to", "~> 1.0"
 gem "rbzip2", "~> 0.3"
