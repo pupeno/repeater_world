@@ -44,7 +44,20 @@ class Importer
       @logger.info "Downloading #{url} to #{dest}"
       dirname = File.dirname(dest)
       FileUtils.mkdir_p(dirname) if !File.directory?(dirname)
-      src_stream = URI.parse(url).open({"User-Agent" => USER_AGENT})
+      parsed_url = URI.parse(url)
+      begin
+        attempts ||= 1
+        src_stream = parsed_url.open({"User-Agent" => USER_AGENT})
+      rescue Net::OpenTimeout => e
+        if attempts <= 10
+          @logger.warn "Failed to download #{url} to #{dest} on attempt #{attempts}: #{e.message}. Retrying in 5 seconds."
+          attempts += 1
+          sleep 5
+          retry
+        else
+          raise
+        end
+      end
       IO.copy_stream(src_stream, dest)
     else
       @logger.info "Skipping download of #{url} because #{dest} already exists."

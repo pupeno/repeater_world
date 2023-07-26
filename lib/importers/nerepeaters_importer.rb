@@ -292,6 +292,7 @@ class NerepeatersImporter < Importer
     if access_code.blank?
       access_code = raw_repeater[ACCESS_CODE_2]
     end
+    access_code = access_code.to_s
     access_code = access_code.strip if access_code.respond_to? :strip
 
     if repeater.fm? && access_code.to_f&.in?(Repeater::CTCSS_TONES)
@@ -312,8 +313,8 @@ class NerepeatersImporter < Importer
       repeater.dstar_port = access_code.split("/").first.in?(%w[A B C])
     elsif repeater.dmr? && (access_code =~ /CC[0-9]/ || access_code =~ /CC1[0-5]/)
       repeater.dmr_color_code = access_code.gsub("CC", "").to_i
-    elsif repeater.dmr? && access_code.in?(Repeater::DMR_COLOR_CODES)
-      repeater.dmr_color_code = access_code
+    elsif repeater.dmr? && access_code.to_i.in?(Repeater::DMR_COLOR_CODES)
+      repeater.dmr_color_code = access_code.to_i
     elsif repeater.dstar? && access_code.in?(%w[A B C])
       repeater.dstar_port = access_code
     elsif repeater.nxdn? && access_code.in?(%w[RAN1 RAN11 RAN2])

@@ -68,6 +68,7 @@ class IrlpImporter < Importer
     "Italy" => "it",
     "Jamaica" => "jm",
     "Japan" => "jp",
+    "Korea, Republic of" => "kr",
     "Mexico" => "mx",
     "Montserrat" => "ms",
     "Netherlands" => "nl",
@@ -82,7 +83,7 @@ class IrlpImporter < Importer
   }
 
   def import_repeater(raw_repeater)
-    call_sign = raw_repeater["CallSign"].upcase
+    call_sign = raw_repeater["CallSign"]&.upcase
     if call_sign.blank? || call_sign == "*"
       @logger.info "Ignoring repeater since the call sign is #{raw_repeater["CallSign"]}"
       return [:ignored_due_to_broken_record, nil]

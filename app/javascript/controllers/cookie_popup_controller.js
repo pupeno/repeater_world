@@ -22,8 +22,6 @@ const COOKIE_NAME = "accept-cookies-2023-07-10"
 
 export default class extends Controller {
   connect() {
-    console.log(COOKIE_NAME)
-    console.log(Cookies.get(COOKIE_NAME))
     if (!Cookies.get(COOKIE_NAME)) {
       this.element.classList.remove("hidden")
     }

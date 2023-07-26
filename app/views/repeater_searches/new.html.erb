@@ -12,7 +12,11 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div class="grow w-full px-0 flex flex-col"
+
+<% content_for :head_title, "Repeater World - Your open source & open data ham radio repeater repository" %>
+<% content_for :meta_description, "Helps you find your local repeaters and easily export them to your radio. All source code and all data is free and open for everyone to use." %>
+
+<div class="grow w-full px-1 flex flex-col"
      data-controller="repeater-searches">
   <%= render "shared/flash_messages" %>
 
