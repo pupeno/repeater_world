@@ -45,7 +45,7 @@ Rails.application.routes.draw do
 
   # Boring routes.
   get "sitemap", to: "static#sitemap"
-  get "open-source-open-data", to: "static#open_source_open_data"
+  get "values", to: "static#values"
   get "map-legend", to: "static#map_legend"
   get "data-limitations/ukrepeater-net", to: "static#ukrepeater_net"
   get "data-limitations/sral-fi", to: "static#sral_fi"
@@ -55,7 +55,8 @@ Rails.application.routes.draw do
   get "404", to: "static#not_found"
 
   # Redirections
-  get "open-source", to: redirect("/open-source-open-data")
+  get "open-source", to: redirect("/values")
+  get "open-source-open-data", to: redirect("/values")
 
   # Fail!
   get "fail", to: "static#fail"
