@@ -15,37 +15,37 @@
 require "rails_helper"
 
 RSpec.describe "Statics", type: :request do
-  it "Renders the home page" do
+  it "renders the home page" do
     get "/"
     expect(response).to have_http_status(:success)
   end
 
-  it "Renders open-source-open-data" do
-    get "/open-source-open-data"
+  it "renders values" do
+    get "/values"
     expect(response).to have_http_status(:success)
   end
 
-  it "Renders data-limitations/ukrepeater-net" do
+  it "renders data-limitations/ukrepeater-net" do
     get "/data-limitations/ukrepeater-net"
     expect(response).to have_http_status(:success)
   end
 
-  it "Renders data-limitations/sral-fi" do
+  it "renders data-limitations/sral-fi" do
     get "/data-limitations/sral-fi"
     expect(response).to have_http_status(:success)
   end
 
-  it "Renders crawler" do
+  it "renders crawler" do
     get "/crawler"
     expect(response).to have_http_status(:success)
   end
 
-  it "Renders privacy-policy" do
+  it "renders privacy-policy" do
     get "/privacy-policy"
     expect(response).to have_http_status(:success)
   end
 
-  it "Renders cookie-policy" do
+  it "renders cookie-policy" do
     get "/cookie-policy"
     expect(response).to have_http_status(:success)
   end
