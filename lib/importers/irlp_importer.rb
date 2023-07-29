@@ -61,6 +61,7 @@ class IrlpImporter < Importer
     "Canary Islands" => "es",
     "Denmark" => "dk",
     "Dominica" => "dm",
+    "Dominican Republic" => "do",
     "Ecuador" => "ec",
     "England" => "gb",
     "Germany" => "de",
@@ -76,6 +77,7 @@ class IrlpImporter < Importer
     "Philippines" => "ph",
     "Saint Kitts & Nevis" => "kn",
     "Scotland" => "gb",
+    "South Africa" => "za",
     "Spain" => "es",
     "Sweden" => "se",
     "USA" => "us",
@@ -109,7 +111,15 @@ class IrlpImporter < Importer
 
     repeater.locality = raw_repeater["City"]
     repeater.region = raw_repeater["Prov./St"]
-    repeater.country_id = COUNTRY_CODES[raw_repeater["Country"]] || raise("Unknown country: #{raw_repeater["Country"]}")
+    if raw_repeater["Country"] == "Netherlands Antilles" #  This country doesn't exist anymore, since 2010... _sigh_
+      if repeater.call_sign == "PJ7R" # This one is in "Sint Maarten"
+        repeater.country_id = "sx"
+      else
+        raise "The country Netherlands Antilles doesn't exist anymore."
+      end
+    else
+      repeater.country_id = COUNTRY_CODES[raw_repeater["Country"]] || raise("Unknown country: #{raw_repeater["Country"]}")
+    end
 
     latitude = to_f_or_nil(raw_repeater["lat"])
     longitude = to_f_or_nil(raw_repeater["long"])
