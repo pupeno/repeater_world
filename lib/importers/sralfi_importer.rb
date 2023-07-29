@@ -161,6 +161,9 @@ class SralfiImporter < Importer
     elsif raw_repeater["rep_access"]&.strip&.in? ["CC1 / CTCSS 103.5Hz"]
       repeater.fm_ctcss_tone = 103.5
       repeater.dmr_color_code = 1 # Just guessing here.
+    elsif raw_repeater["rep_access"]&.strip&.in? ["CC1 / CTCSS 110,9"]
+      repeater.fm_ctcss_tone = 110.9
+      repeater.dmr_color_code = 1 # Just guessing here.
     elsif raw_repeater["rep_access"]&.strip&.in? ["CC1 / CTCSS 118.8Hz"]
       repeater.fm_ctcss_tone = 118.8
       repeater.dmr_color_code = 1 # Just guessing here.
