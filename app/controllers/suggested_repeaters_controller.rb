@@ -67,8 +67,8 @@ class SuggestedRepeatersController < ApplicationController
     @suggested_repeater = SuggestedRepeater.new(suggested_repeater_params)
     @suggested_repeater.save
     ActionMailer::Base.mail(
-      from: "Repeater World <inforepeater.world>",
-      to: "Repeater World <inforepeater.world>",
+      from: "Repeater World <info@repeater.world>",
+      to: "Repeater World <info@repeater.world>",
       subject: "New repeater added #{@suggested_repeater.name}",
       body: "New repeater added #{@suggested_repeater.name}"
     ).deliver
