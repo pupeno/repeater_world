@@ -68,7 +68,7 @@ services:
   - type: cron
     name: repeater_world-import_artscipub
     runtime: ruby
-    schedule: "0 2 ? * SAT" # every Saturday at 2am UTC
+    schedule: "0 2 15 * *" # every Saturday at 2am UTC
     buildCommand: "./bin/render-build.sh"
     startCommand: rake import_artscipub
     envVars:
