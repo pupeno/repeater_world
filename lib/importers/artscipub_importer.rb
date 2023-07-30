@@ -351,7 +351,7 @@ class ArtscipubImporter < Importer
     elsif pl_tone == "cc12"
       repeater.dmr = true
       repeater.dmr_color_code = 12
-    elsif pl_tone == "cc 11 ts 1 & ts 2" && raw_repeater[:comments].include?("BRANDMEISTER")
+    elsif (pl_tone.include?("cc 11") || pl_tone.include?("cc11")) && raw_repeater[:comments].include?("BRANDMEISTER")
       repeater.dmr = true
       repeater.dmr_color_code = 11
       repeater.dmr_network = "Brandmeister"
@@ -377,7 +377,7 @@ class ArtscipubImporter < Importer
           "atikokan", "cochin", "d073", "[d031]", "[d 244n]"]) # No idea what this is...
       # ...so not doing anything here.
     else
-      raise "Unknown mode and access code for #{raw_repeater}."
+      raise "Unknown mode and access code \"#{pl_tone}\" for #{raw_repeater}."
     end
   end
 
