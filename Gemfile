@@ -22,13 +22,13 @@ gem "rbzip2", "~> 0.3"
 gem "activerecord-postgis-adapter", "~> 8.0"
 gem "babosa", "~> 2.0"
 gem "bootsnap", "~> 1.16", require: false # Reduces boot times through caching; required in config/boot.rb
-gem "countries", "~> 5.5"
+gem "countries", "~> 5.6"
 gem "devise", "~> 4.9"
 gem "devise-async", "~> 1.0"
 gem "dotenv-rails", "~> 2.8"
 gem "dx-grid", "~> 1.0"
 gem "factory_bot_rails", "~> 6.2" # To be able to generate sample data in staging (which is production).
-gem "faker", "~> 3.1" # To be able to generate sample data in staging (which is production).
+gem "faker", "~> 3.2" # To be able to generate sample data in staging (which is production).
 gem "geocoder", "~> 1.8"
 gem "importmap-rails", "~> 1.2" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "jbuilder", "~> 2.11"
