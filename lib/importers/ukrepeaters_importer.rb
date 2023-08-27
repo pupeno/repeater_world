@@ -121,8 +121,8 @@ class UkrepeatersImporter < Importer
 
     repeater.save!
     repeater
-  rescue ActiveRecord::RecordInvalid => e
-    raise "Failed to save #{repeater.inspect} due to #{e.message}"
+  rescue => e
+    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   def process_repeaterlist_dv_csv
