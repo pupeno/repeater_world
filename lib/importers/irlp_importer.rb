@@ -83,16 +83,8 @@ class IrlpImporter < Importer
 
     repeater.locality = raw_repeater["City"]
     repeater.region = raw_repeater["Prov./St"]
-    country = ISO3166::Country.find_country_by_any_name(raw_repeater["Country"])
-    if country.present?
-      repeater.country_id = country.alpha2.downcase
-    elsif raw_repeater["Country"] == "Netherlands Antilles" #  This country doesn't exist anymore, since 2010... _sigh_
-      if repeater.call_sign == "PJ7R" # This repeater is actually in "Sint Maarten".
-        repeater.country_id = "sx"
-      else
-        raise "The country Netherlands Antilles doesn't exist anymore."
-      end
-    end
+    repeater.country_id =
+        parse_country(raw_repeater)
 
     latitude = to_f_or_nil(raw_repeater["lat"])
     longitude = to_f_or_nil(raw_repeater["long"])
@@ -113,6 +105,30 @@ class IrlpImporter < Importer
     [:created_or_updated, repeater]
   rescue ActiveRecord::RecordInvalid => e
     raise "Failed to save #{repeater.inspect} due to #{e.message}"
+  end
+
+  def parse_country(raw_repeater)
+    non_countries = {
+        "Antigua & Barbuda" => "ag",
+        "Canary Islands" => "es",
+        "Saint Kitts & Nevis" => "kn",
+        "Scotland" => "gb",
+        "Virgin Islands, United States" => "vi"
+    }
+    country = ISO3166::Country.find_country_by_any_name(raw_repeater["Country"])
+    if country.present?
+      country.alpha2.downcase
+    elsif raw_repeater["Country"] == "Netherlands Antilles"
+      # Netherlands Antilles stopped existing in 2010 and turned into several different countries so there can't be a
+      # one to one mapping and we have to go repeater by repeater.
+      if repeater.call_sign == "PJ7R" # This repeater is actually in "Sint Maarten".
+        "sx"
+      else
+        raise "The country Netherlands Antilles doesn't exist anymore."
+      end
+    else
+      non_countries[raw_repeater["Country"]] || raise("Unknown country: #{raw_repeater["Country"]}")
+    end
   end
 
   def to_f_or_nil(value)
