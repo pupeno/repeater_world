@@ -91,11 +91,16 @@ class IrlpImporter < Importer
       @logger.info "Ignoring repeater since the call sign is #{raw_repeater["CallSign"]}"
       return [:ignored_due_to_broken_record, nil]
     end
+
     tx_frequency = raw_repeater["Freq"].to_f.abs * 10**6 # Yes, there's a repeater with negative frequency.
+    if call_sign == "W7NJN" && tx_frequency == 147_500_000_000 # Someone mixed their Mhz and khz
+      tx_frequency = 147_500_000
+    end
     if tx_frequency == 0
       @logger.info "Ignoring #{call_sign} since the frequency is 0"
       return [:ignored_due_to_broken_record, nil]
     end
+
     repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
 
     # Only update repeaters that were sourced from this same source.
