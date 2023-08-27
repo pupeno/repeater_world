@@ -72,6 +72,7 @@ class IrlpImporter < Importer
     "Korea, Republic of" => "kr",
     "Mexico" => "mx",
     "Montserrat" => "ms",
+    "Nepal" => "np",
     "Netherlands" => "nl",
     "New Zealand" => "nz",
     "Philippines" => "ph",
