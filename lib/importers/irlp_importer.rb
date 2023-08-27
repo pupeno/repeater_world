@@ -83,8 +83,7 @@ class IrlpImporter < Importer
 
     repeater.locality = raw_repeater["City"]
     repeater.region = raw_repeater["Prov./St"]
-    repeater.country_id =
-        parse_country(raw_repeater)
+    repeater.country_id = parse_country(raw_repeater)
 
     latitude = to_f_or_nil(raw_repeater["lat"])
     longitude = to_f_or_nil(raw_repeater["long"])
@@ -109,11 +108,11 @@ class IrlpImporter < Importer
 
   def parse_country(raw_repeater)
     non_countries = {
-        "Antigua & Barbuda" => "ag",
-        "Canary Islands" => "es",
-        "Saint Kitts & Nevis" => "kn",
-        "Scotland" => "gb",
-        "Virgin Islands, United States" => "vi"
+      "Antigua & Barbuda" => "ag",
+      "Canary Islands" => "es",
+      "Saint Kitts & Nevis" => "kn",
+      "Scotland" => "gb",
+      "Virgin Islands, United States" => "vi"
     }
     country = ISO3166::Country.find_country_by_any_name(raw_repeater["Country"])
     if country.present?
