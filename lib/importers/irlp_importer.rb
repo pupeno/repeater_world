@@ -51,40 +51,6 @@ class IrlpImporter < Importer
     [ignored_due_to_source_count, created_or_updated_ids, repeaters_deleted_count]
   end
 
-  COUNTRY_CODES = {
-    "Anguilla" => "ai",
-    "Antigua & Barbuda" => "ag",
-    "Australia" => "au",
-    "Barbados" => "bb",
-    "Bermuda" => "bm",
-    "Canada" => "ca",
-    "Canary Islands" => "es",
-    "Denmark" => "dk",
-    "Dominica" => "dm",
-    "Dominican Republic" => "do",
-    "Ecuador" => "ec",
-    "England" => "gb",
-    "Germany" => "de",
-    "Ireland" => "ie",
-    "Italy" => "it",
-    "Jamaica" => "jm",
-    "Japan" => "jp",
-    "Korea, Republic of" => "kr",
-    "Mexico" => "mx",
-    "Montserrat" => "ms",
-    "Nepal" => "np",
-    "Netherlands" => "nl",
-    "New Zealand" => "nz",
-    "Philippines" => "ph",
-    "Saint Kitts & Nevis" => "kn",
-    "Scotland" => "gb",
-    "South Africa" => "za",
-    "Spain" => "es",
-    "Sweden" => "se",
-    "USA" => "us",
-    "Virgin Islands, United States" => "vi"
-  }
-
   def import_repeater(raw_repeater)
     call_sign = raw_repeater["CallSign"]&.upcase
     if call_sign.blank? || call_sign == "*"
@@ -92,7 +58,7 @@ class IrlpImporter < Importer
       return [:ignored_due_to_broken_record, nil]
     end
 
-    tx_frequency = raw_repeater["Freq"].to_f.abs * 10**6 # Yes, there's a repeater with negative frequency.
+    tx_frequency = raw_repeater["Freq"].to_f.abs * 10 ** 6 # Yes, there's a repeater with negative frequency.
     if call_sign == "W7NJN" && tx_frequency == 147_500_000_000 # Someone mixed their Mhz and khz
       tx_frequency = 147_500_000
     end
@@ -109,7 +75,7 @@ class IrlpImporter < Importer
       return [:ignored_due_to_source, repeater]
     end
 
-    repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10**3
+    repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10 ** 3
     if repeater.tx_frequency > 150_000_000 && repeater.tx_frequency < 160_000_000
       repeater.band = Repeater::BAND_2M # There's one repeater with frequency 157.56MHz, which is outside the band plan.
     end
@@ -117,21 +83,22 @@ class IrlpImporter < Importer
 
     repeater.locality = raw_repeater["City"]
     repeater.region = raw_repeater["Prov./St"]
-    if raw_repeater["Country"] == "Netherlands Antilles" #  This country doesn't exist anymore, since 2010... _sigh_
-      if repeater.call_sign == "PJ7R" # This one is in "Sint Maarten"
+    country = ISO3166::Country.find_country_by_any_name(raw_repeater["Country"])
+    if country.present?
+      repeater.country_id = country.alpha2.downcase
+    elsif raw_repeater["Country"] == "Netherlands Antilles" #  This country doesn't exist anymore, since 2010... _sigh_
+      if repeater.call_sign == "PJ7R" # This repeater is actually in "Sint Maarten".
         repeater.country_id = "sx"
       else
         raise "The country Netherlands Antilles doesn't exist anymore."
       end
-    else
-      repeater.country_id = COUNTRY_CODES[raw_repeater["Country"]] || raise("Unknown country: #{raw_repeater["Country"]}")
     end
 
     latitude = to_f_or_nil(raw_repeater["lat"])
     longitude = to_f_or_nil(raw_repeater["long"])
     if latitude.present? && longitude.present? &&
-        (latitude != 0 || longitude != 0) && # One should be different to 0, since 0,0 is used to represent lack of data and there are no repeaters in null island
-        (latitude <= 90 && latitude >= -90) # There can't be latitudes above 90 or below -90, those are typos.
+      (latitude != 0 || longitude != 0) && # One should be different to 0, since 0,0 is used to represent lack of data and there are no repeaters in null island
+      (latitude <= 90 && latitude >= -90) # There can't be latitudes above 90 or below -90, those are typos.
       repeater.latitude = latitude
       repeater.longitude = longitude
     end
