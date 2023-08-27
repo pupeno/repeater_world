@@ -58,7 +58,7 @@ class IrlpImporter < Importer
       return [:ignored_due_to_broken_record, nil]
     end
 
-    tx_frequency = raw_repeater["Freq"].to_f.abs * 10 ** 6 # Yes, there's a repeater with negative frequency.
+    tx_frequency = raw_repeater["Freq"].to_f.abs * 10**6 # Yes, there's a repeater with negative frequency.
     if call_sign == "W7NJN" && tx_frequency == 147_500_000_000 # Someone mixed their Mhz and khz
       tx_frequency = 147_500_000
     end
@@ -75,7 +75,7 @@ class IrlpImporter < Importer
       return [:ignored_due_to_source, repeater]
     end
 
-    repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10 ** 3
+    repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10**3
     if repeater.tx_frequency > 150_000_000 && repeater.tx_frequency < 160_000_000
       repeater.band = Repeater::BAND_2M # There's one repeater with frequency 157.56MHz, which is outside the band plan.
     end
@@ -97,8 +97,8 @@ class IrlpImporter < Importer
     latitude = to_f_or_nil(raw_repeater["lat"])
     longitude = to_f_or_nil(raw_repeater["long"])
     if latitude.present? && longitude.present? &&
-      (latitude != 0 || longitude != 0) && # One should be different to 0, since 0,0 is used to represent lack of data and there are no repeaters in null island
-      (latitude <= 90 && latitude >= -90) # There can't be latitudes above 90 or below -90, those are typos.
+        (latitude != 0 || longitude != 0) && # One should be different to 0, since 0,0 is used to represent lack of data and there are no repeaters in null island
+        (latitude <= 90 && latitude >= -90) # There can't be latitudes above 90 or below -90, those are typos.
       repeater.latitude = latitude
       repeater.longitude = longitude
     end
