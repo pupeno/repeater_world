@@ -115,10 +115,8 @@ class SralfiImporter < Importer
     repeater.save!
 
     [:created_or_updated, repeater]
-  rescue => e
-    @logger.error "Failed to import repeater #{raw_repeater["callsign"]}: #{e.message}"
-    @logger.error raw_repeater
-    raise "Failed to import repeater #{raw_repeater}"
+  rescue ActiveRecord::RecordInvalid => e
+    raise "Failed to save #{repeater.inspect} due to #{e.message}"
   end
 
   def import_notes(raw_repeater, repeater)
