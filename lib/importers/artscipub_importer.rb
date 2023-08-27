@@ -326,7 +326,7 @@ class ArtscipubImporter < Importer
       repeater.dmr = true
       repeater.dmr_color_code = 0
     elsif pl_tone.in? ["dmr cc1", "[cc1]", "cc 1", "cc1 [csq]", "cc1", "[cc 1]", "color code 1", "color code 1 dmr",
-      "code 1"]
+      "code 1", "ts1 cc1"]
       repeater.dmr = true
       repeater.dmr_color_code = 1
     elsif pl_tone.in? ["cc2", "cc 2", "[cc2]"]
