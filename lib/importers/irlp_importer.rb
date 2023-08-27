@@ -51,50 +51,22 @@ class IrlpImporter < Importer
     [ignored_due_to_source_count, created_or_updated_ids, repeaters_deleted_count]
   end
 
-  COUNTRY_CODES = {
-    "Anguilla" => "ai",
-    "Antigua & Barbuda" => "ag",
-    "Australia" => "au",
-    "Barbados" => "bb",
-    "Bermuda" => "bm",
-    "Canada" => "ca",
-    "Canary Islands" => "es",
-    "Denmark" => "dk",
-    "Dominica" => "dm",
-    "Dominican Republic" => "do",
-    "Ecuador" => "ec",
-    "England" => "gb",
-    "Germany" => "de",
-    "Ireland" => "ie",
-    "Italy" => "it",
-    "Jamaica" => "jm",
-    "Japan" => "jp",
-    "Korea, Republic of" => "kr",
-    "Mexico" => "mx",
-    "Montserrat" => "ms",
-    "Netherlands" => "nl",
-    "New Zealand" => "nz",
-    "Philippines" => "ph",
-    "Saint Kitts & Nevis" => "kn",
-    "Scotland" => "gb",
-    "South Africa" => "za",
-    "Spain" => "es",
-    "Sweden" => "se",
-    "USA" => "us",
-    "Virgin Islands, United States" => "vi"
-  }
-
   def import_repeater(raw_repeater)
     call_sign = raw_repeater["CallSign"]&.upcase
     if call_sign.blank? || call_sign == "*"
       @logger.info "Ignoring repeater since the call sign is #{raw_repeater["CallSign"]}"
       return [:ignored_due_to_broken_record, nil]
     end
+
     tx_frequency = raw_repeater["Freq"].to_f.abs * 10**6 # Yes, there's a repeater with negative frequency.
+    if call_sign == "W7NJN" && tx_frequency == 147_500_000_000 # Someone mixed their Mhz and khz
+      tx_frequency = 147_500_000
+    end
     if tx_frequency == 0
       @logger.info "Ignoring #{call_sign} since the frequency is 0"
       return [:ignored_due_to_broken_record, nil]
     end
+
     repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
 
     # Only update repeaters that were sourced from this same source.
@@ -111,15 +83,7 @@ class IrlpImporter < Importer
 
     repeater.locality = raw_repeater["City"]
     repeater.region = raw_repeater["Prov./St"]
-    if raw_repeater["Country"] == "Netherlands Antilles" #  This country doesn't exist anymore, since 2010... _sigh_
-      if repeater.call_sign == "PJ7R" # This one is in "Sint Maarten"
-        repeater.country_id = "sx"
-      else
-        raise "The country Netherlands Antilles doesn't exist anymore."
-      end
-    else
-      repeater.country_id = COUNTRY_CODES[raw_repeater["Country"]] || raise("Unknown country: #{raw_repeater["Country"]}")
-    end
+    repeater.country_id = parse_country(raw_repeater)
 
     latitude = to_f_or_nil(raw_repeater["lat"])
     longitude = to_f_or_nil(raw_repeater["long"])
@@ -138,6 +102,32 @@ class IrlpImporter < Importer
     repeater.save!
 
     [:created_or_updated, repeater]
+  rescue ActiveRecord::RecordInvalid => e
+    raise "Failed to save #{repeater.inspect} due to #{e.message}"
+  end
+
+  def parse_country(raw_repeater)
+    non_countries = {
+      "Antigua & Barbuda" => "ag",
+      "Canary Islands" => "es",
+      "Saint Kitts & Nevis" => "kn",
+      "Scotland" => "gb",
+      "Virgin Islands, United States" => "vi"
+    }
+    country = ISO3166::Country.find_country_by_any_name(raw_repeater["Country"])
+    if country.present?
+      country.alpha2.downcase
+    elsif raw_repeater["Country"] == "Netherlands Antilles"
+      # Netherlands Antilles stopped existing in 2010 and turned into several different countries so there can't be a
+      # one to one mapping and we have to go repeater by repeater.
+      if repeater.call_sign == "PJ7R" # This repeater is actually in "Sint Maarten".
+        "sx"
+      else
+        raise "The country Netherlands Antilles doesn't exist anymore."
+      end
+    else
+      non_countries[raw_repeater["Country"]] || raise("Unknown country: #{raw_repeater["Country"]}")
+    end
   end
 
   def to_f_or_nil(value)
