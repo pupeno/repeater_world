@@ -102,8 +102,8 @@ class IrlpImporter < Importer
     repeater.save!
 
     [:created_or_updated, repeater]
-  rescue ActiveRecord::RecordInvalid => e
-    raise "Failed to save #{repeater.inspect} due to #{e.message}"
+  rescue => e
+    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   def parse_country(raw_repeater)

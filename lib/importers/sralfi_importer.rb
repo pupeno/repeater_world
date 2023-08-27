@@ -115,8 +115,8 @@ class SralfiImporter < Importer
     repeater.save!
 
     [:created_or_updated, repeater]
-  rescue ActiveRecord::RecordInvalid => e
-    raise "Failed to save #{repeater.inspect} due to #{e.message}"
+  rescue => e
+    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   def import_notes(raw_repeater, repeater)
