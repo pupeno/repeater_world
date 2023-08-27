@@ -114,8 +114,8 @@ class WiaImporter < Importer
     repeater.save!
 
     [:created_or_updated, repeater]
-  rescue ActiveRecord::RecordInvalid => e
-    raise "Failed to save #{repeater.inspect} due to #{e.message}"
+  rescue => e
+    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   # WIA seems to publish a different CSV file every quarter, so first we need to find the latest CSV file name.

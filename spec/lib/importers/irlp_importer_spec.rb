@@ -30,7 +30,7 @@ RSpec.describe IrlpImporter do
     Dir.mktmpdir("IrlpImporter") do |dir|
       expect do
         IrlpImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(936)
+      end.to change { Repeater.count }.by(929)
 
       # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "VE7ISC")

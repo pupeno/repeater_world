@@ -115,8 +115,8 @@ class SralfiImporter < Importer
     repeater.save!
 
     [:created_or_updated, repeater]
-  rescue ActiveRecord::RecordInvalid => e
-    raise "Failed to save #{repeater.inspect} due to #{e.message}"
+  rescue => e
+    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   def import_notes(raw_repeater, repeater)
@@ -143,9 +143,9 @@ class SralfiImporter < Importer
       repeater.fm_tone_burst = true
     elsif raw_repeater["rep_access"]&.strip&.in? ["CTCSS 103.5 Hz", "CTCSS 103,5 Hz", "CTCSS 103,5", "103.5 Hz", "CTCSS 103,5 / Yaesu", "CTCSS 103,5Hz"]
       repeater.fm_ctcss_tone = 103.5
-    elsif raw_repeater["rep_access"]&.strip&.in? ["CTCSS 110.9 Hz", "CTCSS 110,9 Hz", "CTCSS 110.9", "ctcss 110.9hz", "CTCSS 110,9", "CTSS 110.9"]
+    elsif raw_repeater["rep_access"]&.strip&.in? ["CTCSS 110.9 Hz", "CTCSS 110,9 Hz", "CTCSS 110.9", "ctcss 110.9hz", "CTCSS 110,9", "CTSS 110.9", "CC1 / CTCSS 110.9"]
       repeater.fm_ctcss_tone = 110.9
-    elsif raw_repeater["rep_access"]&.strip&.in? ["CTCSS 114.8"]
+    elsif raw_repeater["rep_access"]&.strip&.in? ["CTCSS 114.8", "114.8 Hz"]
       repeater.fm_ctcss_tone = 114.8
     elsif raw_repeater["rep_access"]&.strip&.in? ["CTCSS 118.8", "CTCSS 118.8 / NAC293", "118.8", "CTCSS 118.8 Hz"]
       repeater.fm_ctcss_tone = 118.8

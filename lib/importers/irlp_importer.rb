@@ -102,8 +102,8 @@ class IrlpImporter < Importer
     repeater.save!
 
     [:created_or_updated, repeater]
-  rescue ActiveRecord::RecordInvalid => e
-    raise "Failed to save #{repeater.inspect} due to #{e.message}"
+  rescue => e
+    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   def parse_country(raw_repeater)
@@ -120,7 +120,7 @@ class IrlpImporter < Importer
     elsif raw_repeater["Country"] == "Netherlands Antilles"
       # Netherlands Antilles stopped existing in 2010 and turned into several different countries so there can't be a
       # one to one mapping and we have to go repeater by repeater.
-      if repeater.call_sign == "PJ7R" # This repeater is actually in "Sint Maarten".
+      if raw_repeater["CallSign"] == "PJ7R" # This repeater is actually in "Sint Maarten".
         "sx"
       else
         raise "The country Netherlands Antilles doesn't exist anymore."
