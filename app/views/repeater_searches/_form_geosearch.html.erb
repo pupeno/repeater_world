@@ -13,87 +13,99 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <div class="geosearch my-3 mx-1" data-controller="geosearch">
-  <%= form.check_box :geosearch,
-                     class: "h-6 w-6 rounded text-orange-500 dark:bg-gray-700 focus:ring-0 focus:ring-offset-0 focus:outline-2 focus:outline-offset-2 focus:outline-orange-500",
-                     data: { action: "change->geosearch#updateState",
-                             geosearch_target: "activator" } %>
-
-  <span class="text-gray-300 dark:text-gray-700"
-        data-geosearch-target="controlled">Within</span>
-
-  <%# Distance and units %>
-  <div class="inline-flex flex-row w-32 rounded-md shadow-sm">
-    <%= form.text_field :distance,
-                        class: "pr-0 w-full grow
-                                rounded-s-md border-s border-e-0 border-gray-300 dark:border-gray-600
-                                focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
-                                text-right text-gray-300 dark:text-gray-700",
-                        data: { geosearch_target: "controlled",
-                                action: "click->geosearch#enable" } %>
-    <%= form.label :distance_unit, "Unit", class: "sr-only" %>
-    <%= form.select :distance_unit,
-                    RepeaterSearch::DISTANCE_UNITS, {}, {
-                      class: "pl-2 w-full shrink
-                              rounded-e-md border-e border-s-0 border-gray-300 dark:border-gray-600
-                              focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
-                              text-gray-300 dark:text-gray-700 chevron-gray-300 dark:chevron-gray-700",
-                      data: { geosearch_target: "controlled",
-                              action: "click->geosearch#enable" } } %>
-  </div>
-
-  <span class="text-gray-300 dark:text-gray-700" data-geosearch-target="controlled">of</span>
-
   <%# Type of geosearch selector %>
   <%= form.select :geosearch_type,
-                  { "my location" => RepeaterSearch::MY_LOCATION,
-                    "the place" => RepeaterSearch::PLACE,
-                    "the coordinates" => RepeaterSearch::COORDINATES,
-                    "the grid square" => RepeaterSearch::GRID_SQUARE },
-                  {},
-                  { class: "inline-block mt-1 pl-3 pr-10
+                  { "Near my current location" => RepeaterSearch::MY_LOCATION,
+                    "Near a place (city or any other named location)" => RepeaterSearch::PLACE,
+                    "Near some coordinates" => RepeaterSearch::COORDINATES,
+                    "Near a grid square" => RepeaterSearch::GRID_SQUARE,
+                    "Within a country" => RepeaterSearch::WITHIN_A_COUNTRY },
+                  { include_blank: "Select geographic filtering method" },
+                  { class: "inline-block my-1 pl-3 pr-10
                             rounded-md border border-gray-300 dark:border-gray-600
                             focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
-                            text-gray-300 dark:text-gray-700 chevron-gray-300 dark:chevron-gray-700",
-                    data: { geosearch_target: "type controlled",
+                            chevron-gray-700 dark:chevron-gray-300",
+                    data: { geosearch_target: "type",
                             action: "click->geosearch#enable change->geosearch#updateState" } } %>
 
-  <%# Field for searching by place %>
-  <div class="contents hidden" data-geosearch-target="placeFields">
-    <%= form.text_field :place,
-                        class: "inline w-80 px-2 mt-1 field-text",
-                        data: { geosearch_target: "controlled",
-                                action: "click->geosearch#enable" } %>
-  </div>
+  <%# All the searches that have the shape of "Within N KM of ...." %>
+  <div class="my-1 hidden" data-geosearch-target="myLocationFields placeFields coordinatesFields gridSquareFields">
+    Within
 
-  <%# Fields for searching by coordinates %>
-  <div class="contents hidden" data-geosearch-target="coordinatesFields">
-    <div class="inline-flex items-baseline">
-      <%= form.label :latitude, "latitude", class: "mr-2 text-gray-300 dark:text-gray-700",
-                     data: { geosearch_target: "controlled" } %>
-      <%= form.text_field :latitude,
-                          class: "inline w-28 px-2 mt-1 field-text",
-                          data: { geosearch_target: "latitude controlled",
+    <%# Distance and units %>
+    <span class="inline-flex flex-row w-32 rounded-md shadow-sm">
+      <%= form.text_field :distance,
+                          class: "pr-0 w-full grow
+                                  rounded-s-md border-s border-e-0 border-gray-300 dark:border-gray-600
+                                  focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
+                                  text-right",
+                          data: { geosearch_target: "controlled",
                                   action: "click->geosearch#enable" } %>
+      <%= form.label :distance_unit, "Unit", class: "sr-only" %>
+      <%= form.select :distance_unit,
+                      RepeaterSearch::DISTANCE_UNITS, {}, {
+                        class: "pl-2 w-full shrink
+                                rounded-e-md border-e border-s-0 border-gray-300 dark:border-gray-600
+                                focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
+                               chevron-gray-700 dark:chevron-gray-300",
+                        data: { geosearch_target: "controlled",
+                                action: "click->geosearch#enable" } } %>
+    </span>
+
+    of
+
+    <%# "Field" for current location, actually no field, because none are needed. %>
+    <span class="contents hidden" data-geosearch-target="myLocationFields">
+      my current location.
+    </span>
+
+    <%# Field for searching by place %>
+    <div class="contents hidden" data-geosearch-target="placeFields">
+      <%= form.text_field :place,
+                          placeholder: "City, town, place, landmark",
+                          class: "inline w-80 px-2 field-text",
+                          data: { action: "click->geosearch#enable" } %>
     </div>
 
-    <span class="text-gray-300 dark:text-gray-700"
-          data-geosearch-target="controlled">&nbsp;and</span>
+    <%# Fields for searching by coordinates %>
+    <div class="contents hidden" data-geosearch-target="coordinatesFields">
+      <span class="inline-flex items-baseline">
+        <%= form.label :latitude, "latitude", class: "mr-2" %>
+        <%= form.text_field :latitude,
+                            class: "inline w-28 px-2 field-text",
+                            data: { geosearch_target: "latitude",
+                                    action: "click->geosearch#enable" } %>
+      </span>
 
-    <div class="inline-flex items-baseline">
-      <%= form.label :longitude, "longitude", class: "mr-2 text-gray-300 dark:text-gray-700",
-                     data: { geosearch_target: "controlled" } %>
-      <%= form.text_field :longitude,
-                          class: "inline w-28 px-2 mt-1 field-text",
-                          data: { geosearch_target: "longitude controlled",
-                                  action: "click->geosearch#enable" } %>
+      <span>and</span>
+
+      <div class="inline-flex items-baseline">
+        <%= form.label :longitude, "longitude", class: "mr-2" %>
+        <%= form.text_field :longitude,
+                            class: "inline w-28 px-2 field-text",
+                            data: { geosearch_target: "longitude",
+                                    action: "click->geosearch#enable" } %>
+      </div>
     </div>
+
+    <%# Field for searching by grid square. %>
+    <span class="contents hidden" data-geosearch-target="gridSquareFields">
+      the grid
+      <%= form.text_field :grid_square,
+                          class: "inline w-28 px-2 mt-1 field-text",
+                          data: { action: "click->geosearch#enable" } %>
+    </span>
   </div>
 
-  <%# Field for searching by grid square. %>
-  <div class="contents hidden" data-geosearch-target="gridSquareFields">
-    <%= form.text_field :grid_square,
-                        class: "inline w-28 px-2 mt-1 field-text",
-                        data: { geosearch_target: "controlled",
-                                action: "click->geosearch#enable" } %>
+  <%# Search within a country %>
+  <div class="my-1 hidden" data-geosearch-target="withinACountryFields">
+    <%= form.select :country_id,
+                    Country.order(:name).collect { |c| [c.name, c.id] },
+                    {},
+                    { class: "inline-block pl-3 pr-10
+                              rounded-md border border-gray-300 dark:border-gray-600
+                              focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
+                              chevron-gray-700 dark:chevron-gray-300", } %>
   </div>
 </div>
+
