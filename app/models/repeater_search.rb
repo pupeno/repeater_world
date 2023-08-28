@@ -129,8 +129,6 @@ class RepeaterSearch < ApplicationRecord
         end"))
 
     repeaters.includes(:country)
-
-    repeaters
   end
 
   def all_bands?
