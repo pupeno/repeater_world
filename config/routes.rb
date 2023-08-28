@@ -123,7 +123,7 @@ end
 #                                          PUT    /profile(.:format)                                                                                profiles#update
 #                       api_next_repeaters GET    /api/next/repeaters(.:format)                                                                     api/next/repeaters#index
 #                                  sitemap GET    /sitemap(.:format)                                                                                static#sitemap
-#                    open_source_open_data GET    /open-source-open-data(.:format)                                                                  static#open_source_open_data
+#                                   values GET    /values(.:format)                                                                                 static#values
 #                               map_legend GET    /map-legend(.:format)                                                                             static#map_legend
 #          data_limitations_ukrepeater_net GET    /data-limitations/ukrepeater-net(.:format)                                                        static#ukrepeater_net
 #                 data_limitations_sral_fi GET    /data-limitations/sral-fi(.:format)                                                               static#sral_fi
@@ -131,7 +131,8 @@ end
 #                           privacy_policy GET    /privacy-policy(.:format)                                                                         static#privacy_policy
 #                            cookie_policy GET    /cookie-policy(.:format)                                                                          static#cookie_policy
 #                                          GET    /404(.:format)                                                                                    static#not_found
-#                              open_source GET    /open-source(.:format)                                                                            redirect(301, /open-source-open-data)
+#                              open_source GET    /open-source(.:format)                                                                            redirect(301, /values)
+#                    open_source_open_data GET    /open-source-open-data(.:format)                                                                  redirect(301, /values)
 #                                     fail GET    /fail(.:format)                                                                                   static#fail
 #                                  fail_fe GET    /fail-fe(.:format)                                                                                static#fail_fe
 #                                  fail_bg GET    /fail-bg(.:format)                                                                                static#fail_bg
