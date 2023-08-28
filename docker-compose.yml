@@ -9,6 +9,7 @@ services:
     environment:
       POSTGRES_USER: repeater_world
       POSTGRES_PASSWORD: te6ahng1phi1uizaeGhahMof1
+      POSTGRES_DB: repeater_world_development
 # Uncomment this when starting to use proper background jobs.
 #  redis:
 #    image: redis:6.2-alpine
