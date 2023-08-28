@@ -25,7 +25,8 @@ class SampleDataGenerator
   def generate
     delete_data
     create_admins
-    create_repeaters
+    # create_repeaters
+    # call rake import_all instead
     create_users
   end
 

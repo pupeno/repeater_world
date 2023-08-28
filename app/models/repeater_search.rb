@@ -13,6 +13,8 @@
 # <https://www.gnu.org/licenses/>.
 
 class RepeaterSearch < ApplicationRecord
+  # TODO: geolocate the IP of the user and select the appropriate country
+
   DISTANCE_UNITS = [
     KM = "km",
     MILES = "miles"
@@ -60,18 +62,20 @@ class RepeaterSearch < ApplicationRecord
     MY_LOCATION = "my_location",
     COORDINATES = "coordinates",
     GRID_SQUARE = "grid_square",
-    PLACE = "place"
+    PLACE = "place",
+    WITHIN_A_COUNTRY = "within_a_country"
   ]
 
   attr_writer :saving
 
   belongs_to :user, optional: true
+  belongs_to :country, optional: true
 
   validates :user, presence: true, if: :saving
   validates :name, presence: true, if: :saving
-  validates :distance, presence: true, if: :geosearch?
+  validates :distance, presence: true, if: :distance_required?
   validates :distance, numericality: {greater_than: 0}, allow_blank: true
-  validates :distance_unit, presence: true, if: :geosearch?
+  validates :distance_unit, presence: true, if: :distance_required?
   validates :distance_unit, inclusion: DISTANCE_UNITS, allow_blank: true
   validates :place, presence: true, if: :place_required?
   validates :latitude, presence: true, if: :lat_and_long_required?
@@ -106,7 +110,7 @@ class RepeaterSearch < ApplicationRecord
       repeaters = repeaters.merge(cond)
     end
 
-    if geosearch?
+    if geosearch_type.in? [MY_LOCATION, COORDINATES, GRID_SQUARE, PLACE]
       repeaters = repeaters.select(self.class.sanitize_sql_array([<<-SQL, current_location: Geo.to_wkt(Geo.point(latitude, longitude))]))
         #{repeaters.table_name}.*,
         ST_Distance(:current_location, location) AS distance,
@@ -119,6 +123,8 @@ class RepeaterSearch < ApplicationRecord
          distance: distance}
       ).all
       repeaters = repeaters.order(:distance)
+    elsif geosearch_type == WITHIN_A_COUNTRY
+      repeaters = repeaters.where(country_id: country_id)
     end
 
     repeaters = repeaters.order(:name, :call_sign, Arel.sql("
@@ -139,12 +145,20 @@ class RepeaterSearch < ApplicationRecord
     MODES.map { |mode| !send(mode[:pred]) }.all?
   end
 
+  def geosearch?
+    geosearch_type.present?
+  end
+
+  def distance_required?
+    geosearch_type.in? [MY_LOCATION, COORDINATES, GRID_SQUARE, PLACE]
+  end
+
   def place_required?
-    geosearch? && geosearch_type == PLACE
+    geosearch_type == PLACE
   end
 
   def lat_and_long_required?
-    geosearch? && (geosearch_type == COORDINATES || geosearch_type == MY_LOCATION)
+    geosearch_type.in? [COORDINATES, MY_LOCATION]
   end
 
   def grid_square_format_valid
@@ -154,20 +168,20 @@ class RepeaterSearch < ApplicationRecord
   end
 
   def grid_square_required?
-    geosearch? && geosearch_type == GRID_SQUARE
+    geosearch_type == GRID_SQUARE
   end
 
   def geosearch_post_processing
     # If we are searching for my location and we didn't get valid latitude and longitude from the browser, add an error
     # to the geosearch_type field so that it's actually visible in the form.
-    if geosearch? && geosearch_type == MY_LOCATION && (errors[:latitude].present? || errors[:longitude].present?)
+    if geosearch_type == MY_LOCATION && (errors[:latitude].present? || errors[:longitude].present?)
       errors.add(:base, "We couldn't get valid coordinates for your location")
       errors.delete(:latitude)
       errors.delete(:longitude)
     end
 
     # If we are searching for a place, populate the lat and long.
-    if geosearch? && geosearch_type == PLACE && errors[:place].blank? && place != place_was
+    if geosearch_type == PLACE && errors[:place].blank? && place != place_was
       results = Geocoder.search(place).first
       if results.present?
         self.latitude = results.latitude
@@ -180,7 +194,7 @@ class RepeaterSearch < ApplicationRecord
     end
 
     # If we are searching for grid square, populate the lat and long.
-    if geosearch? && geosearch_type == GRID_SQUARE && errors[:grid_square].blank?
+    if geosearch_type == GRID_SQUARE && errors[:grid_square].blank?
       self.latitude, self.longitude = DX::Grid.decode(grid_square)
     end
   end
@@ -213,7 +227,6 @@ end
 #  dstar          :boolean          default(FALSE), not null
 #  fm             :boolean          default(FALSE), not null
 #  fusion         :boolean          default(FALSE), not null
-#  geosearch      :boolean
 #  geosearch_type :string
 #  grid_square    :string
 #  latitude       :decimal(, )
@@ -225,6 +238,7 @@ end
 #  tetra          :boolean          default(FALSE), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  country_id     :string
 #  user_id        :uuid
 #
 # Indexes

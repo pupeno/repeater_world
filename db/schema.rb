@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_14_064720) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_28_150654) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -62,7 +62,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_14_064720) do
     t.boolean "fusion", default: false, null: false
     t.boolean "dmr", default: false, null: false
     t.boolean "nxdn", default: false, null: false
-    t.boolean "geosearch"
     t.integer "distance"
     t.string "distance_unit"
     t.decimal "latitude"
@@ -81,6 +80,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_14_064720) do
     t.string "geosearch_type"
     t.string "grid_square"
     t.string "place"
+    t.string "country_id"
     t.index ["user_id"], name: "index_repeater_searches_on_user_id"
   end
 
@@ -103,7 +103,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_14_064720) do
     t.integer "dmr_color_code"
     t.string "dmr_network"
     t.boolean "nxdn"
-    t.geography "location", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
+    t.geography "location", limit: {srid: 4326, type: "st_point", geographic: true}
     t.string "grid_square"
     t.string "utc_offset"
     t.string "source"
