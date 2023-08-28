@@ -12,48 +12,45 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-class BaofengUv5rExporter < Exporter
+class ChirpExporter < Exporter
   def export
-    headers = [
-      LOCATION, NAME, FREQUENCY, DUPLEX, OFFSET, TONE, R_TONE_FREQ, C_TONE_FREQ, DTCS_CODE, DTCS_POLARITY, MODE, TSTEP,
-      SKIP, COMMENT, URCALL, RPT1CALL, RPT2CALL, DVCODE
-    ]
-
     @repeaters = @repeaters.where(band: [Repeater::BAND_2M, Repeater::BAND_70CM])
       .where("operational IS NOT FALSE") # Skip repeaters known to not be operational.
       .where(fm: true)
       .order(:name, :call_sign)
 
-    CSV.generate(headers: headers, write_headers: true) do |csv|
+    CSV.generate(headers: HEADERS, write_headers: true) do |csv|
       @repeaters.each_with_index do |repeater, index|
         csv << to_repeater_row(repeater).merge({LOCATION => index})
-        if index >= 127 # Baofeng UV-5R can only have 127 memories.
-          break
-        end
       end
     end
   end
 
   private
 
-  LOCATION = "Location"
-  NAME = "Name"
-  FREQUENCY = "Frequency"
-  DUPLEX = "Duplex"
-  OFFSET = "Offset"
-  TONE = "Tone"
-  R_TONE_FREQ = "rToneFreq"
-  C_TONE_FREQ = "cToneFreq"
-  DTCS_CODE = "DtcsCode"
-  DTCS_POLARITY = "DtcsPolarity"
-  MODE = "Mode"
-  TSTEP = "TStep"
-  SKIP = "Skip"
-  COMMENT = "Comment"
-  URCALL = "URCALL"
-  RPT1CALL = "RPT1CALL"
-  RPT2CALL = "RPT2CALL"
-  DVCODE = "DVCODE"
+  HEADERS = [
+    LOCATION = "Location",
+    NAME = "Name",
+    FREQUENCY = "Frequency",
+    DUPLEX = "Duplex",
+    OFFSET = "Offset",
+    TONE = "Tone",
+    R_TONE_FREQ = "rToneFreq",
+    C_TONE_FREQ = "cToneFreq",
+    DTCS_CODE = "DtcsCode",
+    DTCS_POLARITY = "DtcsPolarity",
+    RX_DTCS_CODE = "RxDtcsCode",
+    CROSS_MODE = "CrossMode",
+    MODE = "Mode",
+    TSTEP = "TStep",
+    SKIP = "Skip",
+    POWER = "Power",
+    COMMENT = "Comment",
+    URCALL = "URCALL",
+    RPT1CALL = "RPT1CALL",
+    RPT2CALL = "RPT2CALL",
+    DVCODE = "DVCODE"
+  ]
 
   def to_repeater_row(repeater)
     row = {
@@ -62,19 +59,22 @@ class BaofengUv5rExporter < Exporter
       OFFSET => frequency_in_mhz((repeater.tx_frequency - repeater.rx_frequency).abs, precision: 6),
       DTCS_CODE => "023", # TODO: what's this? https://github.com/flexpointtech/repeater_world/issues/28
       DTCS_POLARITY => "NN", # TODO: what's this? https://github.com/flexpointtech/repeater_world/issues/28
+      RX_DTCS_CODE => "023", # TODO: what's this? https://github.com/flexpointtech/repeater_world/issues/28
+      CROSS_MODE => "Tone->Tone", # TODO: what's this? https://github.com/flexpointtech/repeater_world/issues/28
       MODE => "FM", # Always FM.
-      TSTEP => 5, # Default?
+      TSTEP => "5.00", # Just the default, not sure if it has any effect.
+      POWER => "50W", # TODO: this is the default, but could this value lower the power on a radio that receives CHIRP?
       COMMENT => "#{repeater.name} #{repeater.call_sign}"
     }
 
     row[NAME] =
       truncate(7, repeater.call_sign)
 
-    row[TONE] = if repeater.fm_ctcss_tone.present?
-      "TONE" # TODO: when do we use TSQL: https://github.com/flexpointtech/repeater_world/issues/23
+    if repeater.fm_ctcss_tone.present?
+      row[TONE] = "Tone" # TODO: when do we use TSQL: https://github.com/flexpointtech/repeater_world/issues/23
     end
 
-    row[R_TONE_FREQ] = repeater.fm_ctcss_tone || 88.5 # Default?
+    row[R_TONE_FREQ] = repeater.fm_ctcss_tone || 88.5 # When blank it seems to go to 88.5, default?
 
     row[C_TONE_FREQ] = row[R_TONE_FREQ]
 
