@@ -16,6 +16,7 @@ module Exporters
   EXPORTER_FOR = {
     baofeng_uv_5r: BaofengUv5rExporter,
     csv: CsvExporter,
+    chirp: ChirpExporter,
     icom_ic_705: IcomIc705Exporter,
     icom_id_51: IcomId51Exporter,
     icom_id_52: IcomId52Exporter,
@@ -23,7 +24,10 @@ module Exporters
   }
 
   SUPPORTED_FORMATS =
-    [["General", [["CSV", :csv]]]] + # At the beginning to avoid being sorted.
+    [["General", [ # At the beginning to avoid being sorted.
+      ["CSV (all fields)", :csv],
+      ["CHIRP (as CSV)", :chirp]
+    ]]] +
     [
       ["Baofeng", [
         ["Baofeng UV-5R", :baofeng_uv_5r]
