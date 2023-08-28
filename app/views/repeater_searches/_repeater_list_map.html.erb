@@ -20,8 +20,8 @@ You should have received a copy of the GNU Affero General Public License along w
          { lat: @repeater_search.latitude.to_f,
            lng: @repeater_search.longitude.to_f,
            info: "<h1 class='font-bold text-lg'>This is where you are</h1>
-                <p>Lat: <span class='font-bold'>#{h @repeater_search.latitude.round(2)}</span>,
-                   Long: <span class='font-bold'>#{h @repeater_search.longitude.round(2)}</span></p>" }.to_json
+                  <p>Lat: <span class='font-bold'>#{h @repeater_search.latitude.round(2)}</span>,
+                    Long: <span class='font-bold'>#{h @repeater_search.longitude.round(2)}</span></p>" }.to_json
        else
          {}.to_json
        end %>"

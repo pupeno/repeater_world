@@ -42,7 +42,6 @@ end
 #  dstar          :boolean          default(FALSE), not null
 #  fm             :boolean          default(FALSE), not null
 #  fusion         :boolean          default(FALSE), not null
-#  geosearch      :boolean
 #  geosearch_type :string
 #  grid_square    :string
 #  latitude       :decimal(, )
@@ -54,6 +53,7 @@ end
 #  tetra          :boolean          default(FALSE), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  country_id     :string
 #  user_id        :uuid
 #
 # Indexes

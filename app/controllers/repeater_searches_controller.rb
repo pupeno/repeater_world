@@ -52,16 +52,20 @@ class RepeaterSearchesController < ApplicationController
     else
       RepeaterSearch::BANDS.map { |band| band[:label] if @repeater_search.send(band[:pred]) }.compact
     end
-    if @repeater_search.geosearch?
-      distance = if @repeater_search.geosearch_type == RepeaterSearch::MY_LOCATION
-        "#{@repeater_search.distance}#{@repeater_search.distance_unit} of my location (#{@repeater_search.latitude&.round(1)}, #{@repeater_search.longitude&.round(1)})"
-      elsif @repeater_search.geosearch_type == RepeaterSearch::COORDINATES
-        "#{@repeater_search.distance}#{@repeater_search.distance_unit} of coordinates #{@repeater_search.latitude&.round(3)}, #{@repeater_search.longitude&.round(3)}"
-      else # if @repeater_search.geosearch_type == RepeaterSearch::GRID_SQUARE
-        "#{@repeater_search.distance}#{@repeater_search.distance_unit} of grid square #{@repeater_search.grid_square}"
-      end
+
+    geo = if @repeater_search.geosearch_type == RepeaterSearch::MY_LOCATION
+      "within #{@repeater_search.distance}#{@repeater_search.distance_unit} of my location (#{@repeater_search.latitude&.round(1)}, #{@repeater_search.longitude&.round(1)})"
+    elsif @repeater_search.geosearch_type == RepeaterSearch::PLACE
+      "within #{@repeater_search.distance}#{@repeater_search.distance_unit} of #{@repeater_search.place} (#{@repeater_search.latitude&.round(1)}, #{@repeater_search.longitude&.round(1)})"
+    elsif @repeater_search.geosearch_type == RepeaterSearch::COORDINATES
+      "within #{@repeater_search.distance}#{@repeater_search.distance_unit} of coordinates #{@repeater_search.latitude&.round(3)}, #{@repeater_search.longitude&.round(3)}"
+    elsif @repeater_search.geosearch_type == RepeaterSearch::GRID_SQUARE
+      "within #{@repeater_search.distance}#{@repeater_search.distance_unit} of grid square #{@repeater_search.grid_square} (#{@repeater_search.latitude&.round(1)}, #{@repeater_search.longitude&.round(1)})"
+    elsif @repeater_search.geosearch_type == RepeaterSearch::WITHIN_A_COUNTRY
+      "within #{@repeater_search.country.name}"
     end
-    @repeater_search.name = "#{modes.to_sentence} on #{bands.to_sentence} #{distance}".strip.capitalize
+
+    @repeater_search.name = "#{modes.to_sentence} on #{bands.to_sentence} #{geo}".strip.upcase_first
   end
 
   def export
@@ -130,12 +134,13 @@ class RepeaterSearchesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def repeater_search_params
+    fields = RepeaterSearch::BANDS.map { |band| band[:name] } +
+      RepeaterSearch::MODES.map { |mode| mode[:name] } +
+      [:name, :geosearch_type, :distance, :distance_unit, :place, :latitude, :longitude, :grid_square, :country_id]
     params.permit(
-      :d,
-      s: RepeaterSearch::BANDS.map { |band| band[:name] } +
-        RepeaterSearch::MODES.map { |mode| mode[:name] } +
-        [:name, :geosearch, :distance, :distance_unit, :geosearch_type, :place, :latitude, :longitude, :grid_square],
-      e: [:format]
+      :d, # Display mode, like cards, maps, table.
+      s: fields, # Fields in the RepeaterSearch model.
+      e: [:format] # Whether to export and what format.
     )
   end
 
