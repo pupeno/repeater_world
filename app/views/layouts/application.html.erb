@@ -25,8 +25,10 @@ You should have received a copy of the GNU Affero General Public License along w
       <meta name="description" content="<%= yield :meta_description %>">
     <% end %>
     <% if content_for? :canonical_url %>
-      <link rel="canonical" href="<%= yield :canonical_url %>" />
-  <% end %>
+      <link rel="canonical" href="<%= yield :canonical_url %>"/>
+    <% else %>
+      <link rel="canonical" href="<%= request.original_url %>"/>
+    <% end %>
 
     <%# Security tags %>
     <%= csrf_meta_tags %>
