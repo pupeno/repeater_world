@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License along w
      data-controller="map"
      data-action="google-maps-callback@window->maps#initializeMap"
      data-map-home-value="<%=
-       if @repeater_search.geosearch?
+       if @repeater_search.geosearch? && @repeater_search.latitude.present? && @repeater_search.longitude.present?
          { lat: @repeater_search.latitude.to_f,
            lng: @repeater_search.longitude.to_f,
            info: "<h1 class='font-bold text-lg'>This is where you are</h1>
