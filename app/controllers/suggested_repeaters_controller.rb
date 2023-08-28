@@ -17,6 +17,8 @@ class SuggestedRepeatersController < ApplicationController
     @suggested_repeater = SuggestedRepeater.new
     repeater = Repeater.where(id: params[:repeater_id]).first
     if repeater.present?
+      @noindex = true
+
       @suggested_repeater.repeater = repeater
       @suggested_repeater.name = repeater.name
       @suggested_repeater.call_sign = repeater.call_sign

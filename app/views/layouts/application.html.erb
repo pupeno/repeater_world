@@ -24,6 +24,9 @@ You should have received a copy of the GNU Affero General Public License along w
     <% if content_for? :meta_description %>
       <meta name="description" content="<%= yield :meta_description %>">
     <% end %>
+    <% if @noindex %>
+      <meta name="robots" content="noindex">
+    <% end %>
     <% if content_for? :canonical_url %>
       <link rel="canonical" href="<%= yield :canonical_url %>"/>
     <% else %>
