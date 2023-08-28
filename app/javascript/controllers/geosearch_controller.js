@@ -15,14 +15,11 @@
 
 import {Controller} from "@hotwired/stimulus"
 
-const GRAYED_OUT_TEXT = ["text-gray-300", "dark:text-gray-700"]
-const GRAYED_OUT_SELECT = ["chevron-gray-300", "dark:chevron-gray-700"]
-const NOT_GRAYED_OUT_SELECT = ["chevron-gray-700", "dark:chevron-gray-300"]
-
 export default class extends Controller {
   static targets = [
-    "activator", "controlled", "type", "coordinatesFields", "latitude", "longitude", "gridSquareFields",
-    "placeFields"
+    "type",
+    "myLocationFields", "coordinatesFields", "gridSquareFields", "placeFields", "withinACountryFields",
+    "latitude", "longitude",
   ]
 
   connect() {
@@ -30,53 +27,35 @@ export default class extends Controller {
   }
 
   updateState() {
-    if (this.activatorTarget.checked) {
-      this.controlledTargets.forEach(element => {
-        element.classList.remove(...GRAYED_OUT_TEXT)
-        if (element.tagName === "SELECT") {
-          element.classList.remove(...GRAYED_OUT_SELECT)
-          element.classList.add(...NOT_GRAYED_OUT_SELECT)
-        }
-      })
-    } else {
-      this.controlledTargets.forEach(element => {
-        element.classList.add(...GRAYED_OUT_TEXT)
-        if (element.tagName === "SELECT") {
-          element.classList.add(...GRAYED_OUT_SELECT)
-          element.classList.remove(...NOT_GRAYED_OUT_SELECT)
-        }
-      })
-    }
-    if (this.typeTarget.value === "my_location") {
-      this.placeFieldsTarget.classList.add("hidden")
-      this.coordinatesFieldsTarget.classList.add("hidden")
-      this.gridSquareFieldsTarget.classList.add("hidden")
-      if (this.activatorTarget.checked) {
-        this.geolocate()
-      }
+    if (this.typeTarget.value === "") { // Nothing is selected.
+      this.hideAllFields()
+    } else if (this.typeTarget.value === "my_location") {
+      this.hideAllFields()
+      this.myLocationFieldsTargets.forEach(e => e.classList.remove("hidden"))
+      this.geolocate()
     } else if (this.typeTarget.value === "coordinates") {
-      this.placeFieldsTarget.classList.add("hidden")
-      this.coordinatesFieldsTarget.classList.remove("hidden")
-      this.gridSquareFieldsTarget.classList.add("hidden")
+      this.hideAllFields()
+      this.coordinatesFieldsTargets.forEach(e => e.classList.remove("hidden"))
     } else if (this.typeTarget.value === "grid_square") {
-      this.placeFieldsTarget.classList.add("hidden")
-      this.coordinatesFieldsTarget.classList.add("hidden")
-      this.gridSquareFieldsTarget.classList.remove("hidden")
+      this.hideAllFields()
+      this.gridSquareFieldsTargets.forEach(e => e.classList.remove("hidden"))
     } else if (this.typeTarget.value === "place") {
-      this.placeFieldsTarget.classList.remove("hidden")
-      this.coordinatesFieldsTarget.classList.add("hidden")
-      this.gridSquareFieldsTarget.classList.add("hidden")
+      this.hideAllFields()
+      this.placeFieldsTargets.forEach(e => e.classList.remove("hidden"))
+    } else if (this.typeTarget.value === "within_a_country") {
+      this.hideAllFields()
+      this.withinACountryFieldsTargets.forEach(e => e.classList.remove("hidden"))
     } else {
       throw `Unexpected type of geosearch : ${this.typeTarget.value}`
     }
   }
 
-  enable() {
-    if (!this.activatorTarget.checked) {
-      this.activatorTarget.checked = true
-      this.activatorTarget.dispatchEvent(new Event("change"))
-      this.updateState()
-    }
+  hideAllFields() {
+    this.myLocationFieldsTargets.forEach(e => e.classList.add("hidden"))
+    this.placeFieldsTargets.forEach(e => e.classList.add("hidden"))
+    this.coordinatesFieldsTargets.forEach(e => e.classList.add("hidden"))
+    this.gridSquareFieldsTargets.forEach(e => e.classList.add("hidden"))
+    this.withinACountryFieldsTargets.forEach(e => e.classList.add("hidden"))
   }
 
   geolocate() {

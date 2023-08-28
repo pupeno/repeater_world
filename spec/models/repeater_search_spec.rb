@@ -17,7 +17,7 @@ require "rails_helper"
 RSpec.describe RepeaterSearch, type: :model do
   context "When not geosearching" do
     before do
-      @repeater_search = create(:repeater_search, geosearch: false)
+      @repeater_search = create(:repeater_search)
       expect(@repeater_search).to be_valid
     end
 
@@ -87,7 +87,7 @@ RSpec.describe RepeaterSearch, type: :model do
   context "When geosearching by my location" do
     before do
       @repeater_search = create(:repeater_search,
-        geosearch: true, geosearch_type: RepeaterSearch::MY_LOCATION,
+        geosearch_type: RepeaterSearch::MY_LOCATION,
         distance: 10, distance_unit: RepeaterSearch::KM,
         latitude: 10.01, longitude: 20.02)
       expect(@repeater_search).to be_valid
@@ -170,7 +170,7 @@ RSpec.describe RepeaterSearch, type: :model do
           "country" => "United States",
           "country_code" => "US"}])
       @repeater_search = create(:repeater_search,
-        geosearch: true, geosearch_type: RepeaterSearch::PLACE,
+        geosearch_type: RepeaterSearch::PLACE,
         distance: 10, distance_unit: RepeaterSearch::KM,
         place: "New York, NY, US")
       expect(@repeater_search).to be_valid
@@ -242,7 +242,7 @@ RSpec.describe RepeaterSearch, type: :model do
   context "When geosearching by coordinates" do
     before do
       @repeater_search = create(:repeater_search,
-        geosearch: true, geosearch_type: RepeaterSearch::COORDINATES,
+        geosearch_type: RepeaterSearch::COORDINATES,
         distance: 10, distance_unit: RepeaterSearch::KM,
         latitude: 10.01, longitude: 20.02)
       expect(@repeater_search).to be_valid
@@ -314,7 +314,7 @@ RSpec.describe RepeaterSearch, type: :model do
   context "When geosearching by grid square" do
     before do
       @repeater_search = create(:repeater_search,
-        geosearch: true, geosearch_type: RepeaterSearch::GRID_SQUARE,
+        geosearch_type: RepeaterSearch::GRID_SQUARE,
         distance: 10, distance_unit: RepeaterSearch::KM,
         grid_square: "FN22ab")
       expect(@repeater_search).to be_valid
@@ -385,7 +385,7 @@ RSpec.describe RepeaterSearch, type: :model do
 
   it "should not run search when it's invalid" do
     repeater_search = create(:repeater_search)
-    repeater_search.geosearch = true
+    repeater_search.geosearch_type = RepeaterSearch::COORDINATES
     expect { repeater_search.run }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
@@ -399,7 +399,7 @@ RSpec.describe RepeaterSearch, type: :model do
         "country_code" => "US"}])
     Geocoder::Lookup::Test.add_stub("Nowhere", [])
     @repeater_search = create(:repeater_search,
-      geosearch: true, geosearch_type: RepeaterSearch::PLACE,
+      geosearch_type: RepeaterSearch::PLACE,
       distance: 10, distance_unit: RepeaterSearch::KM,
       place: "New York, NY, US")
     expect(@repeater_search).to be_valid
@@ -434,7 +434,6 @@ end
 #  dstar          :boolean          default(FALSE), not null
 #  fm             :boolean          default(FALSE), not null
 #  fusion         :boolean          default(FALSE), not null
-#  geosearch      :boolean
 #  geosearch_type :string
 #  grid_square    :string
 #  latitude       :decimal(, )
@@ -446,6 +445,7 @@ end
 #  tetra          :boolean          default(FALSE), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  country_id     :string
 #  user_id        :uuid
 #
 # Indexes
