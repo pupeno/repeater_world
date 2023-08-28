@@ -24,6 +24,9 @@ You should have received a copy of the GNU Affero General Public License along w
     <% if content_for? :meta_description %>
       <meta name="description" content="<%= yield :meta_description %>">
     <% end %>
+    <% if content_for? :canonical_url %>
+      <link rel="canonical" href="<%= yield :canonical_url %>" />
+  <% end %>
 
     <%# Security tags %>
     <%= csrf_meta_tags %>
@@ -44,20 +47,20 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <%# JavaScript %>
     <script>
-      <%# Copied from light_dark_switcher_controller.js to avoid FOUC %>
-      if (localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-        document.documentElement.classList.add('dark')
-      } else {
-        document.documentElement.classList.remove('dark')
-      }
+        <%# Copied from light_dark_switcher_controller.js to avoid FOUC %>
+        if (localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
 
-      const RAILS_ENV = <%= javascript_quoted_string_or_null(Rails.env) %>;
-      const IS_PULL_REQUEST = <%= javascript_quoted_string_or_null(ENV["IS_PULL_REQUEST"]) %>;
-      const RENDER = <%= javascript_quoted_string_or_null(ENV["RENDER"]) %>;
-      const RENDER_SERVICE_NAME = <%= javascript_quoted_string_or_null(ENV["RENDER_SERVICE_NAME"]) %>;
-      const SENTRY_DSN = <%= javascript_quoted_string_or_null(ENV["SENTRY_DSN_FE"]) %>;
-      const CROSSHAIRS_MAP_MARKER = "<%= image_url("map_markers/crosshairs.svg") %>";
-      const REPEATER_MAP_MARKERS = <%= RepeaterSearch::BANDS.to_h do |band|
+        const RAILS_ENV = <%= javascript_quoted_string_or_null(Rails.env) %>;
+        const IS_PULL_REQUEST = <%= javascript_quoted_string_or_null(ENV["IS_PULL_REQUEST"]) %>;
+        const RENDER = <%= javascript_quoted_string_or_null(ENV["RENDER"]) %>;
+        const RENDER_SERVICE_NAME = <%= javascript_quoted_string_or_null(ENV["RENDER_SERVICE_NAME"]) %>;
+        const SENTRY_DSN = <%= javascript_quoted_string_or_null(ENV["SENTRY_DSN_FE"]) %>;
+        const CROSSHAIRS_MAP_MARKER = "<%= image_url("map_markers/crosshairs.svg") %>";
+        const REPEATER_MAP_MARKERS = <%= RepeaterSearch::BANDS.to_h do |band|
           [band[:symbol], RepeaterSearch::MODES_AND_MULTI.to_h do |mode|
             [mode[:symbol], image_url("map_markers/marker-#{band[:symbol]}-#{mode[:symbol]}.svg")]
           end]
@@ -72,12 +75,12 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <%# Google maps: https://www.driftingruby.com/episodes/google-maps-api-with-stimulusjs %>
     <script>
-      window.dispatchMapsEvent = function (...args) {
-        const event = document.createEvent("Events")
-        event.initEvent("google-maps-callback", true, true)
-        event.args = args
-        window.dispatchEvent(event)
-      }
+        window.dispatchMapsEvent = function (...args) {
+            const event = document.createEvent("Events")
+            event.initEvent("google-maps-callback", true, true)
+            event.args = args
+            window.dispatchEvent(event)
+        }
     </script>
     <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{ENV["GOOGLE_MAPS_API_KEY"]}&callback=dispatchMapsEvent",
                                async: true,
