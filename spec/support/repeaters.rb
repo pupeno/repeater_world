@@ -28,7 +28,7 @@ RSpec.shared_context "repeaters" do
 
     # FM repeater without CTCSS, and Fusion
     create(:repeater, :explicit_modes,
-      name: "Weymouth", call_sign: "GB3DR", band: "2m", channel: "RV59", keeper: "G3VPF", operational: true,
+      name: "Weymouth", call_sign: "GB3DR", band: "2m", channel: "RV59", keeper: "G3VPF", operational: nil,
       tx_frequency: 145_737_500,
       rx_frequency: 145_137_500,
       fm: true, fm_tone_burst: true, fusion: true,
@@ -58,7 +58,7 @@ RSpec.shared_context "repeaters" do
 
     # FM, D-Star, Fusion, DMR and NXDN repeater.
     create(:repeater, :explicit_modes,
-      name: "Derby", call_sign: "GB7DC", band: "70cm", channel: "RU70", keeper: "G7NPW", operational: true,
+      name: "Derby", call_sign: "GB7DC", band: "70cm", channel: "RU70", keeper: "G7NPW", operational: nil,
       tx_frequency: 430_875_000,
       rx_frequency: 438_475_000,
       fm: true, fm_ctcss_tone: 71.9,
@@ -127,7 +127,7 @@ RSpec.shared_context "repeaters" do
       dstar: true,
       country_id: "jp")
 
-    # Blank repeater
+    # Blank repeaters
     create(:repeater)
     create(:repeater, fm: true, tx_frequency: 144_970_000)
 

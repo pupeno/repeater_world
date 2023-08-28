@@ -29,10 +29,10 @@ RSpec.describe CsvExporter do
       Amersham,GB3AM,,M0ZPU,6m,true,50840000,51340000,true,false,77.0,false,wide,false,,false,false,,,false,false,false,51.65,-0.62,IO91QP,,Amersham,"South West, England",HP7,gb,,,,,,,,,0:00,R50-13,,ukrepeater.net,
       Cleobury North,GB3BX,,G4VZO,2m,true,145675000,145075000,false,false,,false,,false,,false,true,13,SALOP DMR,false,false,false,52.5,-2.6,IO82QL,,Cleobury North,Wales & Marches,SY7,gb,,,,,,,,,0:00,RV54,,ukrepeater.net,
       Newcastle Emlyn,GB3CN,,GW6JSO,2m,true,145687500,145087500,true,false,94.8,false,wide,false,,false,false,,,false,false,false,51.99,-4.4,IO71TX,,Newcastle Emlyn,Wales & Marches,SA44,gb,,,,,,,,,0:00,RV55,,ukrepeater.net,https://repeater.world/ukrepeater-net
-      Weymouth,GB3DR,,G3VPF,2m,true,145737500,145137500,true,true,,false,wide,false,,true,false,,,false,false,false,50.55,-2.44,IO80SN,,Weymouth,"South West, England",DT5,gb,,,,,,,,,0:00,RV59,,ukrepeater.net,
+      Weymouth,GB3DR,,G3VPF,2m,,145737500,145137500,true,true,,false,wide,false,,true,false,,,false,false,false,50.55,-2.44,IO80SN,,Weymouth,"South West, England",DT5,gb,,,,,,,,,0:00,RV59,,ukrepeater.net,
       Perth,GB3SF,,GM3NFO,2m,true,145625000,145025000,false,false,,false,,false,,true,false,,,false,false,false,56.5,-3.4,IO86HK,,Perth,Scotland,PH2,gb,,,,,,,,,0:00,RV50,,ukrepeater.net,
       Marlborough,GB7AE,,M1CJE,70cm,true,439425000,430425000,false,false,,false,,true,,false,false,,,false,false,false,51.42,-1.76,IO91CJ,,Marlborough,"South West, England",SN8,gb,,,,,,,,,0:00,DVU34,,ukrepeater.net,
-      Derby,GB7DC,,G7NPW,70cm,true,430875000,438475000,true,false,71.9,false,wide,true,,true,true,1,BRANDMEISTER,true,false,false,52.9,-1.4,IO92GW,,Derby,"Midlands, England",DE21,gb,,,,,,,,,,RU70,Reduced output.,ukrepeater.net,
+      Derby,GB7DC,,G7NPW,70cm,,430875000,438475000,true,false,71.9,false,wide,true,,true,true,1,BRANDMEISTER,true,false,false,52.9,-1.4,IO92GW,,Derby,"Midlands, England",DE21,gb,,,,,,,,,,RU70,Reduced output.,ukrepeater.net,
       Herne Bay,GB7IC-C,,G4TKR,2m,true,145662500,145062500,true,false,,false,wide,true,,false,false,,,false,false,false,51.36,1.15,JO01NI,,Herne Bay,"South East, England",CT6,gb,,,,,,,,,0:00,RV53,,ukrepeater.net,
       Made up,JP0AA,,JP0ZZ,70cm,true,439420000,430420000,false,false,,false,,true,,false,false,,,false,false,false,,,,,,,,jp,,,,,,,,,,,,,
       Made up,JP0AA,,JP0ZZ,23cm,true,1297900000,1297900000,false,false,,false,,true,,false,false,,,false,false,false,,,,,,,,jp,,,,,,,,,,,,,

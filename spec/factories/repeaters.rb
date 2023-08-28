@@ -23,7 +23,6 @@ FactoryBot.define do
 
     trait :explicit_modes do
       after(:build) do |repeater|
-        repeater.operational = false unless repeater.operational?
         repeater.fm = false unless repeater.fm?
         repeater.fm_tone_burst = false unless repeater.fm_tone_burst?
         repeater.fm_tone_squelch = false unless repeater.fm_tone_squelch?
