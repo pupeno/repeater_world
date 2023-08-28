@@ -16,14 +16,15 @@
 class IcomExporter < Exporter
   def export
     headers = ["Group No", "Group Name", "Name", "Sub Name", "Repeater Call Sign", "Gateway Call Sign", "Frequency", "Dup", "Offset", "Mode", "TONE", "Repeater Tone", "RPT1USE", "Position", "Latitude", "Longitude", "UTC Offset"]
+
+    @repeaters = @repeaters.where(band: [Repeater::BAND_2M, Repeater::BAND_70CM]) # ID-52 can only do VHF and UHF.
+      .where("operational IS NOT FALSE") # Skip repeaters known to not be operational.
+      .merge(Repeater.where(fm: true).or(Repeater.where(dstar: true))) # ID-52 does FM and DStar only
+      .order(:name, :call_sign)
+      .includes(:country)
+
     CSV.generate(headers: headers, write_headers: true) do |csv|
-      @repeaters
-        .where(band: [Repeater::BAND_2M, Repeater::BAND_70CM]) # ID-52 can only do VHF and UHF.
-        .where.not(operational: false) # Skip repeaters known to not be operational.
-        .merge(Repeater.where(fm: true).or(Repeater.where(dstar: true))) # ID-52 does FM and DStar only
-        .order(:name, :call_sign)
-        .includes(:country)
-        .each do |repeater|
+      @repeaters.each do |repeater|
         if repeater.fm?
           csv << fm_repeater(repeater)
         end

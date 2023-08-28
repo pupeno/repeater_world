@@ -20,7 +20,7 @@ class BaofengUv5rExporter < Exporter
     ]
 
     @repeaters = @repeaters.where(band: [Repeater::BAND_2M, Repeater::BAND_70CM])
-      .where("operational IS NOT FALSE")
+      .where("operational IS NOT FALSE") # Skip repeaters known to not be operational.
       .where(fm: true)
       .order(:name, :call_sign)
 

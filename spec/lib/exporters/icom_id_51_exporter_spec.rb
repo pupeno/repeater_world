@@ -22,6 +22,7 @@ RSpec.describe IcomId51Exporter do
 
     expect(exporter.export).to eq(<<~CSV)
       Group No,Group Name,Name,Sub Name,Repeater Call Sign,Gateway Call Sign,Frequency,Dup,Offset,Mode,TONE,Repeater Tone,RPT1USE,Position,Latitude,Longitude,UTC Offset
+      1,United Kingdom,Repeater BL4NK,Missing Tone,BL4NK,,144.970000,DUP-,0.600000,FM,OFF,88.5Hz,YES,Approximate,,,--:--
       1,United Kingdom,Repeater FU11,city,FU11,,144.962500,DUP-,0.600000,FM,TONE,67.0Hz,YES,Approximate,51.740000,-3.420000,05:00
       1,United Kingdom,Repeater FU11,city,FU11   C,FU11   G,144.962500,DUP-,0.600000,DV,OFF,88.5Hz,YES,Approximate,51.740000,-3.420000,05:00
       1,United Kingdom,Newcastle Emlyn,Wales &,GB3CN,,145.687500,DUP-,0.600000,FM,TONE,94.8Hz,YES,Approximate,51.990000,-4.400000,0:00
