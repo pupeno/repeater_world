@@ -19,14 +19,14 @@ class BaofengUv5rExporter < Exporter
       SKIP, COMMENT, URCALL, RPT1CALL, RPT2CALL, DVCODE
     ]
 
+    @repeaters = @repeaters.where(band: [Repeater::BAND_2M, Repeater::BAND_70CM])
+      .where("operational IS NOT FALSE")
+      .where(fm: true)
+      .order(:name, :call_sign)
+
     CSV.generate(headers: headers, write_headers: true) do |csv|
-      @repeaters
-        .where(band: [Repeater::BAND_2M, Repeater::BAND_70CM])
-        .where.not(operational: false) # Skip repeaters known to not be operational.
-        .where(fm: true)
-        .order(:name, :call_sign)
-        .each_with_index do |repeater, index|
-        csv << repeater(repeater).merge({LOCATION => index})
+      @repeaters.each_with_index do |repeater, index|
+        csv << to_repeater_row(repeater).merge({LOCATION => index})
         if index >= 127 # Baofeng UV-5R can only have 127 memories.
           break
         end
@@ -55,7 +55,7 @@ class BaofengUv5rExporter < Exporter
   RPT2CALL = "RPT2CALL"
   DVCODE = "DVCODE"
 
-  def repeater(repeater)
+  def to_repeater_row(repeater)
     row = {
       FREQUENCY => frequency_in_mhz(repeater.rx_frequency, precision: 6),
       DUPLEX => (repeater.tx_frequency > repeater.rx_frequency) ? "-" : "+",
