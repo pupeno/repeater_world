@@ -26,7 +26,7 @@ You should have received a copy of the GNU Affero General Public License along w
                             focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
                             chevron-gray-700 dark:chevron-gray-300",
                     data: { geosearch_target: "type",
-                            action: "click->geosearch#enable change->geosearch#updateState" } } %>
+                            action: "change->geosearch#updateState" } } %>
 
   <%# All the searches that have the shape of "Within N KM of ...." %>
   <div class="my-1 hidden" data-geosearch-target="myLocationFields placeFields coordinatesFields gridSquareFields">
@@ -38,18 +38,14 @@ You should have received a copy of the GNU Affero General Public License along w
                           class: "pr-0 w-full grow
                                   rounded-s-md border-s border-e-0 border-gray-300 dark:border-gray-600
                                   focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
-                                  text-right",
-                          data: { geosearch_target: "controlled",
-                                  action: "click->geosearch#enable" } %>
+                                  text-right" %>
       <%= form.label :distance_unit, "Unit", class: "sr-only" %>
       <%= form.select :distance_unit,
                       RepeaterSearch::DISTANCE_UNITS, {}, {
                         class: "pl-2 w-full shrink
                                 rounded-e-md border-e border-s-0 border-gray-300 dark:border-gray-600
                                 focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
-                               chevron-gray-700 dark:chevron-gray-300",
-                        data: { geosearch_target: "controlled",
-                                action: "click->geosearch#enable" } } %>
+                               chevron-gray-700 dark:chevron-gray-300" } %>
     </span>
 
     of
@@ -63,8 +59,7 @@ You should have received a copy of the GNU Affero General Public License along w
     <div class="contents hidden" data-geosearch-target="placeFields">
       <%= form.text_field :place,
                           placeholder: "City, town, place, landmark",
-                          class: "inline w-80 px-2 field-text",
-                          data: { action: "click->geosearch#enable" } %>
+                          class: "inline w-80 px-2 field-text" %>
     </div>
 
     <%# Fields for searching by coordinates %>
@@ -73,8 +68,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= form.label :latitude, "latitude", class: "mr-2" %>
         <%= form.text_field :latitude,
                             class: "inline w-28 px-2 field-text",
-                            data: { geosearch_target: "latitude",
-                                    action: "click->geosearch#enable" } %>
+                            data: { geosearch_target: "latitude" } %>
       </span>
 
       <span>and</span>
@@ -83,8 +77,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= form.label :longitude, "longitude", class: "mr-2" %>
         <%= form.text_field :longitude,
                             class: "inline w-28 px-2 field-text",
-                            data: { geosearch_target: "longitude",
-                                    action: "click->geosearch#enable" } %>
+                            data: { geosearch_target: "longitude" } %>
       </div>
     </div>
 
@@ -92,8 +85,7 @@ You should have received a copy of the GNU Affero General Public License along w
     <span class="contents hidden" data-geosearch-target="gridSquareFields">
       the grid
       <%= form.text_field :grid_square,
-                          class: "inline w-28 px-2 mt-1 field-text",
-                          data: { action: "click->geosearch#enable" } %>
+                          class: "inline w-28 px-2 mt-1 field-text" %>
     </span>
   </div>
 
@@ -105,7 +97,7 @@ You should have received a copy of the GNU Affero General Public License along w
                     { class: "inline-block pl-3 pr-10
                               rounded-md border border-gray-300 dark:border-gray-600
                               focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500
-                              chevron-gray-700 dark:chevron-gray-300", } %>
+                              chevron-gray-700 dark:chevron-gray-300" } %>
   </div>
 </div>
 
