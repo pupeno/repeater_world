@@ -51,6 +51,7 @@ export default class extends Controller {
       toggle.classList.remove("hidden")
     })
     this.moreTarget.classList.add("hidden")
+    this.allTarget.focus()
   }
 
   // Show the buttons that are toggled on. The rest needs to click on "More" to be shown. See showMore()
