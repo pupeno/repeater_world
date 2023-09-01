@@ -33,7 +33,7 @@ gem "geocoder", "~> 1.8"
 gem "importmap-rails", "~> 1.2" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "jbuilder", "~> 2.11"
 gem "kaminari", "~> 1.2"
-gem "pg", "~> 1.4" # Use postgresql as the database for Active Record
+gem "pg", "~> 1.5" # Use postgresql as the database for Active Record
 gem "postmark-rails", "~> 0.22"
 gem "puma", "~> 6.3" # Use the Puma web server [https://github.com/puma/puma]
 gem "rails", "~> 7.0" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
