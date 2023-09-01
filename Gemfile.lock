@@ -193,7 +193,7 @@ GEM
     parser (3.2.2.3)
       ast (~> 2.4.1)
       racc
-    pg (1.5.3)
+    pg (1.5.4)
     postmark (1.24.0)
       json
     postmark-rails (0.22.1)
@@ -386,7 +386,7 @@ DEPENDENCIES
   importmap-rails (~> 1.2)
   jbuilder (~> 2.11)
   kaminari (~> 1.2)
-  pg (~> 1.4)
+  pg (~> 1.5)
   postmark-rails (~> 0.22)
   puma (~> 6.3)
   rails (~> 7.0)
