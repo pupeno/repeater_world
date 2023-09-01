@@ -14,6 +14,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
 <div class="geosearch my-3 mx-1" data-controller="geosearch">
   <%# Type of geosearch selector %>
+  <%= form.label :geosearch_type, "Geographic filtering method", class: "sr-only" %>
   <%= form.select :geosearch_type,
                   { "Near my current location" => RepeaterSearch::MY_LOCATION,
                     "Near a place (city or any other named location)" => RepeaterSearch::PLACE,
@@ -58,6 +59,8 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <%# Field for searching by place %>
     <div class="contents hidden" data-geosearch-target="placeFields">
+      the
+      <%= form.label :place, "place", class: "mr-1" %>
       <%= form.text_field :place,
                           placeholder: "City, town, place, landmark",
                           class: "inline w-80 px-2 field-text" %>
@@ -66,16 +69,14 @@ You should have received a copy of the GNU Affero General Public License along w
     <%# Fields for searching by coordinates %>
     <div class="contents hidden" data-geosearch-target="coordinatesFields">
       <span class="inline-flex items-baseline">
-        <%= form.label :latitude, "latitude", class: "mr-2" %>
+        <%= form.label :latitude, "latitude", class: "mr-1" %>
         <%= form.text_field :latitude,
                             class: "inline w-28 px-2 field-text",
                             data: { geosearch_target: "latitude" } %>
       </span>
-
       <span>and</span>
-
       <div class="inline-flex items-baseline">
-        <%= form.label :longitude, "longitude", class: "mr-2" %>
+        <%= form.label :longitude, "longitude", class: "mr-1" %>
         <%= form.text_field :longitude,
                             class: "inline w-28 px-2 field-text",
                             data: { geosearch_target: "longitude" } %>
@@ -84,7 +85,8 @@ You should have received a copy of the GNU Affero General Public License along w
 
     <%# Field for searching by grid square. %>
     <span class="contents hidden" data-geosearch-target="gridSquareFields">
-      the grid
+      the
+      <%= form.label :grid_square, "grid", class: "mr-1"  %>
       <%= form.text_field :grid_square,
                           class: "inline w-28 px-2 mt-1 field-text" %>
     </span>
@@ -92,6 +94,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <%# Search within a country %>
   <div class="my-1 hidden" data-geosearch-target="withinACountryFields">
+    <%= form.label :country_id, "Country", class: "sr-only" %>
     <%= form.select :country_id,
                     Country.order(:name).collect { |c| [c.name, c.id] },
                     {},
