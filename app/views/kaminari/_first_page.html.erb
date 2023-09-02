@@ -26,7 +26,7 @@ You should have received a copy of the GNU Affero General Public License along w
                inline-flex items-center
                font-medium text-gray-300 dark:text-gray-600">
       <i class="fa-solid fa-angles-left"></i>
-      <span class="ml-2 hidden sm:block">First</span>
+      <span class="sm:ml-2 sr-only sm:not-sr-only sm:block">First</span>
     </span>
 <% else %>
   <%= link_to url, remote: remote,
@@ -40,6 +40,6 @@ You should have received a copy of the GNU Affero General Public License along w
                       focus:text-gray-800 focus:border-gray-300
                       dark:focus:text-gray-200 dark:focus:border-gray-500" do %>
     <i class="fa-solid fa-angles-left"></i>
-    <span class="ml-2 hidden sm:block">First</span>
+    <span class="sm:ml-2 sr-only sm:not-sr-only sm:block">First</span>
   <% end %>
 <% end %>
