@@ -40,6 +40,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <div class="mb-3 flex flex-row flex-wrap gap-2"
        data-controller="multi-toggle">
     <%= toggle_like_button "All Bands",
+                           checked: RepeaterSearch::BANDS.map { |b| form.object.send(b[:name]) }.none?,
                            data: { action: "click->multi-toggle#selectAll",
                                    multi_toggle_target: "all" } %>
     <% RepeaterSearch::BANDS.each do |band| %>
@@ -59,9 +60,9 @@ You should have received a copy of the GNU Affero General Public License along w
   <div class="mb-3 flex flex-row flex-wrap gap-2"
        data-controller="multi-toggle">
     <%= toggle_like_button "All Modes",
-                           class: "",
+                           checked: RepeaterSearch::MODES.map { |m| form.object.send(m[:name]) }.none?,
                            data: { action: "click->multi-toggle#selectAll",
-                                   multi_toggle_target: "all" } %>
+                                                multi_toggle_target: "all" } %>
     <% RepeaterSearch::MODES.each do |mode| %>
       <%= toggle_button form, mode[:name], mode[:label],
                         class: "#{mode[:secondary] ? "hidden" : ""}",

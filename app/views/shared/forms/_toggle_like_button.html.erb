@@ -16,6 +16,5 @@ You should have received a copy of the GNU Affero General Public License along w
     as the toggle buttons. This needs to be kept in sync with the stile in _toggle_button.html.erb %>
 <%= content_tag(:button,
                 label,
-                class: "button-toggle-checked
-                        #{local_assigns[:class]}",
+                class: (checked ? "button-toggle-checked" : "button-toggle-unchecked") + " #{local_assigns[:class]}",
                 **kwargs) %>

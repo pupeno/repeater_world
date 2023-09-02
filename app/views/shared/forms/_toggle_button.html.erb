@@ -14,8 +14,8 @@ You should have received a copy of the GNU Affero General Public License along w
 
 <%# The style here needs to be kept in sync with _toggle_like_button.html.erb %>
 <%= form.label name,
-               class: "button-toggle-unchecked
-                       #{local_assigns[:class]}",
+               class: (form.object.send(name) ? "button-toggle-checked" : "button-toggle-unchecked") +
+                 " #{local_assigns[:class]}",
                data: { controller: "toggle-button", **data },
                **kwargs do %>
   <%= form.check_box name,
