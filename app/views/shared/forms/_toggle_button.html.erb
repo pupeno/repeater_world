@@ -14,13 +14,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
 <%# The style here needs to be kept in sync with _toggle_like_button.html.erb %>
 <%= form.label name,
-               class: "button-base
-                       bg-orange-50 dark:bg-orange-900
-                       border border-orange-500
-                       ring-0 ring-orange-500 ring-inset
-                       outline-orange-500
-                       hover:bg-orange-100
-                       focus-within:bg-orange-50
+               class: "button-toggle-unchecked
                        #{local_assigns[:class]}",
                data: { controller: "toggle-button", **data },
                **kwargs do %>

@@ -15,9 +15,9 @@
 
 import {Controller} from "@hotwired/stimulus"
 
-export const WHEN_CHECKED = ["ring-2", "bg-orange-300", "dark:bg-orange-700", "hover:bg-orange-400", "focus-within:bg-orange-400"]
+export const WHEN_CHECKED = "button-toggle-checked"
 
-export const WHEN_UNCHECKED = ["ring-0", "bg-orange-50", "dark:bg-orange-900", "hover:bg-orange-100", "focus-within:bg-orange-50"]
+export const WHEN_UNCHECKED = "button-toggle-unchecked"
 
 export default class extends Controller {
   connect() {
@@ -28,11 +28,11 @@ export default class extends Controller {
 
   updateStyle() {
     if (this.checkbox.checked) {
-      this.label.classList.remove(...(WHEN_UNCHECKED))
-      this.label.classList.add(...(WHEN_CHECKED))
+      this.label.classList.remove(WHEN_UNCHECKED)
+      this.label.classList.add(WHEN_CHECKED)
     } else {
-      this.label.classList.remove(...(WHEN_CHECKED))
-      this.label.classList.add(...(WHEN_UNCHECKED))
+      this.label.classList.remove(WHEN_CHECKED)
+      this.label.classList.add(WHEN_UNCHECKED)
     }
   }
 }
