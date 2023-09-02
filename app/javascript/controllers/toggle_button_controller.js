@@ -34,15 +34,5 @@ export default class extends Controller {
       this.label.classList.remove(...(WHEN_CHECKED))
       this.label.classList.add(...(WHEN_UNCHECKED))
     }
-
-    const whenDisabled = ["opacity-25", "cursor-not-allowed"]
-    const whenEnabled = ["cursor-pointer"]
-    if (this.checkbox.disabled) {
-      this.label.classList.remove(...whenEnabled)
-      this.label.classList.add(...whenDisabled)
-    } else {
-      this.label.classList.remove(...whenDisabled)
-      this.label.classList.add(...whenEnabled)
-    }
   }
 }
