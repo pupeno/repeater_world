@@ -54,7 +54,10 @@
     }
 
     .button-toggle-base {
-        @apply border border-orange-700 dark:border-orange-400;
+        @apply
+        px-2 sm:px-3 md:px-5
+        border border-orange-700
+        dark:border-orange-400;
     }
 
     .button-toggle-checked {
