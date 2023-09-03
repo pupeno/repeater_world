@@ -28,6 +28,9 @@ class SuggestedRepeater < ApplicationRecord
       field :call_sign
       field :band
       field :tx_frequency
+      field :submitter_name
+      field :submitter_email
+      field :submitter_call_sign
       field :done_at
       field :created_at
     end
