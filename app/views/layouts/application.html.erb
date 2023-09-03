@@ -93,8 +93,8 @@ You should have received a copy of the GNU Affero General Public License along w
                                "data-turbolinks-eval": false %>
   </head>
   <body class="flex flex-col
-               bg-gray-50 text-gray-900
-               dark:bg-gray-800 dark:text-gray-200"
+               text-gray-900 bg-gray-50
+               dark:text-gray-200 dark:bg-gray-900"
         data-controller="light-dark-switcher">
     <div class="min-h-screen flex flex-col">
       <%= render "layouts/top_bar" %>
@@ -111,8 +111,8 @@ You should have received a copy of the GNU Affero General Public License along w
       <%= render "layouts/cookie_popup" %>
 
       <footer class="mt-24
-                     bg-gray-200 dark:bg-gray-900
-                     text-gray-600 dark:text-gray-300">
+                     text-gray-600 bg-gray-200
+                     dark:text-gray-300 dark:bg-gray-950">
         <nav class="mx-4
                     my-2 md:my-4 lg:my-6 xl:my-8
                     flex justify-center flex-wrap
@@ -153,8 +153,9 @@ You should have received a copy of the GNU Affero General Public License along w
       </footer>
     </div>
 
-    <footer class="bg-gray-200 dark:bg-gray-900
-                   text-center text-xs text-gray-500">
+    <footer class="text-gray-700 bg-gray-200
+                   dark:text-gray-400 dark:bg-gray-950
+                   text-center text-xs ">
       <p class="mt-10">
         &copy; <%= Time.zone.now.year %> Flexpoint Tech Ltd. All rights reserved.
       </p>

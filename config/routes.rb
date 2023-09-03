@@ -53,6 +53,7 @@ Rails.application.routes.draw do
   get "privacy-policy", to: "static#privacy_policy"
   get "cookie-policy", to: "static#cookie_policy"
   get "404", to: "static#not_found"
+  get "ui", to: "static#ui"
 
   # Redirections
   get "open-source", to: redirect("/values")
@@ -131,6 +132,7 @@ end
 #                           privacy_policy GET    /privacy-policy(.:format)                                                                         static#privacy_policy
 #                            cookie_policy GET    /cookie-policy(.:format)                                                                          static#cookie_policy
 #                                          GET    /404(.:format)                                                                                    static#not_found
+#                                       ui GET    /ui(.:format)                                                                                     static#ui
 #                              open_source GET    /open-source(.:format)                                                                            redirect(301, /values)
 #                    open_source_open_data GET    /open-source-open-data(.:format)                                                                  redirect(301, /values)
 #                                     fail GET    /fail(.:format)                                                                                   static#fail
