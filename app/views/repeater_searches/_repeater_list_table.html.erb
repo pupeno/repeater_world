@@ -68,10 +68,10 @@ You should have received a copy of the GNU Affero General Public License along w
     </thead>
     <tbody class="">
       <% repeaters.each_with_index do |repeater, index| %>
-        <tr class="<%= index.even? ? "" : "bg-gray-100 dark:bg-gray-700" %>">
-          <td class="<%= cell_classes %>">
+        <tr class="<%= index.even? ? "" : "bg-gray-100 dark:bg-gray-800" %>">
+          <th scope="row" class="<%= cell_classes %> text-left">
             <%= link_to repeater.name, repeater, class: "link font-bold" %>
-          </td>
+          </th>
           <td class="<%= cell_classes %>">
             <%= link_to repeater.call_sign, repeater, class: "link font-bold" %>
           </td>

@@ -17,7 +17,9 @@ You should have received a copy of the GNU Affero General Public License along w
 <div class="w-full sm:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <%= render "shared/flash_messages" %>
 
-  <ul role="list" class="divide-y divide-gray-100">
-    <%= render @repeater_searches %>
+  <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+    <% @repeater_searches.each_with_index do |repeater_search, index| %>
+      <%= render "repeater_search", { repeater_search: repeater_search, index: index } %>
+    <% end %>
   </ul>
 </div>

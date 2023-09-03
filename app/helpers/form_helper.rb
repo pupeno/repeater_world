@@ -76,9 +76,9 @@ module FormHelper
       locals: {form: form, name: name, label: label, class: klass, data: data, kwargs: kwargs}
   end
 
-  def toggle_like_button(label, **kwargs)
+  def toggle_like_button(label, checked: true, **kwargs)
     klass = kwargs.delete(:class) || ""
     render partial: "shared/forms/toggle_like_button",
-      locals: {label: label, class: klass, kwargs: kwargs}
+      locals: {label: label, checked: checked, class: klass, kwargs: kwargs}
   end
 end
