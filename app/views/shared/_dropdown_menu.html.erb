@@ -15,7 +15,9 @@ You should have received a copy of the GNU Affero General Public License along w
 <div class="relative flex-none"
      data-controller="dropdown-menu">
   <button type="button"
-          class="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900"
+          class="-m-2.5 block p-2.5
+                 text-gray-700 hover:text-orange-700
+                 dark:text-gray-300 dark:hover:text-orange-300"
           id="options-menu-0-button"
           aria-expanded="false"
           aria-haspopup="true"
@@ -26,7 +28,11 @@ You should have received a copy of the GNU Affero General Public License along w
   </button>
   <div class="absolute right-0 z-10 mt-2 w-32 origin-top-right
               rounded-md py-2
-              shadow-lg ring-1 ring-gray-900/5 focus:outline-none
+              shadow-lg ring-1 focus:outline-none
+              bg-gray-50
+              ring-gray-900/5
+              dark:bg-gray-900
+              ring-gray-100/10
               hidden"
        role="menu" aria-orientation="vertical" aria-labelledby="options-menu-0-button" tabindex="-1"
        data-transition-enter="ease-out duration-100"

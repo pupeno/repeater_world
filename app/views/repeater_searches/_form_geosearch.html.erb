@@ -17,7 +17,7 @@ You should have received a copy of the GNU Affero General Public License along w
   <%= form.label :geosearch_type, "Geographic filtering method", class: "sr-only" %>
   <%= form.select :geosearch_type,
                   { "Near my current location" => RepeaterSearch::MY_LOCATION,
-                    "Near a place (city or any other named location)" => RepeaterSearch::PLACE,
+                    "Near a place (city, town, location)" => RepeaterSearch::PLACE,
                     "Near some coordinates" => RepeaterSearch::COORDINATES,
                     "Near a grid square" => RepeaterSearch::GRID_SQUARE,
                     "Within a country" => RepeaterSearch::WITHIN_A_COUNTRY },

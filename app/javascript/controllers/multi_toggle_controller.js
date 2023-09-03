@@ -30,18 +30,18 @@ export default class extends Controller {
       this.getCheckbox(toggle).checked = false
       this.application.getControllerForElementAndIdentifier(toggle, "toggle-button")?.updateStyle()
     })
-    this.allTarget.classList.remove(...WHEN_UNCHECKED)
-    this.allTarget.classList.add(...WHEN_CHECKED)
+    this.allTarget.classList.remove(WHEN_UNCHECKED)
+    this.allTarget.classList.add(WHEN_CHECKED)
   }
 
   updateStatusOfAllButton() {
     const anyButtonsChecked = this.toggleTargets.filter((toggle) => this.getCheckbox(toggle).checked).length !== 0
     if (anyButtonsChecked) {
-      this.allTarget.classList.remove(...WHEN_CHECKED)
-      this.allTarget.classList.add(...WHEN_UNCHECKED)
+      this.allTarget.classList.remove(WHEN_CHECKED)
+      this.allTarget.classList.add(WHEN_UNCHECKED)
     } else {
-      this.allTarget.classList.remove(...WHEN_UNCHECKED)
-      this.allTarget.classList.add(...WHEN_CHECKED)
+      this.allTarget.classList.remove(WHEN_UNCHECKED)
+      this.allTarget.classList.add(WHEN_CHECKED)
     }
   }
 
