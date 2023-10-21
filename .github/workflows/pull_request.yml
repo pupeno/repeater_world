@@ -43,6 +43,9 @@ jobs:
       - name: Set Up Database Schema
         run: bin/rails db:migrate
 
+      - name: Precompile assets
+        run: bundle exec rake assets:precompile
+
       - name: Run Tests
         run: bundle exec rspec
 
@@ -92,6 +95,9 @@ jobs:
       - name: Set Up Database Schema
         if: steps.simplecov-resultset.outputs.cache-hit != 'true'
         run: bin/rails db:migrate
+
+      - name: Precompile assets
+        run: bundle exec rake assets:precompile
 
       - name: Run Tests
         if: steps.simplecov-resultset.outputs.cache-hit != 'true'
