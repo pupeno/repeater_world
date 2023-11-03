@@ -61,6 +61,8 @@ class IrlpImporter < Importer
     tx_frequency = raw_repeater["Freq"].to_f.abs * 10**6 # Yes, there's a repeater with negative frequency.
     if call_sign == "W7NJN" && tx_frequency == 147_500_000_000 # Someone mixed their Mhz and khz
       tx_frequency = 147_500_000
+    elsif call_sign == "W7UPS" && tx_frequency == 446_525_000_000 # Someone mixed their Mhz and khz
+      tx_frequency = 446_525_000
     end
     if tx_frequency == 0
       @logger.info "Ignoring #{call_sign} since the frequency is 0"
@@ -76,9 +78,6 @@ class IrlpImporter < Importer
     end
 
     repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10**3
-    if repeater.tx_frequency > 150_000_000 && repeater.tx_frequency < 160_000_000
-      repeater.band = Repeater::BAND_2M # There's one repeater with frequency 157.56MHz, which is outside the band plan.
-    end
     repeater.fm = true # Just making an assumption here, we don't have access code, so this is actually a bit useless.
 
     repeater.locality = raw_repeater["City"]
