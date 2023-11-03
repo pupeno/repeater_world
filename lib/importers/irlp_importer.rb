@@ -56,6 +56,9 @@ class IrlpImporter < Importer
     if call_sign.blank? || call_sign == "*"
       @logger.info "Ignoring repeater since the call sign is #{raw_repeater["CallSign"]}"
       return [:ignored_due_to_broken_record, nil]
+    elsif call_sign == "K5NX" && raw_repeater["Freq"] == "157.5600"
+      @logger.info "Ignoring repeater since frequency is outside the band plan #{raw_repeater["CallSign"]}"
+      return [:ignored_due_to_broken_record, nil]
     end
 
     tx_frequency = raw_repeater["Freq"].to_f.abs * 10**6 # Yes, there's a repeater with negative frequency.
