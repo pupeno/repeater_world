@@ -208,7 +208,8 @@ class NerepeatersImporter < Importer
       elsif repeater.call_sign == "K1GHZ" && raw_repeater[COMMENT]&.include?(" 1270.1000 ")
         repeater.rx_frequency = 1_270_100_000
       elsif repeater.call_sign.in? %w[W1AFD W2FCC NO1A K1GAS KB1ISZ KB1ISZ NN1PA N1PA N1MYY KX1X KC1EGN NB1RI W1MLL K1IR
-        K1KZP WE1CT KB1KVD W1STT KX1X WA1REQ W1AW AB1EX N1DOT WA3ITR W1SPC KB1VKY WX1PBD AA1TT KB1FX AA1PR WW1VT W1KK]
+        K1KZP WE1CT KB1KVD W1STT KX1X WA1REQ W1AW AB1EX N1DOT WA3ITR W1SPC KB1VKY WX1PBD AA1TT KB1FX AA1PR WW1VT W1KK
+        WB1GOF]
         repeater.rx_frequency = repeater.tx_frequency # No idea what's going on here, we just don't have the rx frequency.
       end
     end
