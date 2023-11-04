@@ -165,6 +165,12 @@ RSpec.describe "/repeater_searches", type: :request do
         expect(response.body).to include("Name,Call Sign,Web Site,Keeper,Band,Operational,Tx Frequency,Rx Frequency,FM,Tone Burst,CTCSS Tone,Tone Squelch,Bandwidth,D-Star,D-Star Port,Fusion,DMR,DMR Color Code,DMR Network,NXDN,P25,Tetra,Latitude,Longitude,Grid Square,Address,Locality,Region,Post Code,Country Code,Tx Power,Tx Antenna,Tx Antenna Polarization,Rx Antenna,Rx Antenna Polarization,Altitude Asl,Altitude Agl,Bearing,UTC Offset,Channel,Notes,Source,Redistribution Limitations")
         expect(response.body).to include("2M FM,")
       end
+
+      it "exports with no parameters of any kind" do
+        expect do
+          get export_url # I'm not sure what made it happen, the URL was export.php, so probably some crawling searching for exploits.
+        end.to raise_exception(ActionController::BadRequest)
+      end
     end
 
     context "as a user" do
