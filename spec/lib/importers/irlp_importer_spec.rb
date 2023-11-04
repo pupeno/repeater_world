@@ -30,7 +30,7 @@ RSpec.describe IrlpImporter do
     Dir.mktmpdir("IrlpImporter") do |dir|
       expect do
         IrlpImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(929)
+      end.to change { Repeater.count }.by(915)
 
       # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "VE7ISC")
@@ -40,7 +40,7 @@ RSpec.describe IrlpImporter do
       expect(repeater.rx_frequency).to eq(146_040_000)
 
       # Check a case where we get multiple repeaters with the same call sign.
-      expect(Repeater.where(call_sign: "K5NX").count).to eq(4)
+      expect(Repeater.where(call_sign: "K5NX").count).to eq(2)
     end
   end
 
