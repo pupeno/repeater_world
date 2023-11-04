@@ -34,7 +34,7 @@ RSpec.describe UkrepeatersImporter do
     Dir.mktmpdir("ukrepeatersimporter") do |dir|
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(929)
+      end.to change { Repeater.count }.by(920)
 
       # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_by(call_sign: "GB7DC")
