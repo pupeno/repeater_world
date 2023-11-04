@@ -69,13 +69,17 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def export
-    if params[:id].present?
-      @repeater_search = RepeaterSearch.new(repeater_search_params[:s])
+    safe_params = repeater_search_params
+    if safe_params[:id].present?
+      @repeater_search = RepeaterSearch.new(safe_params[:s])
     else
       defaults = {distance: 8, distance_unit: RepeaterSearch::KM}
-      @repeater_search = RepeaterSearch.new(defaults.merge(repeater_search_params[:s]))
+      @repeater_search = RepeaterSearch.new(defaults.merge(safe_params[:s] || {}))
     end
-    exporter_class = Exporters::EXPORTER_FOR[repeater_search_params[:e][:format].to_sym]
+    exporter_class = Exporters::EXPORTER_FOR[safe_params.dig(:e, :format)&.to_sym]
+    if exporter_class.blank?
+      raise ActionController::BadRequest, "Exporter format \"#{safe_params.dig(:e, :format)}\" not recognized, it should be one of #{Exporters::EXPORTER_FOR.keys}"
+    end
     @export = exporter_class.new(@repeater_search.run).export
     send_data(@export, filename: "export.csv", disposition: "attachment")
   end
@@ -132,12 +136,12 @@ class RepeaterSearchesController < ApplicationController
     @repeater_search = current_user.repeater_searches.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def repeater_search_params
     fields = RepeaterSearch::BANDS.map { |band| band[:name] } +
       RepeaterSearch::MODES.map { |mode| mode[:name] } +
       [:name, :geosearch_type, :distance, :distance_unit, :place, :latitude, :longitude, :grid_square, :country_id]
     params.permit(
+      :id, # Id of the record, when it's saved
       :d, # Display mode, like cards, maps, table.
       s: fields, # Fields in the RepeaterSearch model.
       e: [:format] # Whether to export and what format.
