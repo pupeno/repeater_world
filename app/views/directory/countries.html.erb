@@ -19,7 +19,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <ul>
     <% @countries.each do |country| %>
-      <li><%= link_to country.name, directory_by_country_url(country.id), class: "link" %></li>
+      <li class="mb-4"><%= link_to country.name, directory_by_country_url(country.id), class: "link" %></li>
     <% end %>
   </ul>
 </div>
