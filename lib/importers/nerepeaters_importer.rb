@@ -22,7 +22,7 @@ class NerepeatersImporter < Importer
     csv_file = CSV.table(file_name)
 
     ignored_due_to_source_count = 0
-    ignored_due_to_invalid = 0
+    ignored_due_to_invalid_count = 0
     created_or_updated_ids = []
     repeaters_deleted_count = 0
 
@@ -32,7 +32,7 @@ class NerepeatersImporter < Importer
         if action == :ignored_due_to_source
           ignored_due_to_source_count += 1
         elsif action == :ignored_due_to_invalid
-          ignored_due_to_invalid += 1
+          ignored_due_to_invalid_count += 1
         else
           created_or_updated_ids << imported_repeater.id
         end
@@ -43,7 +43,7 @@ class NerepeatersImporter < Importer
       repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: created_or_updated_ids).delete_all
     end
 
-    @logger.info "Done importing from #{SOURCE}. #{created_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{ignored_due_to_invalid} ignored due to being invalid, and #{repeaters_deleted_count} deleted."
+    @logger.info "Done importing from #{SOURCE}. #{created_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{ignored_due_to_invalid_count} ignored due to being invalid, and #{repeaters_deleted_count} deleted."
   end
 
   private
