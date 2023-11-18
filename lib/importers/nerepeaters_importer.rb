@@ -22,6 +22,7 @@ class NerepeatersImporter < Importer
     csv_file = CSV.table(file_name)
 
     ignored_due_to_source_count = 0
+    ignored_due_to_invalid = 0
     created_or_updated_ids = []
     repeaters_deleted_count = 0
 
@@ -30,6 +31,8 @@ class NerepeatersImporter < Importer
         action, imported_repeater = import_repeater(raw_repeater)
         if action == :ignored_due_to_source
           ignored_due_to_source_count += 1
+        elsif action == :ignored_due_to_invalid
+          ignored_due_to_invalid += 1
         else
           created_or_updated_ids << imported_repeater.id
         end
@@ -40,7 +43,7 @@ class NerepeatersImporter < Importer
       repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: created_or_updated_ids).delete_all
     end
 
-    @logger.info "Done importing from #{SOURCE}. #{created_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{repeaters_deleted_count} deleted."
+    @logger.info "Done importing from #{SOURCE}. #{created_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{ignored_due_to_invalid} ignored due to being invalid, and #{repeaters_deleted_count} deleted."
   end
 
   private
@@ -122,6 +125,14 @@ class NerepeatersImporter < Importer
     if repeater.persisted? && repeater.source != SOURCE && repeater.source != IrlpImporter.source
       @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
       return [:ignored_due_to_source, repeater]
+    end
+
+    # Something odd is going on here, NE Repeaters claims this is Yaesu System Fusion, but gives a CTCSS code,
+    # https://nedecn.org/maine-repeaters/buckfield-streaked-mtn-w1bkw/ and
+    # https://nedecn.org/maine-repeaters/peru-w1bkw/ seem to point to it being DMR (color code), and
+    # https://www.qrz.com/db/W1BKW seems to be a person, not a repeater.
+    if raw_repeater[CALL_SIGN] == "W1BKW" && raw_repeater[MODE].strip == "YSF"
+      return [:ignored_due_to_invalid, repeater]
     end
 
     import_rx_frequency(repeater, raw_repeater)
