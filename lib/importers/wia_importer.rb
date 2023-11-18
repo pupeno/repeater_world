@@ -48,7 +48,10 @@ class WiaImporter < Importer
       repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).delete_all
     end
 
-    [ignored_due_to_source_count, created_or_updated_ids, repeaters_deleted_count]
+    {created_or_updated_ids: created_or_updated_ids,
+     ignored_due_to_source_count: ignored_due_to_source_count,
+     ignored_due_to_invalid_count: 0,
+     repeaters_deleted_count: repeaters_deleted_count}
   end
 
   def import_repeater(raw_repeater)
