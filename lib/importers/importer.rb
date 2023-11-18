@@ -24,8 +24,12 @@ class Importer
 
   def import
     @logger.info "Importing repeaters from #{self.class.source}"
-    ignored_due_to_source_count, created_or_updated_ids, repeaters_deleted_count = import_data
-    @logger.info "Done importing from #{self.class.source}. #{created_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{repeaters_deleted_count} deleted."
+    result = import_data
+    @logger.info "Done importing from #{self.class.source}:"
+    @logger.info "  #{result[:created_or_updated_ids].count} created or updated"
+    @logger.info "  #{result[:ignored_due_to_source_count] || 0} ignored due to source"
+    @logger.info "  #{result[:ignored_due_to_invalid_count] || 0} ignored due to being invalid"
+    @logger.info "  #{result[:repeaters_deleted_count] || 0} deleted."
   end
 
   def self.source

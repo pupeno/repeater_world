@@ -47,7 +47,10 @@ class ArtscipubImporter < Importer
 
     # puts @mocks
 
-    [ignored_due_to_source_count, created_or_updated_ids, repeaters_deleted_count]
+    {created_or_updated_ids: created_or_updated_ids,
+     ignored_due_to_source_count: ignored_due_to_source_count,
+     ignored_due_to_invalid_count: 0,
+     repeaters_deleted_count: repeaters_deleted_count}
   end
 
   def get_raw_repeaters
