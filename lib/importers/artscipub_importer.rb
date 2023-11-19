@@ -374,12 +374,11 @@ class ArtscipubImporter < Importer
     elsif pl_tone.include?("dpl") || # No idea what this is...
         pl_tone.include?("dcs") || # No idea what this is...
         pl_tone.blank? || # Can't do much here.
-        pl_tone.downcase.in?(["23", "yes", "29.54", "448.35", "449.275", "52.35", "654", "[026]", "atv", "d 606", "d023n",
-          "d172", "d311", "d411", "d432", "data", "dts", "lafayette", "pl 218.1", "0", "a", "c",
-          "yes", "[dtmf]", "d051", "d732n", "[dtmf5]", "d263", "5z", "d174", "d245n", "[*]", "152d",
-          "293", "[nac]", "dtmf", "047", "073", "video", "[311]", "244", "tg99", "rock hill",
-          "[nac 293]", "csq", "d125n", "d455", "[dgid:00]", "432", "d047", "[visit srg]", "600",
-          "atikokan", "cochin", "d073", "[d031]", "[d 244n]"]) # No idea what this is...
+        pl_tone.downcase.in?(["23", "yes", "29.54", "448.35", "449.275", "52.35", "654", "[026]", "atv", "d 606",
+          "d023n", "d172", "d311", "d411", "d432", "data", "dts", "lafayette", "pl 218.1", "0", "a", "c", "yes",
+          "[dtmf]", "d051", "d732n", "[dtmf5]", "d263", "5z", "d174", "d245n", "[*]", "152d", "293", "[nac]", "dtmf",
+          "047", "073", "video", "[311]", "244", "tg99", "rock hill", "[nac 293]", "csq", "d125n", "d455", "[dgid:00]",
+          "432", "d047", "[visit srg]", "600", "atikokan", "cochin", "d073", "[d031]", "[d 244n]", "365n"]) # No idea what this is...
       # ...so not doing anything here.
     else
       raise "Unknown mode and access code \"#{pl_tone}\" for #{raw_repeater}."
