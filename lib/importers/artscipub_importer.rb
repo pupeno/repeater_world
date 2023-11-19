@@ -379,7 +379,7 @@ class ArtscipubImporter < Importer
           "yes", "[dtmf]", "d051", "d732n", "[dtmf5]", "d263", "5z", "d174", "d245n", "[*]", "152d",
           "293", "[nac]", "dtmf", "047", "073", "video", "[311]", "244", "tg99", "rock hill",
           "[nac 293]", "csq", "d125n", "d455", "[dgid:00]", "432", "d047", "[visit srg]", "600",
-          "atikokan", "cochin", "d073", "[d031]", "[d 244n]"]) # No idea what this is...
+          "atikokan", "cochin", "d073", "[d031]", "[d 244n]", "365n"]) # No idea what this is...
       # ...so not doing anything here.
     else
       raise "Unknown mode and access code \"#{pl_tone}\" for #{raw_repeater}."
