@@ -39,8 +39,8 @@ gem "puma", "~> 6.3" # Use the Puma web server [https://github.com/puma/puma]
 gem "rails", "~> 7.1" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails_admin", "~> 3.1"
 gem "sassc-rails", "~> 2.1" # Asked by rails_admin... but it's not a dependency??? the world is complicated.
-gem "sentry-rails", "~> 5.7"
-gem "sentry-ruby", "~> 5.10"
+gem "sentry-rails", "~> 5.14"
+gem "sentry-ruby", "~> 5.14"
 gem "sprockets-rails", "~> 3.4" # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "stimulus-rails", "~> 1.2" # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "tailwindcss-rails", "~> 2.0" # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
