@@ -55,7 +55,7 @@ gem "turbo-rails", "~> 1.4" # Hotwire's SPA-like page accelerator [https://turbo
 
 group :development, :test do
   gem "capybara", "~> 3.39"
-  gem "brakeman", "~> 6.0"
+  gem "brakeman", "~> 6.1"
   gem "debug", "~> 1.8", platforms: %i[mri mingw x64_mingw] # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "rspec-rails", "~> 6.1"
   gem "standard", "~> 1.32"
