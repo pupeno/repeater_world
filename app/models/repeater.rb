@@ -105,7 +105,7 @@ class Repeater < ApplicationRecord
   end
 
   def modes
-    Set.new MODES.select { |mode| send("#{mode}?") }.map(&:to_sym)
+    Set.new MODES.select { |mode| send(:"#{mode}?") }.map(&:to_sym)
   end
 
   def location_in_words
