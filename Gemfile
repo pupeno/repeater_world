@@ -42,7 +42,7 @@ gem "sassc-rails", "~> 2.1" # Asked by rails_admin... but it's not a dependency?
 gem "sentry-rails", "~> 5.15"
 gem "sentry-ruby", "~> 5.15"
 gem "sprockets-rails", "~> 3.4" # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
-gem "stimulus-rails", "~> 1.2" # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails", "~> 1.3" # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "tailwindcss-rails", "~> 2.1" # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
 gem "turbo-rails", "~> 1.4" # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 # gem "bcrypt", "~> 3.1.7" # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
