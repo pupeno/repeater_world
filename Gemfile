@@ -30,7 +30,7 @@ gem "dx-grid", "~> 1.0"
 gem "factory_bot_rails", "~> 6.4" # To be able to generate sample data in staging (which is production).
 gem "faker", "~> 3.2" # To be able to generate sample data in staging (which is production).
 gem "geocoder", "~> 1.8"
-gem "importmap-rails", "~> 1.2" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
+gem "importmap-rails", "~> 2.0" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "jbuilder", "~> 2.11"
 gem "kaminari", "~> 1.2"
 gem "pg", "~> 1.5" # Use postgresql as the database for Active Record
