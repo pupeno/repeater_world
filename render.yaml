@@ -21,6 +21,8 @@ envVarGroups:
         sync: false
       - key: POSTMARK_API_TOKEN
         sync: false
+      - key: MAILGUN_API_KEY
+        sync: false
       - key: SAFE_EMAIL_DEST
         value: "staging@repeater.world"
       - key: SECRET_KEY_BASE
