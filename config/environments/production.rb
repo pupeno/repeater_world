@@ -79,8 +79,6 @@ Rails.application.configure do
   config.action_mailer.default_url_options = {host: "repeater.world"}
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_caching = false # Switch to true only if we are sending a lot of email and we know what we are doing.
-  # config.action_mailer.delivery_method = :postmark
-  # config.action_mailer.postmark_settings = {api_token: ENV["POSTMARK_API_TOKEN"]}
   config.action_mailer.delivery_method = :mailgun
   config.action_mailer.mailgun_settings = {api_key: ENV["MAILGUN_API_KEY"], domain: "repeater.world"}
 

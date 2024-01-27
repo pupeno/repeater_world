@@ -34,7 +34,6 @@ gem "jbuilder", "~> 2.11"
 gem "kaminari", "~> 1.2"
 gem "mailgun-ruby", "~>1.2"
 gem "pg", "~> 1.5" # Use postgresql as the database for Active Record
-gem "postmark-rails", "~> 0.22"
 gem "puma", "~> 6.4" # Use the Puma web server [https://github.com/puma/puma]
 gem "rails", "~> 7.1" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails_admin", "~> 3.1"
