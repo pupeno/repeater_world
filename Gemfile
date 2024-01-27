@@ -18,7 +18,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.2.2"
 
 gem "active_link_to", "~> 1.0"
-gem "rbzip2", "~> 0.3"
 gem "activerecord-postgis-adapter", "~> 9.0"
 gem "babosa", "~> 2.0"
 gem "bootsnap", "~> 1.17", require: false # Reduces boot times through caching; required in config/boot.rb
@@ -33,11 +32,13 @@ gem "geocoder", "~> 1.8"
 gem "importmap-rails", "~> 2.0" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "jbuilder", "~> 2.11"
 gem "kaminari", "~> 1.2"
+gem "mailgun-ruby", "~>1.2"
 gem "pg", "~> 1.5" # Use postgresql as the database for Active Record
 gem "postmark-rails", "~> 0.22"
 gem "puma", "~> 6.4" # Use the Puma web server [https://github.com/puma/puma]
 gem "rails", "~> 7.1" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails_admin", "~> 3.1"
+gem "rbzip2", "~> 0.3"
 gem "sassc-rails", "~> 2.1" # Asked by rails_admin... but it's not a dependency??? the world is complicated.
 gem "sentry-rails", "~> 5.16"
 gem "sentry-ruby", "~> 5.16"
