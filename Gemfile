@@ -54,7 +54,7 @@ gem "turbo-rails", "~> 1.4" # Hotwire's SPA-like page accelerator [https://turbo
 # gem "sidekiq", "~> 6.4" # Uncomment this when starting to use proper background jobs.
 
 group :development, :test do
-  gem "capybara", "~> 3.39"
+  gem "capybara", "~> 3.40"
   gem "brakeman", "~> 6.1"
   gem "debug", "~> 1.9", platforms: %i[mri mingw x64_mingw] # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "rspec-rails", "~> 6.1"
