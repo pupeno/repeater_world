@@ -96,7 +96,7 @@ GEM
     bcrypt (3.1.20)
     bigdecimal (3.1.6)
     bindex (0.8.1)
-    bootsnap (1.17.1)
+    bootsnap (1.18.3)
       msgpack (~> 1.2)
     brakeman (6.1.2)
       racc
@@ -409,7 +409,7 @@ DEPENDENCIES
   activerecord-postgis-adapter (~> 9.0)
   annotate (~> 3.2)
   babosa (~> 2.0)
-  bootsnap (~> 1.17)
+  bootsnap (~> 1.18)
   brakeman (~> 6.1)
   capybara (~> 3.39)
   countries (~> 5.7)

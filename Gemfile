@@ -20,7 +20,7 @@ ruby "3.2.2"
 gem "active_link_to", "~> 1.0"
 gem "activerecord-postgis-adapter", "~> 9.0"
 gem "babosa", "~> 2.0"
-gem "bootsnap", "~> 1.17", require: false # Reduces boot times through caching; required in config/boot.rb
+gem "bootsnap", "~> 1.18", require: false # Reduces boot times through caching; required in config/boot.rb
 gem "countries", "~> 5.7"
 gem "devise", "~> 4.9"
 gem "devise-async", "~> 1.0"
