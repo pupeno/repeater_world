@@ -135,6 +135,11 @@ class NerepeatersImporter < Importer
       return [:ignored_due_to_invalid, repeater]
     end
 
+    # K1PQ is there twice, with different data, so we are ignoring one of the two.
+    if raw_repeater[CALL_SIGN] == "K1PQ" && raw_repeater[COMMENT] == "*Input: 146.400 (+0 kHz), 444.950 (Brownville,ME)"
+      return [:ignored_due_to_invalid, repeater]
+    end
+
     import_rx_frequency(repeater, raw_repeater)
     repeater.region = US_STATES[raw_repeater[STATE]]
     repeater.locality = raw_repeater[CITY]
@@ -218,10 +223,6 @@ class NerepeatersImporter < Importer
         repeater.rx_frequency = 902_062_500
       elsif repeater.call_sign == "K1GHZ" && raw_repeater[COMMENT]&.include?(" 1270.1000 ")
         repeater.rx_frequency = 1_270_100_000
-      elsif repeater.call_sign == "K1PQ" && raw_repeater[RX_OFFSET] == "*" && raw_repeater[COMMENT] == "*Input: 146.400 (+0 kHz), 444.950 (Brownville,ME)"
-        # Not completely sure what's going on here, the data for K1PQ seems messy, so this is just guesswork.
-        repeater.tx_frequency = 444_950_000
-        repeater.rx_frequency = 146_400_000
       elsif repeater.call_sign.in? %w[W1AFD W2FCC NO1A K1GAS KB1ISZ KB1ISZ NN1PA N1PA N1MYY KX1X KC1EGN NB1RI W1MLL K1IR
         K1KZP WE1CT KB1KVD W1STT KX1X WA1REQ W1AW AB1EX N1DOT WA3ITR W1SPC KB1VKY WX1PBD AA1TT KB1FX AA1PR WW1VT W1KK
         WB1GOF]

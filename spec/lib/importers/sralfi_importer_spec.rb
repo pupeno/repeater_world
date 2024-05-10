@@ -30,7 +30,7 @@ RSpec.describe SralfiImporter do
     Dir.mktmpdir("SralfiImporter") do |dir|
       expect do
         SralfiImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(142)
+      end.to change { Repeater.count }.by(144)
 
       # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 145_575_000, dmr: true)
