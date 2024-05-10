@@ -13,7 +13,7 @@
 # <https://www.gnu.org/licenses/>.
 
 module TopBarHelper
-  def top_bar_desktop_link(*, **kwargs, &block)
+  def top_bar_desktop_link(*, **kwargs, &)
     kwargs[:class] = <<-CLASSES
       inline-flex items-center px-1 pt-1 border-b-4 font-medium
       focus:outline focus:bg-orange-50 outline-2 outline-offset-[-2px] outline-orange-600
@@ -30,7 +30,7 @@ module TopBarHelper
     CLASSES
     kwargs[:class_active] = "border-orange-500 dark:text-gray-100"
     kwargs[:role] = "menuitem"
-    active_link_to(*, **kwargs, &block)
+    active_link_to(*, **kwargs, &)
   end
 
   DESKTOP_EXTRA_BASE_CLASS = <<-CLASSES
@@ -50,12 +50,12 @@ module TopBarHelper
     dark:bg-orange-950 dark:text-orange-300
   CLASSES
 
-  def top_bar_desktop_extra_link(*, **kwargs, &block)
+  def top_bar_desktop_extra_link(*, **kwargs, &)
     kwargs[:class] = DESKTOP_EXTRA_BASE_CLASS
     kwargs[:class_inactive] = DESKTOP_EXTRA_INACTIVE_CLASS
     kwargs[:class_active] = DESKTOP_EXTRA_ACTIVE_CLASS
     kwargs[:role] = "menuitem"
-    active_link_to(*, **kwargs, &block)
+    active_link_to(*, **kwargs, &)
   end
 
   def top_bar_desktop_extra_button_class
@@ -79,12 +79,12 @@ module TopBarHelper
     dark:bg-orange-950 dark:text-orange-300
   CLASSES
 
-  def top_bar_mobile_link(*, **kwargs, &block)
+  def top_bar_mobile_link(*, **kwargs, &)
     kwargs[:class] = MOBILE_BASE_CLASS
     kwargs[:class_inactive] = MOBILE_INACTIVE_CLASS
     kwargs[:class_active] = MOBILE_ACTIVE_CLASS
     kwargs[:role] = "menuitem"
-    active_link_to(*, **kwargs, &block)
+    active_link_to(*, **kwargs, &)
   end
 
   def top_bar_mobile_button_class
