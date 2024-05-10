@@ -224,19 +224,24 @@ class SralfiImporter < Importer
       repeater.tetra = true
     elsif raw_repeater["mode"].blank?
       # Nothing to do.
-    elsif raw_repeater["mode"] == "FM, Digi" && raw_repeater["callsign"] == "OH4RUB"
+    elsif raw_repeater["mode"] == "FM, Digi" && repeater.call_sign == "OH4RUB"
       # "FM, Digi" is not used for any other repeater, and the comment in this repeater says it supports these
       # modes.
       repeater.fm = true
       repeater.dstar = true
       repeater.fusion = true
       repeater.dmr = true
-    elsif raw_repeater["mode"] == "4FSK" && raw_repeater["callsign"].in?(["OH5DMRA", "OH5RUA", "OH5RUG"])
+    elsif raw_repeater["mode"] == "4FSK" && repeater.call_sign.in?(["OH5DMRA", "OH5RUA", "OH5RUG"])
       # Comments on the repeater information says it's actually DMR.
       repeater.dmr = true
+    elsif raw_repeater["mode"] == "Multi" && repeater.call_sign == "OH2RUP"
+      # Guessing from the comments
+      repeater.fm = true
+      repeater.dmr = true
     else
-      raise "Unknown mode \"#{raw_repeater["mode"]}\"."
+      raise "Unknown mode #{raw_repeater["mode"].inspect}."
     end
+
     if repeater.dmr?
       if raw_repeater["remarks"].present? &&
           (raw_repeater["remarks"].include?("Brandmeister") ||
