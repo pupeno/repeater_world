@@ -69,7 +69,7 @@ class UkrepeatersImporter < Importer
 
     # Some metadata.
     repeater.name = raw_repeater[:where].titleize
-    repeater.band = raw_repeater[:band].downcase
+    repeater.band = raw_repeater[:band]&.downcase
     repeater.channel = raw_repeater[:channel]
     repeater.keeper = raw_repeater[:keeper]
 
@@ -108,6 +108,8 @@ class UkrepeatersImporter < Importer
       repeater.region = "Northern Ireland"
     when "CEN"
       repeater.region = "Central England"
+    when "XXX"
+      repeater.region = nil
     else
       raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
     end
@@ -228,19 +230,7 @@ class UkrepeatersImporter < Importer
       repeater.dmr_color_code = raw_repeater[:dmrcc]
       repeater.dmr_network = raw_repeater[:dmrcon]
 
-      if raw_repeater[:status] == "OPERATIONAL"
-        repeater.operational = true
-      elsif raw_repeater[:status] == "REDUCED OUTPUT"
-        repeater.operational = true
-        repeater.notes = "Reduced output."
-      elsif raw_repeater[:status] == "DMR ONLY"
-        repeater.operational = true
-        repeater.notes = "DMR only."
-      elsif raw_repeater[:status] == "NOT OPERATIONAL"
-        repeater.operational = false
-      else
-        raise "Unknown status #{raw_repeater[:status]}"
-      end
+      parse_operational(raw_repeater, repeater)
 
       repeater.save!
       repeaters << repeater
@@ -270,19 +260,7 @@ class UkrepeatersImporter < Importer
         next
       end
 
-      if raw_repeater[:status] == "OPERATIONAL"
-        repeater.operational = true
-      elsif raw_repeater[:status] == "REDUCED OUTPUT"
-        repeater.operational = true
-        repeater.notes = "Reduced output."
-      elsif raw_repeater[:status] == "DMR ONLY"
-        repeater.operational = true
-        repeater.notes = "DMR only."
-      elsif raw_repeater[:status] == "NOT OPERATIONAL"
-        repeater.operational = false
-      else
-        raise "Unknown status #{raw_repeater[:status]}"
-      end
+      parse_operational(raw_repeater, repeater)
 
       repeater.save!
       repeaters << repeater
@@ -292,6 +270,24 @@ class UkrepeatersImporter < Importer
 
     @logger.info "Done processing repeaterlist_status.csv."
     repeaters
+  end
+
+  def parse_operational(raw_repeater, repeater)
+    if raw_repeater[:status] == "OPERATIONAL"
+      repeater.operational = true
+    elsif raw_repeater[:status] == "REDUCED OUTPUT"
+      repeater.operational = true
+      repeater.notes = "Reduced output."
+    elsif raw_repeater[:status] == "DMR ONLY"
+      repeater.operational = true
+      repeater.notes = "DMR only."
+    elsif raw_repeater[:status] == "NOT OPERATIONAL"
+      repeater.operational = false
+    elsif raw_repeater[:status].nil? && repeater.call_sign.in?(["GB3GC", "GB3VV"])
+      repeater.operational = false # No status present, but the web site says it's off the air.
+    else
+      raise "Unknown status #{raw_repeater[:status].inspect}"
+    end
   end
 
   def assert_fields(table, fields, url, file_name)

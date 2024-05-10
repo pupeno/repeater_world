@@ -135,6 +135,11 @@ class NerepeatersImporter < Importer
       return [:ignored_due_to_invalid, repeater]
     end
 
+    # K1PQ is there twice, with different data, so we are ignoring one of the two.
+    if raw_repeater[CALL_SIGN] == "K1PQ" && raw_repeater[COMMENT] == "*Input: 146.400 (+0 kHz), 444.950 (Brownville,ME)"
+      return [:ignored_due_to_invalid, repeater]
+    end
+
     import_rx_frequency(repeater, raw_repeater)
     repeater.region = US_STATES[raw_repeater[STATE]]
     repeater.locality = raw_repeater[CITY]

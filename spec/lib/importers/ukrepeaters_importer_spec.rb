@@ -34,18 +34,18 @@ RSpec.describe UkrepeatersImporter do
     Dir.mktmpdir("ukrepeatersimporter") do |dir|
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(920)
+      end.to change { Repeater.count }.by(1129)
 
       # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_by(call_sign: "GB7DC")
       expect(repeater.name).to eq("Derby")
       expect(repeater.band).to eq(Repeater::BAND_70CM)
-      expect(repeater.channel).to eq("RU70")
+      expect(repeater.channel).to eq("DMU28")
       expect(repeater.keeper).to eq("G7NPW")
-      expect(repeater.operational).to eq(true)
+      expect(repeater.operational).to eq(false)
       expect(repeater.notes).to eq(nil)
-      expect(repeater.tx_frequency).to eq(430875000)
-      expect(repeater.rx_frequency).to eq(438475000)
+      expect(repeater.tx_frequency).to eq(439350000)
+      expect(repeater.rx_frequency).to eq(430350000)
       expect(repeater.fm).to eq(true)
       expect(repeater.fm_tone_burst).to eq(nil)
       expect(repeater.fm_ctcss_tone).to eq(71.9)
@@ -54,7 +54,7 @@ RSpec.describe UkrepeatersImporter do
       expect(repeater.fusion).to eq(true)
       expect(repeater.dmr).to eq(true)
       expect(repeater.dmr_color_code).to eq(1)
-      expect(repeater.dmr_network).to eq("BRANDMEISTER")
+      expect(repeater.dmr_network).to eq(nil)
       expect(repeater.nxdn).to eq(true)
       expect(repeater.grid_square).to eq("IO92")
       expect(repeater.latitude).to eq(52.9)

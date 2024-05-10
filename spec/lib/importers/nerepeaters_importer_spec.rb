@@ -30,7 +30,7 @@ RSpec.describe NerepeatersImporter do
     Dir.mktmpdir("NerepeatersImporter") do |dir|
       expect do
         NerepeatersImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(952)
+      end.to change { Repeater.count }.by(955)
 
       # Grab one repeater and verify it was imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "WA1DGW")
@@ -48,9 +48,11 @@ RSpec.describe NerepeatersImporter do
     Dir.mktmpdir("NerepeatersImporter") do |dir|
       NerepeatersImporter.new(working_directory: dir).import
 
+      n = Time.now
       # The second time we call it, it shouldn't re-download any files, nor create new repeaters
       expect do
         NerepeatersImporter.new(working_directory: dir).import
+        puts Repeater.where("created_at >= ?", n).all.to_a
       end.to change { Repeater.count }.by(0)
     end
   end
