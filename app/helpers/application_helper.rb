@@ -22,29 +22,29 @@ module ApplicationHelper
     end
   end
 
-  def pop_up(title:, links: [], **args, &block)
+  def pop_up(title:, links: [], **args, &)
     render partial: "shared/pop_up",
       locals: {title: title,
                links: links,
                args: args,
-               contents: capture(&block)}
+               contents: capture(&)}
   end
 
-  def tabbed_view(tabs:, selected_tab:, &block)
+  def tabbed_view(tabs:, selected_tab:, &)
     render partial: "shared/tabbed_view",
       locals: {tabs: tabs,
                selected_tab: selected_tab,
-               contents: capture(selected_tab, &block)}
+               contents: capture(selected_tab, &)}
   end
 
-  def dropdown_menu(&block)
+  def dropdown_menu(&)
     render partial: "shared/dropdown_menu",
-      locals: {contents: capture(&block)}
+      locals: {contents: capture(&)}
   end
 
-  def badge(content = nil, &block)
+  def badge(content = nil, &)
     render partial: "shared/badge",
-      locals: {contents: content || capture(&block)}
+      locals: {contents: content || capture(&)}
   end
 
   def card_entry(label:, value: nil, optional: false, &block)
