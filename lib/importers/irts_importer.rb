@@ -48,7 +48,7 @@ class IrtsImporter < Importer
         raise "Failed to import record #{row}"
       end
 
-      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).delete_all
+      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all
     end
 
     {created_or_updated_ids: created_or_updated_ids,

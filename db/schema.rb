@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_28_150654) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_11_085643) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -103,7 +103,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_150654) do
     t.integer "dmr_color_code"
     t.string "dmr_network"
     t.boolean "nxdn"
-    t.geography "location", limit: {srid: 4326, type: "st_point", geographic: true}
+    t.geography "location", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.string "grid_square"
     t.string "utc_offset"
     t.string "source"
