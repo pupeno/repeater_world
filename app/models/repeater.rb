@@ -69,6 +69,7 @@ class Repeater < ApplicationRecord
 
   belongs_to :country
   belongs_to :geocoded_country, class_name: "Country", optional: true
+  has_many :suggested_repeaters, dependent: :nullify
 
   validates :call_sign, presence: true
   validates :band, presence: true, inclusion: BANDS

@@ -30,7 +30,7 @@ class UkrepeatersImporter < Importer
       # TODO: process packetlist: https://ukrepeater.net/csvfiles.html https://ukrepeater.net/csvcreate4.php
       created_or_updated_ids.merge(process_repeaterlist_status_csv.map(&:id))
 
-      repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: created_or_updated_ids).delete_all
+      repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: created_or_updated_ids).destroy_all
     end
 
     @logger.info "Done importing from #{SOURCE}. #{created_or_updated_ids.count} created or updated, #{repeaters_deleted_count} deleted."
