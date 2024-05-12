@@ -108,7 +108,9 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= yield %>
       </main>
 
-      <%= render "layouts/cookie_popup" %>
+      <%# Cookie pop is disabled since we are only using first party essential cookies. We are leaving it here so
+          it's easy to re-enable it in the future should anything change. %>
+      <%#= render "layouts/cookie_popup" %>
 
       <footer class="mt-24
                      text-gray-600 bg-gray-200
