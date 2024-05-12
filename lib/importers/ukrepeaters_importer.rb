@@ -145,6 +145,9 @@ class UkrepeatersImporter < Importer
         next
       end
 
+      # When a repeater changes mode, the old modes that are no longer there shouldn't remain set to true.
+      repeater.disable_all_modes
+
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
       repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
       repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"
@@ -179,9 +182,6 @@ class UkrepeatersImporter < Importer
         @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
         next
       end
-
-      # When a repeater changes mode, the old modes that are no longer there shouldn't remain set to true.
-      repeater.disable_all_modes
 
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
       repeater.fm = true if raw_repeater[:analog]&.strip == "Y"
