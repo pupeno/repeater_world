@@ -100,6 +100,9 @@ class IrtsImporter < Importer
   end
 
   def import_mode_access_code(repeater, access, notes)
+    # When a repeater changes mode, the old modes that are no longer there shouldn't remain set to true.
+    repeater.disable_all_modes
+
     access_codes = access.split("/")
     access_codes.each do |access_code|
       if access_code.to_d == BigDecimal("1750.0")

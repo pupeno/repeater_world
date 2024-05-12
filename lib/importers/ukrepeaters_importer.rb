@@ -180,6 +180,9 @@ class UkrepeatersImporter < Importer
         next
       end
 
+      # When a repeater changes mode, the old modes that are no longer there shouldn't remain set to true.
+      repeater.disable_all_modes
+
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
       repeater.fm = true if raw_repeater[:analog]&.strip == "Y"
       if repeater.fm && raw_repeater[:ctcss].present? # This file contains some improvements on CTCSS code.

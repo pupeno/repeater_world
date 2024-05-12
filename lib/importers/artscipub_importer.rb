@@ -232,6 +232,9 @@ class ArtscipubImporter < Importer
   end
 
   def import_mode_and_access_codes(repeater, raw_repeater)
+    # When a repeater changes mode, the old modes that are no longer there shouldn't remain set to true.
+    repeater.disable_all_modes
+
     pl_tone = raw_repeater[:pl_tone]&.downcase
     if pl_tone.to_f.in?(Repeater::CTCSS_TONES)
       repeater.fm = true

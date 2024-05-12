@@ -200,6 +200,9 @@ class SralfiImporter < Importer
   end
 
   def import_mode(raw_repeater, repeater)
+    # When a repeater changes mode, the old modes that are no longer there shouldn't remain set to true.
+    repeater.disable_all_modes
+
     if raw_repeater["mode"] == "FM"
       repeater.fm = true
     elsif raw_repeater["mode"] == "NFM"

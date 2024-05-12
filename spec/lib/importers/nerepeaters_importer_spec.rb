@@ -67,8 +67,11 @@ RSpec.describe NerepeatersImporter do
       create(:suggested_repeater, repeater: deleted) # To simulated a suggested repeater on a repeater that gets deleted.
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      changed = Repeater.find_by(call_sign: "AA1TT")
+      # It should update frequency and modes, without crashing.
+      changed = Repeater.find_by(call_sign: "NN1D", fm: true, p25: true, nxdn: nil)
       changed_rx_frequency_was = changed.rx_frequency
+      changed.p25 = false
+      changed.nxdn = true
       changed.rx_frequency = 1_000_000
       changed.save!
 
@@ -98,6 +101,9 @@ RSpec.describe NerepeatersImporter do
       # This got updated.
       changed.reload
       expect(changed.rx_frequency).to eq(changed_rx_frequency_was)
+      expect(changed.fm).to eq(true)
+      expect(changed.p25).to eq(true)
+      expect(changed.nxdn).to eq(nil)
 
       # This got updated.
       secondary_source.reload
