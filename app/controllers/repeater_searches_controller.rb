@@ -13,6 +13,12 @@
 # <https://www.gnu.org/licenses/>.
 
 class RepeaterSearchesController < ApplicationController
+  TABS = [
+    CARDS = "cards",
+    MAP = "map",
+    TABLE = "table"
+  ]
+
   before_action :authenticate_user!, except: %i[new export]
   before_action :set_repeater_search, only: %i[show edit update destroy]
   before_action :set_selected_tab_and_tab_urls, only: %i[new show create update]
@@ -28,7 +34,7 @@ class RepeaterSearchesController < ApplicationController
     if repeater_search_params[:s].present?
       if @repeater_search.valid?
         @repeaters = @repeater_search.run
-        @repeaters = if @selected_tab == "map"
+        @repeaters = if @selected_tab == RepeaterSearchesController::MAP
           # Adding a "where" seems to break the includes(:country) in RepeaterSearch#run.
           @repeaters.where("location IS NOT NULL").includes(:country)
         else
@@ -100,7 +106,7 @@ class RepeaterSearchesController < ApplicationController
       @repeater_search.assign_attributes(repeater_search_params[:s])
     end
     @repeaters = @repeater_search.run
-    @repeaters = if @selected_tab == "map"
+    @repeaters = if @selected_tab == RepeaterSearchesController::MAP
       @repeaters.where("location IS NOT NULL")
     else
       @repeaters.page(params[:p] || 1)
@@ -149,9 +155,9 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def set_selected_tab_and_tab_urls
-    @selected_tab = params[:d] || "cards" # the default selected tab is "cards"
-    @cards_url = search_url(repeater_search_params.merge(d: "cards"))
-    @map_url = search_url(repeater_search_params.merge(d: "map"))
-    @table_url = search_url(repeater_search_params.merge(d: "table"))
+    @selected_tab = (params[:d].present? && params[:d].in?(TABS)) ? params[:d] : CARDS
+    @cards_url = search_url(repeater_search_params.merge(d: CARDS))
+    @map_url = search_url(repeater_search_params.merge(d: MAP))
+    @table_url = search_url(repeater_search_params.merge(d: TABLE))
   end
 end

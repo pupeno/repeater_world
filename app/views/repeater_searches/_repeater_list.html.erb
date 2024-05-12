@@ -37,15 +37,15 @@ You should have received a copy of the GNU Affero General Public License along w
 <% elsif repeaters.present? %>
   <div class="contents"
        data-controller="repeater">
-    <%= tabbed_view tabs: [{ title: "Cards", name: "cards", url: @cards_url, icon: "fa-solid fa-table" },
-                           { title: "Map", name: "map", url: @map_url, icon: "fa-solid fa-map-location-dot" },
-                           { title: "Table", name: "table", url: @table_url, icon: "fa-solid fa-table-list" }],
+    <%= tabbed_view tabs: [{ title: "Cards", name: RepeaterSearchesController::CARDS, url: @cards_url, icon: "fa-solid fa-table" },
+                           { title: "Map", name: RepeaterSearchesController::MAP, url: @map_url, icon: "fa-solid fa-map-location-dot" },
+                           { title: "Table", name: RepeaterSearchesController::TABLE, url: @table_url, icon: "fa-solid fa-table-list" }],
                     selected_tab: @selected_tab do |selected_tab| %>
-      <% if selected_tab == "cards" %>
+      <% if selected_tab == RepeaterSearchesController::CARDS %>
         <%= render "repeater_list_cards", repeaters: repeaters %>
-      <% elsif @selected_tab == "map" %>
+      <% elsif @selected_tab == RepeaterSearchesController::MAP %>
         <%= render "repeater_list_map", repeaters: repeaters %>
-      <% elsif @selected_tab == "table" %>
+      <% elsif @selected_tab == RepeaterSearchesController::TABLE %>
         <%= render "repeater_list_table", repeaters: repeaters %>
       <% end %>
     <% end %>
