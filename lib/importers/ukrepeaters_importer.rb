@@ -145,6 +145,9 @@ class UkrepeatersImporter < Importer
         next
       end
 
+      # When a repeater changes mode, the old modes that are no longer there shouldn't remain set to true.
+      repeater.disable_all_modes
+
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
       repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
       repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"

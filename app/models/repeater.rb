@@ -109,6 +109,10 @@ class Repeater < ApplicationRecord
     Set.new MODES.select { |mode| send(:"#{mode}?") }.map(&:to_sym)
   end
 
+  def disable_all_modes
+    MODES.each { |mode| send(:"#{mode}=", nil) }
+  end
+
   def location_in_words
     [address, locality, region, post_code, country.name].reject(&:blank?).join(", ")
   end

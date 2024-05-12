@@ -235,6 +235,9 @@ class NerepeatersImporter < Importer
   end
 
   def import_mode(repeater, raw_repeater)
+    # When a repeater changes mode, the old modes that are no longer there shouldn't remain set to true.
+    repeater.disable_all_modes
+
     if raw_repeater[MODE].blank?
       repeater.fm = true # We are just assuming it's FM otherwise we'll be throwing away most of the data.
     elsif raw_repeater[MODE].strip == "NFM"
