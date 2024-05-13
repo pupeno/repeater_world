@@ -89,7 +89,6 @@
         focus:outline-2 focus:outline-offset-0 focus:outline-orange-500 focus:border-orange-500;
     }
 
-
     .field_with_errors > .field-text {
         @apply text-red-900 dark:text-red-200 placeholder-red-300 dark:placeholder-red-500
         bg-red-50 dark:bg-red-900/25
@@ -122,5 +121,14 @@
 
     .geosearch select.chevron-gray-700, :is(.dark .geosearch select.dark\:chevron-gray-700) {
         background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%233f3f46' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+    }
+
+    /* Not sure what dark:... doesn't work and html.dark is needed. */
+    html.dark .gm-style .gm-style-iw-d,
+    html.dark .gm-style .gm-style-iw-c,
+    html.dark .gm-style .gm-style-iw-d::-webkit-scrollbar-track,
+    html.dark .gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece,
+    html.dark .gm-style .gm-style-iw-tc::after {
+        @apply dark:bg-gray-800;
     }
 }
