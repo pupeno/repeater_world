@@ -18,26 +18,26 @@ You should have received a copy of the GNU Affero General Public License along w
   <%= render "shared/flash_messages" %>
   <div class="shadow-sm ring-1 ring-black ring-opacity-5">
     <table class="min-w-full border-separate" style="border-spacing: 0">
-      <thead class="bg-gray-50">
+      <thead class="<%= TableHelper::THEAD_CLASSES %>">
         <tr>
-          <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-1 pl-4 pr-2 text-left font-semibold backdrop-blur backdrop-filter">
+          <th scope="col" class="<%= TableHelper::TH_CLASSES %>">
             Band
           </th>
           <% RepeaterSearch::MODES_AND_MULTI.each do |mode| %>
-            <th scope="col" class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-1 py-2 text-center font-semibold backdrop-blur backdrop-filter w-16">
+            <th scope="col" class="<%= TableHelper::TH_CLASSES %>">
               <%= mode[:label] %>
             </th>
           <% end %>
         </tr>
       </thead>
-      <tbody class="bg-white">
+      <tbody>
         <% RepeaterSearch::BANDS.each_with_index do |band, index| %>
-          <tr class="<%= index.even? ? "bg-white" : "bg-gray-50" %>">
-            <td class="whitespace-nowrap border-b border-gray-200 px-1 pl-4 pr-2">
+          <tr class="<%= index.even? ? "" : "bg-gray-100 dark:bg-gray-800" %>">
+            <td class="<%= TableHelper::TD_CLASSES %>">
               <%= band[:label] %>
             </td>
             <% RepeaterSearch::MODES_AND_MULTI.each do |mode| %>
-              <td class="whitespace-nowrap border-b border-gray-200 px-1 py-2 text-center">
+              <td class="<%= TableHelper::TD_CLASSES %> text-center">
                 <%= image_tag("map_markers/marker-#{band[:symbol]}-#{mode[:symbol]}.svg", style: "width: 30px", class: "inline-block") %>
               </td>
             <% end %>
