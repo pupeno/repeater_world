@@ -24,15 +24,11 @@ module RepeaterHelper
   end
 
   def modes(repeater)
-    modes = []
-    modes << "FM" if repeater.fm?
-    modes << "D-Star" if repeater.dstar?
-    modes << "Fusion" if repeater.fusion?
-    modes << "DMR" if repeater.dmr?
-    modes << "NXDN" if repeater.nxdn?
-    modes << "P25" if repeater.p25?
-    modes << "TETRA" if repeater.tetra?
-    modes
+    Repeater::MODES.select { |mode| repeater.send(:"#{mode}") }.map { |mode| Repeater::MODE_NAMES[mode] }
+  end
+
+  def modes_as_sym(repeater)
+    Set.new Repeater::MODES.select { |mode| repeater.send(:"#{mode}?") }.map(&:to_sym)
   end
 
   def distance_in_unit(distance, unit)
@@ -42,5 +38,9 @@ module RepeaterHelper
     else
       "#{distance}km"
     end
+  end
+
+  def location_in_words(repeater)
+    [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.try(:country_name) || repeater.country.name].reject(&:blank?).join(", ")
   end
 end

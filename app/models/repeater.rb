@@ -54,6 +54,16 @@ class Repeater < ApplicationRecord
     TETRA = "tetra"
   ]
 
+  MODE_NAMES = {
+    FM => "FM",
+    DSTAR => "D-Star",
+    FUSION => "Fusion",
+    DMR => "DMR",
+    NXDN => "NXDN",
+    P25 => "P25",
+    TETRA => "TETRA"
+  }
+
   CTCSS_TONES = [
     67.0, 69.3, 71.9, 74.4, 77.0, 79.7, 82.5, 85.4, 88.5, 91.5, 94.8, 97.4, 100.0, 103.5, 107.2, 110.9, 114.8, 118.8,
     123, 127.3, 131.8, 136.5, 141.3, 146.2, 151.4, 156.7, 162.2, 167.9, 173.8, 179.9, 186.2, 192.8, 203.5, 210.7, 218.1,
@@ -80,6 +90,42 @@ class Repeater < ApplicationRecord
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
 
   before_validation :ensure_fields_are_set
+
+  include PgSearch::Model
+  multisearchable(
+    against: [
+      :address, :band, :call_sign, :channel, :dmr_network, :dmr_color_code, :dstar_port,
+      :fm_ctcss_tone, :grid_square, :keeper, :locality, :name, :notes, :post_code, :region,
+      :rx_antenna, :rx_antenna_polarization, :rx_frequency, :source, :tx_antenna,
+      :tx_antenna_polarization, :tx_frequency, :web_site, :country_name
+    ],
+    additional_attributes: ->(repeater) {
+      {name: repeater.name,
+       call_sign: repeater.call_sign,
+       fm: repeater.fm,
+       fm_ctcss_tone: repeater.fm_ctcss_tone,
+       dstar: repeater.dstar,
+       fusion: repeater.fusion,
+       dmr: repeater.dmr,
+       nxdn: repeater.nxdn,
+       p25: repeater.p25,
+       tetra: repeater.tetra,
+       band: repeater.band,
+       tx_frequency: repeater.tx_frequency,
+       rx_frequency: repeater.rx_frequency,
+       operational: repeater.operational,
+       address: repeater.address,
+       locality: repeater.locality,
+       region: repeater.region,
+       post_code: repeater.post_code,
+       country_id: repeater.country_id,
+       country_name: repeater.country.name,
+       grid_square: repeater.grid_square,
+       latitude: repeater.latitude,
+       longitude: repeater.longitude,
+       location: repeater.location}
+    }
+  )
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
