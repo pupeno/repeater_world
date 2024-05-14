@@ -26,7 +26,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= link_to repeater.name, repeater, class: "link" %>
       </h3>
       <p class="mt-1 max-w-2xl text-gray-500 dark:text-gray-400">
-        <%= repeater.band %>, <%= modes(repeater).to_sentence %>
+        <%= [repeater.band, modes(repeater).to_sentence].reject(&:blank?).join(" - ") %>
       </p>
     </div>
     <div class="py-2 sm:p-0
