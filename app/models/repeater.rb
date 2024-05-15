@@ -126,6 +126,7 @@ class Repeater < ApplicationRecord
        location: repeater.location}
     }
   )
+  delegate :name, to: :country, prefix: true
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
@@ -151,16 +152,8 @@ class Repeater < ApplicationRecord
     self.location = Geo.point(latitude || 0, value)
   end
 
-  def modes
-    Set.new MODES.select { |mode| send(:"#{mode}?") }.map(&:to_sym)
-  end
-
   def disable_all_modes
     MODES.each { |mode| send(:"#{mode}=", nil) }
-  end
-
-  def location_in_words
-    [address, locality, region, post_code, country.name].reject(&:blank?).join(", ")
   end
 
   def to_param

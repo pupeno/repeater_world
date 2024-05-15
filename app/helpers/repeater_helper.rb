@@ -13,34 +13,27 @@
 # <https://www.gnu.org/licenses/>.
 
 module RepeaterHelper
-  def frequency_in_mhz(frequency)
-    "#{frequency.to_f / (10**6)}MHz"
+  def frequency_in_mhz(...)
+    RepeaterUtils.frequency_in_mhz(...)
   end
 
-  def frequency_offset_in_khz(tx_frequency, rx_frequency)
-    sign = (rx_frequency - tx_frequency > 0) ? "+" : "" # Artificially adding the +, because the int 600 renders as 600, not +600
-    raw_offset = ((rx_frequency.to_f - tx_frequency) / (10**3)).to_i
-    "#{sign}#{raw_offset}kHz"
+  def frequency_offset_in_khz(...)
+    RepeaterUtils.frequency_offset_in_khz(...)
   end
 
-  def modes(repeater)
-    Repeater::MODES.select { |mode| repeater.send(:"#{mode}") }.map { |mode| Repeater::MODE_NAMES[mode] }
+  def modes(...)
+    RepeaterUtils.mode_names(...)
   end
 
-  def modes_as_sym(repeater)
-    Set.new Repeater::MODES.select { |mode| repeater.send(:"#{mode}?") }.map(&:to_sym)
+  def modes_as_sym(...)
+    RepeaterUtils.modes_as_sym(...)
   end
 
-  def distance_in_unit(distance, unit)
-    distance = (distance / ((unit == "miles") ? 1609.34 : 1000)).round(2)
-    if unit == "miles"
-      "#{distance} miles"
-    else
-      "#{distance}km"
-    end
+  def distance_in_unit(...)
+    RepeaterUtils.distance_in_unit(...)
   end
 
-  def location_in_words(repeater)
-    [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.try(:country_name) || repeater.country.name].reject(&:blank?).join(", ")
+  def location_in_words(...)
+    RepeaterUtils.location_in_words(...)
   end
 end

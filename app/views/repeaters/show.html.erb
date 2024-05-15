@@ -14,7 +14,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
 <%= render "shared/page_header",
            title: @repeater.name,
-           head_title: "#{@repeater.name} - #{@repeater.call_sign} - #{@repeater.location_in_words}" %>
+           head_title: "#{@repeater.name} - #{@repeater.call_sign} - #{location_in_words @repeater}" %>
 
 <div class="w-full sm:max-w-7xl mx-auto px-0 sm:px-4">
   <%= render "shared/flash_messages" %>
