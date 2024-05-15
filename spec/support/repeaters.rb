@@ -14,7 +14,7 @@
 
 RSpec.shared_context "repeaters" do
   before(:context) do
-    Repeater.delete_all
+    Repeater.destroy_all
 
     # FM repeater with CTCSS
     create(:repeater, :explicit_modes,
@@ -136,6 +136,6 @@ RSpec.shared_context "repeaters" do
   end
 
   after(:context) do
-    Repeater.delete_all
+    Repeater.destroy_all
   end
 end
