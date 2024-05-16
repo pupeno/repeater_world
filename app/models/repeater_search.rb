@@ -203,6 +203,40 @@ class RepeaterSearch < ApplicationRecord
   def saving
     @saving.nil? ? true : @saving
   end
+
+  def generate_name
+    # TODO: this is very problematic to internationalize, find a better way of doing this.
+    modes = if self.all_modes?
+              ["all modes"]
+            else
+              RepeaterSearch::MODES.map { |band| band[:label] if self.send(band[:pred]) }.compact
+            end
+    modes = modes.to_sentence
+
+    bands = if self.all_bands?
+              ["all bands"]
+            else
+              RepeaterSearch::BANDS.map { |band| band[:label] if self.send(band[:pred]) }.compact
+            end
+    bands = "on #{bands.to_sentence}" if bands.present?
+
+    geo = if self.geosearch_type == RepeaterSearch::MY_LOCATION
+            "within #{self.distance}#{self.distance_unit} of my location (#{self.latitude&.round(1)}, #{self.longitude&.round(1)})"
+          elsif self.geosearch_type == RepeaterSearch::PLACE
+            "within #{self.distance}#{self.distance_unit} of #{self.place} (#{self.latitude&.round(1)}, #{self.longitude&.round(1)})"
+          elsif self.geosearch_type == RepeaterSearch::COORDINATES
+            "within #{self.distance}#{self.distance_unit} of coordinates #{self.latitude&.round(3)}, #{self.longitude&.round(3)}"
+          elsif self.geosearch_type == RepeaterSearch::GRID_SQUARE
+            "within #{self.distance}#{self.distance_unit} of grid square #{self.grid_square} (#{self.latitude&.round(1)}, #{self.longitude&.round(1)})"
+          elsif self.geosearch_type == RepeaterSearch::WITHIN_A_COUNTRY
+            "within #{self.country.name}"
+          end
+
+    terms = if self.search_terms.present?
+              "containing \"#{self.search_terms}\""
+            end
+    self.name = [modes, bands, terms, geo].reject(&:blank?).join(" ").upcase_first
+  end
 end
 
 # == Schema Information
