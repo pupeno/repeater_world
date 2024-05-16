@@ -113,12 +113,22 @@ RSpec.describe "/repeater_searches", type: :request do
         expect(response.body).to include("Grid square can&#39;t be blank")
       end
 
+      it "runs a full text search" do
+        get search_url(s: attributes_for(:repeater_search, search_terms: "2M"))
+        expect(response).to be_successful
+        expect(response).to render_template(:new)
+        expect(response.body).to include("Search")
+        expect(response.body).to include("Save Search")
+        expect(response.body).to include("2M FM")
+        expect(response.body).not_to include("4M FM")
+      end
+
       it "runs a search with all possible options" do
         get search_url(s: attributes_for(:repeater_search,
           band_10m: true, band_6m: true, band_4m: true, band_2m: true, band_70cm: true, band_23cm: true,
           fm: true, dstar: true, fusion: true, dmr: true, nxdn: true,
           geosearch_type: RepeaterSearch::MY_LOCATION,
-          distance: 1000, distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0))
+          distance: 1000, distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0), search_terms: "FM")
         expect(response).to be_successful
         expect(response).to render_template(:new)
         expect(response.body).to include("Search")
