@@ -88,7 +88,8 @@ jobs:
           path: coverage/.resultset.json
           key: simplecov-resultset-${{ env.revision }}
 
-      - uses: ruby/setup-ruby@v1
+      - name: Install Ruby and Gems
+        uses: ruby/setup-ruby@v1
         if: steps.simplecov-resultset.outputs.cache-hit != 'true'
         with:
           bundler-cache: true
@@ -98,6 +99,7 @@ jobs:
         run: bin/rails db:migrate
 
       - name: Precompile assets
+        if: steps.simplecov-resultset.outputs.cache-hit != 'true'
         run: bundle exec rake assets:precompile
 
       - name: Run Tests
