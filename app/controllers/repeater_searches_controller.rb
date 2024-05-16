@@ -35,8 +35,7 @@ class RepeaterSearchesController < ApplicationController
       if @repeater_search.valid?
         @repeaters = @repeater_search.run
         @repeaters = if @selected_tab == RepeaterSearchesController::MAP
-          # Adding a "where" seems to break the includes(:country) in RepeaterSearch#run.
-          @repeaters.where("location IS NOT NULL").includes(:country)
+          @repeaters.where("location IS NOT NULL")
         else
           @repeaters.page(params[:p] || 1)
         end
@@ -143,9 +142,10 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def repeater_search_params
-    fields = RepeaterSearch::BANDS.map { |band| band[:name] } +
-      RepeaterSearch::MODES.map { |mode| mode[:name] } +
-      [:name, :geosearch_type, :distance, :distance_unit, :place, :latitude, :longitude, :grid_square, :country_id]
+    fields = [:name, :search_terms, :geosearch_type, :distance, :distance_unit, :place, :latitude, :longitude,
+      :grid_square, :country_id]
+    fields += RepeaterSearch::BANDS.map { |band| band[:name] }
+    fields += RepeaterSearch::MODES.map { |mode| mode[:name] }
     params.permit(
       :id, # Id of the record, when it's saved
       :d, # Display mode, like cards, maps, table.

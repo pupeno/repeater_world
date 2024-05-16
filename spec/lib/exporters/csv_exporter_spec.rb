@@ -18,7 +18,7 @@ RSpec.describe CsvExporter do
   include_context "repeaters"
 
   it "should export" do
-    exporter = CsvExporter.new(Repeater.order(:call_sign, :tx_frequency))
+    exporter = CsvExporter.new(PgSearch::Document.order(:call_sign, :tx_frequency))
 
     expect(exporter.export).to eq(<<~CSV)
       Name,Call Sign,Web Site,Keeper,Band,Operational,Tx Frequency,Rx Frequency,FM,Tone Burst,CTCSS Tone,Tone Squelch,Bandwidth,D-Star,D-Star Port,Fusion,DMR,DMR Color Code,DMR Network,NXDN,P25,Tetra,Latitude,Longitude,Grid Square,Address,Locality,Region,Post Code,Country Code,Tx Power,Tx Antenna,Tx Antenna Polarization,Rx Antenna,Rx Antenna Polarization,Altitude Asl,Altitude Agl,Bearing,UTC Offset,Channel,Notes,Source,Redistribution Limitations

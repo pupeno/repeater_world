@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_11_085643) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_14_083608) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -49,6 +49,39 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_11_085643) do
     t.index ["name"], name: "index_countries_on_name", unique: true
   end
 
+  create_table "pg_search_documents", force: :cascade do |t|
+    t.text "content"
+    t.string "searchable_type"
+    t.uuid "searchable_id"
+    t.string "name"
+    t.string "call_sign"
+    t.boolean "fm"
+    t.decimal "fm_ctcss_tone"
+    t.boolean "dstar"
+    t.boolean "fusion"
+    t.boolean "dmr"
+    t.boolean "nxdn"
+    t.boolean "p25"
+    t.boolean "tetra"
+    t.bigint "tx_frequency"
+    t.bigint "rx_frequency"
+    t.string "band"
+    t.boolean "operational"
+    t.string "address"
+    t.string "locality"
+    t.string "region"
+    t.string "post_code"
+    t.string "country_id"
+    t.string "country_name"
+    t.string "grid_square"
+    t.decimal "latitude"
+    t.decimal "longitude"
+    t.geography "location", limit: {srid: 4326, type: "st_point", geographic: true}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
+  end
+
   create_table "repeater_searches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id"
     t.boolean "band_10m", default: false, null: false
@@ -81,6 +114,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_11_085643) do
     t.string "grid_square"
     t.string "place"
     t.string "country_id"
+    t.string "search_terms"
     t.index ["user_id"], name: "index_repeater_searches_on_user_id"
   end
 
@@ -103,7 +137,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_11_085643) do
     t.integer "dmr_color_code"
     t.string "dmr_network"
     t.boolean "nxdn"
-    t.geography "location", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
+    t.geography "location", limit: {srid: 4326, type: "st_point", geographic: true}
     t.string "grid_square"
     t.string "utc_offset"
     t.string "source"

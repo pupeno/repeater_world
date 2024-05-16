@@ -28,13 +28,13 @@ You should have received a copy of the GNU Affero General Public License along w
      data-map-markers-value="<%= repeaters.map do |repeater|
        distance = (repeater.respond_to?(:distance) && repeater.distance.present?) ? "<p>Distance: <span class='font-bold'>#{h distance_in_unit(repeater.distance, @repeater_search.distance_unit)}</span></p>" : ""
        azimuth = (repeater.respond_to?(:azimuth) && repeater.azimuth.present?) ? "<p>Azimuth: <span class='font-bold'>#{h repeater.azimuth.round}°</span></p>" : ""
-       { lat: repeater.latitude,
-         lng: repeater.longitude,
+       { lat: repeater.latitude.to_f,
+         lng: repeater.longitude.to_f,
          tooltip: repeater.call_sign,
          band: repeater.band,
          modes: modes_as_sym(repeater),
-         info: "<h1 class='font-bold text-lg link'>#{link_to repeater.name, repeater}</h1>
-                <p class='link'>#{link_to repeater.call_sign, repeater}</p>
+         info: "<h1 class='font-bold text-lg link'>#{link_to repeater.name, repeater_url(repeater.searchable_id)}</h1>
+                <p class='link'>#{link_to repeater.call_sign, repeater_url(repeater.searchable_id)}</p>
                 #{distance} #{azimuth}
                 <p>Band: <span class='font-bold'>#{h repeater.band}</span></p>
                 <p>Modes: <span class='font-bold'>#{h modes(repeater).join(", ")}</span></p>

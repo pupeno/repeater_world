@@ -23,7 +23,7 @@ You should have received a copy of the GNU Affero General Public License along w
         id="<%= dom_id repeater %>">
     <div class="pt-2 sm:pt-5 pb-3 px-2 sm:px-4">
       <h3 class="text-xl font-medium leading-6">
-        <%= link_to repeater.name, repeater, class: "link" %>
+        <%= link_to repeater.name, repeater_url(repeater.searchable_id), class: "link" %>
       </h3>
       <p class="mt-1 max-w-2xl text-gray-500 dark:text-gray-400">
         <%= [repeater.band, modes(repeater).to_sentence].reject(&:blank?).join(" - ") %>
@@ -57,7 +57,7 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
     <div class="-mt-px flex divide-x divide-gray-200 justify-end ">
       <div class="-ml-px flex w-0 flex-1">
-        <%= link_to "More Details", repeater, class: "link inline-flex flex-1 items-center justify-center py-4" %>
+        <%= link_to "More Details", repeater_url(repeater.searchable_id), class: "link inline-flex flex-1 items-center justify-center py-4" %>
       </div>
     </div>
     </li>

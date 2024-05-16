@@ -96,16 +96,20 @@ class RepeaterSearch < ApplicationRecord
       raise ActiveRecord::RecordInvalid.new(self)
     end
 
-    repeaters = Repeater
+    repeaters = if search_terms.present?
+      PgSearch.multisearch(search_terms)
+    else
+      PgSearch::Document
+    end
 
     bands = BANDS.filter { |band| send(band[:pred]) }.map { |band| band[:label] }
     repeaters = repeaters.where(band: bands) if bands.present?
 
     modes = MODES.filter { |mode| send(mode[:pred]) }
     if modes.present?
-      cond = Repeater.where(modes.first[:name] => true)
+      cond = PgSearch::Document.where(modes.first[:name] => true)
       modes[1..].each do |mode|
-        cond = cond.or(Repeater.where(mode[:name] => true))
+        cond = cond.or(PgSearch::Document.where(mode[:name] => true))
       end
       repeaters = repeaters.merge(cond)
     end
@@ -127,14 +131,11 @@ class RepeaterSearch < ApplicationRecord
       repeaters = repeaters.where(country_id: country_id)
     end
 
-    repeaters = repeaters.order(:name, :call_sign, Arel.sql("
-        case
-            when \"repeaters\".\"operational\" = true then 1
-            when \"repeaters\".\"operational\" IS NULL then 2
-            when \"repeaters\".\"operational\" = false then 3
-        end"))
+    if search_terms.blank? # When there are search terms, we let full text search control the order.
+      repeaters = repeaters.order(:name, :call_sign)
+    end
 
-    repeaters.includes(:country)
+    repeaters
   end
 
   def all_bands?
@@ -235,6 +236,7 @@ end
 #  nxdn           :boolean          default(FALSE), not null
 #  p25            :boolean          default(FALSE), not null
 #  place          :string
+#  search_terms   :string
 #  tetra          :boolean          default(FALSE), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
