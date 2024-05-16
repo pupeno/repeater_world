@@ -21,14 +21,15 @@ class YaesuFt5dExporter < Exporter
       BANK8, BANK9, BANK10, BANK11, BANK12, BANK13, BANK14, BANK15, BANK16, BANK17, BANK18, BANK19, BANK20, BANK21,
       BANK22, BANK23, BANK24, COMMENT, LAST
     ]
-    @repeaters = @repeaters.where(band: [Repeater::BAND_2M, Repeater::BAND_70CM]) # TODO: can the FT5D do other bands? https://github.com/pupeno/repeater_world/issues/24
+    @results = @results.where("repeaters.band in (?)", [Repeater::BAND_2M, Repeater::BAND_70CM]) # TODO: can the FT5D do other bands? https://github.com/pupeno/repeater_world/issues/24
       .where("operational IS NOT FALSE") # Skip repeaters known to not be operational.
-      .merge(Repeater.where(fm: true).or(Repeater.where(fusion: true))) # FT5D does FM and Fusion
-      .order(:name, :call_sign)
+      .where("repeaters.fm = true OR repeaters.fusion = true") # FT5D does FM and Fusion
+      .includes(searchable: :country)
 
     channel_number = 1
-    CSV.generate(headers: headers, write_headers: false) do |csv|
-      @repeaters.each do |repeater|
+    CSV.generate(headers: headers, write_headers: false, encoding: Encoding::UTF_8) do |csv|
+      @results.each do |result|
+        repeater = result.searchable
         csv << repeater(repeater).merge({CHANNEL_NO => channel_number})
         channel_number += 1 # TODO: maybe do something better with channel numbers: https://github.com/pupeno/repeater_world/issues/25
       end

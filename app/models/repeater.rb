@@ -99,32 +99,7 @@ class Repeater < ApplicationRecord
       :rx_antenna, :rx_antenna_polarization, :rx_frequency, :source, :tx_antenna,
       :tx_antenna_polarization, :tx_frequency, :web_site, :country_name
     ],
-    additional_attributes: ->(repeater) {
-      {name: repeater.name,
-       call_sign: repeater.call_sign,
-       fm: repeater.fm,
-       fm_ctcss_tone: repeater.fm_ctcss_tone,
-       dstar: repeater.dstar,
-       fusion: repeater.fusion,
-       dmr: repeater.dmr,
-       nxdn: repeater.nxdn,
-       p25: repeater.p25,
-       tetra: repeater.tetra,
-       band: repeater.band,
-       tx_frequency: repeater.tx_frequency,
-       rx_frequency: repeater.rx_frequency,
-       operational: repeater.operational,
-       address: repeater.address,
-       locality: repeater.locality,
-       region: repeater.region,
-       post_code: repeater.post_code,
-       country_id: repeater.country_id,
-       country_name: repeater.country.name,
-       grid_square: repeater.grid_square,
-       latitude: repeater.latitude,
-       longitude: repeater.longitude,
-       location: repeater.location}
-    }
+    additional_attributes: ->(repeater) { {repeater_id: repeater.id} }
   )
   delegate :name, to: :country, prefix: true
 

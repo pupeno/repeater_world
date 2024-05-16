@@ -33,11 +33,11 @@ class RepeaterSearchesController < ApplicationController
     @repeater_search.saving = false
     if repeater_search_params[:s].present?
       if @repeater_search.valid?
-        @repeaters = @repeater_search.run
-        @repeaters = if @selected_tab == RepeaterSearchesController::MAP
-          @repeaters.where("location IS NOT NULL")
+        @results = @repeater_search.run
+        @results = if @selected_tab == RepeaterSearchesController::MAP
+          @results.where("location IS NOT NULL")
         else
-          @repeaters.page(params[:p] || 1)
+          @results.page(params[:p] || 1)
         end
       end
     end
@@ -104,11 +104,11 @@ class RepeaterSearchesController < ApplicationController
     if repeater_search_params[:s].present?
       @repeater_search.assign_attributes(repeater_search_params[:s])
     end
-    @repeaters = @repeater_search.run
-    @repeaters = if @selected_tab == RepeaterSearchesController::MAP
-      @repeaters.where("location IS NOT NULL")
+    @results = @repeater_search.run
+    @results = if @selected_tab == RepeaterSearchesController::MAP
+      @results.where("location IS NOT NULL")
     else
-      @repeaters.page(params[:p] || 1)
+      @results.page(params[:p] || 1)
     end
     if params[:export]
       @export_url = export_repeater_search_url(@repeater_search, e: repeater_search_params[:e])

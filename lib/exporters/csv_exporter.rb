@@ -47,9 +47,10 @@ class CsvExporter < Exporter
     column_names[:utc_offset] = "UTC Offset"
     column_names[:redistribution_limitations] = "Redistribution Limitations"
 
-    CSV.generate(headers: columns.map { |c| column_names[c] }, write_headers: true) do |csv|
-      @repeaters.each do |repeater|
-        repeater = repeater.searchable
+    headers = columns.map { |c| column_names[c] }
+    CSV.generate(headers: headers, write_headers: true, encoding: Encoding::UTF_8) do |csv|
+      @results.each do |result|
+        repeater = result.searchable
         csv << columns.each_with_object({}) do |column, line|
           line[column_names[column]] = case column
           when :latitude

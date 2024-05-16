@@ -18,7 +18,7 @@ RSpec.describe Exporter do
   include_context "repeaters"
 
   it "should not export" do
-    exporter = Exporter.new(Repeater.order(:call_sign, :tx_frequency))
+    exporter = Exporter.new(build(:repeater_search).run)
     expect { exporter.export }.to raise_exception("Method should be implemented in subclass.")
   end
 

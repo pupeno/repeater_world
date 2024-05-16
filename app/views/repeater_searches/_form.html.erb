@@ -93,7 +93,7 @@ You should have received a copy of the GNU Affero General Public License along w
       Search
     </button>
 
-    <% if !@repeaters.nil? %>
+    <% if !@results.nil? %>
       <% if !user_signed_in? %> <%# Not logged in, the save search button invites you to sign up. %>
         <button type="button" class="button-secondary" data-action="click->repeater-searches#showAuthBeforeSavePopUp">
           <i class="fa-regular fa-bookmark"></i>

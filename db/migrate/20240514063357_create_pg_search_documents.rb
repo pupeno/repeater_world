@@ -18,30 +18,7 @@ class CreatePgSearchDocuments < ActiveRecord::Migration[7.1]
       create_table :pg_search_documents do |t|
         t.text :content
         t.belongs_to :searchable, polymorphic: true, index: true, type: :uuid
-        t.string "name", null: true
-        t.string "call_sign", null: true
-        t.boolean "fm", null: true
-        t.decimal "fm_ctcss_tone", null: true
-        t.boolean "dstar", null: true
-        t.boolean "fusion", null: true
-        t.boolean "dmr", null: true
-        t.boolean "nxdn", null: true
-        t.boolean "p25", null: true
-        t.boolean "tetra", null: true
-        t.bigint "tx_frequency", null: true
-        t.bigint "rx_frequency", null: true
-        t.string "band", null: true
-        t.boolean "operational", null: true
-        t.string "address", null: true
-        t.string "locality", null: true
-        t.string "region", null: true
-        t.string "post_code", null: true
-        t.string "country_id", null: true
-        t.string "country_name", null: true
-        t.string "grid_square", null: true
-        t.decimal "latitude", null: true
-        t.decimal "longitude", null: true
-        t.geography "location", limit: {srid: 4326, type: "st_point", geographic: true}
+        t.belongs_to :repeater, index: true, type: :uuid, null: true
         t.timestamps null: false
       end
     end
