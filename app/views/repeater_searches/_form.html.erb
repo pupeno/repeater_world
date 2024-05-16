@@ -23,6 +23,10 @@ You should have received a copy of the GNU Affero General Public License along w
   <% show_name_field = repeater_search.saving || repeater_search.persisted?
      unsaved_changes = repeater_search.persisted? && repeater_search.changed? %>
 
+  <% if @results.nil? %>
+    <h1 class="text-2xl sm:text-3xl font-bold">Search Repeaters</h1>
+  <% end %>
+
   <%= render "shared/forms/error_summary", resource: @repeater_search %>
 
   <% if show_name_field %>
