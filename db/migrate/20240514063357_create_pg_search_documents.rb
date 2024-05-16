@@ -1,4 +1,4 @@
-# Copyright 2023, Pablo Fernandez
+# Copyright 2024, Pablo Fernandez
 #
 # This file is part of Repeater World.
 #
@@ -12,28 +12,21 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-module RepeaterHelper
-  def frequency_in_mhz(...)
-    RepeaterUtils.frequency_in_mhz(...)
+class CreatePgSearchDocuments < ActiveRecord::Migration[7.1]
+  def up
+    say_with_time("Creating table for pg_search multisearch") do
+      create_table :pg_search_documents do |t|
+        t.text :content
+        t.belongs_to :searchable, polymorphic: true, index: true, type: :uuid
+        t.belongs_to :repeater, index: true, type: :uuid, null: true
+        t.timestamps null: false
+      end
+    end
   end
 
-  def frequency_offset_in_khz(...)
-    RepeaterUtils.frequency_offset_in_khz(...)
-  end
-
-  def modes(...)
-    RepeaterUtils.mode_names(...)
-  end
-
-  def modes_as_sym(...)
-    RepeaterUtils.modes_as_sym(...)
-  end
-
-  def distance_in_unit(...)
-    RepeaterUtils.distance_in_unit(...)
-  end
-
-  def location_in_words(...)
-    RepeaterUtils.location_in_words(...)
+  def down
+    say_with_time("Dropping table for pg_search multisearch") do
+      drop_table :pg_search_documents
+    end
   end
 end

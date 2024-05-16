@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License along w
 <div data-action="click->repeater#changeLocationFormat"
      class="cursor-pointer underline hover:text-orange-800">
   <div data-repeater-target="locationFormat1" class="">
-    <%= [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.country.name].reject(&:blank?).join(", ") %>
+    <%= location_in_words repeater %>
   </div>
   <div data-repeater-target="locationFormat2" class="hidden">
     Lat: <%= repeater.latitude %>, Long: <%= repeater.longitude %>

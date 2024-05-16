@@ -50,6 +50,7 @@ end
 #  nxdn           :boolean          default(FALSE), not null
 #  p25            :boolean          default(FALSE), not null
 #  place          :string
+#  search_terms   :string
 #  tetra          :boolean          default(FALSE), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null

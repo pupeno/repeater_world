@@ -16,7 +16,7 @@ require "rails_helper"
 
 RSpec.describe IrlpImporter do
   before do
-    Repeater.delete_all
+    Repeater.destroy_all
     files = {"https://status.irlp.net/nohtmlstatus.txt.bz2" => "irlp.tsv.bz2"}
     files.each do |url, local_file|
       file = double("file")

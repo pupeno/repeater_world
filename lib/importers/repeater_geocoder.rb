@@ -42,7 +42,7 @@ class RepeaterGeocoder
 
     geocoded_repeater_count = 0
     repeaters.each do |repeater|
-      geocode = Geocoder.search(repeater.location_in_words).first
+      geocode = Geocoder.search(RepeaterUtils.location_in_words(repeater)).first
       if geocode.present?
         repeater.latitude = geocode.latitude
         repeater.longitude = geocode.longitude

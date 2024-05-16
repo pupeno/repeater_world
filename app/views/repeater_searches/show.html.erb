@@ -18,11 +18,14 @@ You should have received a copy of the GNU Affero General Public License along w
      data-controller="repeater-searches">
   <%= render "shared/flash_messages" %>
 
-  <%= render "form",
-             repeater_search: @repeater_search,
-             search_url: repeater_search_url(@repeater_search),
-             save_url: repeater_search_url(@repeater_search),
-             save_method: "patch" %>
 
-  <%= render "repeater_list", repeaters: @repeaters %>
+  <div class="<%= @results.nil? ? "flex-1" : "" %> grid place-items-center">
+    <%= render "form",
+               repeater_search: @repeater_search,
+               search_url: repeater_search_url(@repeater_search),
+               save_url: repeater_search_url(@repeater_search),
+               save_method: "patch" %>
+  </div>
+
+  <%= render "repeater_list", results: @results %>
 </div>

@@ -15,6 +15,6 @@
 class BaofengUv5rExporter < ChirpExporter
   def initialize(repeaters)
     super
-    @repeaters = @repeaters.limit(128)
+    @results = @results.limit(128) # Baofeng UV-5R only supports 128 repeaters.
   end
 end

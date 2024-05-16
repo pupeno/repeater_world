@@ -96,45 +96,46 @@ class RepeaterSearch < ApplicationRecord
       raise ActiveRecord::RecordInvalid.new(self)
     end
 
-    repeaters = Repeater
+    results = if search_terms.present?
+      PgSearch.multisearch(search_terms)
+    else
+      PgSearch::Document
+    end
+
+    results = results
+      .includes(:searchable)
+      .joins("INNER JOIN repeaters ON pg_search_documents.repeater_id = repeaters.id")
 
     bands = BANDS.filter { |band| send(band[:pred]) }.map { |band| band[:label] }
-    repeaters = repeaters.where(band: bands) if bands.present?
+    results = results.where("repeaters.band IN (?)", bands) if bands.present?
 
     modes = MODES.filter { |mode| send(mode[:pred]) }
     if modes.present?
-      cond = Repeater.where(modes.first[:name] => true)
-      modes[1..].each do |mode|
-        cond = cond.or(Repeater.where(mode[:name] => true))
-      end
-      repeaters = repeaters.merge(cond)
+      results = results.where(modes.map { |mode| "repeaters.#{mode[:name]} = true" }.join(" OR "))
     end
 
     if geosearch_type.in? [MY_LOCATION, COORDINATES, GRID_SQUARE, PLACE]
-      repeaters = repeaters.select(self.class.sanitize_sql_array([<<-SQL, current_location: Geo.to_wkt(Geo.point(latitude, longitude))]))
-        #{repeaters.table_name}.*,
-        ST_Distance(:current_location, location) AS distance,
-        degrees(ST_Azimuth(:current_location, location)) AS azimuth
+      results = results.select(self.class.sanitize_sql_array([<<-SQL, current_location: Geo.to_wkt(Geo.point(latitude, longitude))]))
+        #{results.table_name}.*,
+        ST_Distance(:current_location, repeaters.location) AS distance,
+        degrees(ST_Azimuth(:current_location, repeaters.location)) AS azimuth
       SQL
       distance = self.distance * ((distance_unit == RepeaterSearch::MILES) ? 1609.34 : 1000)
-      repeaters = repeaters.where(
-        "ST_DWithin(location, :point, :distance)",
+      results = results.where(
+        "ST_DWithin(repeaters.location, :point, :distance)",
         {point: Geo.to_wkt(Geo.point(latitude, longitude)),
          distance: distance}
       ).all
-      repeaters = repeaters.order(:distance)
+      results = results.order(:distance)
     elsif geosearch_type == WITHIN_A_COUNTRY
-      repeaters = repeaters.where(country_id: country_id)
+      results = results.where("repeaters.country_id = ?", country_id)
     end
 
-    repeaters = repeaters.order(:name, :call_sign, Arel.sql("
-        case
-            when \"repeaters\".\"operational\" = true then 1
-            when \"repeaters\".\"operational\" IS NULL then 2
-            when \"repeaters\".\"operational\" = false then 3
-        end"))
+    if search_terms.blank? # When there are search terms, we let full text search control the order.
+      results = results.order("repeaters.name, repeaters.call_sign, repeaters.tx_frequency, repeaters.id")
+    end
 
-    repeaters.includes(:country)
+    results
   end
 
   def all_bands?
@@ -202,6 +203,45 @@ class RepeaterSearch < ApplicationRecord
   def saving
     @saving.nil? ? true : @saving
   end
+
+  def generate_name
+    # TODO: this is very problematic to internationalize, find a better way of doing this.
+    modes = if all_modes?
+      ["all modes"]
+    else
+      RepeaterSearch::MODES.map { |band| band[:label] if send(band[:pred]) }.compact
+    end
+    modes = modes.to_sentence
+
+    bands = if all_bands?
+      ["all bands"]
+    else
+      RepeaterSearch::BANDS.map { |band| band[:label] if send(band[:pred]) }.compact
+    end
+    bands = "on #{bands.to_sentence}"
+
+    geo = if geosearch_type == RepeaterSearch::MY_LOCATION
+      "within #{distance}#{distance_unit} of my location"
+    elsif geosearch_type == RepeaterSearch::PLACE
+      "within #{distance}#{distance_unit} of #{place}"
+    elsif geosearch_type == RepeaterSearch::COORDINATES
+      "within #{distance}#{distance_unit} of coordinates"
+    elsif geosearch_type == RepeaterSearch::GRID_SQUARE
+      "within #{distance}#{distance_unit} of grid square #{grid_square}"
+    elsif geosearch_type == RepeaterSearch::WITHIN_A_COUNTRY
+      "within #{country.name}"
+    end
+    if latitude.present? && longitude.present? && geosearch_type.in?([RepeaterSearch::MY_LOCATION, RepeaterSearch::PLACE, RepeaterSearch::GRID_SQUARE])
+      geo += " (#{latitude.round(1)}, #{longitude.round(1)})"
+    elsif latitude.present? && longitude.present? && geosearch_type == RepeaterSearch::COORDINATES
+      geo += " #{latitude.round(3)}, #{longitude.round(3)}"
+    end
+
+    terms = if search_terms.present?
+      "containing \"#{search_terms}\""
+    end
+    self.name = [modes, bands, terms, geo].reject(&:blank?).join(" ").upcase_first
+  end
 end
 
 # == Schema Information
@@ -235,6 +275,7 @@ end
 #  nxdn           :boolean          default(FALSE), not null
 #  p25            :boolean          default(FALSE), not null
 #  place          :string
+#  search_terms   :string
 #  tetra          :boolean          default(FALSE), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null

@@ -409,6 +409,85 @@ RSpec.describe RepeaterSearch, type: :model do
     expect(@repeater_search.latitude).to be_nil
     expect(@repeater_search.longitude).to be_nil
   end
+
+  it "should generate names" do
+    repeater_search = build(:repeater_search)
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("All modes on all bands")
+
+    repeater_search = build(:repeater_search)
+    repeater_search.fm = true
+    repeater_search.dstar = true
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("FM and D-Star on all bands")
+
+    repeater_search = build(:repeater_search)
+    repeater_search.band_2m = true
+    repeater_search.band_70cm = true
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("All modes on 2m and 70cm")
+
+    repeater_search = build(:repeater_search, geosearch_type: RepeaterSearch::MY_LOCATION,
+      distance: 10, distance_unit: RepeaterSearch::KM,
+      latitude: 10.01, longitude: 20.02)
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("All modes on all bands within 10km of my location (10.0, 20.0)")
+
+    repeater_search = build(:repeater_search, geosearch_type: RepeaterSearch::MY_LOCATION,
+      distance: 10, distance_unit: RepeaterSearch::KM)
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("All modes on all bands within 10km of my location")
+
+    repeater_search = build(:repeater_search,
+      geosearch_type: RepeaterSearch::PLACE,
+      distance: 10, distance_unit: RepeaterSearch::KM,
+      place: "New York, NY, US")
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("All modes on all bands within 10km of New York, NY, US")
+    Geocoder::Lookup::Test.add_stub("New York, NY, US",
+      [{"coordinates" => [40.7143528, -74.0059731],
+        "address" => "New York, NY, USA",
+        "state" => "New York",
+        "state_code" => "NY",
+        "country" => "United States",
+        "country_code" => "US"}])
+    repeater_search.save!
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("All modes on all bands within 10km of New York, NY, US (40.7, -74.0)")
+
+    repeater_search = build(:repeater_search,
+      geosearch_type: RepeaterSearch::COORDINATES,
+      distance: 10, distance_unit: RepeaterSearch::KM)
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("All modes on all bands within 10km of coordinates")
+
+    repeater_search = build(:repeater_search,
+      geosearch_type: RepeaterSearch::COORDINATES,
+      distance: 10, distance_unit: RepeaterSearch::KM,
+      latitude: 10.01, longitude: 20.02)
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("All modes on all bands within 10km of coordinates 10.01, 20.02")
+
+    repeater_search = build(:repeater_search,
+      geosearch_type: RepeaterSearch::GRID_SQUARE,
+      distance: 10, distance_unit: RepeaterSearch::KM,
+      grid_square: "FN22ab")
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("All modes on all bands within 10km of grid square FN22ab")
+    repeater_search.save!
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("All modes on all bands within 10km of grid square FN22ab (42.1, -76.0)")
+
+    repeater_search = build(:repeater_search,
+      geosearch_type: RepeaterSearch::WITHIN_A_COUNTRY,
+      country: Country.find("gb"))
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("All modes on all bands within United Kingdom")
+
+    repeater_search = build(:repeater_search, search_terms: "london")
+    repeater_search.generate_name
+    expect(repeater_search.name).to eq("All modes on all bands containing \"london\"")
+  end
 end
 
 # == Schema Information
@@ -442,6 +521,7 @@ end
 #  nxdn           :boolean          default(FALSE), not null
 #  p25            :boolean          default(FALSE), not null
 #  place          :string
+#  search_terms   :string
 #  tetra          :boolean          default(FALSE), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
