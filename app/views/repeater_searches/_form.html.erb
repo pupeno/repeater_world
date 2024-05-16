@@ -29,18 +29,6 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <%= render "shared/forms/error_summary", resource: @repeater_search %>
 
-  <% if show_name_field %>
-    <div class="mb-3 flex flex-row items-baseline gap-3">
-      <%= form.label :name, "Name:", class: "mr-2" %>
-      <div class="mt-1 sm:mt-0 grow">
-        <%= form.text_field :name, class: "field-text w-full" %>
-        <% repeater_search.errors.where(:name).each do |error| %>
-          <p class="mt-2 text-red-600 dark:text-red-300"><%= error.full_message %></p>
-        <% end %>
-      </div>
-    </div>
-  <% end %>
-
   <div class="mb-3 flex flex-row flex-wrap gap-2">
     <%= form_text_field form, :search_terms, label: :skip,
                         input_html_options: { autofocus: true, placeholder: "Optional search terms" },
@@ -86,6 +74,12 @@ You should have received a copy of the GNU Affero General Public License along w
   </div>
 
   <%= render "form_geosearch", { form: form } %>
+
+  <% if show_name_field %>
+    <%= form_text_field form, :name, label: "Name of this search",
+                        help_text: "Just for your list of saved searches, no effect on results",
+                        wrapper_html_options: { class: "mb-4" } %>
+  <% end %>
 
   <% if unsaved_changes %>
     <p>You have unsaved changes to your search.</p>

@@ -46,31 +46,7 @@ class RepeaterSearchesController < ApplicationController
       @export_url = export_url(repeater_search_params)
     end
 
-    modes = if @repeater_search.all_modes?
-      ["all modes"]
-    else
-      RepeaterSearch::MODES.map { |band| band[:label] if @repeater_search.send(band[:pred]) }.compact
-    end
-
-    bands = if @repeater_search.all_bands?
-      ["all bands"]
-    else
-      RepeaterSearch::BANDS.map { |band| band[:label] if @repeater_search.send(band[:pred]) }.compact
-    end
-
-    geo = if @repeater_search.geosearch_type == RepeaterSearch::MY_LOCATION
-      "within #{@repeater_search.distance}#{@repeater_search.distance_unit} of my location (#{@repeater_search.latitude&.round(1)}, #{@repeater_search.longitude&.round(1)})"
-    elsif @repeater_search.geosearch_type == RepeaterSearch::PLACE
-      "within #{@repeater_search.distance}#{@repeater_search.distance_unit} of #{@repeater_search.place} (#{@repeater_search.latitude&.round(1)}, #{@repeater_search.longitude&.round(1)})"
-    elsif @repeater_search.geosearch_type == RepeaterSearch::COORDINATES
-      "within #{@repeater_search.distance}#{@repeater_search.distance_unit} of coordinates #{@repeater_search.latitude&.round(3)}, #{@repeater_search.longitude&.round(3)}"
-    elsif @repeater_search.geosearch_type == RepeaterSearch::GRID_SQUARE
-      "within #{@repeater_search.distance}#{@repeater_search.distance_unit} of grid square #{@repeater_search.grid_square} (#{@repeater_search.latitude&.round(1)}, #{@repeater_search.longitude&.round(1)})"
-    elsif @repeater_search.geosearch_type == RepeaterSearch::WITHIN_A_COUNTRY
-      "within #{@repeater_search.country.name}"
-    end
-
-    @repeater_search.name = "#{modes.to_sentence} on #{bands.to_sentence} #{geo}".strip.upcase_first
+    @repeater_search.name = generate_human_name(@repeater_search)
   end
 
   def export
@@ -135,6 +111,40 @@ class RepeaterSearchesController < ApplicationController
   end
 
   private
+
+  def generate_human_name(repeater_search)
+    # TODO: this is very problematic to internationalize, find a better way of doing this.
+    modes = if repeater_search.all_modes?
+      ["all modes"]
+    else
+      RepeaterSearch::MODES.map { |band| band[:label] if repeater_search.send(band[:pred]) }.compact
+    end
+    modes = modes.to_sentence
+
+    bands = if repeater_search.all_bands?
+      ["all bands"]
+    else
+      RepeaterSearch::BANDS.map { |band| band[:label] if repeater_search.send(band[:pred]) }.compact
+    end
+    bands = "on #{bands.to_sentence}" if bands.present?
+
+    geo = if repeater_search.geosearch_type == RepeaterSearch::MY_LOCATION
+      "within #{repeater_search.distance}#{repeater_search.distance_unit} of my location (#{repeater_search.latitude&.round(1)}, #{repeater_search.longitude&.round(1)})"
+    elsif repeater_search.geosearch_type == RepeaterSearch::PLACE
+      "within #{repeater_search.distance}#{repeater_search.distance_unit} of #{repeater_search.place} (#{repeater_search.latitude&.round(1)}, #{repeater_search.longitude&.round(1)})"
+    elsif repeater_search.geosearch_type == RepeaterSearch::COORDINATES
+      "within #{repeater_search.distance}#{repeater_search.distance_unit} of coordinates #{repeater_search.latitude&.round(3)}, #{repeater_search.longitude&.round(3)}"
+    elsif repeater_search.geosearch_type == RepeaterSearch::GRID_SQUARE
+      "within #{repeater_search.distance}#{repeater_search.distance_unit} of grid square #{repeater_search.grid_square} (#{repeater_search.latitude&.round(1)}, #{repeater_search.longitude&.round(1)})"
+    elsif repeater_search.geosearch_type == RepeaterSearch::WITHIN_A_COUNTRY
+      "within #{repeater_search.country.name}"
+    end
+
+    terms = if repeater_search.search_terms.present?
+      "containing \"#{repeater_search.search_terms}\""
+    end
+    [modes, bands, terms, geo].reject(&:blank?).join(" ").upcase_first
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_repeater_search
