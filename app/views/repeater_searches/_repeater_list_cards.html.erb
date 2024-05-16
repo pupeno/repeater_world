@@ -34,11 +34,11 @@ You should have received a copy of the GNU Affero General Public License along w
                   grow
                   border-t border-gray-200 ">
       <dl class="sm:divide-y divide-gray-200 dark:divide-gray-600">
-        <%= card_entry(label: "Distance", value: repeater.respond_to?(:distance) ? repeater.distance : nil, optional: true) do %>
-          <%= distance_in_unit(repeater.distance, @repeater_search.distance_unit) %>
+        <%= card_entry(label: "Distance", value: result.respond_to?(:distance) ? result.distance : nil, optional: true) do %>
+          <%= distance_in_unit(result.distance, @repeater_search.distance_unit) %>
         <% end %>
-        <%= card_entry(label: "Azimuth", value: repeater.respond_to?(:azimuth) ? repeater.azimuth : nil, optional: true) do %>
-          <%= repeater.azimuth.round %>°
+        <%= card_entry(label: "Azimuth", value: result.respond_to?(:azimuth) ? result.azimuth : nil, optional: true) do %>
+          <%= result.azimuth.round %>°
         <% end %>
         <%= card_entry(label: "Call Sign", value: repeater.call_sign) %>
         <%= card_entry(label: "Band", value: repeater.band, optional: true) %>

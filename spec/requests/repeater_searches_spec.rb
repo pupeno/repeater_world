@@ -56,6 +56,7 @@ RSpec.describe "/repeater_searches", type: :request do
         expect(response.body).to include("Search")
         expect(response.body).to include("Save Search")
         expect(response.body).to include("2M FM")
+        expect(response.body).to include("154.8km")
         expect(response.body).not_to include("4M FM")
       end
 
@@ -270,6 +271,7 @@ RSpec.describe "/repeater_searches", type: :request do
         expect(response.body).to include("23CM FM")
         expect(response.body).to include("70CM FM")
         expect(response.body).to include("2M FM")
+        expect(response.body).to include("96.19 miles")
         expect(response.body).not_to include("4M FM")
       end
 
