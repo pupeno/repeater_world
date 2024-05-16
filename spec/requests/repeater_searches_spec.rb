@@ -59,7 +59,7 @@ RSpec.describe "/repeater_searches", type: :request do
         expect(response.body).not_to include("4M FM")
       end
 
-      it "runs a search by my location without coordinates, when " do
+      it "fails to runs a search by my location due to missing coordinates" do
         get search_url(s: attributes_for(:repeater_search,
           geosearch_type: RepeaterSearch::MY_LOCATION,
           distance: 160, distance_unit: RepeaterSearch::KM))
