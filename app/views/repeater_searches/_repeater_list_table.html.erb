@@ -22,12 +22,12 @@ You should have received a copy of the GNU Affero General Public License along w
         <th scope="col" class="<%= TableHelper::TH_CLASSES %>">
           Call Sign
         </th>
-        <% if repeaters.first&.respond_to?(:distance) %>
+        <% if results.first&.respond_to?(:distance) %>
           <th scope="col" class="<%= TableHelper::TH_CLASSES %> text-right">
             Distance
           </th>
         <% end %>
-        <% if repeaters.first&.respond_to?(:azimuth) %>
+        <% if results.first&.respond_to?(:azimuth) %>
           <th scope="col" class="<%= TableHelper::TH_CLASSES %> text-right">
             Azimuth
           </th>
@@ -64,7 +64,8 @@ You should have received a copy of the GNU Affero General Public License along w
       </tr>
     </thead>
     <tbody>
-      <% repeaters.each_with_index do |repeater, index| %>
+      <% results.each_with_index do |result, index| %>
+        <% repeater = result.searchable %>
         <tr class="<%= index.even? ? "" : "bg-gray-100 dark:bg-gray-800" %>">
           <th scope="row" class="<%= TableHelper::TD_CLASSES %> text-left">
             <%= link_to repeater.name, repeater, class: "link font-bold" %>
@@ -72,14 +73,14 @@ You should have received a copy of the GNU Affero General Public License along w
           <td class="<%= TableHelper::TD_CLASSES %>">
             <%= link_to repeater.call_sign, repeater, class: "link font-bold" %>
           </td>
-          <% if repeater.respond_to?(:distance) %>
+          <% if result.respond_to?(:distance) %>
             <td class="<%= TableHelper::TD_CLASSES %> text-right">
-              <%= distance_in_unit(repeater.distance, @repeater_search.distance_unit) %>
+              <%= distance_in_unit(result.distance, @repeater_search.distance_unit) %>
             </td>
           <% end %>
-          <% if repeater.respond_to?(:azimuth) %>
+          <% if result.respond_to?(:azimuth) %>
             <td class="<%= TableHelper::TD_CLASSES %> text-right">
-              <%= repeater.azimuth.round %>°
+              <%= result.azimuth.round %>°
             </td>
           <% end %>
           <td class="<%= TableHelper::TD_CLASSES %> text-right">
@@ -111,4 +112,4 @@ You should have received a copy of the GNU Affero General Public License along w
     </tbody>
   </table>
 </div>
-<%= paginate repeaters %>
+<%= paginate results %>

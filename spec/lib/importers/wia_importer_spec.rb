@@ -16,7 +16,7 @@ require "rails_helper"
 
 RSpec.describe WiaImporter do
   before do
-    Repeater.delete_all
+    Repeater.destroy_all
     files = {"https://www.wia.org.au/members/repeaters/data/" => "wia.html",
              "https://www.wia.org.au/members/repeaters/data/documents/Repeater%20Directory%20230304.csv" => "wia.csv"}
     files.each do |url, local_file|

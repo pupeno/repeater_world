@@ -54,6 +54,16 @@ class Repeater < ApplicationRecord
     TETRA = "tetra"
   ]
 
+  MODE_NAMES = {
+    FM => "FM",
+    DSTAR => "D-Star",
+    FUSION => "Fusion",
+    DMR => "DMR",
+    NXDN => "NXDN",
+    P25 => "P25",
+    TETRA => "TETRA"
+  }
+
   CTCSS_TONES = [
     67.0, 69.3, 71.9, 74.4, 77.0, 79.7, 82.5, 85.4, 88.5, 91.5, 94.8, 97.4, 100.0, 103.5, 107.2, 110.9, 114.8, 118.8,
     123, 127.3, 131.8, 136.5, 141.3, 146.2, 151.4, 156.7, 162.2, 167.9, 173.8, 179.9, 186.2, 192.8, 203.5, 210.7, 218.1,
@@ -81,6 +91,18 @@ class Repeater < ApplicationRecord
 
   before_validation :ensure_fields_are_set
 
+  include PgSearch::Model
+  multisearchable(
+    against: [
+      :address, :band, :call_sign, :channel, :dmr_network, :dmr_color_code, :dstar_port,
+      :fm_ctcss_tone, :grid_square, :keeper, :locality, :name, :notes, :post_code, :region,
+      :rx_antenna, :rx_antenna_polarization, :rx_frequency, :source, :tx_antenna,
+      :tx_antenna_polarization, :tx_frequency, :web_site, :country_name
+    ],
+    additional_attributes: ->(repeater) { {repeater_id: repeater.id} }
+  )
+  delegate :name, to: :country, prefix: true
+
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
   end
@@ -105,16 +127,8 @@ class Repeater < ApplicationRecord
     self.location = Geo.point(latitude || 0, value)
   end
 
-  def modes
-    Set.new MODES.select { |mode| send(:"#{mode}?") }.map(&:to_sym)
-  end
-
   def disable_all_modes
     MODES.each { |mode| send(:"#{mode}=", nil) }
-  end
-
-  def location_in_words
-    [address, locality, region, post_code, country.name].reject(&:blank?).join(", ")
   end
 
   def to_param

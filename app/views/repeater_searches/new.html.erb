@@ -20,12 +20,12 @@ You should have received a copy of the GNU Affero General Public License along w
      data-controller="repeater-searches">
   <%= render "shared/flash_messages" %>
 
-  <div class="<%= @repeaters.nil? ? "flex-1" : "" %> grid place-items-center">
+  <div class="<%= @results.nil? ? "flex-1" : "" %> grid place-items-center">
     <%= render "form",
                repeater_search: @repeater_search,
                search_rl: search_url,
                save_url: repeater_searches_url,
                save_method: "post" %>
   </div>
-  <%= render "repeater_list", repeaters: @repeaters %>
+  <%= render "repeater_list", results: @results %>
 </div>

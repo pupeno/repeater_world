@@ -16,7 +16,7 @@ require "rails_helper"
 
 RSpec.describe ArtscipubImporter do
   before do
-    Repeater.delete_all
+    Repeater.destroy_all
     files = {"http://www.artscipub.com/repeaters/" => "home.html",
              "http://www.artscipub.com/repeaters/search/index.asp?state=Alabama" => "Alabama_1.html",
              "http://www.artscipub.com/repeaters/detail.asp?rid=23613&ln=N4PHP_repeater_information_on_224.500_in_Alabaster,_Alabama" => "23613.html",

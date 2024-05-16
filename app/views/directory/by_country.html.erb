@@ -26,7 +26,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
   <ul>
     <% @repeaters.each do |repeater| %>
-      <li class="mb-4"><%= link_to "#{repeater.name} - #{repeater.call_sign} - #{frequency_in_mhz(repeater.tx_frequency)} - #{repeater.location_in_words}", repeater, class: "link" %></li>
+      <li class="mb-4"><%= link_to "#{repeater.name} - #{repeater.call_sign} - #{frequency_in_mhz(repeater.tx_frequency)} - #{location_in_words repeater}", repeater, class: "link" %></li>
     <% end %>
   </ul>
 </div>

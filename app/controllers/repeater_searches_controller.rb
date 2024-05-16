@@ -33,12 +33,11 @@ class RepeaterSearchesController < ApplicationController
     @repeater_search.saving = false
     if repeater_search_params[:s].present?
       if @repeater_search.valid?
-        @repeaters = @repeater_search.run
-        @repeaters = if @selected_tab == RepeaterSearchesController::MAP
-          # Adding a "where" seems to break the includes(:country) in RepeaterSearch#run.
-          @repeaters.where("location IS NOT NULL").includes(:country)
+        @results = @repeater_search.run
+        @results = if @selected_tab == RepeaterSearchesController::MAP
+          @results.where("location IS NOT NULL")
         else
-          @repeaters.page(params[:p] || 1)
+          @results.page(params[:p] || 1)
         end
       end
     end
@@ -47,31 +46,7 @@ class RepeaterSearchesController < ApplicationController
       @export_url = export_url(repeater_search_params)
     end
 
-    modes = if @repeater_search.all_modes?
-      ["all modes"]
-    else
-      RepeaterSearch::MODES.map { |band| band[:label] if @repeater_search.send(band[:pred]) }.compact
-    end
-
-    bands = if @repeater_search.all_bands?
-      ["all bands"]
-    else
-      RepeaterSearch::BANDS.map { |band| band[:label] if @repeater_search.send(band[:pred]) }.compact
-    end
-
-    geo = if @repeater_search.geosearch_type == RepeaterSearch::MY_LOCATION
-      "within #{@repeater_search.distance}#{@repeater_search.distance_unit} of my location (#{@repeater_search.latitude&.round(1)}, #{@repeater_search.longitude&.round(1)})"
-    elsif @repeater_search.geosearch_type == RepeaterSearch::PLACE
-      "within #{@repeater_search.distance}#{@repeater_search.distance_unit} of #{@repeater_search.place} (#{@repeater_search.latitude&.round(1)}, #{@repeater_search.longitude&.round(1)})"
-    elsif @repeater_search.geosearch_type == RepeaterSearch::COORDINATES
-      "within #{@repeater_search.distance}#{@repeater_search.distance_unit} of coordinates #{@repeater_search.latitude&.round(3)}, #{@repeater_search.longitude&.round(3)}"
-    elsif @repeater_search.geosearch_type == RepeaterSearch::GRID_SQUARE
-      "within #{@repeater_search.distance}#{@repeater_search.distance_unit} of grid square #{@repeater_search.grid_square} (#{@repeater_search.latitude&.round(1)}, #{@repeater_search.longitude&.round(1)})"
-    elsif @repeater_search.geosearch_type == RepeaterSearch::WITHIN_A_COUNTRY
-      "within #{@repeater_search.country.name}"
-    end
-
-    @repeater_search.name = "#{modes.to_sentence} on #{bands.to_sentence} #{geo}".strip.upcase_first
+    @repeater_search.generate_name
   end
 
   def export
@@ -105,11 +80,11 @@ class RepeaterSearchesController < ApplicationController
     if repeater_search_params[:s].present?
       @repeater_search.assign_attributes(repeater_search_params[:s])
     end
-    @repeaters = @repeater_search.run
-    @repeaters = if @selected_tab == RepeaterSearchesController::MAP
-      @repeaters.where("location IS NOT NULL")
+    @results = @repeater_search.run
+    @results = if @selected_tab == RepeaterSearchesController::MAP
+      @results.where("location IS NOT NULL")
     else
-      @repeaters.page(params[:p] || 1)
+      @results.page(params[:p] || 1)
     end
     if params[:export]
       @export_url = export_repeater_search_url(@repeater_search, e: repeater_search_params[:e])
@@ -143,9 +118,10 @@ class RepeaterSearchesController < ApplicationController
   end
 
   def repeater_search_params
-    fields = RepeaterSearch::BANDS.map { |band| band[:name] } +
-      RepeaterSearch::MODES.map { |mode| mode[:name] } +
-      [:name, :geosearch_type, :distance, :distance_unit, :place, :latitude, :longitude, :grid_square, :country_id]
+    fields = [:name, :search_terms, :geosearch_type, :distance, :distance_unit, :place, :latitude, :longitude,
+      :grid_square, :country_id]
+    fields += RepeaterSearch::BANDS.map { |band| band[:name] }
+    fields += RepeaterSearch::MODES.map { |mode| mode[:name] }
     params.permit(
       :id, # Id of the record, when it's saved
       :d, # Display mode, like cards, maps, table.

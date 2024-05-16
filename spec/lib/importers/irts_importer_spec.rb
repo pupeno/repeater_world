@@ -16,7 +16,7 @@ require "rails_helper"
 
 RSpec.describe IrtsImporter do
   before do
-    Repeater.delete_all
+    Repeater.destroy_all
     files = {"https://www.irts.ie/cgi/repeater.cgi?printable" => "irts.html"}
     files.each do |url, local_file|
       file = double("file")

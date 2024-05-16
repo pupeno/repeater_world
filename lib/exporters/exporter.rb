@@ -13,8 +13,8 @@
 # <https://www.gnu.org/licenses/>.
 
 class Exporter
-  def initialize(repeaters)
-    @repeaters = repeaters
+  def initialize(results)
+    @results = results
   end
 
   def export

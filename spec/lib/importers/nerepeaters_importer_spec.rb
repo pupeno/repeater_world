@@ -16,7 +16,7 @@ require "rails_helper"
 
 RSpec.describe NerepeatersImporter do
   before do
-    Repeater.delete_all
+    Repeater.destroy_all
     files = {"http://www.nerepeaters.com/NERepeaters.php" => "nerepeaters.csv"}
     files.each do |url, local_file|
       file = double("file")

@@ -14,13 +14,13 @@
 
 class ChirpExporter < Exporter
   def export
-    @repeaters = @repeaters.where(band: [Repeater::BAND_2M, Repeater::BAND_70CM])
+    @results = @results.where("repeaters.band in (?)", [Repeater::BAND_2M, Repeater::BAND_70CM])
       .where("operational IS NOT FALSE") # Skip repeaters known to not be operational.
-      .where(fm: true)
-      .order(:name, :call_sign)
+      .where("repeaters.fm = true")
 
-    CSV.generate(headers: HEADERS, write_headers: true) do |csv|
-      @repeaters.each_with_index do |repeater, index|
+    CSV.generate(headers: HEADERS, write_headers: true, encoding: Encoding::UTF_8) do |csv|
+      @results.each_with_index do |result, index|
+        repeater = result.searchable
         csv << to_repeater_row(repeater).merge({LOCATION => index})
       end
     end

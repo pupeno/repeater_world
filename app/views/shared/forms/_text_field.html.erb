@@ -12,8 +12,8 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div>
-  <%= form.label field_name, label, class: "block font-medium" %>
+<div <%= tag.attributes wrapper_html_options %>>
+  <%= form.label field_name, label, class: "block font-medium" unless label == :skip %>
   <div class="mt-2">
     <%= form.text_field field_name,
                         **input_html_options.deep_merge(

@@ -13,13 +13,14 @@
 # <https://www.gnu.org/licenses/>.
 
 module FormHelper
-  def form_text_field(form, field_name, label: nil, input_html_options: {}, help_text: nil)
+  def form_text_field(form, field_name, label: nil, input_html_options: {}, help_text: nil, wrapper_html_options: {})
     render partial: "shared/forms/text_field",
       locals: {form: form,
                field_name: field_name,
                label: label,
                input_html_options: input_html_options,
-               help_text: help_text}
+               help_text: help_text,
+               wrapper_html_options: wrapper_html_options}
   end
 
   def form_email_field(form, field_name, label: nil, input_html_options: {}, help_text: nil)

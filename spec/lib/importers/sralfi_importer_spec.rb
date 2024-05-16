@@ -16,7 +16,7 @@ require "rails_helper"
 
 RSpec.describe SralfiImporter do
   before do
-    Repeater.delete_all
+    Repeater.destroy_all
     files = {"https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json"}
     files.each do |url, local_file|
       file = double("file")

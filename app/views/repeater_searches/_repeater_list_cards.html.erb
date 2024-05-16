@@ -17,7 +17,8 @@ You should have received a copy of the GNU Affero General Public License along w
            grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4
            gap-3 sm:gap-4 md:gap-6 lg:gap-8
            sm:mx-2 md:mx-4 lg:mx-6">
-  <% repeaters.each do |repeater| %>
+  <% results.each do |result| %>
+    <% repeater = result.searchable %>
     <li class="col-span-1 flex flex-col divide-y divide-gray-200 dark:divide-gray-600 rounded-lg shadow
                border border-gray-200 dark:border-gray-600
         id="<%= dom_id repeater %>">
@@ -26,18 +27,18 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= link_to repeater.name, repeater, class: "link" %>
       </h3>
       <p class="mt-1 max-w-2xl text-gray-500 dark:text-gray-400">
-        <%= repeater.band %>, <%= modes(repeater).to_sentence %>
+        <%= [repeater.band, modes(repeater).to_sentence].reject(&:blank?).join(" - ") %>
       </p>
     </div>
     <div class="py-2 sm:p-0
                   grow
                   border-t border-gray-200 ">
       <dl class="sm:divide-y divide-gray-200 dark:divide-gray-600">
-        <%= card_entry(label: "Distance", value: repeater.respond_to?(:distance) ? repeater.distance : nil, optional: true) do %>
-          <%= distance_in_unit(repeater.distance, @repeater_search.distance_unit) %>
+        <%= card_entry(label: "Distance", value: result.respond_to?(:distance) ? result.distance : nil, optional: true) do %>
+          <%= distance_in_unit(result.distance, @repeater_search.distance_unit) %>
         <% end %>
-        <%= card_entry(label: "Azimuth", value: repeater.respond_to?(:azimuth) ? repeater.azimuth : nil, optional: true) do %>
-          <%= repeater.azimuth.round %>°
+        <%= card_entry(label: "Azimuth", value: result.respond_to?(:azimuth) ? result.azimuth : nil, optional: true) do %>
+          <%= result.azimuth.round %>°
         <% end %>
         <%= card_entry(label: "Call Sign", value: repeater.call_sign) %>
         <%= card_entry(label: "Band", value: repeater.band, optional: true) %>
@@ -63,4 +64,4 @@ You should have received a copy of the GNU Affero General Public License along w
     </li>
   <% end %>
 </ul>
-<%= paginate repeaters %>
+<%= paginate results %>

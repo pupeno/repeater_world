@@ -12,7 +12,7 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<% if !repeaters.nil? && repeaters.empty? %>
+<% if !results.nil? && results.empty? %>
   <div class="w-screen flex items-center justify-center">
     <div class="text-center">
       <h1 class="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">No repeaters found</h1>
@@ -34,7 +34,7 @@ You should have received a copy of the GNU Affero General Public License along w
       </p>
     </div>
   </div>
-<% elsif repeaters.present? %>
+<% elsif results.present? %>
   <div class="contents"
        data-controller="repeater">
     <%= tabbed_view tabs: [{ title: "Cards", name: RepeaterSearchesController::CARDS, url: @cards_url, icon: "fa-solid fa-table" },
@@ -42,11 +42,11 @@ You should have received a copy of the GNU Affero General Public License along w
                            { title: "Table", name: RepeaterSearchesController::TABLE, url: @table_url, icon: "fa-solid fa-table-list" }],
                     selected_tab: @selected_tab do |selected_tab| %>
       <% if selected_tab == RepeaterSearchesController::CARDS %>
-        <%= render "repeater_list_cards", repeaters: repeaters %>
+        <%= render "repeater_list_cards", results: results %>
       <% elsif @selected_tab == RepeaterSearchesController::MAP %>
-        <%= render "repeater_list_map", repeaters: repeaters %>
+        <%= render "repeater_list_map", results: results %>
       <% elsif @selected_tab == RepeaterSearchesController::TABLE %>
-        <%= render "repeater_list_table", repeaters: repeaters %>
+        <%= render "repeater_list_table", results: results %>
       <% end %>
     <% end %>
   </div>

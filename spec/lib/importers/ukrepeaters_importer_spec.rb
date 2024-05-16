@@ -16,7 +16,7 @@ require "rails_helper"
 
 RSpec.describe UkrepeatersImporter do
   before do
-    Repeater.delete_all
+    Repeater.destroy_all
     files = {"https://ukrepeater.net/csvcreate3.php" => "repeaterlist3.csv",
              "https://ukrepeater.net/csvcreate_dv.php" => "repeaterlist_dv.csv",
              "https://ukrepeater.net/csvcreate_all.php" => "repeaterlist_all.csv",
