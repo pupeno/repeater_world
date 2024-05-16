@@ -72,7 +72,8 @@ jobs:
     env:
       RAILS_ENV: test
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
         with:
           ## Here we do not checkout the current branch, but we checkout the base branch.
           ref: ${{ github.base_ref }}
