@@ -218,18 +218,23 @@ class RepeaterSearch < ApplicationRecord
     else
       RepeaterSearch::BANDS.map { |band| band[:label] if send(band[:pred]) }.compact
     end
-    bands = "on #{bands.to_sentence}" if bands.present?
+    bands = "on #{bands.to_sentence}"
 
     geo = if geosearch_type == RepeaterSearch::MY_LOCATION
-      "within #{distance}#{distance_unit} of my location (#{latitude&.round(1)}, #{longitude&.round(1)})"
+      "within #{distance}#{distance_unit} of my location"
     elsif geosearch_type == RepeaterSearch::PLACE
-      "within #{distance}#{distance_unit} of #{place} (#{latitude&.round(1)}, #{longitude&.round(1)})"
+      "within #{distance}#{distance_unit} of #{place}"
     elsif geosearch_type == RepeaterSearch::COORDINATES
-      "within #{distance}#{distance_unit} of coordinates #{latitude&.round(3)}, #{longitude&.round(3)}"
+      "within #{distance}#{distance_unit} of coordinates"
     elsif geosearch_type == RepeaterSearch::GRID_SQUARE
-      "within #{distance}#{distance_unit} of grid square #{grid_square} (#{latitude&.round(1)}, #{longitude&.round(1)})"
+      "within #{distance}#{distance_unit} of grid square #{grid_square}"
     elsif geosearch_type == RepeaterSearch::WITHIN_A_COUNTRY
       "within #{country.name}"
+    end
+    if latitude.present? && longitude.present? && geosearch_type.in?([RepeaterSearch::MY_LOCATION, RepeaterSearch::PLACE, RepeaterSearch::GRID_SQUARE])
+      geo += " (#{latitude.round(1)}, #{longitude.round(1)})"
+    elsif latitude.present? && longitude.present? && geosearch_type == RepeaterSearch::COORDINATES
+      geo += " #{latitude.round(3)}, #{longitude.round(3)}"
     end
 
     terms = if search_terms.present?
