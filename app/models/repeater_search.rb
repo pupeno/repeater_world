@@ -132,7 +132,7 @@ class RepeaterSearch < ApplicationRecord
     end
 
     if search_terms.blank? # When there are search terms, we let full text search control the order.
-      results = results.order("repeaters.name", "repeaters.call_sign")
+      results = results.order("repeaters.name, repeaters.call_sign, repeaters.tx_frequency, repeaters.id")
     end
 
     results
