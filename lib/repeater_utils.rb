@@ -32,7 +32,7 @@ module RepeaterUtils
   end
 
   def self.distance_in_unit(distance, unit)
-    distance = (distance / ((unit == "miles") ? 1609.34 : 1000)).round(2)
+    distance = (distance / ((unit == "miles") ? 1609.34 : 1000.0)).round(2)
     if unit == "miles"
       "#{distance} miles"
     else
