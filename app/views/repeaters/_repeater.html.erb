@@ -40,6 +40,9 @@ You should have received a copy of the GNU Affero General Public License along w
         <% end %>
         <%= card_entry(label: "D-Star", value: repeater.dstar?) %>
         <%= card_entry(label: "Fusion", value: repeater.fusion?) %>
+        <% if repeater.fusion? %>
+          <%= card_entry(label: "Wires X Id", value: repeater.wires_x_id, optional: true) %>
+        <% end %>
         <%= card_entry(label: "DMR", value: repeater.dmr?) %>
         <% if repeater.dmr? %>
           <%= card_entry(label: "DMR color code", value: repeater.dmr_color_code, optional: true) %>

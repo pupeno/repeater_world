@@ -73,6 +73,10 @@ class SuggestedRepeater < ApplicationRecord
         field :dstar_port
       end
 
+      group "Fusion" do
+        field :wires_x_id
+      end
+
       group "DMR" do
         field :dmr_color_code
         field :dmr_network
@@ -154,6 +158,10 @@ class SuggestedRepeater < ApplicationRecord
 
       group "D-Star" do
         field :dstar_port
+      end
+
+      group "Fusion" do
+        field :wires_x_id
       end
 
       group "DMR" do
@@ -252,6 +260,7 @@ end
 #  updated_at              :datetime         not null
 #  country_id              :string
 #  repeater_id             :uuid
+#  wires_x_id              :string
 #
 # Indexes
 #
