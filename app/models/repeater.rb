@@ -194,6 +194,7 @@ class Repeater < ApplicationRecord
         field :fm_tone_burst
         field :fm_ctcss_tone
         field :fm_tone_squelch
+        field :fm_bandwidth
       end
 
       group "D-Star" do
@@ -285,6 +286,7 @@ class Repeater < ApplicationRecord
         field :fm_tone_burst
         field :fm_ctcss_tone
         field :fm_tone_squelch
+        field :fm_bandwidth
       end
 
       group "D-Star" do
