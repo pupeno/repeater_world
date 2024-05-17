@@ -1,4 +1,4 @@
-/* Copyright 2023, Pablo Fernandez
+/* Copyright 2023-2024, Pablo Fernandez
  *
  * This file is part of Repeater World.
  *
