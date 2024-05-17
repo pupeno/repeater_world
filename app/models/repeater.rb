@@ -187,6 +187,7 @@ class Repeater < ApplicationRecord
         field :nxdn
         field :p25
         field :tetra
+        field :echo_link
       end
 
       group "FM" do
@@ -202,6 +203,11 @@ class Repeater < ApplicationRecord
       group "DMR" do
         field :dmr_color_code
         field :dmr_network
+      end
+
+      group "EchoLink" do
+        field :echo_link
+        field :echo_link_node_number
       end
 
       group "Location" do
@@ -268,6 +274,7 @@ class Repeater < ApplicationRecord
         field :nxdn
         field :p25
         field :tetra
+        field :echo_link
       end
 
       group "FM" do
@@ -283,6 +290,10 @@ class Repeater < ApplicationRecord
       group "DMR" do
         field :dmr_color_code
         field :dmr_network
+      end
+
+      group "EchoLink" do
+        field :echo_link_node_number
       end
 
       group "Location" do
@@ -347,6 +358,8 @@ end
 #  dmr_network                :string
 #  dstar                      :boolean
 #  dstar_port                 :string
+#  echo_link                  :boolean
+#  echo_link_node_number      :integer
 #  fm                         :boolean
 #  fm_bandwidth               :string
 #  fm_ctcss_tone              :decimal(, )
