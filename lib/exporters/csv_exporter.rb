@@ -17,7 +17,7 @@ class CsvExporter < Exporter
   def export
     columns = [
       :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency,
-      :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch, :fm_bandwidth,
+      :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch, :bandwidth,
       :dstar, :dstar_port,
       :fusion,
       :dmr, :dmr_color_code, :dmr_network,
@@ -36,7 +36,7 @@ class CsvExporter < Exporter
     column_names[:fm_tone_burst] = "Tone Burst"
     column_names[:fm_ctcss_tone] = "CTCSS Tone"
     column_names[:fm_tone_squelch] = "Tone Squelch"
-    column_names[:fm_bandwidth] = "Bandwidth"
+    column_names[:bandwidth] = "Bandwidth"
     column_names[:dstar] = "D-Star"
     column_names[:dstar_port] = "D-Star Port"
     column_names[:dmr] = "DMR"

@@ -46,7 +46,7 @@ FactoryBot.define do
       fm_ctcss_tone { Repeater::CTCSS_TONES.first }
       fm_tone_burst { true }
       fm_tone_squelch { true }
-      fm_bandwidth { Repeater::FM_WIDE }
+      bandwidth { Repeater::FM_WIDE }
       dstar { true }
       dstar_port { "C" }
       fusion { true }
@@ -93,6 +93,7 @@ end
 #  altitude_agl               :integer
 #  altitude_asl               :integer
 #  band                       :string
+#  bandwidth                  :integer
 #  bearing                    :string
 #  call_sign                  :string
 #  channel                    :string
@@ -104,7 +105,6 @@ end
 #  echo_link                  :boolean
 #  echo_link_node_number      :integer
 #  fm                         :boolean
-#  fm_bandwidth               :string
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean

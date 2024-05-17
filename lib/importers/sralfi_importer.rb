@@ -207,7 +207,7 @@ class SralfiImporter < Importer
       repeater.fm = true
     elsif raw_repeater["mode"] == "NFM"
       repeater.fm = true
-      repeater.fm_bandwidth = Repeater::FM_NARROW
+      repeater.bandwidth = Repeater::FM_NARROW
     elsif raw_repeater["mode"] == "FM / P25"
       repeater.fm = true
       repeater.p25 = true
