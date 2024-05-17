@@ -103,6 +103,8 @@ class SuggestedRepeatersController < ApplicationController
       :dmr_network,
       :dstar,
       :dstar_port,
+      :echo_link,
+      :echo_link_node_number,
       :fm,
       :fm_ctcss_tone,
       :fm_tone_burst,
@@ -120,6 +122,7 @@ class SuggestedRepeatersController < ApplicationController
       :post_code,
       :private_notes,
       :region,
+      :repeater_id,
       :rx_antenna,
       :rx_antenna_polarization,
       :rx_frequency,
@@ -134,9 +137,7 @@ class SuggestedRepeatersController < ApplicationController
       :tx_frequency,
       :tx_power,
       :web_site,
-      :repeater_id,
-      :echo_link,
-      :echo_link_node_number
+      :wires_x_id
     )
   end
 end

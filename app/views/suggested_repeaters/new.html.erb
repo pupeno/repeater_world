@@ -101,6 +101,16 @@ You should have received a copy of the GNU Affero General Public License along w
     </div>
     <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
       <div>
+        <h2 class="text-lg font-semibold leading-7">Fusion</h2>
+        <p class="mt-1  text-gray-500 dark:text-gray-400">Only applicable if the repeater supports Fusion.</p>
+      </div>
+
+      <div class="flex flex-col gap-y-8 md:col-span-2">
+        <%= form_text_field form, :wires_x_id, label: "Wires-X Id" %>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
+      <div>
         <h2 class="text-lg font-semibold leading-7">DMR</h2>
         <p class="mt-1  text-gray-500 dark:text-gray-400">Only applicable if the repeater supports DMR.</p>
       </div>

@@ -200,6 +200,10 @@ class Repeater < ApplicationRecord
         field :dstar_port
       end
 
+      group "Fusion" do
+        field :wires_x_id
+      end
+
       group "DMR" do
         field :dmr_color_code
         field :dmr_network
@@ -285,6 +289,10 @@ class Repeater < ApplicationRecord
 
       group "D-Star" do
         field :dstar_port
+      end
+
+      group "Fusion" do
+        field :wires_x_id
       end
 
       group "DMR" do
@@ -400,6 +408,7 @@ end
 #  country_id                 :string
 #  external_id                :string
 #  geocoded_country_id        :string
+#  wires_x_id                 :string
 #
 # Indexes
 #
