@@ -134,7 +134,9 @@ class SuggestedRepeatersController < ApplicationController
       :tx_frequency,
       :tx_power,
       :web_site,
-      :repeater_id
+      :repeater_id,
+      :echo_link,
+      :echo_link_node_number
     )
   end
 end
