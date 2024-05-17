@@ -13,6 +13,10 @@
 # <https://www.gnu.org/licenses/>.
 
 module RepeaterUtils
+  def self.frequency_in_khz(frequency)
+    "#{frequency.to_f / (10**3)}kHz" if frequency.present?
+  end
+
   def self.frequency_in_mhz(frequency)
     "#{frequency.to_f / (10**6)}MHz"
   end

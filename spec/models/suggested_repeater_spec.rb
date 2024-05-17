@@ -44,6 +44,7 @@ end
 #  altitude_agl            :string
 #  altitude_asl            :string
 #  band                    :string
+#  bandwidth               :string
 #  bearing                 :string
 #  call_sign               :string
 #  channel                 :string

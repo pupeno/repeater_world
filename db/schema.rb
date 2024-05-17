@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_17_190947) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_17_193627) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -149,10 +149,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_17_190947) do
     t.string "geocoded_region"
     t.string "geocoded_post_code"
     t.string "geocoded_country_id"
-    t.string "fm_bandwidth"
     t.boolean "echo_link"
     t.integer "echo_link_node_number"
     t.string "wires_x_node_id"
+    t.integer "bandwidth"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["country_id"], name: "index_repeaters_on_country_id"
     t.index ["location"], name: "index_repeaters_on_location", using: :gist
@@ -210,6 +210,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_17_190947) do
     t.boolean "echo_link"
     t.integer "echo_link_node_number"
     t.string "wires_x_node_id"
+    t.string "bandwidth"
     t.index ["country_id"], name: "index_suggested_repeaters_on_country_id"
     t.index ["repeater_id"], name: "index_suggested_repeaters_on_repeater_id"
   end

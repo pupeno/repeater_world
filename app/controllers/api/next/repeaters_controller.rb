@@ -22,7 +22,7 @@ class Api::Next::RepeatersController < ApplicationController
     @repeaters = Repeater.all.includes(:country)
     @fields = [
       :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency,
-      :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch, :fm_bandwidth,
+      :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch, :bandwidth,
       :dstar, :dstar_port,
       :fusion,
       :dmr, :dmr_color_code, :dmr_network,

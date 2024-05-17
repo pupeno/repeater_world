@@ -242,7 +242,7 @@ class NerepeatersImporter < Importer
       repeater.fm = true # We are just assuming it's FM otherwise we'll be throwing away most of the data.
     elsif raw_repeater[MODE].strip == "NFM"
       repeater.fm = true
-      repeater.fm_bandwidth = Repeater::FM_NARROW
+      repeater.bandwidth = Repeater::FM_NARROW
     elsif raw_repeater[MODE].strip == "D-STAR"
       repeater.dstar = true
     elsif raw_repeater[MODE].strip == "YSF"
@@ -261,14 +261,14 @@ class NerepeatersImporter < Importer
       repeater.dstar = true
     elsif raw_repeater[MODE].strip == "NXDN/NFM"
       repeater.fm = true
-      repeater.fm_bandwidth = Repeater::FM_NARROW
+      repeater.bandwidth = Repeater::FM_NARROW
       repeater.nxdn = true
     elsif raw_repeater[MODE].strip == "YSF/FM"
       repeater.fm = true
       repeater.fusion = true
     elsif raw_repeater[MODE].strip == "DMR/NFM"
       repeater.fm = true
-      repeater.fm_bandwidth = Repeater::FM_NARROW
+      repeater.bandwidth = Repeater::FM_NARROW
       repeater.dmr = true
     elsif raw_repeater[MODE].strip == "DMR/FM"
       repeater.fm = true
@@ -281,7 +281,7 @@ class NerepeatersImporter < Importer
       repeater.p25 = true
     elsif raw_repeater[MODE].strip == "P25/NFM"
       repeater.fm = true
-      repeater.fm_bandwidth = Repeater::FM_NARROW
+      repeater.bandwidth = Repeater::FM_NARROW
       repeater.p25 = true
     elsif raw_repeater[MODE].strip == "P25DMR/FM"
       repeater.fm = true

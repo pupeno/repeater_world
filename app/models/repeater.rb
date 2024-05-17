@@ -70,9 +70,9 @@ class Repeater < ApplicationRecord
     225.7, 233.6, 241.8, 250.3
   ]
 
-  FM_BANDWIDTHS = [
-    FM_WIDE = "wide",
-    FM_NARROW = "narrow"
+  BANDWIDTHS = [
+    FM_WIDE = 25_000,
+    FM_NARROW = 12_500
   ]
 
   DMR_COLOR_CODES = (0..15).to_a
@@ -86,7 +86,6 @@ class Repeater < ApplicationRecord
   validates :tx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
   validates :rx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
   validates :fm_ctcss_tone, inclusion: CTCSS_TONES, allow_blank: true
-  validates :fm_bandwidth, inclusion: FM_BANDWIDTHS, if: :fm?
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
 
   before_validation :ensure_fields_are_set
@@ -151,8 +150,8 @@ class Repeater < ApplicationRecord
         end
       end
     end
-    if fm_bandwidth.blank? && fm?
-      self.fm_bandwidth = FM_WIDE
+    if bandwidth.blank?
+      self.bandwidth = FM_WIDE
     end
   end
 
@@ -194,7 +193,6 @@ class Repeater < ApplicationRecord
         field :fm_tone_burst
         field :fm_ctcss_tone
         field :fm_tone_squelch
-        field :fm_bandwidth
       end
 
       group "D-Star" do
@@ -243,6 +241,7 @@ class Repeater < ApplicationRecord
       end
 
       group "Other" do
+        field :bandwidth
         field :tx_antenna
         field :tx_antenna_polarization
         field :tx_power
@@ -286,7 +285,6 @@ class Repeater < ApplicationRecord
         field :fm_tone_burst
         field :fm_ctcss_tone
         field :fm_tone_squelch
-        field :fm_bandwidth
       end
 
       group "D-Star" do
@@ -336,6 +334,7 @@ class Repeater < ApplicationRecord
       end
 
       group "Other" do
+        field :bandwidth
         field :tx_antenna
         field :tx_antenna_polarization
         field :tx_power
@@ -360,6 +359,7 @@ end
 #  altitude_agl               :integer
 #  altitude_asl               :integer
 #  band                       :string
+#  bandwidth                  :integer
 #  bearing                    :string
 #  call_sign                  :string
 #  channel                    :string
@@ -371,7 +371,6 @@ end
 #  echo_link                  :boolean
 #  echo_link_node_number      :integer
 #  fm                         :boolean
-#  fm_bandwidth               :string
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean

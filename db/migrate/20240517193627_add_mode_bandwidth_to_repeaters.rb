@@ -1,4 +1,4 @@
-# Copyright 2023-2024, Pablo Fernandez
+# Copyright 2024, Pablo Fernandez
 #
 # This file is part of Repeater World.
 #
@@ -12,32 +12,13 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-module RepeaterHelper
-  def frequency_in_khz(...)
-    RepeaterUtils.frequency_in_khz(...)
-  end
-
-  def frequency_in_mhz(...)
-    RepeaterUtils.frequency_in_mhz(...)
-  end
-
-  def frequency_offset_in_khz(...)
-    RepeaterUtils.frequency_offset_in_khz(...)
-  end
-
-  def modes(...)
-    RepeaterUtils.mode_names(...)
-  end
-
-  def modes_as_sym(...)
-    RepeaterUtils.modes_as_sym(...)
-  end
-
-  def distance_in_unit(...)
-    RepeaterUtils.distance_in_unit(...)
-  end
-
-  def location_in_words(...)
-    RepeaterUtils.location_in_words(...)
+class AddModeBandwidthToRepeaters < ActiveRecord::Migration[7.1]
+  def up
+    add_column :repeaters, :bandwidth, :integer
+    add_column :suggested_repeaters, :bandwidth, :string
+    Repeater.reset_column_information
+    Repeater.where(fm_bandwidth: Repeater::FM_WIDE).update_all(bandwidth: 25_000)
+    Repeater.where(fm_bandwidth: Repeater::FM_NARROW).update_all(bandwidth: 12_500)
+    remove_column :repeaters, :fm_bandwidth
   end
 end

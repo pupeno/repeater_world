@@ -67,7 +67,6 @@ class SuggestedRepeater < ApplicationRecord
         field :fm_tone_burst
         field :fm_ctcss_tone
         field :fm_tone_squelch
-        field :fm_bandwidth
       end
 
       group "D-Star" do
@@ -99,6 +98,7 @@ class SuggestedRepeater < ApplicationRecord
       end
 
       group "Other" do
+        field :bandwidth
         field :tx_antenna
         field :tx_antenna_polarization
         field :tx_power
@@ -155,7 +155,6 @@ class SuggestedRepeater < ApplicationRecord
         field :fm_tone_burst
         field :fm_ctcss_tone
         field :fm_tone_squelch
-        field :fm_bandwidth
       end
 
       group "D-Star" do
@@ -187,6 +186,7 @@ class SuggestedRepeater < ApplicationRecord
       end
 
       group "Other" do
+        field :bandwidth
         field :tx_antenna
         field :tx_antenna_polarization
         field :tx_power
@@ -216,6 +216,7 @@ end
 #  altitude_agl            :string
 #  altitude_asl            :string
 #  band                    :string
+#  bandwidth               :string
 #  bearing                 :string
 #  call_sign               :string
 #  channel                 :string

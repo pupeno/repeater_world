@@ -81,6 +81,7 @@ end
 #  altitude_agl               :integer
 #  altitude_asl               :integer
 #  band                       :string
+#  bandwidth                  :integer
 #  bearing                    :string
 #  call_sign                  :string
 #  channel                    :string
@@ -92,7 +93,6 @@ end
 #  echo_link                  :boolean
 #  echo_link_node_number      :integer
 #  fm                         :boolean
-#  fm_bandwidth               :string
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
