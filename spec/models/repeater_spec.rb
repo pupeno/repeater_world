@@ -131,7 +131,7 @@ end
 #  country_id                 :string
 #  external_id                :string
 #  geocoded_country_id        :string
-#  wires_x_id                 :string
+#  wires_x_node_id            :string
 #
 # Indexes
 #

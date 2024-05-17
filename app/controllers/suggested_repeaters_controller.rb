@@ -137,7 +137,7 @@ class SuggestedRepeatersController < ApplicationController
       :tx_frequency,
       :tx_power,
       :web_site,
-      :wires_x_id
+      :wires_x_node_id
     )
   end
 end

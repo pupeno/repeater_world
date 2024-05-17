@@ -74,7 +74,7 @@ class SuggestedRepeater < ApplicationRecord
       end
 
       group "Fusion" do
-        field :wires_x_id
+        field :wires_x_node_id
       end
 
       group "DMR" do
@@ -161,7 +161,7 @@ class SuggestedRepeater < ApplicationRecord
       end
 
       group "Fusion" do
-        field :wires_x_id
+        field :wires_x_node_id
       end
 
       group "DMR" do
@@ -260,7 +260,7 @@ end
 #  updated_at              :datetime         not null
 #  country_id              :string
 #  repeater_id             :uuid
-#  wires_x_id              :string
+#  wires_x_node_id         :string
 #
 # Indexes
 #
