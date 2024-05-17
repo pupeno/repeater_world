@@ -53,6 +53,8 @@ end
 #  done_at                 :datetime
 #  dstar                   :boolean
 #  dstar_port              :string
+#  echo_link               :boolean
+#  echo_link_node_number   :integer
 #  fm                      :boolean
 #  fm_ctcss_tone           :string
 #  fm_tone_burst           :boolean
