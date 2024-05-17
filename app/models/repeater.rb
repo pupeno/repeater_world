@@ -201,7 +201,7 @@ class Repeater < ApplicationRecord
       end
 
       group "Fusion" do
-        field :wires_x_id
+        field :wires_x_node_id
       end
 
       group "DMR" do
@@ -292,7 +292,7 @@ class Repeater < ApplicationRecord
       end
 
       group "Fusion" do
-        field :wires_x_id
+        field :wires_x_node_id
       end
 
       group "DMR" do
@@ -408,7 +408,7 @@ end
 #  country_id                 :string
 #  external_id                :string
 #  geocoded_country_id        :string
-#  wires_x_id                 :string
+#  wires_x_node_id            :string
 #
 # Indexes
 #

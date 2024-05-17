@@ -114,7 +114,7 @@ end
 #  updated_at              :datetime         not null
 #  country_id              :string
 #  repeater_id             :uuid
-#  wires_x_id              :string
+#  wires_x_node_id         :string
 #
 # Indexes
 #
