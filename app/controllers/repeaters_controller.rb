@@ -14,6 +14,9 @@
 
 class RepeatersController < ApplicationController
   def show
-    @repeater = Repeater.find(params[:id].split("-").take(5).join("-"))
+    @repeater = Repeater.friendly.find(params[:id])
+    if request.path != repeater_path(@repeater)
+      redirect_to @repeater, status: :moved_permanently
+    end
   end
 end

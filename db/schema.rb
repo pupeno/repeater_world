@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_17_193627) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_18_064255) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -48,6 +48,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_17_193627) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_countries_on_name", unique: true
+  end
+
+  create_table "friendly_id_slugs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "slug", null: false
+    t.uuid "sluggable_id", null: false
+    t.string "sluggable_type", limit: 50
+    t.string "scope"
+    t.datetime "created_at"
+    t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
+    t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
+    t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
   create_table "pg_search_documents", force: :cascade do |t|
@@ -116,7 +127,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_17_193627) do
     t.integer "dmr_color_code"
     t.string "dmr_network"
     t.boolean "nxdn"
-    t.geography "location", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
+    t.geography "location", limit: {srid: 4326, type: "st_point", geographic: true}
     t.string "grid_square"
     t.string "utc_offset"
     t.string "source"
@@ -153,9 +164,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_17_193627) do
     t.integer "echo_link_node_number"
     t.string "wires_x_node_id"
     t.integer "bandwidth"
+    t.string "slug", null: false
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["country_id"], name: "index_repeaters_on_country_id"
     t.index ["location"], name: "index_repeaters_on_location", using: :gist
+    t.index ["slug"], name: "index_repeaters_on_slug", unique: true
   end
 
   create_table "suggested_repeaters", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

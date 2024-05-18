@@ -130,6 +130,7 @@ end
 #  rx_antenna                 :string
 #  rx_antenna_polarization    :string
 #  rx_frequency               :bigint           not null
+#  slug                       :string           not null
 #  source                     :string
 #  tetra                      :boolean
 #  tx_antenna                 :string
@@ -150,6 +151,7 @@ end
 #  index_repeaters_on_call_sign   (call_sign)
 #  index_repeaters_on_country_id  (country_id)
 #  index_repeaters_on_location    (location) USING gist
+#  index_repeaters_on_slug        (slug) UNIQUE
 #
 # Foreign Keys
 #

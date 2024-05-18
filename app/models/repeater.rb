@@ -102,6 +102,9 @@ class Repeater < ApplicationRecord
   )
   delegate :name, to: :country, prefix: true
 
+  include FriendlyId
+  friendly_id :generate_slug, use: [:slugged, :history]
+
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
   end
@@ -130,8 +133,9 @@ class Repeater < ApplicationRecord
     MODES.each { |mode| send(:"#{mode}=", nil) }
   end
 
-  def to_param
-    [id, call_sign&.parameterize, name&.parameterize].reject(&:blank?).join("-")
+  def generate_slug
+    s = [:call_sign, :name, :band, RepeaterUtils.mode_names(self), RepeaterUtils.location_in_words(self)]
+    [s, s + [:id]]
   end
 
   def web_site=(value)
@@ -256,6 +260,7 @@ class Repeater < ApplicationRecord
 
       group "Record" do
         field :id
+        field :slug
         field :created_at
         field :updated_at
       end
@@ -346,6 +351,10 @@ class Repeater < ApplicationRecord
         field :band
         field :channel
       end
+
+      group "Record" do
+        field :slug
+      end
     end
   end
 end
@@ -396,6 +405,7 @@ end
 #  rx_antenna                 :string
 #  rx_antenna_polarization    :string
 #  rx_frequency               :bigint           not null
+#  slug                       :string           not null
 #  source                     :string
 #  tetra                      :boolean
 #  tx_antenna                 :string
@@ -416,6 +426,7 @@ end
 #  index_repeaters_on_call_sign   (call_sign)
 #  index_repeaters_on_country_id  (country_id)
 #  index_repeaters_on_location    (location) USING gist
+#  index_repeaters_on_slug        (slug) UNIQUE
 #
 # Foreign Keys
 #

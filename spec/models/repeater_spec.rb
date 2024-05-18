@@ -48,15 +48,6 @@ RSpec.describe Repeater, type: :model do
       expect(@repeater.to_s).to include(@repeater.call_sign)
     end
 
-    it "has SEO friendly params" do
-      expect(@repeater.to_param).to include(@repeater.id)
-      expect(@repeater.to_param).to include(@repeater.call_sign.parameterize)
-      expect(@repeater.to_param).to include(@repeater.name.parameterize)
-      @repeater.name = nil
-      @repeater.call_sign = nil
-      expect(@repeater.to_param).to include(@repeater.id)
-    end
-
     it "fixes web site" do
       @repeater.web_site = "example.com"
       expect(@repeater.web_site).to eq("http://example.com")
@@ -118,6 +109,7 @@ end
 #  rx_antenna                 :string
 #  rx_antenna_polarization    :string
 #  rx_frequency               :bigint           not null
+#  slug                       :string           not null
 #  source                     :string
 #  tetra                      :boolean
 #  tx_antenna                 :string
@@ -138,6 +130,7 @@ end
 #  index_repeaters_on_call_sign   (call_sign)
 #  index_repeaters_on_country_id  (country_id)
 #  index_repeaters_on_location    (location) USING gist
+#  index_repeaters_on_slug        (slug) UNIQUE
 #
 # Foreign Keys
 #
