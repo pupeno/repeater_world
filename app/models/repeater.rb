@@ -138,6 +138,13 @@ class Repeater < ApplicationRecord
     [s, s + [:id]]
   end
 
+  def should_generate_new_friendly_id?
+    predicates = [slug.blank?, call_sign_changed?, name_changed?, band_changed?]
+    predicates += MODES.map { |m| :"#{m}_changed?" }
+    predicates += [address_changed?, locality_changed?, region_changed?, post_code_changed?, country_id_changed?]
+    predicates.any?
+  end
+
   def web_site=(value)
     if value.present? && !value.start_with?("http://") && !value.start_with?("https://")
       value = "http://#{value}"
