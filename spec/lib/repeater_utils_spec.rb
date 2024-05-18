@@ -15,6 +15,10 @@
 require "rails_helper"
 
 RSpec.describe RepeaterUtils do
+  it "should convert frequencies to kHz" do
+    expect(RepeaterUtils.frequency_in_khz(1_000_000)).to eq("1000.0kHz")
+  end
+
   it "should convert frequencies to MHz" do
     expect(RepeaterUtils.frequency_in_mhz(1_000_000)).to eq("1.0MHz")
   end
