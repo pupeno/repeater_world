@@ -28,7 +28,7 @@ class IrlpImporter < Importer
 
     compressed_file_name = download_file(EXPORT_URL, "irlp.tsv.bz2")
     uncompressed_file = RBzip2.default_adapter::Decompressor.new(File.open(compressed_file_name))
-    file_contents = uncompressed_file.read
+    file_contents = uncompressed_file.read.force_encoding("utf-8")
     file_contents.gsub!("http://www.lcarc.ca/          TARGET=\"_blank\"", "http://www.lcarc.ca/") # Makes the CSV parser fail.
     tsv_file = CSV.parse(file_contents, col_sep: "\t", headers: true)
 
