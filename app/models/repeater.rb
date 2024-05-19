@@ -103,7 +103,7 @@ class Repeater < ApplicationRecord
   delegate :name, to: :country, prefix: true
 
   include FriendlyId
-  friendly_id :generate_slug, use: [:slugged, :history]
+  friendly_id :generate_friendly_id, use: [:slugged, :history]
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
@@ -133,14 +133,14 @@ class Repeater < ApplicationRecord
     MODES.each { |mode| send(:"#{mode}=", nil) }
   end
 
-  def generate_slug
+  def generate_friendly_id
     s = [:call_sign, :name, :band, RepeaterUtils.mode_names(self), RepeaterUtils.location_in_words(self)]
     [s, s + [:id]]
   end
 
   def should_generate_new_friendly_id?
     predicates = [slug.blank?, call_sign_changed?, name_changed?, band_changed?]
-    predicates += MODES.map { |m| :"#{m}_changed?" }
+    predicates += MODES.map { |m| send(:"#{m}_changed?") }
     predicates += [address_changed?, locality_changed?, region_changed?, post_code_changed?, country_id_changed?]
     predicates.any?
   end

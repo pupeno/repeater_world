@@ -62,10 +62,14 @@ RSpec.describe Repeater, type: :model do
     end
 
     it "updates slug" do
+      expect(@repeater.should_generate_new_friendly_id?).to eq(false)
       expect(@repeater.slug).to eq("bl4nk-repeater-bl4nk-2m-united-kingdom")
+
       @repeater.call_sign = "nw23clls"
+      expect(@repeater.should_generate_new_friendly_id?).to eq(true)
       @repeater.save!
       expect(@repeater.slug).to eq("nw23clls-repeater-bl4nk-2m-united-kingdom")
+      expect(@repeater.should_generate_new_friendly_id?).to eq(false)
       expect(Repeater.friendly.find("bl4nk-repeater-bl4nk-2m-united-kingdom")).to eq(@repeater)
     end
   end
