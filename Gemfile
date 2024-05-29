@@ -27,7 +27,7 @@ gem "devise-async", "~> 1.0"
 gem "dotenv-rails", "~> 3.1"
 gem "dx-grid", "~> 1.0"
 gem "factory_bot_rails", "~> 6.4" # To be able to generate sample data in staging (which is production).
-gem "faker", "~> 3.2" # To be able to generate sample data in staging (which is production).
+gem "faker", "~> 3.4" # To be able to generate sample data in staging (which is production).
 gem "friendly_id", "~> 5.5"
 gem "geocoder", "~> 1.8"
 gem "importmap-rails", "~> 2.0" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
