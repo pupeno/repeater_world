@@ -103,7 +103,11 @@ class Repeater < ApplicationRecord
   delegate :name, to: :country, prefix: true
 
   include FriendlyId
-  friendly_id :generate_friendly_id, use: [:slugged, :history]
+  if Rails.env.test?
+    friendly_id :generate_friendly_id, use: [:slugged, :history]
+  else # Unfortunately, slug generation becomes very slow in tests: https://stackoverflow.com/questions/78505982/is-there-a-way-to-turn-of-friendly-id-or-at-least-the-history-module-during-test
+    friendly_id :generate_friendly_id, use: [:slugged]
+  end
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
@@ -160,7 +164,17 @@ class Repeater < ApplicationRecord
   end
 
   def should_generate_new_friendly_id?
-    slug.blank?
+    if slug.blank?
+      return true
+    end
+    if Rails.env.test? # Unfortunately, slug generation becomes very slow in tests: https://stackoverflow.com/questions/78505982/is-there-a-way-to-turn-of-friendly-id-or-at-least-the-history-module-during-test
+      false
+    else
+      predicates = [slug.blank?, call_sign_changed?, name_changed?, band_changed?]
+      predicates += MODES.map { |m| send(:"#{m}_changed?") }
+      predicates += [address_changed?, locality_changed?, region_changed?, post_code_changed?, country_id_changed?]
+      predicates.any?
+    end
   end
 
   rails_admin do
