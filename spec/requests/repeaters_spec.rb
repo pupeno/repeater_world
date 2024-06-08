@@ -38,12 +38,7 @@ RSpec.describe "/repeaters", type: :request do
 
   it "redirects from an old slug" do
     repeater = create(:repeater)
-    old_url = repeater_url(repeater)
-    repeater.call_sign = "nw4cs"
-    repeater.slug = nil # TODO: remove this when we generate slugs on data change.
-    repeater.save!
-    expect(repeater_url(repeater)).not_to eq(old_url)
-    get old_url
+    get repeater_url("#{repeater.id}-#{repeater.name}")
     expect(response).to redirect_to(repeater_url(repeater))
   end
 end
