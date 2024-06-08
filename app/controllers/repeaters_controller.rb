@@ -14,7 +14,12 @@
 
 class RepeatersController < ApplicationController
   def show
-    @repeater = Repeater.friendly.find(params[:id])
+    begin
+      @repeater = Repeater.friendly.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      @repeater = Repeater.find_by_id(params[:id].split("-").take(5).join("-")) # Old "slug", starting with the UUID of the record.
+      raise if @repeater.blank?
+    end
     if request.path != repeater_path(@repeater)
       redirect_to @repeater, status: :moved_permanently
     end
