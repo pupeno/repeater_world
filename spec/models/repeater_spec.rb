@@ -60,6 +60,20 @@ RSpec.describe Repeater, type: :model do
       @repeater.web_site = "http:example.com"
       expect(@repeater.web_site).to eq("http://http:example.com") # Can't save everyone.
     end
+
+    it "updates slug" do
+      expect(@repeater.should_generate_new_friendly_id?).to eq(false)
+      expect(@repeater.slug).to eq("bl4nk-repeater-bl4nk-2m-united-kingdom")
+
+      @repeater.slug = ""
+      expect(@repeater.should_generate_new_friendly_id?).to eq(true)
+
+      @repeater.slug = " "
+      expect(@repeater.should_generate_new_friendly_id?).to eq(true)
+
+      @repeater.slug = nil
+      expect(@repeater.should_generate_new_friendly_id?).to eq(true)
+    end
   end
 end
 
