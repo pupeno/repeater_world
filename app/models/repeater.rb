@@ -103,7 +103,7 @@ class Repeater < ApplicationRecord
   delegate :name, to: :country, prefix: true
 
   include FriendlyId
-  friendly_id :generate_slug, use: [:slugged, :history]
+  friendly_id :generate_friendly_id, use: [:slugged, :history]
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
@@ -133,7 +133,7 @@ class Repeater < ApplicationRecord
     MODES.each { |mode| send(:"#{mode}=", nil) }
   end
 
-  def generate_slug
+  def generate_friendly_id
     s = [:call_sign, :name, :band, RepeaterUtils.mode_names(self), RepeaterUtils.location_in_words(self)]
     [s, s + [:id]]
   end
@@ -157,6 +157,10 @@ class Repeater < ApplicationRecord
     if bandwidth.blank?
       self.bandwidth = FM_WIDE
     end
+  end
+
+  def should_generate_new_friendly_id?
+    slug.blank?
   end
 
   rails_admin do
