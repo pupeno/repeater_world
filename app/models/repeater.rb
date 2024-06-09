@@ -138,7 +138,9 @@ class Repeater < ApplicationRecord
   end
 
   def generate_friendly_id
-    s = [:call_sign, :name, :band, RepeaterUtils.mode_names(self), RepeaterUtils.location_in_words(self)]
+    s = [:call_sign, :name, :band,
+      -> { RepeaterUtils.mode_names(self).join("-") },
+      -> { RepeaterUtils.location_in_words(self) }]
     [s, s + [:id]]
   end
 
