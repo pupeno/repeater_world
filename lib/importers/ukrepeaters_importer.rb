@@ -15,28 +15,37 @@
 require "open-uri"
 
 class UkrepeatersImporter < Importer
-  SOURCE = "https://ukrepeater.net"
+  def self.source
+    "https://ukrepeater.net"
+  end
 
-  def import
-    @logger.info "Importing repeaters from #{SOURCE}."
-    created_or_updated_ids = Set.new
-    repeaters_deleted_count = 0
+  def import_data
+    results = {created_or_updated_ids: [],
+               ignored_due_to_source_count: 0,
+               ignored_due_to_invalid_count: 0,
+               repeaters_deleted_count: 0}
 
     Repeater.transaction do
-      created_or_updated_ids.merge(process_repeaterlist3_csv.map(&:id))
-      created_or_updated_ids.merge(process_repeaterlist_dv_csv.map(&:id))
-      created_or_updated_ids.merge(process_repeaterlist_all_csv.map(&:id))
-      created_or_updated_ids.merge(process_repeaterlist_alt2_csv.map(&:id))
+      results = merge_results(results, process_repeaterlist3_csv)
+      results = merge_results(results, process_repeaterlist_dv_csv)
+      results = merge_results(results, process_repeaterlist_all_csv)
+      results = merge_results(results, process_repeaterlist_alt2_csv)
       # TODO: process packetlist: https://ukrepeater.net/csvfiles.html https://ukrepeater.net/csvcreate4.php
-      created_or_updated_ids.merge(process_repeaterlist_status_csv.map(&:id))
+      results = merge_results(results, process_repeaterlist_status_csv)
 
-      repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: created_or_updated_ids).destroy_all
+      results[:repeaters_deleted_count] = Repeater.where(source: self.class.source).where.not(id: results[:created_or_updated_ids]).destroy_all
     end
-
-    @logger.info "Done importing from #{SOURCE}. #{created_or_updated_ids.count} created or updated, #{repeaters_deleted_count} deleted."
+    results
   end
 
   private
+
+  def merge_results(results, new_results)
+    results.keys.each do |k|
+      results[k] += new_results[k] if new_results[k].present?
+    end
+    results
+  end
 
   def process_repeaterlist3_csv
     @logger.info "Processing repeaterlist3.csv..."
@@ -53,7 +62,7 @@ class UkrepeatersImporter < Importer
     end
 
     @logger.info "Done processing repeaterlist3.csv..."
-    repeaters
+    {created_or_updated_ids: repeaters.map(&:id)}
   end
 
   # Create repeater from a record in voice_repeater_list.csv
@@ -62,8 +71,8 @@ class UkrepeatersImporter < Importer
     repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[:callsign].upcase, tx_frequency: raw_repeater[:tx].to_f * 10**6)
 
     # Only update repeaters that were sourced from ukrepeater.
-    if repeater.persisted? && repeater.source != SOURCE && repeater.source != IrlpImporter.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+    if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source
+      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
       return repeater
     end
 
@@ -118,7 +127,7 @@ class UkrepeatersImporter < Importer
 
     repeater.utc_offset = "0:00"
 
-    repeater.source = SOURCE
+    repeater.source = self.class.source
     repeater.redistribution_limitations = data_limitations_ukrepeater_net_url(host: "repeater.world", protocol: "https")
 
     repeater.save!
@@ -140,8 +149,8 @@ class UkrepeatersImporter < Importer
       if !repeater
         @logger.info "Repeater not found: #{raw_repeater[:call]} when importing #{raw_repeater}"
         next # TODO: create these repeaters.
-      elsif repeater.source != SOURCE && repeater.source != IrlpImporter.source
-        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+      elsif repeater.source != self.class.source && repeater.source != IrlpImporter.source
+        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
         next
       end
 
@@ -162,7 +171,7 @@ class UkrepeatersImporter < Importer
 
     @logger.info "Done processing repeaterlist_dv.csv."
 
-    repeaters
+    {created_or_updated_ids: repeaters.map(&:id)}
   end
 
   def process_repeaterlist_all_csv
@@ -178,8 +187,8 @@ class UkrepeatersImporter < Importer
       if !repeater
         @logger.info "Repeater not found: #{raw_repeater[:call]}"
         next # TODO: create these repeaters.
-      elsif repeater.source != SOURCE && repeater.source != IrlpImporter.source
-        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+      elsif repeater.source != self.class.source && repeater.source != IrlpImporter.source
+        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
         next
       end
 
@@ -202,7 +211,7 @@ class UkrepeatersImporter < Importer
     end
 
     @logger.info "Done processing repeaterlist_all.csv."
-    repeaters
+    {created_or_updated_ids: repeaters.map(&:id)}
   end
 
   def process_repeaterlist_alt2_csv
@@ -218,8 +227,8 @@ class UkrepeatersImporter < Importer
       if !repeater
         @logger.info "Repeater not found: #{raw_repeater[:call]}"
         next # TODO: create these repeaters.
-      elsif repeater.source != SOURCE && repeater.source != IrlpImporter.source
-        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+      elsif repeater.source != self.class.source && repeater.source != IrlpImporter.source
+        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
         next
       end
 
@@ -242,7 +251,7 @@ class UkrepeatersImporter < Importer
     end
 
     @logger.info "Done processing repeaterlist_alt2.csv."
-    repeaters
+    {created_or_updated_ids: repeaters.map(&:id)}
   end
 
   def process_repeaterlist_status_csv
@@ -258,8 +267,8 @@ class UkrepeatersImporter < Importer
       if !repeater
         @logger.info "Repeater not found: #{raw_repeater[:repeater]}"
         next # TODO: create these repeaters.
-      elsif repeater.source != SOURCE && repeater.source != IrlpImporter.source
-        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+      elsif repeater.source != self.class.source && repeater.source != IrlpImporter.source
+        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
         next
       end
 
@@ -272,7 +281,7 @@ class UkrepeatersImporter < Importer
     end
 
     @logger.info "Done processing repeaterlist_status.csv."
-    repeaters
+    {created_or_updated_ids: repeaters.map(&:id)}
   end
 
   def parse_operational(raw_repeater, repeater)
