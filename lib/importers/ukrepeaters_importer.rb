@@ -189,9 +189,6 @@ class UkrepeatersImporter < Importer
       end
 
       parse_operational(raw_repeater, repeater)
-
-      repeater.save!
-      repeaters << repeater
     rescue
       raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
