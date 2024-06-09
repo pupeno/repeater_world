@@ -43,3 +43,4 @@ coverage
 
 # Temporary files created while working
 spec/factories/irlp_importer_data/*.tsv
+spec/factories/*/*.orig.*
