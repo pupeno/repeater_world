@@ -40,13 +40,6 @@ class UkrepeatersImporter < Importer
 
   private
 
-  def merge_results(results, new_results)
-    results.keys.each do |k|
-      results[k] += new_results[k] if new_results[k].present?
-    end
-    results
-  end
-
   def process_repeaterlist3_csv
     @logger.info "Processing repeaterlist3.csv..."
 
@@ -63,77 +56,6 @@ class UkrepeatersImporter < Importer
 
     @logger.info "Done processing repeaterlist3.csv..."
     {created_or_updated_ids: repeaters.map(&:id)}
-  end
-
-  # Create repeater from a record in voice_repeater_list.csv
-  def create_repeater(raw_repeater)
-    # For the UK, we treat the call sign as unique and the identifier of the repeater.
-    repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[:callsign].upcase, tx_frequency: raw_repeater[:tx].to_f * 10**6)
-
-    # Only update repeaters that were sourced from ukrepeater.
-    if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
-      return repeater
-    end
-
-    # Some metadata.
-    repeater.name = raw_repeater[:where].titleize
-    repeater.band = raw_repeater[:band]&.downcase
-    repeater.channel = raw_repeater[:channel]
-    repeater.keeper = raw_repeater[:keeper]
-
-    # How to access the repeater.
-    repeater.rx_frequency = raw_repeater[:rx].to_f * 10**6
-    if raw_repeater[:code].present?
-      if Repeater::CTCSS_TONES.include?(raw_repeater[:code].to_f)
-        repeater.fm_ctcss_tone = raw_repeater[:code]
-        repeater.fm_tone_squelch = false # TODO: how do we know when this should be true? https://github.com/pupeno/repeater_world/issues/23
-      elsif Repeater::DMR_COLOR_CODES.include?(raw_repeater[:code].to_f)
-        repeater.dmr_color_code = raw_repeater[:code]
-      else
-        @logger.info "Ignoring invalid code #{raw_repeater[:code]} in #{raw_repeater}"
-      end
-    end
-
-    # The location of the repeater
-    repeater.grid_square = raw_repeater[:qthr].upcase
-    repeater.latitude = raw_repeater[:lat]
-    repeater.longitude = raw_repeater[:lon]
-    repeater.locality = raw_repeater[:where].titleize
-    case raw_repeater[:region]
-    when "SE"
-      repeater.region = "South East, England"
-    when "SW"
-      repeater.region = "South West, England"
-    when "NOR"
-      repeater.region = "North England"
-    when "MIDL"
-      repeater.region = "Midlands, England"
-    when "SCOT"
-      repeater.region = "Scotland"
-    when "WM"
-      repeater.region = "Wales & Marches"
-    when "NI"
-      repeater.region = "Northern Ireland"
-    when "CEN"
-      repeater.region = "Central England"
-    when "XXX"
-      repeater.region = nil
-    else
-      raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
-    end
-    repeater.post_code = raw_repeater[:postcode]
-    repeater.country_id = "gb"
-
-    repeater.utc_offset = "0:00"
-
-    repeater.source = self.class.source
-    repeater.redistribution_limitations = data_limitations_ukrepeater_net_url(host: "repeater.world", protocol: "https")
-
-    repeater.save!
-    repeater
-  rescue => e
-    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   def process_repeaterlist_dv_csv
@@ -284,6 +206,77 @@ class UkrepeatersImporter < Importer
     {created_or_updated_ids: repeaters.map(&:id)}
   end
 
+  # Create repeater from a record in voice_repeater_list.csv
+  def create_repeater(raw_repeater)
+    # For the UK, we treat the call sign as unique and the identifier of the repeater.
+    repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[:callsign].upcase, tx_frequency: raw_repeater[:tx].to_f * 10**6)
+
+    # Only update repeaters that were sourced from ukrepeater.
+    if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source
+      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
+      return repeater
+    end
+
+    # Some metadata.
+    repeater.name = raw_repeater[:where].titleize
+    repeater.band = raw_repeater[:band]&.downcase
+    repeater.channel = raw_repeater[:channel]
+    repeater.keeper = raw_repeater[:keeper]
+
+    # How to access the repeater.
+    repeater.rx_frequency = raw_repeater[:rx].to_f * 10**6
+    if raw_repeater[:code].present?
+      if Repeater::CTCSS_TONES.include?(raw_repeater[:code].to_f)
+        repeater.fm_ctcss_tone = raw_repeater[:code]
+        repeater.fm_tone_squelch = false # TODO: how do we know when this should be true? https://github.com/pupeno/repeater_world/issues/23
+      elsif Repeater::DMR_COLOR_CODES.include?(raw_repeater[:code].to_f)
+        repeater.dmr_color_code = raw_repeater[:code]
+      else
+        @logger.info "Ignoring invalid code #{raw_repeater[:code]} in #{raw_repeater}"
+      end
+    end
+
+    # The location of the repeater
+    repeater.grid_square = raw_repeater[:qthr].upcase
+    repeater.latitude = raw_repeater[:lat]
+    repeater.longitude = raw_repeater[:lon]
+    repeater.locality = raw_repeater[:where].titleize
+    case raw_repeater[:region]
+    when "SE"
+      repeater.region = "South East, England"
+    when "SW"
+      repeater.region = "South West, England"
+    when "NOR"
+      repeater.region = "North England"
+    when "MIDL"
+      repeater.region = "Midlands, England"
+    when "SCOT"
+      repeater.region = "Scotland"
+    when "WM"
+      repeater.region = "Wales & Marches"
+    when "NI"
+      repeater.region = "Northern Ireland"
+    when "CEN"
+      repeater.region = "Central England"
+    when "XXX"
+      repeater.region = nil
+    else
+      raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
+    end
+    repeater.post_code = raw_repeater[:postcode]
+    repeater.country_id = "gb"
+
+    repeater.utc_offset = "0:00"
+
+    repeater.source = self.class.source
+    repeater.redistribution_limitations = data_limitations_ukrepeater_net_url(host: "repeater.world", protocol: "https")
+
+    repeater.save!
+    repeater
+  rescue => e
+    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
+  end
+
   def parse_operational(raw_repeater, repeater)
     if raw_repeater[:status] == "OPERATIONAL"
       repeater.operational = true
@@ -306,5 +299,12 @@ class UkrepeatersImporter < Importer
     if table.headers != fields
       raise "The fields for #{url} changed, so we can't process it.\n  Expected: #{fields.inspect}\n  Received: #{table.headers.inspect}\n  Local file: #{file_name}"
     end
+  end
+
+  def merge_results(results, new_results)
+    results.keys.each do |k|
+      results[k] += new_results[k] if new_results[k].present?
+    end
+    results
   end
 end
