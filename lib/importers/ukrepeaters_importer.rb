@@ -216,14 +216,14 @@ class UkrepeatersImporter < Importer
 
     # How to access the repeater.
     repeater.rx_frequency = raw_repeater[:rx].to_f * 10**6
-    if raw_repeater[:code].present?
-      if Repeater::CTCSS_TONES.include?(raw_repeater[:code].to_f)
-        repeater.fm_ctcss_tone = raw_repeater[:code]
+    if raw_repeater[:ctcsscc].present?
+      if Repeater::CTCSS_TONES.include?(raw_repeater[:ctcsscc].to_f)
+        repeater.fm_ctcss_tone = raw_repeater[:ctcsscc]
         repeater.fm_tone_squelch = false # TODO: how do we know when this should be true? https://github.com/pupeno/repeater_world/issues/23
-      elsif Repeater::DMR_COLOR_CODES.include?(raw_repeater[:code].to_f)
-        repeater.dmr_color_code = raw_repeater[:code]
+      elsif Repeater::DMR_COLOR_CODES.include?(raw_repeater[:ctcsscc].to_f)
+        repeater.dmr_color_code = raw_repeater[:ctcsscc]
       else
-        @logger.info "Ignoring invalid code #{raw_repeater[:code]} in #{raw_repeater}"
+        @logger.info "Ignoring invalid code #{raw_repeater[:ctcsscc]} in #{raw_repeater}"
       end
     end
 
@@ -239,8 +239,6 @@ class UkrepeatersImporter < Importer
       repeater.region = "South West, England"
     when "NOR"
       repeater.region = "North England"
-    when "MIDL"
-      repeater.region = "Midlands, England"
     when "SCOT"
       repeater.region = "Scotland"
     when "WM"
@@ -276,8 +274,6 @@ class UkrepeatersImporter < Importer
       repeater.notes = "DMR only."
     elsif raw_repeater[:status] == "NOT OPERATIONAL"
       repeater.operational = false
-    elsif raw_repeater[:status].nil? && repeater.call_sign.in?(["GB3GC", "GB3VV"])
-      repeater.operational = false # No status present, but the web site says it's off the air.
     else
       raise "Unknown status #{raw_repeater[:status].inspect}"
     end
@@ -287,12 +283,5 @@ class UkrepeatersImporter < Importer
     if table.headers != fields
       raise "The fields for #{url} changed, so we can't process it.\n  Expected: #{fields.inspect}\n  Received: #{table.headers.inspect}\n  Local file: #{file_name}"
     end
-  end
-
-  def merge_results(results, new_results)
-    results.keys.each do |k|
-      results[k] += new_results[k] if new_results[k].present?
-    end
-    results
   end
 end
