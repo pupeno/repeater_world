@@ -19,7 +19,7 @@ class NerepeatersImporter < Importer
   def import
     @logger.info "Importing repeaters from #{SOURCE}."
     file_name = download_file(EXPORT_URL, "nerepeaters.csv")
-    csv_file = CSV.table(file_name)
+    csv_file = CSV.table(file_name, headers: false)
 
     ignored_due_to_source_count = 0
     ignored_due_to_invalid_count = 0

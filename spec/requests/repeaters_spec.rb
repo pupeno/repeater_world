@@ -41,4 +41,10 @@ RSpec.describe "/repeaters", type: :request do
     get repeater_url("#{repeater.id}-#{repeater.name}")
     expect(response).to redirect_to(repeater_url(repeater))
   end
+
+  it "shows a 404 when a repeater is not found" do
+    expect do
+      get repeater_url("not-an-existing-repeater")
+    end.to raise_exception(ActiveRecord::RecordNotFound)
+  end
 end

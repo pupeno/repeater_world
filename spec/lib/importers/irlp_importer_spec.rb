@@ -30,14 +30,14 @@ RSpec.describe IrlpImporter do
     Dir.mktmpdir("IrlpImporter") do |dir|
       expect do
         IrlpImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(915)
+      end.to change { Repeater.count }.by(11)
 
       # Grab some repeaters and verify they were imported correctly.
-      repeater = Repeater.find_sole_by(call_sign: "VE7ISC")
-      expect(repeater.name).to eq("Nanaimo VE7ISC")
+      repeater = Repeater.find_sole_by(call_sign: "VE7RHS")
+      expect(repeater.name).to eq("Vancouver VE7RHS")
       expect(repeater.band).to eq(Repeater::BAND_2M)
-      expect(repeater.tx_frequency).to eq(146_640_000)
-      expect(repeater.rx_frequency).to eq(146_040_000)
+      expect(repeater.tx_frequency).to eq(145_270_000)
+      expect(repeater.rx_frequency).to eq(144_670_000)
 
       # Check a case where we get multiple repeaters with the same call sign.
       expect(Repeater.where(call_sign: "K5NX").count).to eq(2)
@@ -64,14 +64,14 @@ RSpec.describe IrlpImporter do
       deleted = create(:repeater, :full, call_sign: "VE7RHS", tx_frequency: 145_000_001, source: IrlpImporter.source)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      changed = Repeater.find_by(call_sign: "VE7RVN")
+      changed = Repeater.find_by(call_sign: "VE7RHS")
       changed_rx_frequency_was = changed.rx_frequency
       changed.rx_frequency = 1_000_000
       changed.save!
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      independent = Repeater.find_by(call_sign: "VE7BYN")
+      independent = Repeater.find_by(call_sign: "W7NJN")
       independent.rx_frequency = 1_000_000
       independent.source = nil
       independent.save!
