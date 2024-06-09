@@ -34,7 +34,7 @@ RSpec.describe UkrepeatersImporter do
     Dir.mktmpdir("ukrepeatersimporter") do |dir|
       expect do
         UkrepeatersImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(1129)
+      end.to change { Repeater.count }.by(11)
 
       # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_by(call_sign: "GB7DC")
@@ -42,14 +42,14 @@ RSpec.describe UkrepeatersImporter do
       expect(repeater.band).to eq(Repeater::BAND_70CM)
       expect(repeater.channel).to eq("DMU28")
       expect(repeater.keeper).to eq("G7NPW")
-      expect(repeater.operational).to eq(false)
+      expect(repeater.operational).to eq(true)
       expect(repeater.notes).to eq(nil)
       expect(repeater.tx_frequency).to eq(439350000)
       expect(repeater.rx_frequency).to eq(430350000)
       expect(repeater.fm).to eq(true)
       expect(repeater.fm_tone_burst).to eq(nil)
       expect(repeater.fm_ctcss_tone).to eq(71.9)
-      expect(repeater.fm_tone_squelch).to eq(nil)
+      expect(repeater.fm_tone_squelch).to eq(false)
       expect(repeater.dstar).to eq(true)
       expect(repeater.fusion).to eq(true)
       expect(repeater.dmr).to eq(true)
@@ -84,16 +84,16 @@ RSpec.describe UkrepeatersImporter do
 
       # This repeater simulates a previously imported repeater that is no longer in the source files, so we should
       # delete it to avoid stale data.
-      deleted = create(:repeater, :full, call_sign: "XX1XX", tx_frequency: 145_000_001, source: UkrepeatersImporter::SOURCE)
+      deleted = create(:repeater, :full, call_sign: "XX1XX", tx_frequency: 145_000_001, source: UkrepeatersImporter.source)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      changed = Repeater.find_by(call_sign: "GB3NL")
+      changed = Repeater.find_by(call_sign: "GB3GS")
       changed_rx_frequency_was = changed.rx_frequency
       changed.rx_frequency = 1_000_000
       changed.save!
 
       # This repeater represents one where a secondary source imported first, and this importer will override it.
-      secondary_source = Repeater.find_by(call_sign: "GB3HF")
+      secondary_source = Repeater.find_by(call_sign: "GB7DC")
       secondary_source_rx_frequency_was = secondary_source.rx_frequency
       secondary_source.rx_frequency = 1_000_000
       secondary_source.source = IrlpImporter.source
@@ -101,7 +101,7 @@ RSpec.describe UkrepeatersImporter do
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      independent = Repeater.find_by(call_sign: "GB3HI")
+      independent = Repeater.find_by(call_sign: "2M0FPI")
       independent.rx_frequency = 1_000_000
       independent.source = nil
       independent.save!
@@ -122,7 +122,7 @@ RSpec.describe UkrepeatersImporter do
       # This got updated.
       secondary_source.reload
       expect(secondary_source.rx_frequency).to eq(secondary_source_rx_frequency_was)
-      expect(secondary_source.source).to eq(UkrepeatersImporter::SOURCE)
+      expect(secondary_source.source).to eq(UkrepeatersImporter.source)
 
       # This one didn't change.
       independent.reload
