@@ -30,14 +30,14 @@ RSpec.describe NerepeatersImporter do
     Dir.mktmpdir("NerepeatersImporter") do |dir|
       expect do
         NerepeatersImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(955)
+      end.to change { Repeater.count }.by(89)
 
       # Grab one repeater and verify it was imported correctly.
-      repeater = Repeater.find_sole_by(call_sign: "WA1DGW")
-      expect(repeater.name).to eq("Fall River WA1DGW")
-      expect(repeater.band).to eq(Repeater::BAND_2M)
-      expect(repeater.tx_frequency).to eq(145_150_000)
-      expect(repeater.rx_frequency).to eq(144_550_000)
+      repeater = Repeater.find_sole_by(call_sign: "KB1CDI")
+      expect(repeater.name).to eq("Bristol KB1CDI")
+      expect(repeater.band).to eq(Repeater::BAND_10M)
+      expect(repeater.tx_frequency).to eq(29_640_000)
+      expect(repeater.rx_frequency).to eq(29_540_000)
 
       # Check a case where we get multiple repeaters with the same call sign.
       expect(Repeater.where(call_sign: "AA1HD").count).to eq(4)
@@ -48,11 +48,9 @@ RSpec.describe NerepeatersImporter do
     Dir.mktmpdir("NerepeatersImporter") do |dir|
       NerepeatersImporter.new(working_directory: dir).import
 
-      n = Time.now
       # The second time we call it, it shouldn't re-download any files, nor create new repeaters
       expect do
         NerepeatersImporter.new(working_directory: dir).import
-        puts Repeater.where("created_at >= ?", n).all.to_a
       end.to change { Repeater.count }.by(0)
     end
   end
@@ -68,15 +66,15 @@ RSpec.describe NerepeatersImporter do
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
       # It should update frequency and modes, without crashing.
-      changed = Repeater.find_by(call_sign: "NN1D", fm: true, p25: true, nxdn: nil)
+      changed = Repeater.find_by(call_sign: "AA1HD", fm: nil, dstar: true)
       changed_rx_frequency_was = changed.rx_frequency
-      changed.p25 = false
-      changed.nxdn = true
+      changed.fm = true
+      changed.dstar = false
       changed.rx_frequency = 1_000_000
       changed.save!
 
       # This repeater represents one where a secondary source imported first, and this importer will override it.
-      secondary_source = Repeater.find_by(call_sign: "W1MHL")
+      secondary_source = Repeater.find_by(call_sign: "W1BST")
       secondary_source_rx_frequency_was = secondary_source.rx_frequency
       secondary_source.rx_frequency = 1_000_000
       secondary_source.source = IrlpImporter.source
@@ -84,7 +82,7 @@ RSpec.describe NerepeatersImporter do
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      independent = Repeater.find_by(call_sign: "N1MYY")
+      independent = Repeater.find_by(call_sign: "W1AEC")
       independent.rx_frequency = 1_000_000
       independent.source = nil
       independent.save!
@@ -100,10 +98,9 @@ RSpec.describe NerepeatersImporter do
 
       # This got updated.
       changed.reload
+      expect(changed.fm).to eq(nil)
+      expect(changed.dstar).to eq(true)
       expect(changed.rx_frequency).to eq(changed_rx_frequency_was)
-      expect(changed.fm).to eq(true)
-      expect(changed.p25).to eq(true)
-      expect(changed.nxdn).to eq(nil)
 
       # This got updated.
       secondary_source.reload
