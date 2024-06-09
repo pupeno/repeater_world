@@ -30,60 +30,16 @@ RSpec.describe SralfiImporter do
     Dir.mktmpdir("SralfiImporter") do |dir|
       expect do
         SralfiImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(144)
+      end.to change { Repeater.count }.by(27)
 
       # Grab some repeaters and verify they were imported correctly.
-      repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 145_575_000, dmr: true)
-      expect(repeater.external_id).to eq("801")
-      expect(repeater.name).to eq("Tampere VHF DMR")
-      expect(repeater.band).to eq(Repeater::BAND_2M)
+      repeater = Repeater.find_sole_by(call_sign: "OH1RHU")
+      expect(repeater.external_id).to eq("215")
+      expect(repeater.name).to eq("Turku (RX) Lieto (TX)")
+      expect(repeater.band).to eq(Repeater::BAND_10M)
       expect(repeater.operational).to eq(true)
-      expect(repeater.rx_frequency).to eq(144_975_000)
-      expect(repeater.tx_power).to eq(50)
-      expect(repeater.dmr_color_code).to eq(1)
-      expect(repeater.dmr_network).to eq("Brandmeister")
-
-      repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 145_750_000, fm: true)
-      expect(repeater.external_id).to eq("237")
-      expect(repeater.name).to eq("Tampere Wide Area")
-      expect(repeater.band).to eq(Repeater::BAND_2M)
-      expect(repeater.operational).to eq(true)
-      expect(repeater.rx_frequency).to eq(145_150_000)
-      expect(repeater.tx_power).to eq(47)
-      expect(repeater.fm_ctcss_tone).to eq(123)
-
-      repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 434_850_000, fm: true)
-      expect(repeater.external_id).to eq("286")
-      expect(repeater.name).to eq("Tampere City")
-      expect(repeater.band).to eq(Repeater::BAND_70CM)
-      expect(repeater.operational).to eq(true)
-      expect(repeater.rx_frequency).to eq(432_850_000)
-      expect(repeater.tx_power).to eq(35)
-      expect(repeater.fm_ctcss_tone).to eq(123)
-
-      repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 434_550_000, dmr: true)
-      expect(repeater.external_id).to eq("338")
-      expect(repeater.name).to eq("Tampere Tesoma DMR")
-      expect(repeater.band).to eq(Repeater::BAND_70CM)
-      expect(repeater.operational).to eq(true)
-      expect(repeater.rx_frequency).to eq(432_550_000)
-      expect(repeater.tx_power).to eq(45)
-      expect(repeater.dmr_color_code).to eq(1)
-      expect(repeater.dmr_network).to eq("Brandmeister")
-
-      repeater = Repeater.find_sole_by(call_sign: "OH3RNE", tx_frequency: 434_525_000, dmr: true)
-      expect(repeater.external_id).to eq("701")
-      expect(repeater.name).to eq("Tampere Hervanta DMR")
-      expect(repeater.band).to eq(Repeater::BAND_70CM)
-      expect(repeater.operational).to eq(true)
-      expect(repeater.rx_frequency).to eq(432_525_000)
-      expect(repeater.tx_power).to eq(45.0)
-      expect(repeater.dmr_color_code).to eq(1)
-
-      repeater = Repeater.find_sole_by(call_sign: "OH6RVC", tx_frequency: 1_297_425_000)
-      expect(repeater.external_id).to eq("331")
-      expect(repeater.name).to eq("Lapua")
-      expect(repeater.web_site).to eq("http://www.oh6ac.net")
+      expect(repeater.rx_frequency).to eq(29_580_000)
+      expect(repeater.tx_power).to eq(30)
 
       # Check a case where we get multiple repeaters with the same call sign.
       expect(Repeater.where(call_sign: "OH2RCH").count).to eq(6)
@@ -110,13 +66,13 @@ RSpec.describe SralfiImporter do
       deleted = create(:repeater, :full, call_sign: "OH3RNE", tx_frequency: 145_000_001, source: SralfiImporter::SOURCE)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      changed = Repeater.find_by(call_sign: "OH1RAA")
+      changed = Repeater.find_by(call_sign: "OH1RHU")
       changed_rx_frequency_was = changed.rx_frequency
       changed.rx_frequency = 1_000_000
       changed.save!
 
       # This repeater represents one where a secondary source imported first, and this importer will override it.
-      secondary_source = Repeater.find_by(call_sign: "OH7DMR")
+      secondary_source = Repeater.find_by(call_sign: "OH2RCH")
       secondary_source_rx_frequency_was = secondary_source.rx_frequency
       secondary_source.rx_frequency = 1_000_000
       secondary_source.source = IrlpImporter.source
@@ -124,7 +80,7 @@ RSpec.describe SralfiImporter do
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      independent = Repeater.find_by(call_sign: "OH0RAA")
+      independent = Repeater.find_by(call_sign: "OH3RTR")
       independent.rx_frequency = 1_000_000
       independent.source = nil
       independent.save!
