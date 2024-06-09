@@ -103,10 +103,10 @@ class Repeater < ApplicationRecord
   delegate :name, to: :country, prefix: true
 
   include FriendlyId
-  if Rails.env.test?
-    friendly_id :generate_friendly_id, use: [:slugged, :history]
-  else # Unfortunately, slug generation becomes very slow in tests: https://stackoverflow.com/questions/78505982/is-there-a-way-to-turn-of-friendly-id-or-at-least-the-history-module-during-test
+  if Rails.env.test? # Unfortunately, slug generation becomes very slow in tests: https://stackoverflow.com/questions/78505982/is-there-a-way-to-turn-of-friendly-id-or-at-least-the-history-module-during-test
     friendly_id :generate_friendly_id, use: [:slugged]
+  else
+    friendly_id :generate_friendly_id, use: [:slugged, :history]
   end
 
   def to_s(extra = nil)
