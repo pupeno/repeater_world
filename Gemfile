@@ -43,7 +43,7 @@ gem "rbzip2", "~> 0.3"
 gem "sassc-rails", "~> 2.1" # Asked by rails_admin... but it's not a dependency??? the world is complicated.
 gem "sentry-rails", "~> 5.16"
 gem "sentry-ruby", "~> 5.16"
-gem "sprockets-rails", "~> 3.4" # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+gem "sprockets-rails", "~> 3.5" # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "stimulus-rails", "~> 1.3" # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "tailwindcss-rails", "~> 2.3" # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
 gem "turbo-rails", "~> 1.4" # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
