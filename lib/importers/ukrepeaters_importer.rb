@@ -272,7 +272,8 @@ class UkrepeatersImporter < Importer
     elsif raw_repeater[:status] == "DMR ONLY"
       repeater.operational = true
       repeater.notes = "DMR only."
-    elsif raw_repeater[:status] == "NOT OPERATIONAL"
+    elsif raw_repeater[:status] == "NOT OPERATIONAL" ||
+        raw_repeater[:status] == "CLOSED DOWN"
       repeater.operational = false
     else
       raise "Unknown status #{raw_repeater[:status].inspect}"
