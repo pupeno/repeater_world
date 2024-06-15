@@ -148,7 +148,7 @@ class Repeater < ApplicationRecord
     if value.present? && !value.start_with?("http://") && !value.start_with?("https://")
       value = "http://#{value}"
     end
-    super(value)
+    super
   end
 
   def ensure_fields_are_set
