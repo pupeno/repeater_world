@@ -66,8 +66,8 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= card_entry(label: "TX Antenna Polarization", value: repeater.tx_antenna_polarization, optional: true) %>
         <%= card_entry(label: "RX Antenna", value: repeater.rx_antenna, optional: true) %>
         <%= card_entry(label: "RX Antenna Polarization", value: repeater.rx_antenna_polarization, optional: true) %>
-        <%= card_entry(label: "Altitude Above Sea Level", value: repeater.altitude_agl, optional: true) do %>
-          <%= repeater.altitude_agl %>m
+        <%= card_entry(label: "Altitude Above Sea Level", value: repeater.altitude_asl, optional: true) do %>
+          <%= repeater.altitude_asl %>m
         <% end %>
         <%= card_entry(label: "Altitude Above Ground Level", value: repeater.altitude_agl, optional: true) do %>
           <%= repeater.altitude_agl %>m
