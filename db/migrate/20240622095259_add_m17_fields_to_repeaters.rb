@@ -20,5 +20,8 @@ class AddM17FieldsToRepeaters < ActiveRecord::Migration[7.1]
     add_column :suggested_repeaters, :m17, :boolean
     add_column :suggested_repeaters, :m17_can, :integer
     add_column :suggested_repeaters, :m17_reflector_name, :string
+    add_column :repeater_searches, :m17, :boolean
+    add_column :repeater_searches, :m17_can, :integer
+    add_column :repeater_searches, :m17_reflector_name, :string
   end
 end

@@ -44,6 +44,9 @@ You should have received a copy of the GNU Affero General Public License along w
       <% if repeater_search.dmr? %>
         <%= badge "DMR" %>
       <% end %>
+      <% if repeater_search.m17? %>
+        <%= badge "M17" %>
+      <% end %>
       <% if repeater_search.nxdn? %>
         <%= badge "NXDN" %>
       <% end %>

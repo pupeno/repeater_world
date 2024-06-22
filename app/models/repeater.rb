@@ -101,7 +101,7 @@ class Repeater < ApplicationRecord
       :address, :band, :call_sign, :channel, :dmr_network, :dmr_color_code, :dstar_port,
       :fm_ctcss_tone, :grid_square, :keeper, :locality, :name, :notes, :post_code, :region,
       :rx_antenna, :rx_antenna_polarization, :rx_frequency, :source, :tx_antenna,
-      :tx_antenna_polarization, :tx_frequency, :web_site, :country_name
+      :tx_antenna_polarization, :tx_frequency, :web_site, :country_name, :m17_can, :m17_reflector_name
     ],
     additional_attributes: ->(repeater) { {repeater_id: repeater.id} }
   )
