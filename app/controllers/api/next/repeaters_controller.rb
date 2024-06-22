@@ -22,11 +22,13 @@ class Api::Next::RepeatersController < ApplicationController
     @repeaters = Repeater.all.includes(:country)
     @fields = [
       :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency,
-      :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch, :bandwidth,
+      :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch,
+      :m17, :m17_can, :m17_reflector_name,
       :dstar, :dstar_port,
       :fusion,
       :dmr, :dmr_color_code, :dmr_network,
       :nxdn, :p25, :tetra,
+      :bandwidth,
       :latitude, :longitude, :grid_square, :address, :locality, :region, :post_code, :country_id,
       :tx_power, :tx_antenna, :tx_antenna_polarization, :rx_antenna, :rx_antenna_polarization,
       :altitude_asl, :altitude_agl, :bearing,

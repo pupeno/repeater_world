@@ -66,6 +66,7 @@ You should have received a copy of the GNU Affero General Public License along w
                                               { name: :dstar, label: "D-Star" },
                                               { name: :fusion, label: "Fusion" },
                                               { name: :dmr, label: "DMR" },
+                                              { name: :m17, label: "M17" },
                                               { name: :nxdn, label: "NXDN" },
                                               { name: :p25, label: "P25" },
                                               { name: :tetra, label: "Tetra" },
@@ -123,6 +124,20 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= form_text_field form, :dmr_network, label: "DMR Connectivity",
                             help_text: "Likely something like BRANDMEISTER or freeDMR, but there are many others." %>
 
+      </div>
+    </div>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
+      <div>
+        <h2 class="text-lg font-semibold leading-7">M17</h2>
+        <p class="mt-1  text-gray-500 dark:text-gray-400">Only applicable if the repeater supports M17.</p>
+      </div>
+
+      <div class="flex flex-col gap-y-8 md:col-span-2">
+        <%= form_select_field form, :m17_can,
+                              choices: Repeater::M17_CANS,
+                              options: { include_blank: "None" },
+                              label: "Channel Access Number" %>
+        <%= form_text_field form, :m17_reflector_name, label: "M17 Reflector Name" %>
       </div>
     </div>
     <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">

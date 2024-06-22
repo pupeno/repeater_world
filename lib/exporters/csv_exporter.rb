@@ -17,11 +17,13 @@ class CsvExporter < Exporter
   def export
     columns = [
       :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency,
-      :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch, :bandwidth,
+      :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch,
+      :m17, :m17_can, :m17_reflector_name,
       :dstar, :dstar_port,
       :fusion,
       :dmr, :dmr_color_code, :dmr_network,
       :nxdn, :p25, :tetra,
+      :bandwidth,
       :latitude, :longitude, :grid_square, :address, :locality, :region, :post_code, :country_id,
       :tx_power, :tx_antenna, :tx_antenna_polarization, :rx_antenna, :rx_antenna_polarization,
       :altitude_asl, :altitude_agl, :bearing,
@@ -36,13 +38,16 @@ class CsvExporter < Exporter
     column_names[:fm_tone_burst] = "Tone Burst"
     column_names[:fm_ctcss_tone] = "CTCSS Tone"
     column_names[:fm_tone_squelch] = "Tone Squelch"
-    column_names[:bandwidth] = "Bandwidth"
+    column_names[:m17] = "M17"
+    column_names[:m17_can] = "M17 Channel Access Number"
+    column_names[:m17_reflector_name] = "M17 Reflector Name"
     column_names[:dstar] = "D-Star"
     column_names[:dstar_port] = "D-Star Port"
     column_names[:dmr] = "DMR"
     column_names[:dmr_color_code] = "DMR Color Code"
     column_names[:dmr_network] = "DMR Network"
     column_names[:nxdn] = "NXDN"
+    column_names[:bandwidth] = "Bandwidth"
     column_names[:country_id] = "Country Code"
     column_names[:utc_offset] = "UTC Offset"
     column_names[:redistribution_limitations] = "Redistribution Limitations"

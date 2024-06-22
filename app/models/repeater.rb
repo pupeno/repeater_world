@@ -46,6 +46,7 @@ class Repeater < ApplicationRecord
 
   MODES = [
     FM = "fm",
+    M17 = "m17",
     DSTAR = "dstar",
     FUSION = "fusion",
     DMR = "dmr",
@@ -56,6 +57,7 @@ class Repeater < ApplicationRecord
 
   MODE_NAMES = {
     FM => "FM",
+    M17 => "M17",
     DSTAR => "D-Star",
     FUSION => "Fusion",
     DMR => "DMR",
@@ -70,12 +72,14 @@ class Repeater < ApplicationRecord
     225.7, 233.6, 241.8, 250.3
   ]
 
+  M17_CANS = (0..15).to_a
+
+  DMR_COLOR_CODES = (0..15).to_a
+
   BANDWIDTHS = [
     FM_WIDE = 25_000,
     FM_NARROW = 12_500
   ]
-
-  DMR_COLOR_CODES = (0..15).to_a
 
   belongs_to :country
   belongs_to :geocoded_country, class_name: "Country", optional: true
@@ -86,6 +90,7 @@ class Repeater < ApplicationRecord
   validates :tx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
   validates :rx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
   validates :fm_ctcss_tone, inclusion: CTCSS_TONES, allow_blank: true
+  validates :m17_can, inclusion: M17_CANS, allow_blank: true
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
 
   before_validation :ensure_fields_are_set
@@ -204,6 +209,7 @@ class Repeater < ApplicationRecord
         field :rx_frequency
         field :operational
         field :fm
+        field :m17
         field :dstar
         field :fusion
         field :dmr
@@ -217,6 +223,11 @@ class Repeater < ApplicationRecord
         field :fm_tone_burst
         field :fm_ctcss_tone
         field :fm_tone_squelch
+      end
+
+      group "M17" do
+        field :m17_can
+        field :m17_reflector_name
       end
 
       group "D-Star" do
@@ -297,6 +308,7 @@ class Repeater < ApplicationRecord
         field :rx_frequency
         field :operational
         field :fm
+        field :m17
         field :dstar
         field :fusion
         field :dmr
@@ -310,6 +322,11 @@ class Repeater < ApplicationRecord
         field :fm_tone_burst
         field :fm_ctcss_tone
         field :fm_tone_squelch
+      end
+
+      group "M17" do
+        field :m17_can
+        field :m17_reflector_name
       end
 
       group "D-Star" do
@@ -414,6 +431,9 @@ end
 #  keeper                     :string
 #  locality                   :string
 #  location                   :geography        point, 4326
+#  m17                        :boolean
+#  m17_can                    :integer
+#  m17_reflector_name         :string
 #  name                       :string
 #  notes                      :text
 #  nxdn                       :boolean

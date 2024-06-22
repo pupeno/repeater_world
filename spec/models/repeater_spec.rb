@@ -112,6 +112,9 @@ end
 #  keeper                     :string
 #  locality                   :string
 #  location                   :geography        point, 4326
+#  m17                        :boolean
+#  m17_can                    :integer
+#  m17_reflector_name         :string
 #  name                       :string
 #  notes                      :text
 #  nxdn                       :boolean
