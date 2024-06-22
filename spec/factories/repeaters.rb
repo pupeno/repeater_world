@@ -26,6 +26,7 @@ FactoryBot.define do
         repeater.fm = false unless repeater.fm?
         repeater.fm_tone_burst = false unless repeater.fm_tone_burst?
         repeater.fm_tone_squelch = false unless repeater.fm_tone_squelch?
+        repeater.m17 = false unless repeater.m17?
         repeater.dstar = false unless repeater.dstar?
         repeater.fusion = false unless repeater.fusion?
         repeater.dmr = false unless repeater.dmr?
@@ -46,7 +47,9 @@ FactoryBot.define do
       fm_ctcss_tone { Repeater::CTCSS_TONES.first }
       fm_tone_burst { true }
       fm_tone_squelch { true }
-      bandwidth { Repeater::FM_WIDE }
+      m17 { true }
+      m17_can { 5 }
+      m17_reflector_name { "m17 reflector" }
       dstar { true }
       dstar_port { "C" }
       fusion { true }
@@ -56,6 +59,7 @@ FactoryBot.define do
       nxdn { true }
       p25 { true }
       tetra { true }
+      bandwidth { Repeater::FM_WIDE }
 
       latitude { 51.74 }
       longitude { -3.42 }
@@ -119,6 +123,9 @@ end
 #  keeper                     :string
 #  locality                   :string
 #  location                   :geography        point, 4326
+#  m17                        :boolean
+#  m17_can                    :integer
+#  m17_reflector_name         :string
 #  name                       :string
 #  notes                      :text
 #  nxdn                       :boolean

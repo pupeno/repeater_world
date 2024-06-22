@@ -28,6 +28,7 @@ class SuggestedRepeatersController < ApplicationController
       @suggested_repeater.tx_frequency = repeater.tx_frequency
       @suggested_repeater.rx_frequency = repeater.rx_frequency
       @suggested_repeater.fm = repeater.fm
+      @suggested_repeater.m17 = repeater.m17
       @suggested_repeater.dstar = repeater.dstar
       @suggested_repeater.fusion = repeater.fusion
       @suggested_repeater.dmr = repeater.dmr
@@ -37,6 +38,9 @@ class SuggestedRepeatersController < ApplicationController
 
       @suggested_repeater.fm_tone_burst = repeater.fm_tone_burst
       @suggested_repeater.fm_ctcss_tone = repeater.fm_ctcss_tone
+
+      @suggested_repeater.m17_can = repeater.m17_can
+      @suggested_repeater.m17_reflector_name = repeater.m17_reflector_name
 
       @suggested_repeater.dstar_port = repeater.dstar_port
 
@@ -115,6 +119,9 @@ class SuggestedRepeatersController < ApplicationController
       :latitude,
       :locality,
       :longitude,
+      :m17,
+      :m17_can,
+      :m17_reflector_name,
       :name,
       :notes,
       :nxdn,

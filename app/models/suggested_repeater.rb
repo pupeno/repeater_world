@@ -57,6 +57,7 @@ class SuggestedRepeater < ApplicationRecord
         field :dstar
         field :fusion
         field :dmr
+        field :m17
         field :nxdn
         field :p25
         field :tetra
@@ -67,6 +68,11 @@ class SuggestedRepeater < ApplicationRecord
         field :fm_tone_burst
         field :fm_ctcss_tone
         field :fm_tone_squelch
+      end
+
+      group "M17" do
+        field :m17_can
+        field :m17_reflector_name
       end
 
       group "D-Star" do
@@ -142,6 +148,7 @@ class SuggestedRepeater < ApplicationRecord
         field :tx_frequency
         field :rx_frequency
         field :fm
+        field :m17
         field :dstar
         field :fusion
         field :dmr
@@ -155,6 +162,11 @@ class SuggestedRepeater < ApplicationRecord
         field :fm_tone_burst
         field :fm_ctcss_tone
         field :fm_tone_squelch
+      end
+
+      group "M17" do
+        field :m17_can
+        field :m17_reflector_name
       end
 
       group "D-Star" do
@@ -238,6 +250,9 @@ end
 #  latitude                :string
 #  locality                :string
 #  longitude               :string
+#  m17                     :boolean
+#  m17_can                 :integer
+#  m17_reflector_name      :string
 #  name                    :string
 #  notes                   :text
 #  nxdn                    :boolean

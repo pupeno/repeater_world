@@ -66,6 +66,9 @@ end
 #  latitude                :string
 #  locality                :string
 #  longitude               :string
+#  m17                     :boolean
+#  m17_can                 :integer
+#  m17_reflector_name      :string
 #  name                    :string
 #  notes                   :text
 #  nxdn                    :boolean

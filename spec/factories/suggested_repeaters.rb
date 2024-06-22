@@ -36,6 +36,10 @@ FactoryBot.define do
     fm_ctcss_tone { "ctcss_tone" }
     fm_tone_squelch { "fm_tone_squelch" }
 
+    m17 { true }
+    m17_can { 5 }
+    m17_reflector_name { "reflector name" }
+
     dstar { true }
 
     fusion { true }
@@ -90,6 +94,9 @@ end
 #  latitude                :string
 #  locality                :string
 #  longitude               :string
+#  m17                     :boolean
+#  m17_can                 :integer
+#  m17_reflector_name      :string
 #  name                    :string
 #  notes                   :text
 #  nxdn                    :boolean

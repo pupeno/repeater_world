@@ -31,6 +31,7 @@ task generate_all_map_markers: :environment do
            RepeaterSearch::BAND_3CM[:symbol] => "#e8367a"}
   modes = {:multi => "#420a0a",
            RepeaterSearch::FM[:symbol] => "#b21511",
+           RepeaterSearch::M17[:symbol] => "#ff1100",
            RepeaterSearch::DSTAR[:symbol] => "#1b7209",
            RepeaterSearch::FUSION[:symbol] => "#12afa7",
            RepeaterSearch::DMR[:symbol] => "#2812af",

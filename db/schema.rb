@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_18_080602) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_22_095259) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -105,6 +105,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_18_080602) do
     t.string "place"
     t.string "country_id"
     t.string "search_terms"
+    t.boolean "m17"
+    t.integer "m17_can"
+    t.string "m17_reflector_name"
     t.index ["user_id"], name: "index_repeater_searches_on_user_id"
   end
 
@@ -165,6 +168,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_18_080602) do
     t.string "wires_x_node_id"
     t.integer "bandwidth"
     t.string "slug", null: false
+    t.boolean "m17"
+    t.integer "m17_can"
+    t.string "m17_reflector_name"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["country_id"], name: "index_repeaters_on_country_id"
     t.index ["location"], name: "index_repeaters_on_location", using: :gist
@@ -224,6 +230,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_18_080602) do
     t.integer "echo_link_node_number"
     t.string "wires_x_node_id"
     t.string "bandwidth"
+    t.boolean "m17"
+    t.integer "m17_can"
+    t.string "m17_reflector_name"
     t.index ["country_id"], name: "index_suggested_repeaters_on_country_id"
     t.index ["repeater_id"], name: "index_suggested_repeaters_on_repeater_id"
   end
