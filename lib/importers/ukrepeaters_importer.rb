@@ -275,6 +275,8 @@ class UkrepeatersImporter < Importer
     elsif raw_repeater[:status] == "NOT OPERATIONAL" ||
         raw_repeater[:status] == "CLOSED DOWN"
       repeater.operational = false
+    elsif raw_repeater[:status].blank?
+      repeater.operational = nil
     else
       raise "Unknown status #{raw_repeater[:status].inspect}"
     end
