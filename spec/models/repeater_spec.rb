@@ -74,6 +74,35 @@ RSpec.describe Repeater, type: :model do
       @repeater.slug = nil
       expect(@repeater.should_generate_new_friendly_id?).to eq(true)
     end
+
+    it "should geocode successfully" do
+      @repeater.locality = "New York"
+      @repeater.country_id = "us"
+      @repeater.save!
+      Geocoder::Lookup::Test.add_stub("New York, United States", [
+        {"coordinates" => [40.7143528, -74.0059731],
+         "address" => "New York, NY, USA",
+         "state" => "New York",
+         "state_code" => "NY",
+         "country" => "United States",
+         "country_code" => "US"}
+      ])
+
+      expect(@repeater.geocode_and_save!).to eq(true)
+      expect(@repeater.latitude).to eq(40.7143528)
+      expect(@repeater.longitude).to eq(-74.0059731)
+    end
+
+    it "try to geocode but fail gracefully" do
+      @repeater.locality = "Atlantis"
+      @repeater.country_id = "it"
+      @repeater.save!
+      Geocoder::Lookup::Test.add_stub("Atlantis, Italy", [])
+
+      expect(@repeater.geocode_and_save!).to eq(false)
+      expect(@repeater.latitude).to eq(nil)
+      expect(@repeater.longitude).to eq(nil)
+    end
   end
 end
 

@@ -42,18 +42,7 @@ class RepeaterGeocoder
 
     geocoded_repeater_count = 0
     repeaters.each do |repeater|
-      geocode = Geocoder.search(RepeaterUtils.location_in_words(repeater)).first
-      if geocode.present?
-        repeater.latitude = geocode.latitude
-        repeater.longitude = geocode.longitude
-        repeater.geocoded_at = Time.now
-        repeater.geocoded_by = geocode.class.name
-        repeater.geocoded_address = repeater.address
-        repeater.geocoded_locality = repeater.locality
-        repeater.geocoded_region = repeater.region
-        repeater.geocoded_post_code = repeater.post_code
-        repeater.geocoded_country_id = repeater.country_id
-        repeater.save!
+      if repeater.geocode_and_save!
         Rails.logger.info "Geocoded #{repeater}."
         geocoded_repeater_count += 1
       end

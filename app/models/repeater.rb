@@ -184,6 +184,24 @@ class Repeater < ApplicationRecord
     end
   end
 
+  def geocode_and_save!
+    geocode = Geocoder.search(RepeaterUtils.location_in_words(self)).first
+    if geocode.present?
+      self.latitude = geocode.latitude
+      self.longitude = geocode.longitude
+      self.geocoded_at = Time.now
+      self.geocoded_by = geocode.class.name
+      self.geocoded_address = address
+      self.geocoded_locality = locality
+      self.geocoded_region = region
+      self.geocoded_post_code = post_code
+      self.geocoded_country_id = country_id
+      save!
+      return true
+    end
+    false
+  end
+
   rails_admin do
     list do
       field :country
