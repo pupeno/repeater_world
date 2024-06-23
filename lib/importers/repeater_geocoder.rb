@@ -42,7 +42,8 @@ class RepeaterGeocoder
 
     geocoded_repeater_count = 0
     repeaters.each do |repeater|
-      if repeater.geocode_and_save!
+      if repeater.geocode
+        repeater.save!
         Rails.logger.info "Geocoded #{repeater}."
         geocoded_repeater_count += 1
       end

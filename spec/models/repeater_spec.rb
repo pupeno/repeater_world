@@ -88,7 +88,7 @@ RSpec.describe Repeater, type: :model do
          "country_code" => "US"}
       ])
 
-      expect(@repeater.geocode_and_save!).to eq(true)
+      expect(@repeater.geocode).to eq(true)
       expect(@repeater.latitude).to eq(40.7143528)
       expect(@repeater.longitude).to eq(-74.0059731)
     end
@@ -99,7 +99,7 @@ RSpec.describe Repeater, type: :model do
       @repeater.save!
       Geocoder::Lookup::Test.add_stub("Atlantis, Italy", [])
 
-      expect(@repeater.geocode_and_save!).to eq(false)
+      expect(@repeater.geocode).to eq(false)
       expect(@repeater.latitude).to eq(nil)
       expect(@repeater.longitude).to eq(nil)
     end

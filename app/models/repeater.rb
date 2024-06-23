@@ -184,7 +184,7 @@ class Repeater < ApplicationRecord
     end
   end
 
-  def geocode_and_save!
+  def geocode
     geocode = Geocoder.search(RepeaterUtils.location_in_words(self)).first
     if geocode.present?
       self.latitude = geocode.latitude
@@ -196,7 +196,6 @@ class Repeater < ApplicationRecord
       self.geocoded_region = region
       self.geocoded_post_code = post_code
       self.geocoded_country_id = country_id
-      save!
       return true
     end
     false
