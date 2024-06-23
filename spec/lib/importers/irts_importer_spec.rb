@@ -61,7 +61,7 @@ RSpec.describe IrtsImporter do
       deleted = create(:repeater, :full, call_sign: "EI2TRR", tx_frequency: 145_000_001, source: IrtsImporter.source)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      changed = Repeater.find_by(call_sign: "EI0IPG")
+      changed = Repeater.find_by(call_sign: "EI0IPG", tx_frequency: 29_680_000)
       changed_rx_frequency_was = changed.rx_frequency
       changed.rx_frequency = 1_000_000
       changed.save!
