@@ -36,6 +36,18 @@ FactoryBot.define do
       end
     end
 
+    trait :geocoded do
+      after(:build) do |repeater|
+        repeater.geocoded_at = Time.now
+        repeater.geocoded_by = "factory"
+        repeater.geocoded_address = repeater.address
+        repeater.geocoded_locality = repeater.locality
+        repeater.geocoded_region = repeater.region
+        repeater.geocoded_post_code = repeater.post_code
+        repeater.geocoded_country_id = repeater.country_id
+      end
+    end
+
     trait :full do
       call_sign { "FU11" }
       sequence(:name) { |n| "Repeater #{call_sign}".strip }

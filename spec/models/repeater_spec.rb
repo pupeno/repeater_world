@@ -76,9 +76,8 @@ RSpec.describe Repeater, type: :model do
     end
 
     it "should geocode successfully" do
-      @repeater.locality = "New York"
-      @repeater.country_id = "us"
-      @repeater.save!
+      expect(@repeater.latitude).to eq(nil)
+      expect(@repeater.longitude).to eq(nil)
       Geocoder::Lookup::Test.add_stub("New York, United States", [
         {"coordinates" => [40.7143528, -74.0059731],
          "address" => "New York, NY, USA",
@@ -88,16 +87,44 @@ RSpec.describe Repeater, type: :model do
          "country_code" => "US"}
       ])
 
+      @repeater.locality = "New York"
+      @repeater.country_id = "us"
       expect(@repeater.geocode).to eq(true)
       expect(@repeater.latitude).to eq(40.7143528)
       expect(@repeater.longitude).to eq(-74.0059731)
     end
 
+    it "should geocode when saving" do
+      @repeater.save! # No geocoding.
+      expect(@repeater.geocoded_at).to eq(nil)
+
+      Geocoder::Lookup::Test.add_stub("New York, United States", [
+        {"coordinates" => [40.7143528, -74.0059731],
+         "address" => "New York, NY, USA",
+         "state" => "New York",
+         "state_code" => "NY",
+         "country" => "United States",
+         "country_code" => "US"}
+      ])
+      @repeater.locality = "New York"
+      @repeater.country_id = "us"
+      @repeater.save! # Should geocode here.
+      expect(@repeater.latitude).to eq(40.7143528)
+      expect(@repeater.longitude).to eq(-74.0059731)
+      expect(@repeater.geocoded_at).not_to eq(nil)
+      geocode_at = @repeater.geocoded_at
+
+      @repeater.save! # Nothing changed, so it should not geocode here.
+      expect(@repeater.latitude).to eq(40.7143528)
+      expect(@repeater.longitude).to eq(-74.0059731)
+      expect(@repeater.geocoded_at).to eq(geocode_at)
+    end
+
     it "try to geocode but fail gracefully" do
+      Geocoder::Lookup::Test.add_stub("Atlantis, Italy", [])
       @repeater.locality = "Atlantis"
       @repeater.country_id = "it"
       @repeater.save!
-      Geocoder::Lookup::Test.add_stub("Atlantis, Italy", [])
 
       expect(@repeater.geocode).to eq(false)
       expect(@repeater.latitude).to eq(nil)

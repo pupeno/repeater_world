@@ -94,6 +94,7 @@ class Repeater < ApplicationRecord
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
 
   before_validation :ensure_fields_are_set
+  before_save :geocode_if_necessary
 
   include PgSearch::Model
   multisearchable(
@@ -197,6 +198,14 @@ class Repeater < ApplicationRecord
       self.geocoded_post_code = post_code
       self.geocoded_country_id = country_id
       return true
+    end
+    false
+  end
+
+  def geocode_if_necessary
+    if (address.present? || locality.present? || region.present? || post_code.present?) &&
+        (address != geocoded_address || locality != geocoded_locality || region != geocoded_region || post_code != geocoded_post_code || country_id != geocoded_country_id || location.blank? || geocoded_at <= 1.year.ago)
+      return geocode
     end
     false
   end
