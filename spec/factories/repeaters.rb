@@ -113,13 +113,15 @@ end
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
 #  fusion                     :boolean
-#  geocoded_address           :string
 #  geocoded_at                :datetime
 #  geocoded_by                :string
-#  geocoded_locality          :string
-#  geocoded_post_code         :string
-#  geocoded_region            :string
 #  grid_square                :string
+#  input_address              :string
+#  input_grid_square          :string
+#  input_locality             :string
+#  input_location             :geography        point, 4326
+#  input_post_code            :string
+#  input_region               :string
 #  keeper                     :string
 #  locality                   :string
 #  location                   :geography        point, 4326
@@ -151,16 +153,20 @@ end
 #  country_id                 :string
 #  external_id                :string
 #  geocoded_country_id        :string
+#  input_country_id           :string
 #  wires_x_node_id            :string
 #
 # Indexes
 #
-#  index_repeaters_on_call_sign   (call_sign)
-#  index_repeaters_on_country_id  (country_id)
-#  index_repeaters_on_location    (location) USING gist
-#  index_repeaters_on_slug        (slug) UNIQUE
+#  index_repeaters_on_call_sign         (call_sign)
+#  index_repeaters_on_country_id        (country_id)
+#  index_repeaters_on_input_country_id  (input_country_id)
+#  index_repeaters_on_input_location    (input_location)
+#  index_repeaters_on_location          (location) USING gist
+#  index_repeaters_on_slug              (slug) UNIQUE
 #
 # Foreign Keys
 #
 #  fk_rails_...  (country_id => countries.id)
+#  fk_rails_...  (input_country_id => countries.id)
 #

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_22_095259) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_23_112850) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -131,16 +131,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_22_095259) do
     t.string "dmr_network"
     t.boolean "nxdn"
     t.geography "location", limit: {srid: 4326, type: "st_point", geographic: true}
-    t.string "grid_square"
+    t.string "input_grid_square"
     t.string "utc_offset"
     t.string "source"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "redistribution_limitations"
-    t.string "address"
-    t.string "locality"
-    t.string "region"
-    t.string "post_code"
+    t.string "input_address"
+    t.string "input_locality"
+    t.string "input_region"
+    t.string "input_post_code"
     t.string "country_id"
     t.string "web_site"
     t.string "external_id"
@@ -158,10 +158,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_22_095259) do
     t.string "dstar_port"
     t.datetime "geocoded_at"
     t.string "geocoded_by"
-    t.string "geocoded_address"
-    t.string "geocoded_locality"
-    t.string "geocoded_region"
-    t.string "geocoded_post_code"
+    t.string "address"
+    t.string "locality"
+    t.string "region"
+    t.string "post_code"
     t.string "geocoded_country_id"
     t.boolean "echo_link"
     t.integer "echo_link_node_number"
@@ -171,8 +171,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_22_095259) do
     t.boolean "m17"
     t.integer "m17_can"
     t.string "m17_reflector_name"
+    t.string "input_country_id"
+    t.geography "input_location", limit: {srid: 4326, type: "st_point", geographic: true}
+    t.string "grid_square"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["country_id"], name: "index_repeaters_on_country_id"
+    t.index ["input_country_id"], name: "index_repeaters_on_input_country_id"
+    t.index ["input_location"], name: "index_repeaters_on_input_location"
     t.index ["location"], name: "index_repeaters_on_location", using: :gist
     t.index ["slug"], name: "index_repeaters_on_slug", unique: true
   end
@@ -265,6 +270,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_22_095259) do
 
   add_foreign_key "repeater_searches", "users"
   add_foreign_key "repeaters", "countries"
+  add_foreign_key "repeaters", "countries", column: "input_country_id"
   add_foreign_key "suggested_repeaters", "countries"
   add_foreign_key "suggested_repeaters", "repeaters"
 end
