@@ -228,32 +228,32 @@ class UkrepeatersImporter < Importer
     end
 
     # The location of the repeater
-    repeater.grid_square = raw_repeater[:qthr].upcase
-    repeater.latitude = raw_repeater[:lat]
-    repeater.longitude = raw_repeater[:lon]
-    repeater.locality = raw_repeater[:where].titleize
+    repeater.input_grid_square = raw_repeater[:qthr].upcase
+    repeater.input_latitude = raw_repeater[:lat]
+    repeater.input_longitude = raw_repeater[:lon]
+    repeater.input_locality = raw_repeater[:where].titleize
     case raw_repeater[:region]
     when "SE"
-      repeater.region = "South East, England"
+      repeater.input_region = "South East, England"
     when "SW"
-      repeater.region = "South West, England"
+      repeater.input_region = "South West, England"
     when "NOR"
-      repeater.region = "North England"
+      repeater.input_region = "North England"
     when "SCOT"
-      repeater.region = "Scotland"
+      repeater.input_region = "Scotland"
     when "WM"
-      repeater.region = "Wales & Marches"
+      repeater.input_region = "Wales & Marches"
     when "NI"
-      repeater.region = "Northern Ireland"
+      repeater.input_region = "Northern Ireland"
     when "CEN"
-      repeater.region = "Central England"
+      repeater.input_region = "Central England"
     when "XXX"
-      repeater.region = nil
+      repeater.input_region = nil
     else
       raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
     end
-    repeater.post_code = raw_repeater[:postcode]
-    repeater.country_id = "gb"
+    repeater.input_post_code = raw_repeater[:postcode]
+    repeater.input_country_id = "gb"
 
     repeater.utc_offset = "0:00"
 

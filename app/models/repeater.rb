@@ -81,7 +81,8 @@ class Repeater < ApplicationRecord
     FM_NARROW = 12_500
   ]
 
-  belongs_to :country
+  belongs_to :country, optional: true
+  belongs_to :input_country, class_name: "Country", optional: true
   belongs_to :geocoded_country, class_name: "Country", optional: true
   has_many :suggested_repeaters, dependent: :nullify
 
@@ -94,6 +95,7 @@ class Repeater < ApplicationRecord
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
 
   before_validation :ensure_fields_are_set
+  before_validation :compute_location_fields
 
   include PgSearch::Model
   multisearchable(
@@ -105,7 +107,8 @@ class Repeater < ApplicationRecord
     ],
     additional_attributes: ->(repeater) { {repeater_id: repeater.id} }
   )
-  delegate :name, to: :country, prefix: true
+  delegate :name, to: :country, prefix: true, allow_nil: true
+  delegate :name, to: :input_country, prefix: true, allow_nil: true
 
   include FriendlyId
   if Rails.env.test? # Unfortunately, slug generation becomes very slow in tests: https://stackoverflow.com/questions/78505982/is-there-a-way-to-turn-of-friendly-id-or-at-least-the-history-module-during-test
@@ -136,6 +139,22 @@ class Repeater < ApplicationRecord
 
   def longitude=(value)
     self.location = Geo.point(latitude || 0, value)
+  end
+
+  def input_latitude
+    input_location&.latitude
+  end
+
+  def input_latitude=(value)
+    self.input_location = Geo.point(value, input_longitude || 0)
+  end
+
+  def input_longitude
+    input_location&.longitude
+  end
+
+  def input_longitude=(value)
+    self.input_location = Geo.point(input_latitude || 0, value)
   end
 
   def disable_all_modes
@@ -182,6 +201,27 @@ class Repeater < ApplicationRecord
       predicates += [address_changed?, locality_changed?, region_changed?, post_code_changed?, country_id_changed?]
       predicates.any?
     end
+  end
+
+  def compute_location_fields
+    # If blank, null.
+    self.input_address = nil if input_address.blank?
+    self.input_locality = nil if input_locality.blank?
+    self.input_region = nil if input_region.blank?
+    self.input_post_code = nil if input_post_code.blank?
+    self.input_country_id = nil if input_country_id.blank?
+    self.input_location = nil if input_location.blank?
+    self.input_grid_square = nil if input_grid_square.blank?
+
+    # First, all input values are used as-is.
+    self.address = input_address
+    self.locality = input_locality
+    self.region = input_region
+    self.post_code = input_post_code
+    self.country_id = input_country_id
+    self.geocoded_country_id = input_country_id # Only temporarily.
+    self.location = input_location
+    self.grid_square = input_grid_square
   end
 
   rails_admin do
@@ -246,6 +286,17 @@ class Repeater < ApplicationRecord
       group "EchoLink" do
         field :echo_link
         field :echo_link_node_number
+      end
+
+      group "Input Location" do
+        field :input_address
+        field :input_locality
+        field :input_region
+        field :input_post_code
+        field :input_country
+        field :input_latitude
+        field :input_longitude
+        field :input_grid_square
       end
 
       group "Location" do
@@ -344,6 +395,17 @@ class Repeater < ApplicationRecord
 
       group "EchoLink" do
         field :echo_link_node_number
+      end
+
+      group "Input Location" do
+        field :input_address
+        field :input_locality
+        field :input_region
+        field :input_post_code
+        field :input_country
+        field :input_latitude
+        field :input_longitude
+        field :input_grid_square
       end
 
       group "Location" do

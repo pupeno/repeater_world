@@ -90,7 +90,7 @@ class IrtsImporter < Importer
     import_location(repeater, row[LOCATION])
     repeater.notes = row[NOTES].text.strip
 
-    repeater.country_id = "ie"
+    repeater.input_country_id = "ie"
     repeater.source = self.class.source
 
     repeater.save!
@@ -154,22 +154,22 @@ class IrtsImporter < Importer
   def import_location(repeater, location)
     location = location.xpath("text()").map(&:text)
 
-    repeater.grid_square = location.last
+    repeater.input_grid_square = location.last
 
     address = location[0..-2].join(",")
     address = address.split(",").map { |x| x.strip.gsub(/\s+/, " ").tr("\u00A0", " ") }
 
     if address.size == 1
       if address[0].start_with? "Co"
-        repeater.locality = nil
-        repeater.region = address.first
+        repeater.input_locality = nil
+        repeater.input_region = address.first
       else
-        repeater.locality = address.first
-        repeater.region = nil
+        repeater.input_locality = address.first
+        repeater.input_region = nil
       end
     else
-      repeater.locality = address[0..-2].join(",")
-      repeater.region = address[-1]
+      repeater.input_locality = address[0..-2].join(",")
+      repeater.input_region = address[-1]
     end
   end
 end

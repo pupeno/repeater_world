@@ -20,18 +20,18 @@ class RepeaterGeocoder
 
     # Collect all repeaters that need geocoding.
     repeaters = Repeater.where(
-      "(address IS NOT NULL OR
-        locality IS NOT NULL OR
-        region IS NOT NULL OR
-        post_code IS NOT NULL) AND
+      "(input_address IS NOT NULL OR
+        input_locality IS NOT NULL OR
+        input_region IS NOT NULL OR
+        input_post_code IS NOT NULL) AND
        (location IS NULL OR
         ST_DWithin(location, :point, :distance) OR
         (geocoded_at IS NOT NULL AND geocoded_at < :geocoded_at) OR
-        (address != geocoded_address OR
-         locality != geocoded_locality OR
-         region != geocoded_region OR
-         post_code != geocoded_post_code OR
-         country_id != geocoded_country_id))",
+        (address != input_address OR
+         locality != input_locality OR
+         region != input_region OR
+         post_code != input_post_code OR
+         country_id != input_country_id))",
       {point: Geo.to_wkt(Geo.point(0, 0)),
        distance: 0.1,
        geocoded_at: 1.year.ago}
@@ -42,21 +42,23 @@ class RepeaterGeocoder
 
     geocoded_repeater_count = 0
     repeaters.each do |repeater|
-      geocode = Geocoder.search(RepeaterUtils.location_in_words(repeater)).first
+      repeater.address = repeater.input_address
+      repeater.locality = repeater.input_locality
+      repeater.region = repeater.input_region
+      repeater.post_code = repeater.input_post_code
+      repeater.country_id = repeater.input_country_id
+      repeater.geocoded_country_id = repeater.input_country_id # Only here temporarily.
+      geocode = Geocoder.search(RepeaterUtils.location_in_words(repeater, input: true)).first
       if geocode.present?
         repeater.latitude = geocode.latitude
         repeater.longitude = geocode.longitude
         repeater.geocoded_at = Time.now
         repeater.geocoded_by = geocode.class.name
-        repeater.geocoded_address = repeater.address
-        repeater.geocoded_locality = repeater.locality
-        repeater.geocoded_region = repeater.region
-        repeater.geocoded_post_code = repeater.post_code
-        repeater.geocoded_country_id = repeater.country_id
-        repeater.save!
-        Rails.logger.info "Geocoded #{repeater}."
         geocoded_repeater_count += 1
+        Rails.logger.info "Geocoded #{repeater}."
       end
+      repeater.save!
+      repeater.reload
     end
 
     Rails.logger.info "Done geocoding repeaters."

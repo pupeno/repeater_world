@@ -86,17 +86,17 @@ class IrlpImporter < Importer
     repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10**3
     repeater.fm = true # Just making an assumption here, we don't have access code, so this is actually a bit useless.
 
-    repeater.locality = raw_repeater["City"]
-    repeater.region = raw_repeater["Prov./St"]
-    repeater.country_id = parse_country(raw_repeater)
+    repeater.input_locality = raw_repeater["City"]
+    repeater.input_region = raw_repeater["Prov./St"]
+    repeater.input_country_id = parse_country(raw_repeater)
 
     latitude = to_f_or_nil(raw_repeater["lat"])
     longitude = to_f_or_nil(raw_repeater["long"])
     if latitude.present? && longitude.present? &&
         (latitude != 0 || longitude != 0) && # One should be different to 0, since 0,0 is used to represent lack of data and there are no repeaters in null island
         (latitude <= 90 && latitude >= -90) # There can't be latitudes above 90 or below -90, those are typos.
-      repeater.latitude = latitude
-      repeater.longitude = longitude
+      repeater.input_latitude = latitude
+      repeater.input_longitude = longitude
     end
 
     repeater.external_id = raw_repeater["Record"]

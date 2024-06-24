@@ -21,6 +21,18 @@ FactoryBot.define do
     rx_frequency { tx_frequency - 600_000 } # VHF, maybe dispatch on the band for different frequencies?
     country_id { "gb" }
 
+    trait :populate_input_location do
+      after(:build) do |repeater|
+        repeater.input_address ||= repeater.address
+        repeater.input_locality ||= repeater.locality
+        repeater.input_region ||= repeater.region
+        repeater.input_post_code ||= repeater.post_code
+        repeater.input_country_id ||= repeater.country_id
+        repeater.input_location ||= repeater.location
+        repeater.input_grid_square ||= repeater.grid_square
+      end
+    end
+
     trait :explicit_modes do
       after(:build) do |repeater|
         repeater.fm = false unless repeater.fm?
@@ -34,6 +46,16 @@ FactoryBot.define do
         repeater.p25 = false unless repeater.p25?
         repeater.tetra = false unless repeater.tetra
       end
+    end
+
+    after(:build) do |repeater|
+      repeater.input_address ||= repeater.address
+      repeater.input_locality ||= repeater.locality
+      repeater.input_region ||= repeater.region
+      repeater.input_post_code ||= repeater.post_code
+      repeater.input_country_id ||= repeater.country_id
+      repeater.input_location ||= repeater.location
+      repeater.input_grid_square ||= repeater.grid_square
     end
 
     trait :full do

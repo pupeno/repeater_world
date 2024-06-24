@@ -84,10 +84,10 @@ class SralfiImporter < Importer
     repeater.web_site = raw_repeater["station_url"] || raw_repeater["responsible_club_url"]
     # stdesc imported later
     # TODO: what is cwid? It has some of these values: VJ, RI, KT, KA, JA, JY, JM, KO, OU, RO.
-    repeater.locality = raw_repeater["qth_city"]
-    repeater.grid_square = raw_repeater["locator"]
-    repeater.latitude = raw_repeater["wgs84lat"]
-    repeater.longitude = raw_repeater["wgs84lon"]
+    repeater.input_locality = raw_repeater["qth_city"]
+    repeater.input_grid_square = raw_repeater["locator"]
+    repeater.input_latitude = raw_repeater["wgs84lat"]
+    repeater.input_longitude = raw_repeater["wgs84lon"]
     # site_desc imported later
     repeater.altitude_asl = raw_repeater["alt_asl"]
     repeater.altitude_agl = raw_repeater["alt_agl"]
@@ -110,7 +110,7 @@ class SralfiImporter < Importer
 
     repeater.source = SOURCE
     repeater.redistribution_limitations = data_limitations_sral_fi_url(host: "repeater.world", protocol: "https")
-    repeater.country_id = "fi"
+    repeater.input_country_id = "fi"
 
     repeater.save!
 
