@@ -44,11 +44,7 @@ module RepeaterUtils
     end
   end
 
-  def self.location_in_words(repeater, input: false)
-    if input # Uhg, I really dislike that, but putting these in one field will be annoying everywhere else
-      [repeater.input_address, repeater.input_locality, repeater.input_region, repeater.input_post_code, repeater.input_country_name]
-    else
-      [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.country_name]
-    end.reject(&:blank?).join(", ")
+  def self.location_in_words(repeater)
+    [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.country_name].reject(&:blank?).join(", ")
   end
 end

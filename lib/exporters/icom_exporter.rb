@@ -47,7 +47,7 @@ class IcomExporter < Exporter
   MAX_GATEWAY_CALL_SIGN_LENGTH = 8
 
   def repeater(repeater)
-    group_name = truncate(MAX_COUNTRY_NAME_LENGTH, repeater.country.name) # TODO: do something smarter about groups: https://github.com/pupeno/repeater_world/issues/21
+    group_name = truncate(MAX_COUNTRY_NAME_LENGTH, repeater.country_name || "No Country") # TODO: do something smarter about groups: https://github.com/pupeno/repeater_world/issues/21
     name = truncate(MAX_NAME_LENGTH, repeater.name)
     sub_name = if repeater.name == repeater.locality # If the name is the locality, use the region as the sub name.
       truncate(MAX_SUB_NAME_LENGTH, repeater.region)

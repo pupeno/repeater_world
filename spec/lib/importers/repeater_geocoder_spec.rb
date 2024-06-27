@@ -19,7 +19,7 @@ RSpec.describe RepeaterGeocoder do
     skip # This test doesn't make sense anymore with the new approach.
 
     Geocoder::Lookup::Test.add_stub("New York, United States", [
-      {"coordinates" => [40.7143528, -74.0059731],
+      {"coordinates" => [41.7147015, -72.7283763],
        "address" => "New York, NY, USA",
        "state" => "New York",
        "state_code" => "NY",

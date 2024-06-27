@@ -48,17 +48,9 @@ FactoryBot.define do
       end
     end
 
-    after(:build) do |repeater|
-      repeater.input_address ||= repeater.address
-      repeater.input_locality ||= repeater.locality
-      repeater.input_region ||= repeater.region
-      repeater.input_post_code ||= repeater.post_code
-      repeater.input_country_id ||= repeater.country_id
-      repeater.input_location ||= repeater.location
-      repeater.input_grid_square ||= repeater.grid_square
-    end
-
     trait :full do
+      populate_input_location
+
       call_sign { "FU11" }
       sequence(:name) { |n| "Repeater #{call_sign}".strip }
       keeper { "K3EPR" }

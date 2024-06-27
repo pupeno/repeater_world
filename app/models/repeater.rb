@@ -125,28 +125,13 @@ class Repeater < ApplicationRecord
     super || [locality, call_sign].compact.join(" ")
   end
 
-  def latitude
-    location&.latitude
-  end
-
-  def latitude=(value)
-    self.location = Geo.point(value, longitude || 0)
-  end
-
-  def longitude
-    location&.longitude
-  end
-
-  def longitude=(value)
-    self.location = Geo.point(latitude || 0, value)
-  end
-
   def input_latitude
     input_location&.latitude
   end
 
   def input_latitude=(value)
-    self.input_location = Geo.point(value, input_longitude || 0)
+    @input_latitude = value
+    set_input_location_if_not_nil
   end
 
   def input_longitude
@@ -154,7 +139,26 @@ class Repeater < ApplicationRecord
   end
 
   def input_longitude=(value)
-    self.input_location = Geo.point(input_latitude || 0, value)
+    @input_longitude = value
+    set_input_location_if_not_nil
+  end
+
+  def latitude
+    location&.latitude
+  end
+
+  def latitude=(value)
+    @latitude = value
+    set_location_if_not_nil
+  end
+
+  def longitude
+    location&.longitude
+  end
+
+  def longitude=(value)
+    @longitude = value
+    set_location_if_not_nil
   end
 
   def disable_all_modes
@@ -204,7 +208,7 @@ class Repeater < ApplicationRecord
   end
 
   def compute_location_fields
-    # If blank, null.
+    # If blank, set to null, which is a better blank value.
     self.input_address = nil if input_address.blank?
     self.input_locality = nil if input_locality.blank?
     self.input_region = nil if input_region.blank?
@@ -213,15 +217,50 @@ class Repeater < ApplicationRecord
     self.input_location = nil if input_location.blank?
     self.input_grid_square = nil if input_grid_square.blank?
 
-    # First, all input values are used as-is.
+    # Coordinates are expensive to calculate, since they require a geocoding call, so we need some special logic.
+    # If there are input ones, we use them as is. If not, we only blank location if the address change in any way.
+    if input_location.present?
+      self.location = input_location
+      self.geocoded_at = nil
+      self.geocoded_by = nil
+    elsif input_address != address ||
+        input_locality != locality ||
+        input_region != region ||
+        input_post_code != post_code ||
+        input_country_id != country_id ||
+        (geocoded_at.present? && geocoded_at <= 1.year.ago)
+      self.location = nil
+      self.geocoded_at = nil
+      self.geocoded_by = nil
+    end
+
+    # First, all other input values are used as-is.
     self.address = input_address
     self.locality = input_locality
     self.region = input_region
     self.post_code = input_post_code
     self.country_id = input_country_id
-    self.geocoded_country_id = input_country_id # Only temporarily.
-    self.location = input_location
+    self.geocoded_country_id = input_country_id # Only temporarily, will be removed later.
     self.grid_square = input_grid_square
+
+    # Let's try to fill in some blanks now
+
+    # If we have an address but no coordinates, let's geocode.
+    if location.blank? && [address, locality, region, post_code, country_id].any?(&:present?)
+      geocode
+    end
+
+    # If we have coordinates but no grid square, let's calculate it.
+    if grid_square.blank? && location.present?
+      self.grid_square = DX::Grid.encode([latitude, longitude], length: 6)
+    end
+
+    # if we have grid square, but no coordinates, lets calculate them.
+    # If we have coordinates but no grid square, let's calculate it.
+    if location.blank? && grid_square.present?
+      latitude, longitude = DX::Grid.decode(grid_square)
+      self.location = Geo.point(latitude, longitude)
+    end
   end
 
   rails_admin do
@@ -454,6 +493,29 @@ class Repeater < ApplicationRecord
       group "Record" do
         field :slug
       end
+    end
+  end
+
+  private
+
+  def geocode
+    geocode = Geocoder.search(RepeaterUtils.location_in_words(self)).first
+    self.location = if geocode.present?
+      Geo.point(geocode.latitude, geocode.longitude)
+    end
+    self.geocoded_at = Time.now
+    self.geocoded_by = geocode.class.name
+  end
+
+  def set_input_location_if_not_nil
+    self.input_location = if @input_latitude.present? && @input_longitude.present? # Only create a point when both parts are present.
+      Geo.point(@input_latitude, @input_longitude)
+    end
+  end
+
+  def set_location_if_not_nil
+    self.location = if @latitude.present? && @longitude.present? # Only create a point when both parts are present.
+      Geo.point(@latitude, @longitude)
     end
   end
 end
