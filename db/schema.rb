@@ -130,7 +130,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_23_112850) do
     t.integer "dmr_color_code"
     t.string "dmr_network"
     t.boolean "nxdn"
-    t.geography "location", limit: {srid: 4326, type: "st_point", geographic: true}
+    t.geography "location", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.string "input_grid_square"
     t.string "utc_offset"
     t.string "source"
@@ -172,7 +172,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_23_112850) do
     t.integer "m17_can"
     t.string "m17_reflector_name"
     t.string "input_country_id"
-    t.geography "input_location", limit: {srid: 4326, type: "st_point", geographic: true}
+    t.geography "input_location", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.string "grid_square"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["country_id"], name: "index_repeaters_on_country_id"
