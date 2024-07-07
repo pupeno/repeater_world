@@ -130,7 +130,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_22_095259) do
     t.integer "dmr_color_code"
     t.string "dmr_network"
     t.boolean "nxdn"
-    t.geography "location", limit: {srid: 4326, type: "st_point", geographic: true}
+    t.geography "location", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.string "grid_square"
     t.string "utc_offset"
     t.string "source"
