@@ -77,11 +77,11 @@ class WiaImporter < Importer
     repeater.fm = true # Massive assumption here, since it's not part of the data.
     repeater.fm_ctcss_tone = raw_repeater[:tone] if raw_repeater[:tone].is_a? Numeric
 
-    repeater.locality = raw_repeater[:location]
-    repeater.region = raw_repeater[:service_area]
+    repeater.input_locality = raw_repeater[:location]
+    repeater.input_region = raw_repeater[:service_area]
     if raw_repeater[:latitude].is_a?(Numeric) && raw_repeater[:longitude].is_a?(Numeric)
-      repeater.latitude = raw_repeater[:latitude]
-      repeater.longitude = raw_repeater[:longitude]
+      repeater.input_latitude = raw_repeater[:latitude]
+      repeater.input_longitude = raw_repeater[:longitude]
     end
     repeater.altitude_asl = raw_repeater[:hasl] if raw_repeater[:hasl].is_a? Numeric
 
@@ -112,7 +112,7 @@ class WiaImporter < Importer
     notes << "Timeout: #{raw_repeater[:to]}" if raw_repeater[:to].is_a? Numeric
     repeater.notes = notes.compact.join("\n")
 
-    repeater.country_id = "au"
+    repeater.input_country_id = "au"
     repeater.source = self.class.source
     repeater.save!
 

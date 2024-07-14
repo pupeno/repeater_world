@@ -118,12 +118,12 @@ class RepeaterSearch < ApplicationRecord
     if geosearch_type.in? [MY_LOCATION, COORDINATES, GRID_SQUARE, PLACE]
       results = results.select(self.class.sanitize_sql_array([<<-SQL, current_location: Geo.to_wkt(Geo.point(latitude, longitude))]))
         #{results.table_name}.*,
-        ST_Distance(:current_location, repeaters.location) AS distance,
-        degrees(ST_Azimuth(:current_location, repeaters.location)) AS azimuth
+        ST_Distance(:current_location, repeaters.coordinates) AS distance,
+        degrees(ST_Azimuth(:current_location, repeaters.coordinates)) AS azimuth
       SQL
       distance = self.distance * ((distance_unit == RepeaterSearch::MILES) ? 1609.34 : 1000)
       results = results.where(
-        "ST_DWithin(repeaters.location, :point, :distance)",
+        "ST_DWithin(repeaters.coordinates, :point, :distance)",
         {point: Geo.to_wkt(Geo.point(latitude, longitude)),
          distance: distance}
       ).all

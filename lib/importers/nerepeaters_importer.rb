@@ -141,15 +141,15 @@ class NerepeatersImporter < Importer
     end
 
     import_rx_frequency(repeater, raw_repeater)
-    repeater.region = US_STATES[raw_repeater[STATE]]
-    repeater.locality = raw_repeater[CITY]
-    repeater.name = "#{repeater.locality} #{repeater.call_sign}"
+    repeater.input_region = US_STATES[raw_repeater[STATE]]
+    repeater.input_locality = raw_repeater[CITY]
+    repeater.name = "#{raw_repeater[CITY]} #{repeater.call_sign}"
     import_mode(repeater, raw_repeater)
     import_access_code(repeater, raw_repeater)
     repeater.notes = "#{raw_repeater[COMMENT]}\nAccess codes: #{raw_repeater[ACCESS_CODE]} #{raw_repeater[ACCESS_CODE_2]}"
 
     fill_band(repeater)
-    repeater.country_id = "us"
+    repeater.input_country_id = "us"
     repeater.source = SOURCE
     repeater.save!
 

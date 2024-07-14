@@ -57,6 +57,7 @@ RSpec.describe RepeaterUtils do
       @repeater.locality = "locality"
       @repeater.region = "region"
       @repeater.post_code = "post_code"
+      @repeater.country_id = "gb"
       expect(RepeaterUtils.location_in_words(@repeater)).to eq("address, locality, region, post_code, United Kingdom")
     end
   end
