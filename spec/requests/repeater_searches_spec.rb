@@ -18,10 +18,10 @@ RSpec.describe "/repeater_searches", type: :request do
   context "With some repeaters" do
     before(:all) do
       Repeater.destroy_all
-      create(:repeater, name: "23CM FM", fm: true, band: Repeater::BAND_23CM, latitude: 0, longitude: 0.07, location: "POINT(0 0.07)")
-      create(:repeater, name: "70CM FM", fm: true, band: Repeater::BAND_70CM, latitude: 0, longitude: 0.13, location: "POINT(0 0.13)")
-      create(:repeater, name: "2M FM", fm: true, band: Repeater::BAND_2M, latitude: 0, longitude: 1.4, location: "POINT(0 1.4)")
-      create(:repeater, name: "4M FM", fm: true, band: Repeater::BAND_4M, latitude: 0, longitude: 2, location: "POINT(0 2)")
+      create(:repeater, name: "23CM FM", fm: true, band: Repeater::BAND_23CM, input_location: "POINT(0 0.07)")
+      create(:repeater, name: "70CM FM", fm: true, band: Repeater::BAND_70CM, input_location: "POINT(0 0.13)")
+      create(:repeater, name: "2M FM", fm: true, band: Repeater::BAND_2M, input_location: "POINT(0 1.4)")
+      create(:repeater, name: "4M FM", fm: true, band: Repeater::BAND_4M, input_location: "POINT(0 2)")
       create(:repeater, name: "23CM D-Star", dstar: true, band: Repeater::BAND_23CM)
       create(:repeater, name: "70CM Fusion", fusion: true, band: Repeater::BAND_70CM)
       create(:repeater, name: "2M DMR", dmr: true, band: Repeater::BAND_2M)
@@ -96,7 +96,7 @@ RSpec.describe "/repeater_searches", type: :request do
       it "runs a search by grid square" do
         get search_url(s: attributes_for(:repeater_search,
           geosearch_type: RepeaterSearch::GRID_SQUARE,
-          distance: 160, distance_unit: RepeaterSearch::KM, grid_square: "JJ00"))
+          distance: 160, distance_unit: RepeaterSearch::KM, grid_square: DX::Grid.encode([0.5, 1.0])))
         expect(response).to be_successful
         expect(response).to render_template(:new)
         expect(response.body).to include("Search")
@@ -269,7 +269,9 @@ RSpec.describe "/repeater_searches", type: :request do
         get repeater_search_url(repeater_search)
         expect(response).to be_successful
         expect(response.body).to include("23CM FM")
+        expect(response.body).to include("4.81 miles")
         expect(response.body).to include("70CM FM")
+        expect(response.body).to include("8.93 miles")
         expect(response.body).to include("2M FM")
         expect(response.body).to include("96.19 miles")
         expect(response.body).not_to include("4M FM")
