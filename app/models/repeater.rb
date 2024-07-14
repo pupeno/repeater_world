@@ -227,8 +227,7 @@ class Repeater < ApplicationRecord
         input_locality != locality ||
         input_region != region ||
         input_post_code != post_code ||
-        input_country_id != country_id ||
-        (geocoded_at.present? && geocoded_at <= 1.year.ago)
+        input_country_id != country_id
       self.coordinates = nil
       self.geocoded_at = nil
       self.geocoded_by = nil
@@ -246,6 +245,7 @@ class Repeater < ApplicationRecord
     # Let's try to fill in some blanks now
 
     # If we have an address but no coordinates, let's geocode.
+    # TODO: move this to a background process, but since we don't have one, doing it here is the next best thing.
     if coordinates.blank? && [address, locality, region, post_code, country_id].any?(&:present?)
       geocode
     end
@@ -256,10 +256,8 @@ class Repeater < ApplicationRecord
     end
 
     # if we have grid square, but no coordinates, lets calculate them.
-    # If we have coordinates but no grid square, let's calculate it.
     if coordinates.blank? && grid_square.present?
-      latitude, longitude = DX::Grid.decode(grid_square)
-      self.coordinates = Geo.point(latitude, longitude)
+      self.latitude, self.longitude = DX::Grid.decode(grid_square)
     end
   end
 
