@@ -53,36 +53,36 @@ RSpec.describe Repeater, type: :model do
     end
 
     it "has input coordinates" do
-      @repeater.input_location = nil
-      expect(@repeater.input_location).to eq(nil)
+      @repeater.input_coordinates = nil
+      expect(@repeater.input_coordinates).to eq(nil)
       expect(@repeater.input_latitude).to eq(nil)
       expect(@repeater.input_longitude).to eq(nil)
       @repeater.input_latitude = 10
-      expect(@repeater.input_location).to eq(nil)
+      expect(@repeater.input_coordinates).to eq(nil)
       expect(@repeater.input_latitude).to eq(nil)
       expect(@repeater.input_longitude).to eq(nil)
       @repeater.input_longitude = 20
-      expect(@repeater.input_location).to eq(Geo.point(10, 20))
+      expect(@repeater.input_coordinates).to eq(Geo.point(10, 20))
       expect(@repeater.input_latitude).to eq(10)
       expect(@repeater.input_longitude).to eq(20)
       @repeater.save!
       @repeater.reload
-      expect(@repeater.input_location).to eq(Geo.point(10, 20))
+      expect(@repeater.input_coordinates).to eq(Geo.point(10, 20))
       expect(@repeater.input_latitude).to eq(10)
       expect(@repeater.input_longitude).to eq(20)
     end
 
     it "has coordinates" do
-      @repeater.location = nil
-      expect(@repeater.location).to eq(nil)
+      @repeater.coordinates = nil
+      expect(@repeater.coordinates).to eq(nil)
       expect(@repeater.latitude).to eq(nil)
       expect(@repeater.longitude).to eq(nil)
       @repeater.latitude = 10
-      expect(@repeater.location).to eq(nil)
+      expect(@repeater.coordinates).to eq(nil)
       expect(@repeater.latitude).to eq(nil)
       expect(@repeater.longitude).to eq(nil)
       @repeater.longitude = 20
-      expect(@repeater.location).to eq(Geo.point(10, 20))
+      expect(@repeater.coordinates).to eq(Geo.point(10, 20))
       expect(@repeater.latitude).to eq(10)
       expect(@repeater.longitude).to eq(20)
     end
@@ -99,7 +99,7 @@ RSpec.describe Repeater, type: :model do
         @repeater.input_region = nil
         @repeater.input_post_code = nil
         @repeater.input_country_id = nil
-        @repeater.input_location = nil
+        @repeater.input_coordinates = nil
         @repeater.input_grid_square = nil
 
         @repeater.save!
@@ -109,7 +109,7 @@ RSpec.describe Repeater, type: :model do
         expect(@repeater.region).to eq(nil)
         expect(@repeater.post_code).to eq(nil)
         expect(@repeater.country_id).to eq(nil)
-        expect(@repeater.location).to eq(nil)
+        expect(@repeater.coordinates).to eq(nil)
         expect(@repeater.grid_square).to eq(nil)
       end
 
@@ -131,7 +131,7 @@ RSpec.describe Repeater, type: :model do
         @repeater.input_region = "Connecticut"
         @repeater.input_post_code = "06111"
         @repeater.input_country_id = "us"
-        @repeater.input_location = nil
+        @repeater.input_coordinates = nil
         @repeater.input_grid_square = nil
 
         @repeater.save!
@@ -154,7 +154,7 @@ RSpec.describe Repeater, type: :model do
         @repeater.input_region = "Connecticut"
         @repeater.input_post_code = "06111"
         @repeater.input_country_id = "us"
-        @repeater.input_location = nil
+        @repeater.input_coordinates = nil
         @repeater.input_grid_square = nil
         @repeater.save!
 
@@ -163,7 +163,7 @@ RSpec.describe Repeater, type: :model do
         expect(@repeater.region).to eq("Connecticut")
         expect(@repeater.post_code).to eq("06111")
         expect(@repeater.country_id).to eq("us")
-        expect(@repeater.location).to eq(nil)
+        expect(@repeater.coordinates).to eq(nil)
         expect(@repeater.grid_square).to eq(nil)
         expect(@repeater.geocoded_at).to be > @start
         expect(@repeater.geocoded_by).to eq("NilClass")
@@ -211,7 +211,7 @@ RSpec.describe Repeater, type: :model do
         @repeater.input_region = nil
         @repeater.input_post_code = nil
         @repeater.input_country_id = nil
-        @repeater.input_location = nil
+        @repeater.input_coordinates = nil
         @repeater.input_grid_square = "JK61aa"
 
         @repeater.save!
@@ -234,7 +234,7 @@ RSpec.describe Repeater, type: :model do
         @repeater.input_region = nil
         @repeater.input_post_code = nil
         @repeater.input_country_id = nil
-        @repeater.input_location = nil
+        @repeater.input_coordinates = nil
         @repeater.input_grid_square = nil
         @repeater.address = "225 Main Street"
         @repeater.locality = "Newington"
@@ -252,7 +252,7 @@ RSpec.describe Repeater, type: :model do
         expect(@repeater.region).to eq(nil)
         expect(@repeater.post_code).to eq(nil)
         expect(@repeater.country_id).to eq(nil)
-        expect(@repeater.location).to eq(nil)
+        expect(@repeater.coordinates).to eq(nil)
         expect(@repeater.grid_square).to eq(nil)
       end
     end
@@ -272,6 +272,7 @@ end
 #  bearing                    :string
 #  call_sign                  :string
 #  channel                    :string
+#  coordinates                :geography        point, 4326
 #  dmr                        :boolean
 #  dmr_color_code             :integer
 #  dmr_network                :string
@@ -288,14 +289,13 @@ end
 #  geocoded_by                :string
 #  grid_square                :string
 #  input_address              :string
+#  input_coordinates          :geography        point, 4326
 #  input_grid_square          :string
 #  input_locality             :string
-#  input_location             :geography        point, 4326
 #  input_post_code            :string
 #  input_region               :string
 #  keeper                     :string
 #  locality                   :string
-#  location                   :geography        point, 4326
 #  m17                        :boolean
 #  m17_can                    :integer
 #  m17_reflector_name         :string
@@ -329,12 +329,12 @@ end
 #
 # Indexes
 #
-#  index_repeaters_on_call_sign         (call_sign)
-#  index_repeaters_on_country_id        (country_id)
-#  index_repeaters_on_input_country_id  (input_country_id)
-#  index_repeaters_on_input_location    (input_location)
-#  index_repeaters_on_location          (location) USING gist
-#  index_repeaters_on_slug              (slug) UNIQUE
+#  index_repeaters_on_call_sign          (call_sign)
+#  index_repeaters_on_coordinates        (coordinates) USING gist
+#  index_repeaters_on_country_id         (country_id)
+#  index_repeaters_on_input_coordinates  (input_coordinates)
+#  index_repeaters_on_input_country_id   (input_country_id)
+#  index_repeaters_on_slug               (slug) UNIQUE
 #
 # Foreign Keys
 #

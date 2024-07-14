@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_23_112850) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_14_095010) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -130,7 +130,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_23_112850) do
     t.integer "dmr_color_code"
     t.string "dmr_network"
     t.boolean "nxdn"
-    t.geography "location", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
+    t.geography "coordinates", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.string "input_grid_square"
     t.string "utc_offset"
     t.string "source"
@@ -172,13 +172,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_23_112850) do
     t.integer "m17_can"
     t.string "m17_reflector_name"
     t.string "input_country_id"
-    t.geography "input_location", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
+    t.geography "input_coordinates", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.string "grid_square"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
+    t.index ["coordinates"], name: "index_repeaters_on_coordinates", using: :gist
     t.index ["country_id"], name: "index_repeaters_on_country_id"
+    t.index ["input_coordinates"], name: "index_repeaters_on_input_coordinates"
     t.index ["input_country_id"], name: "index_repeaters_on_input_country_id"
-    t.index ["input_location"], name: "index_repeaters_on_input_location"
-    t.index ["location"], name: "index_repeaters_on_location", using: :gist
     t.index ["slug"], name: "index_repeaters_on_slug", unique: true
   end
 

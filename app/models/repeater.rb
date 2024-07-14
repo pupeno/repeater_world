@@ -126,39 +126,39 @@ class Repeater < ApplicationRecord
   end
 
   def input_latitude
-    input_location&.latitude
+    input_coordinates&.latitude
   end
 
   def input_latitude=(value)
     @input_latitude = value
-    set_input_location_if_not_nil
+    set_input_coordinates_if_not_nil
   end
 
   def input_longitude
-    input_location&.longitude
+    input_coordinates&.longitude
   end
 
   def input_longitude=(value)
     @input_longitude = value
-    set_input_location_if_not_nil
+    set_input_coordinates_if_not_nil
   end
 
   def latitude
-    location&.latitude
+    coordinates&.latitude
   end
 
   def latitude=(value)
     @latitude = value
-    set_location_if_not_nil
+    set_coordinates_if_not_nil
   end
 
   def longitude
-    location&.longitude
+    coordinates&.longitude
   end
 
   def longitude=(value)
     @longitude = value
-    set_location_if_not_nil
+    set_coordinates_if_not_nil
   end
 
   def disable_all_modes
@@ -214,13 +214,13 @@ class Repeater < ApplicationRecord
     self.input_region = nil if input_region.blank?
     self.input_post_code = nil if input_post_code.blank?
     self.input_country_id = nil if input_country_id.blank?
-    self.input_location = nil if input_location.blank?
+    self.input_coordinates = nil if input_coordinates.blank?
     self.input_grid_square = nil if input_grid_square.blank?
 
     # Coordinates are expensive to calculate, since they require a geocoding call, so we need some special logic.
     # If there are input ones, we use them as is. If not, we only blank location if the address change in any way.
-    if input_location.present?
-      self.location = input_location
+    if input_coordinates.present?
+      self.coordinates = input_coordinates
       self.geocoded_at = nil
       self.geocoded_by = nil
     elsif input_address != address ||
@@ -229,7 +229,7 @@ class Repeater < ApplicationRecord
         input_post_code != post_code ||
         input_country_id != country_id ||
         (geocoded_at.present? && geocoded_at <= 1.year.ago)
-      self.location = nil
+      self.coordinates = nil
       self.geocoded_at = nil
       self.geocoded_by = nil
     end
@@ -246,20 +246,20 @@ class Repeater < ApplicationRecord
     # Let's try to fill in some blanks now
 
     # If we have an address but no coordinates, let's geocode.
-    if location.blank? && [address, locality, region, post_code, country_id].any?(&:present?)
+    if coordinates.blank? && [address, locality, region, post_code, country_id].any?(&:present?)
       geocode
     end
 
     # If we have coordinates but no grid square, let's calculate it.
-    if grid_square.blank? && location.present?
+    if grid_square.blank? && coordinates.present?
       self.grid_square = DX::Grid.encode([latitude, longitude], length: 6)
     end
 
     # if we have grid square, but no coordinates, lets calculate them.
     # If we have coordinates but no grid square, let's calculate it.
-    if location.blank? && grid_square.present?
+    if coordinates.blank? && grid_square.present?
       latitude, longitude = DX::Grid.decode(grid_square)
-      self.location = Geo.point(latitude, longitude)
+      self.coordinates = Geo.point(latitude, longitude)
     end
   end
 
@@ -500,21 +500,21 @@ class Repeater < ApplicationRecord
 
   def geocode
     geocode = Geocoder.search(RepeaterUtils.location_in_words(self)).first
-    self.location = if geocode.present?
+    self.coordinates = if geocode.present?
       Geo.point(geocode.latitude, geocode.longitude)
     end
     self.geocoded_at = Time.now
     self.geocoded_by = geocode.class.name
   end
 
-  def set_input_location_if_not_nil
-    self.input_location = if @input_latitude.present? && @input_longitude.present? # Only create a point when both parts are present.
+  def set_input_coordinates_if_not_nil
+    self.input_coordinates = if @input_latitude.present? && @input_longitude.present? # Only create a point when both parts are present.
       Geo.point(@input_latitude, @input_longitude)
     end
   end
 
-  def set_location_if_not_nil
-    self.location = if @latitude.present? && @longitude.present? # Only create a point when both parts are present.
+  def set_coordinates_if_not_nil
+    self.coordinates = if @latitude.present? && @longitude.present? # Only create a point when both parts are present.
       Geo.point(@latitude, @longitude)
     end
   end
@@ -533,6 +533,7 @@ end
 #  bearing                    :string
 #  call_sign                  :string
 #  channel                    :string
+#  coordinates                :geography        point, 4326
 #  dmr                        :boolean
 #  dmr_color_code             :integer
 #  dmr_network                :string
@@ -549,14 +550,13 @@ end
 #  geocoded_by                :string
 #  grid_square                :string
 #  input_address              :string
+#  input_coordinates          :geography        point, 4326
 #  input_grid_square          :string
 #  input_locality             :string
-#  input_location             :geography        point, 4326
 #  input_post_code            :string
 #  input_region               :string
 #  keeper                     :string
 #  locality                   :string
-#  location                   :geography        point, 4326
 #  m17                        :boolean
 #  m17_can                    :integer
 #  m17_reflector_name         :string
@@ -590,12 +590,12 @@ end
 #
 # Indexes
 #
-#  index_repeaters_on_call_sign         (call_sign)
-#  index_repeaters_on_country_id        (country_id)
-#  index_repeaters_on_input_country_id  (input_country_id)
-#  index_repeaters_on_input_location    (input_location)
-#  index_repeaters_on_location          (location) USING gist
-#  index_repeaters_on_slug              (slug) UNIQUE
+#  index_repeaters_on_call_sign          (call_sign)
+#  index_repeaters_on_coordinates        (coordinates) USING gist
+#  index_repeaters_on_country_id         (country_id)
+#  index_repeaters_on_input_coordinates  (input_coordinates)
+#  index_repeaters_on_input_country_id   (input_country_id)
+#  index_repeaters_on_slug               (slug) UNIQUE
 #
 # Foreign Keys
 #

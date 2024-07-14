@@ -24,8 +24,8 @@ class RepeaterGeocoder
         input_locality IS NOT NULL OR
         input_region IS NOT NULL OR
         input_post_code IS NOT NULL) AND
-       (location IS NULL OR
-        ST_DWithin(location, :point, :distance) OR
+       (coordinates IS NULL OR
+        ST_DWithin(coordinates, :point, :distance) OR
         (geocoded_at IS NOT NULL AND geocoded_at < :geocoded_at) OR
         (address != input_address OR
          locality != input_locality OR

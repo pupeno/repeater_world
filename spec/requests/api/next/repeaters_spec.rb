@@ -18,10 +18,10 @@ RSpec.describe "/api/next/repeaters", type: :request do
   context "With some repeaters" do
     before(:all) do
       Repeater.destroy_all
-      create(:repeater, name: "23CM FM", fm: true, band: Repeater::BAND_23CM, latitude: 0, longitude: 0.07, location: "POINT(0 0.07)")
-      create(:repeater, name: "70CM FM", fm: true, band: Repeater::BAND_70CM, latitude: 0, longitude: 0.13, location: "POINT(0 0.13)")
-      create(:repeater, name: "2M FM", fm: true, band: Repeater::BAND_2M, latitude: 0, longitude: 1.4, location: "POINT(0 1.4)")
-      create(:repeater, name: "4M FM", fm: true, band: Repeater::BAND_4M, latitude: 0, longitude: 2, location: "POINT(0 2)")
+      create(:repeater, name: "23CM FM", fm: true, band: Repeater::BAND_23CM, input_coordinates: "POINT(0 0.07)")
+      create(:repeater, name: "70CM FM", fm: true, band: Repeater::BAND_70CM, input_coordinates: "POINT(0 0.13)")
+      create(:repeater, name: "2M FM", fm: true, band: Repeater::BAND_2M, input_coordinates: "POINT(0 1.4)")
+      create(:repeater, name: "4M FM", fm: true, band: Repeater::BAND_4M, input_coordinates: "POINT(0 2)")
       create(:repeater, name: "23CM D-Star", dstar: true, band: Repeater::BAND_23CM)
       create(:repeater, name: "70CM Fusion", fusion: true, band: Repeater::BAND_70CM)
       create(:repeater, name: "2M DMR", dmr: true, band: Repeater::BAND_2M)
