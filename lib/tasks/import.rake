@@ -104,9 +104,3 @@ task :import_artscipub, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
   ArtscipubImporter.new.import
 end
-
-desc "Geocode all non-geocoded repeaters"
-task :geocode_repeaters, [:stdout] => :environment do |_t, _args|
-  Rails.logger = Logger.new($stdout)
-  RepeaterGeocoder.new.geocode
-end
