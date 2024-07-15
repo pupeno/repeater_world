@@ -336,6 +336,17 @@ class Repeater < ApplicationRecord
         field :input_grid_square
       end
 
+      group "Input Location" do
+        field :input_latitude
+        field :input_longitude
+        field :input_address
+        field :input_locality
+        field :input_region
+        field :input_post_code
+        field :input_country
+        field :input_grid_square
+      end
+
       group "Location" do
         field :latitude
         field :longitude
@@ -346,15 +357,6 @@ class Repeater < ApplicationRecord
         field :country
         field :grid_square
         field :utc_offset
-      end
-
-      group "Gocoding" do
-        field :geocoded_at
-        field :geocoded_address
-        field :geocoded_locality
-        field :geocoded_region
-        field :geocoded_post_code
-        field :geocoded_country
       end
 
       group "Source" do
@@ -445,6 +447,17 @@ class Repeater < ApplicationRecord
         field :input_grid_square
       end
 
+      group "Input Location" do
+        field :input_latitude
+        field :input_longitude
+        field :input_address
+        field :input_locality
+        field :input_region
+        field :input_post_code
+        field :input_country
+        field :input_grid_square
+      end
+
       group "Location" do
         field :latitude
         field :longitude
@@ -455,15 +468,6 @@ class Repeater < ApplicationRecord
         field :country
         field :grid_square
         field :utc_offset
-      end
-
-      group "Gocoding" do
-        field :geocoded_at
-        field :geocoded_address
-        field :geocoded_locality
-        field :geocoded_region
-        field :geocoded_post_code
-        field :geocoded_country
       end
 
       group "Source" do
