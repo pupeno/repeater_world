@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_14_095010) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_15_200807) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -162,7 +162,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_14_095010) do
     t.string "locality"
     t.string "region"
     t.string "post_code"
-    t.string "geocoded_country_id"
     t.boolean "echo_link"
     t.integer "echo_link_node_number"
     t.string "wires_x_node_id"

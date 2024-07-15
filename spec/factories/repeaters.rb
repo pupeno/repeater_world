@@ -166,7 +166,6 @@ end
 #  updated_at                 :datetime         not null
 #  country_id                 :string
 #  external_id                :string
-#  geocoded_country_id        :string
 #  input_country_id           :string
 #  wires_x_node_id            :string
 #

@@ -239,7 +239,6 @@ class Repeater < ApplicationRecord
     self.region = input_region
     self.post_code = input_post_code
     self.country_id = input_country_id
-    self.geocoded_country_id = input_country_id # Only temporarily, will be removed later.
     self.grid_square = input_grid_square
 
     # Let's try to fill in some blanks now
@@ -586,7 +585,6 @@ end
 #  updated_at                 :datetime         not null
 #  country_id                 :string
 #  external_id                :string
-#  geocoded_country_id        :string
 #  input_country_id           :string
 #  wires_x_node_id            :string
 #
