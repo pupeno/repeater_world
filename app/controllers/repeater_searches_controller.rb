@@ -35,7 +35,7 @@ class RepeaterSearchesController < ApplicationController
       if @repeater_search.valid?
         @results = @repeater_search.run
         @results = if @selected_tab == RepeaterSearchesController::MAP
-          @results.where("location IS NOT NULL")
+          @results.where("coordinates IS NOT NULL")
         else
           @results.page(params[:p] || 1)
         end
@@ -82,7 +82,7 @@ class RepeaterSearchesController < ApplicationController
     end
     @results = @repeater_search.run
     @results = if @selected_tab == RepeaterSearchesController::MAP
-      @results.where("location IS NOT NULL")
+      @results.where("coordinates IS NOT NULL")
     else
       @results.page(params[:p] || 1)
     end

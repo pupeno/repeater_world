@@ -21,6 +21,18 @@ FactoryBot.define do
     rx_frequency { tx_frequency - 600_000 } # VHF, maybe dispatch on the band for different frequencies?
     country_id { "gb" }
 
+    trait :populate_input_coordinates do
+      after(:build) do |repeater|
+        repeater.input_address ||= repeater.address
+        repeater.input_locality ||= repeater.locality
+        repeater.input_region ||= repeater.region
+        repeater.input_post_code ||= repeater.post_code
+        repeater.input_country_id ||= repeater.country_id
+        repeater.input_coordinates ||= repeater.coordinates
+        repeater.input_grid_square ||= repeater.grid_square
+      end
+    end
+
     trait :explicit_modes do
       after(:build) do |repeater|
         repeater.fm = false unless repeater.fm?
@@ -37,6 +49,8 @@ FactoryBot.define do
     end
 
     trait :full do
+      populate_input_coordinates
+
       call_sign { "FU11" }
       sequence(:name) { |n| "Repeater #{call_sign}".strip }
       keeper { "K3EPR" }
@@ -101,6 +115,7 @@ end
 #  bearing                    :string
 #  call_sign                  :string
 #  channel                    :string
+#  coordinates                :geography        point, 4326
 #  dmr                        :boolean
 #  dmr_color_code             :integer
 #  dmr_network                :string
@@ -113,16 +128,17 @@ end
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
 #  fusion                     :boolean
-#  geocoded_address           :string
 #  geocoded_at                :datetime
 #  geocoded_by                :string
-#  geocoded_locality          :string
-#  geocoded_post_code         :string
-#  geocoded_region            :string
 #  grid_square                :string
+#  input_address              :string
+#  input_coordinates          :geography        point, 4326
+#  input_grid_square          :string
+#  input_locality             :string
+#  input_post_code            :string
+#  input_region               :string
 #  keeper                     :string
 #  locality                   :string
-#  location                   :geography        point, 4326
 #  m17                        :boolean
 #  m17_can                    :integer
 #  m17_reflector_name         :string
@@ -150,17 +166,20 @@ end
 #  updated_at                 :datetime         not null
 #  country_id                 :string
 #  external_id                :string
-#  geocoded_country_id        :string
+#  input_country_id           :string
 #  wires_x_node_id            :string
 #
 # Indexes
 #
-#  index_repeaters_on_call_sign   (call_sign)
-#  index_repeaters_on_country_id  (country_id)
-#  index_repeaters_on_location    (location) USING gist
-#  index_repeaters_on_slug        (slug) UNIQUE
+#  index_repeaters_on_call_sign          (call_sign)
+#  index_repeaters_on_coordinates        (coordinates) USING gist
+#  index_repeaters_on_country_id         (country_id)
+#  index_repeaters_on_input_coordinates  (input_coordinates)
+#  index_repeaters_on_input_country_id   (input_country_id)
+#  index_repeaters_on_slug               (slug) UNIQUE
 #
 # Foreign Keys
 #
 #  fk_rails_...  (country_id => countries.id)
+#  fk_rails_...  (input_country_id => countries.id)
 #

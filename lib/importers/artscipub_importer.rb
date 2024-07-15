@@ -108,7 +108,7 @@ class ArtscipubImporter < Importer
 
     raw_repeater[:external_id] = table.at_xpath("tr[td[normalize-space() = 'Repeater ID #']]/td[2]").text.match(/(\d+)/)[1] # There's other text in the external_id cell that we don't want.
     raw_repeater[:call_sign] = table.at_xpath("tr[td[normalize-space() = 'Call Sign']]/td[2]").text&.strip
-    raw_repeater[:location] = table.at_xpath("tr[td[normalize-space() = 'Location']]/td[2]").text&.strip
+    raw_repeater[:coordinates] = table.at_xpath("tr[td[normalize-space() = 'Location']]/td[2]").text&.strip
     raw_repeater[:frequency] = table.at_xpath("tr[td[normalize-space() = 'Frequency']]/td[2]").text&.strip
     raw_repeater[:input] = table.at_xpath("tr[td[normalize-space() = 'Input']]/td[2]").text&.strip
     raw_repeater[:pl_tone] = table.at_xpath("tr[td[normalize-space() = 'PL Tone']]/td[2]").text&.strip
@@ -180,7 +180,7 @@ class ArtscipubImporter < Importer
     import_mode_and_access_codes(repeater, raw_repeater)
 
     import_address(repeater, raw_repeater)
-    repeater.grid_square = raw_repeater[:grid_square] if raw_repeater[:grid_square].present?
+    repeater.input_grid_square = raw_repeater[:grid_square] if raw_repeater[:grid_square].present?
     if raw_repeater[:latitude].present? && raw_repeater[:longitude].present?
       latitude = raw_repeater[:latitude].to_f
       longitude = raw_repeater[:longitude].to_f
@@ -189,7 +189,7 @@ class ArtscipubImporter < Importer
         repeater.latitude = latitude
         repeater.longitude = longitude
       else
-        repeater.location = nil
+        repeater.coordinates = nil
       end
     end
 
@@ -389,55 +389,55 @@ class ArtscipubImporter < Importer
   end
 
   def import_address(repeater, raw_repeater)
-    location = raw_repeater[:location].split(",").map(&:strip).reject(&:empty?)
+    coordinates = raw_repeater[:coordinates].split(",").map(&:strip).reject(&:empty?)
 
-    if location.last.start_with?(".") # This is how non US locations are formatted.
-      repeater.country_id = figure_out_country(location)
+    if coordinates.last.start_with?(".") # This is how non US locations are formatted.
+      repeater.input_country_id = figure_out_country(coordinates)
 
-      case repeater.country_id
+      case repeater.input_country_id
       when "ca"
-        repeater.region = figure_out_canadian_province(location)
-        repeater.locality = location[0..-2].join(", ")
+        repeater.input_region = figure_out_canadian_province(coordinates)
+        repeater.input_locality = coordinates[0..-2].join(", ")
       when "gb"
-        case location.last
+        case coordinates.last
         when ".England"
-          repeater.locality = location[0..-2].join(", ")
-          repeater.region = "England"
+          repeater.input_locality = coordinates[0..-2].join(", ")
+          repeater.input_region = "England"
         when ".Norfolk-England"
-          repeater.locality = location[0..-2].join(", ")
-          repeater.region = "England"
+          repeater.input_locality = coordinates[0..-2].join(", ")
+          repeater.input_region = "England"
         when ".Scotland" # Not actually imported since we already have them, likely from ukrepeaters.
-          repeater.locality = location[0..-2].join(", ")
-          repeater.region = "Scotland"
+          repeater.input_locality = coordinates[0..-2].join(", ")
+          repeater.input_region = "Scotland"
         else
-          raise "Unknown UK location: #{location.inspect}"
+          raise "Unknown UK location: #{coordinates.inspect}"
         end
       when "in"
-        case location.last
+        case coordinates.last
         when ".india"
-          repeater.region = location[0..-2].join(", ")
+          repeater.input_region = coordinates[0..-2].join(", ")
         when ".Tamilnadu", ".TAMILNADU"
-          repeater.locality = location[0..-2].join(", ")
-          repeater.region = "Tamil Nadu"
+          repeater.input_locality = coordinates[0..-2].join(", ")
+          repeater.input_region = "Tamil Nadu"
         when ".TANIL NADU INDIA"
-          repeater.locality = location[0..-2].join(", ")
-          repeater.region = "Tamil Nadu"
+          repeater.input_locality = coordinates[0..-2].join(", ")
+          repeater.input_region = "Tamil Nadu"
         end
       else
-        if location.length == 2 # Second is the country.
-          repeater.region = location.first
-        elsif location.length == 3 # Third is the country.
-          repeater.locality = location.first
-          repeater.region = location.second
+        if coordinates.length == 2 # Second is the country.
+          repeater.input_region = coordinates.first
+        elsif coordinates.length == 3 # Third is the country.
+          repeater.input_locality = coordinates.first
+          repeater.input_region = coordinates.second
         else
-          raise "Unknown amount of location parts: #{location.inspect}"
+          raise "Unknown amount of location parts: #{coordinates.inspect}"
         end
       end
     else
-      repeater.country_id = "us"
-      repeater.locality = location[0..-2].join(", ")
-      repeater.region = location.last
-      repeater.post_code = raw_repeater[:zip_code] if raw_repeater[:zip_code].present? && raw_repeater[:zip_code] != "00000"
+      repeater.input_country_id = "us"
+      repeater.input_locality = coordinates[0..-2].join(", ")
+      repeater.input_region = coordinates.last
+      repeater.input_post_code = raw_repeater[:zip_code] if raw_repeater[:zip_code].present? && raw_repeater[:zip_code] != "00000"
     end
   end
 

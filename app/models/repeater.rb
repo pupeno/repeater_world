@@ -81,7 +81,8 @@ class Repeater < ApplicationRecord
     FM_NARROW = 12_500
   ]
 
-  belongs_to :country
+  belongs_to :country, optional: true
+  belongs_to :input_country, class_name: "Country", optional: true
   belongs_to :geocoded_country, class_name: "Country", optional: true
   has_many :suggested_repeaters, dependent: :nullify
 
@@ -94,6 +95,7 @@ class Repeater < ApplicationRecord
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
 
   before_validation :ensure_fields_are_set
+  before_validation :compute_location_fields
 
   include PgSearch::Model
   multisearchable(
@@ -105,7 +107,8 @@ class Repeater < ApplicationRecord
     ],
     additional_attributes: ->(repeater) { {repeater_id: repeater.id} }
   )
-  delegate :name, to: :country, prefix: true
+  delegate :name, to: :country, prefix: true, allow_nil: true
+  delegate :name, to: :input_country, prefix: true, allow_nil: true
 
   include FriendlyId
   if Rails.env.test? # Unfortunately, slug generation becomes very slow in tests: https://stackoverflow.com/questions/78505982/is-there-a-way-to-turn-of-friendly-id-or-at-least-the-history-module-during-test
@@ -122,20 +125,40 @@ class Repeater < ApplicationRecord
     super || [locality, call_sign].compact.join(" ")
   end
 
+  def input_latitude
+    input_coordinates&.latitude
+  end
+
+  def input_latitude=(value)
+    @input_latitude = value
+    set_input_coordinates_if_not_nil
+  end
+
+  def input_longitude
+    input_coordinates&.longitude
+  end
+
+  def input_longitude=(value)
+    @input_longitude = value
+    set_input_coordinates_if_not_nil
+  end
+
   def latitude
-    location&.latitude
+    coordinates&.latitude
   end
 
   def latitude=(value)
-    self.location = Geo.point(value, longitude || 0)
+    @latitude = value
+    set_coordinates_if_not_nil
   end
 
   def longitude
-    location&.longitude
+    coordinates&.longitude
   end
 
   def longitude=(value)
-    self.location = Geo.point(latitude || 0, value)
+    @longitude = value
+    set_coordinates_if_not_nil
   end
 
   def disable_all_modes
@@ -181,6 +204,59 @@ class Repeater < ApplicationRecord
       predicates += MODES.map { |m| send(:"#{m}_changed?") }
       predicates += [address_changed?, locality_changed?, region_changed?, post_code_changed?, country_id_changed?]
       predicates.any?
+    end
+  end
+
+  def compute_location_fields
+    # If blank, set to null, which is a better blank value.
+    self.input_address = nil if input_address.blank?
+    self.input_locality = nil if input_locality.blank?
+    self.input_region = nil if input_region.blank?
+    self.input_post_code = nil if input_post_code.blank?
+    self.input_country_id = nil if input_country_id.blank?
+    self.input_coordinates = nil if input_coordinates.blank?
+    self.input_grid_square = nil if input_grid_square.blank?
+
+    # Coordinates are expensive to calculate, since they require a geocoding call, so we need some special logic.
+    # If there are input ones, we use them as is. If not, we only blank location if the address change in any way.
+    if input_coordinates.present?
+      self.coordinates = input_coordinates
+      self.geocoded_at = nil
+      self.geocoded_by = nil
+    elsif input_address != address ||
+        input_locality != locality ||
+        input_region != region ||
+        input_post_code != post_code ||
+        input_country_id != country_id
+      self.coordinates = nil
+      self.geocoded_at = nil
+      self.geocoded_by = nil
+    end
+
+    # First, all other input values are used as-is.
+    self.address = input_address
+    self.locality = input_locality
+    self.region = input_region
+    self.post_code = input_post_code
+    self.country_id = input_country_id
+    self.grid_square = input_grid_square
+
+    # Let's try to fill in some blanks now
+
+    # If we have an address but no coordinates, let's geocode.
+    # TODO: move this to a background process, but since we don't have one, doing it here is the next best thing.
+    if coordinates.blank? && [address, locality, region, post_code, country_id].any?(&:present?)
+      geocode
+    end
+
+    # If we have coordinates but no grid square, let's calculate it.
+    if grid_square.blank? && coordinates.present?
+      self.grid_square = DX::Grid.encode([latitude, longitude], length: 6)
+    end
+
+    # if we have grid square, but no coordinates, lets calculate them.
+    if coordinates.blank? && grid_square.present?
+      self.latitude, self.longitude = DX::Grid.decode(grid_square)
     end
   end
 
@@ -248,6 +324,28 @@ class Repeater < ApplicationRecord
         field :echo_link_node_number
       end
 
+      group "Input Location" do
+        field :input_address
+        field :input_locality
+        field :input_region
+        field :input_post_code
+        field :input_country
+        field :input_latitude
+        field :input_longitude
+        field :input_grid_square
+      end
+
+      group "Input Location" do
+        field :input_latitude
+        field :input_longitude
+        field :input_address
+        field :input_locality
+        field :input_region
+        field :input_post_code
+        field :input_country
+        field :input_grid_square
+      end
+
       group "Location" do
         field :latitude
         field :longitude
@@ -258,15 +356,6 @@ class Repeater < ApplicationRecord
         field :country
         field :grid_square
         field :utc_offset
-      end
-
-      group "Gocoding" do
-        field :geocoded_at
-        field :geocoded_address
-        field :geocoded_locality
-        field :geocoded_region
-        field :geocoded_post_code
-        field :geocoded_country
       end
 
       group "Source" do
@@ -346,6 +435,28 @@ class Repeater < ApplicationRecord
         field :echo_link_node_number
       end
 
+      group "Input Location" do
+        field :input_address
+        field :input_locality
+        field :input_region
+        field :input_post_code
+        field :input_country
+        field :input_latitude
+        field :input_longitude
+        field :input_grid_square
+      end
+
+      group "Input Location" do
+        field :input_latitude
+        field :input_longitude
+        field :input_address
+        field :input_locality
+        field :input_region
+        field :input_post_code
+        field :input_country
+        field :input_grid_square
+      end
+
       group "Location" do
         field :latitude
         field :longitude
@@ -356,15 +467,6 @@ class Repeater < ApplicationRecord
         field :country
         field :grid_square
         field :utc_offset
-      end
-
-      group "Gocoding" do
-        field :geocoded_at
-        field :geocoded_address
-        field :geocoded_locality
-        field :geocoded_region
-        field :geocoded_post_code
-        field :geocoded_country
       end
 
       group "Source" do
@@ -394,6 +496,29 @@ class Repeater < ApplicationRecord
       end
     end
   end
+
+  private
+
+  def geocode
+    geocode = Geocoder.search(RepeaterUtils.location_in_words(self)).first
+    self.coordinates = if geocode.present?
+      Geo.point(geocode.latitude, geocode.longitude)
+    end
+    self.geocoded_at = Time.now
+    self.geocoded_by = geocode.class.name
+  end
+
+  def set_input_coordinates_if_not_nil
+    self.input_coordinates = if @input_latitude.present? && @input_longitude.present? # Only create a point when both parts are present.
+      Geo.point(@input_latitude, @input_longitude)
+    end
+  end
+
+  def set_coordinates_if_not_nil
+    self.coordinates = if @latitude.present? && @longitude.present? # Only create a point when both parts are present.
+      Geo.point(@latitude, @longitude)
+    end
+  end
 end
 
 # == Schema Information
@@ -409,6 +534,7 @@ end
 #  bearing                    :string
 #  call_sign                  :string
 #  channel                    :string
+#  coordinates                :geography        point, 4326
 #  dmr                        :boolean
 #  dmr_color_code             :integer
 #  dmr_network                :string
@@ -421,16 +547,17 @@ end
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
 #  fusion                     :boolean
-#  geocoded_address           :string
 #  geocoded_at                :datetime
 #  geocoded_by                :string
-#  geocoded_locality          :string
-#  geocoded_post_code         :string
-#  geocoded_region            :string
 #  grid_square                :string
+#  input_address              :string
+#  input_coordinates          :geography        point, 4326
+#  input_grid_square          :string
+#  input_locality             :string
+#  input_post_code            :string
+#  input_region               :string
 #  keeper                     :string
 #  locality                   :string
-#  location                   :geography        point, 4326
 #  m17                        :boolean
 #  m17_can                    :integer
 #  m17_reflector_name         :string
@@ -458,17 +585,20 @@ end
 #  updated_at                 :datetime         not null
 #  country_id                 :string
 #  external_id                :string
-#  geocoded_country_id        :string
+#  input_country_id           :string
 #  wires_x_node_id            :string
 #
 # Indexes
 #
-#  index_repeaters_on_call_sign   (call_sign)
-#  index_repeaters_on_country_id  (country_id)
-#  index_repeaters_on_location    (location) USING gist
-#  index_repeaters_on_slug        (slug) UNIQUE
+#  index_repeaters_on_call_sign          (call_sign)
+#  index_repeaters_on_coordinates        (coordinates) USING gist
+#  index_repeaters_on_country_id         (country_id)
+#  index_repeaters_on_input_coordinates  (input_coordinates)
+#  index_repeaters_on_input_country_id   (input_country_id)
+#  index_repeaters_on_slug               (slug) UNIQUE
 #
 # Foreign Keys
 #
 #  fk_rails_...  (country_id => countries.id)
+#  fk_rails_...  (input_country_id => countries.id)
 #

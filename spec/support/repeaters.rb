@@ -15,9 +15,21 @@
 RSpec.shared_context "repeaters" do
   before(:context) do
     Repeater.destroy_all
+    Geocoder::Lookup::Test.set_default_stub(
+      [
+        {
+          "coordinates" => [40.7143528, -74.0059731],
+          "address" => "225 Main Street, Newington, Connecticut, 06111, US",
+          "state" => "Connecticut",
+          "state_code" => "CT",
+          "country" => "United States",
+          "country_code" => "US"
+        }
+      ]
+    )
 
     # FM repeater with CTCSS
-    create(:repeater, :explicit_modes,
+    create(:repeater, :explicit_modes, :populate_input_coordinates,
       name: "Newcastle Emlyn", call_sign: "GB3CN", band: "2m", channel: "RV55", keeper: "GW6JSO", operational: true,
       tx_frequency: 145_687_500,
       rx_frequency: 145_087_500,
@@ -27,7 +39,7 @@ RSpec.shared_context "repeaters" do
       utc_offset: "0:00", source: "ukrepeater.net", redistribution_limitations: "https://repeater.world/ukrepeater-net")
 
     # FM repeater without CTCSS, and Fusion
-    create(:repeater, :explicit_modes,
+    create(:repeater, :explicit_modes, :populate_input_coordinates,
       name: "Weymouth", call_sign: "GB3DR", band: "2m", channel: "RV59", keeper: "G3VPF", operational: nil,
       tx_frequency: 145_737_500,
       rx_frequency: 145_137_500,
@@ -37,7 +49,7 @@ RSpec.shared_context "repeaters" do
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # FM and D-Star repeater.
-    create(:repeater, :explicit_modes,
+    create(:repeater, :explicit_modes, :populate_input_coordinates,
       name: "Herne Bay", call_sign: "GB7IC-C", band: "2m", channel: "RV53", keeper: "G4TKR", operational: true,
       tx_frequency: 145_662_500,
       rx_frequency: 145_062_500,
@@ -47,7 +59,7 @@ RSpec.shared_context "repeaters" do
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # D-Star repeater only.
-    create(:repeater, :explicit_modes,
+    create(:repeater, :explicit_modes, :populate_input_coordinates,
       name: "Marlborough", call_sign: "GB7AE", band: "70cm", channel: "DVU34", keeper: "M1CJE", operational: true,
       tx_frequency: 439_425_000,
       rx_frequency: 430_425_000,
@@ -57,7 +69,7 @@ RSpec.shared_context "repeaters" do
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # FM, D-Star, Fusion, DMR and NXDN repeater.
-    create(:repeater, :explicit_modes,
+    create(:repeater, :explicit_modes, :populate_input_coordinates,
       name: "Derby", call_sign: "GB7DC", band: "70cm", channel: "RU70", keeper: "G7NPW", operational: nil,
       tx_frequency: 430_875_000,
       rx_frequency: 438_475_000,
@@ -71,7 +83,7 @@ RSpec.shared_context "repeaters" do
       utc_offset: nil, source: "ukrepeater.net", notes: "Reduced output.")
 
     # Fusion only repeater.
-    create(:repeater, :explicit_modes,
+    create(:repeater, :explicit_modes, :populate_input_coordinates,
       name: "Perth", call_sign: "GB3SF", band: "2m", channel: "RV50", keeper: "GM3NFO", operational: true,
       tx_frequency: 145_625_000,
       rx_frequency: 145_025_000,
@@ -81,7 +93,7 @@ RSpec.shared_context "repeaters" do
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # DMR repeater.
-    create(:repeater, :explicit_modes,
+    create(:repeater, :explicit_modes, :populate_input_coordinates,
       name: "Cleobury North", call_sign: "GB3BX", band: "2m", channel: "RV54", keeper: "G4VZO", operational: true,
       tx_frequency: 145_675_000,
       rx_frequency: 145_075_000,
@@ -91,7 +103,7 @@ RSpec.shared_context "repeaters" do
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # Non-2m-70cm repeater.
-    create(:repeater, :explicit_modes,
+    create(:repeater, :explicit_modes, :populate_input_coordinates,
       name: "Amersham", call_sign: "GB3AM", band: "6m", channel: "R50-13", keeper: "M0ZPU", operational: true,
       tx_frequency: 50840000,
       rx_frequency: 51340000,
@@ -101,7 +113,7 @@ RSpec.shared_context "repeaters" do
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # Non operational repeater on fm, dstar, fusion and dmr.
-    create(:repeater, :explicit_modes,
+    create(:repeater, :explicit_modes, :populate_input_coordinates,
       name: "Hawick", call_sign: "GB3AI", band: "2m", channel: "RV59", keeper: "GM8SJP", operational: false,
       tx_frequency: 145_737_500,
       rx_frequency: 145_137_500,
@@ -114,13 +126,13 @@ RSpec.shared_context "repeaters" do
       utc_offset: "0:00", source: "ukrepeater.net")
 
     # Japanese D-Star repeaters.
-    create(:repeater, :explicit_modes,
+    create(:repeater, :explicit_modes, :populate_input_coordinates,
       name: "Made up", call_sign: "JP0AA", band: "70cm", keeper: "JP0ZZ", operational: true,
       tx_frequency: 439_420_000,
       rx_frequency: 430_420_000,
       dstar: true,
       country_id: "jp")
-    create(:repeater, :explicit_modes,
+    create(:repeater, :explicit_modes, :populate_input_coordinates,
       name: "Made up", call_sign: "JP0AA", band: "23cm", keeper: "JP0ZZ", operational: true,
       tx_frequency: 129_790_0000,
       rx_frequency: 129_790_0000,
@@ -133,6 +145,8 @@ RSpec.shared_context "repeaters" do
 
     # Full repeater
     create(:repeater, :full)
+
+    Geocoder::Lookup::Test.reset
   end
 
   after(:context) do

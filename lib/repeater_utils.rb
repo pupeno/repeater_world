@@ -45,6 +45,6 @@ module RepeaterUtils
   end
 
   def self.location_in_words(repeater)
-    [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.try(:country_name) || repeater.country.name].reject(&:blank?).join(", ")
+    [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.country_name].reject(&:blank?).join(", ")
   end
 end

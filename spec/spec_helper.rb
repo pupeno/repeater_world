@@ -122,4 +122,20 @@ RSpec.configure do |config|
   config.before(:all) do
     Country.create_all
   end
+
+  config.before(:each) do
+    Geocoder::Lookup::Test.reset
+    Geocoder::Lookup::Test.set_default_stub(
+      [
+        {
+          "coordinates" => [40.7143528, -74.0059731],
+          "address" => "225 Main Street, Newington, Connecticut, 06111, US",
+          "state" => "Connecticut",
+          "state_code" => "CT",
+          "country" => "United States",
+          "country_code" => "US"
+        }
+      ]
+    )
+  end
 end

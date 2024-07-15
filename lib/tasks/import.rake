@@ -54,13 +54,6 @@ task :import_all, [:stdout] => :environment do |_t, _args|
     Rails.logger.error(e.message)
     Sentry.capture_exception(e)
   end
-
-  begin
-    RepeaterGeocoder.new.geocode
-  rescue => e
-    Rails.logger.error(e.message)
-    Sentry.capture_exception(e)
-  end
 end
 
 desc "Import repeaters from ukrepeaters.net, https://ukrepeater.net/csvfiles.html"

@@ -15,29 +15,6 @@
 require "rails_helper"
 
 RSpec.describe Repeater, type: :model do
-  it "has latitude and longitude" do
-    @repeater = build(:repeater)
-    @repeater.location = nil
-    expect(@repeater.latitude).to be(nil)
-    expect(@repeater.longitude).to be(nil)
-    @repeater.save!
-    @repeater.reload
-    expect(@repeater.latitude).to be(nil)
-    expect(@repeater.longitude).to be(nil)
-
-    @repeater.latitude = 1
-    expect(@repeater.latitude).to eq(1)
-    expect(@repeater.longitude).to eq(0)
-
-    @repeater.longitude = 2
-    expect(@repeater.latitude).to eq(1)
-    expect(@repeater.longitude).to eq(2)
-    @repeater.save
-    @repeater.reload
-    expect(@repeater.latitude).to eq(1)
-    expect(@repeater.longitude).to eq(2)
-  end
-
   context "A repeater" do
     before { @repeater = create(:repeater) }
 
@@ -52,7 +29,7 @@ RSpec.describe Repeater, type: :model do
       @repeater.web_site = "example.com"
       expect(@repeater.web_site).to eq("http://example.com")
       @repeater.web_site = nil
-      expect(@repeater.web_site).to be(nil)
+      expect(@repeater.web_site).to eq(nil)
       @repeater.web_site = ""
       expect(@repeater.web_site).to eq("")
       @repeater.web_site = "  "
@@ -63,7 +40,7 @@ RSpec.describe Repeater, type: :model do
 
     it "updates slug" do
       expect(@repeater.should_generate_new_friendly_id?).to eq(false)
-      expect(@repeater.slug).to eq("bl4nk-repeater-bl4nk-2m-united-kingdom")
+      expect(@repeater.slug).to eq("bl4nk-repeater-bl4nk-2m")
 
       @repeater.slug = ""
       expect(@repeater.should_generate_new_friendly_id?).to eq(true)
@@ -73,6 +50,211 @@ RSpec.describe Repeater, type: :model do
 
       @repeater.slug = nil
       expect(@repeater.should_generate_new_friendly_id?).to eq(true)
+    end
+
+    it "has input coordinates" do
+      @repeater.input_coordinates = nil
+      expect(@repeater.input_coordinates).to eq(nil)
+      expect(@repeater.input_latitude).to eq(nil)
+      expect(@repeater.input_longitude).to eq(nil)
+      @repeater.input_latitude = 10
+      expect(@repeater.input_coordinates).to eq(nil)
+      expect(@repeater.input_latitude).to eq(nil)
+      expect(@repeater.input_longitude).to eq(nil)
+      @repeater.input_longitude = 20
+      expect(@repeater.input_coordinates).to eq(Geo.point(10, 20))
+      expect(@repeater.input_latitude).to eq(10)
+      expect(@repeater.input_longitude).to eq(20)
+      @repeater.save!
+      @repeater.reload
+      expect(@repeater.input_coordinates).to eq(Geo.point(10, 20))
+      expect(@repeater.input_latitude).to eq(10)
+      expect(@repeater.input_longitude).to eq(20)
+    end
+
+    it "has coordinates" do
+      @repeater.coordinates = nil
+      expect(@repeater.coordinates).to eq(nil)
+      expect(@repeater.latitude).to eq(nil)
+      expect(@repeater.longitude).to eq(nil)
+      @repeater.latitude = 10
+      expect(@repeater.coordinates).to eq(nil)
+      expect(@repeater.latitude).to eq(nil)
+      expect(@repeater.longitude).to eq(nil)
+      @repeater.longitude = 20
+      expect(@repeater.coordinates).to eq(Geo.point(10, 20))
+      expect(@repeater.latitude).to eq(10)
+      expect(@repeater.longitude).to eq(20)
+    end
+
+    context "while geocoding" do
+      before(:each) do
+        Geocoder::Lookup::Test.reset
+        @start = Time.now
+      end
+
+      it "should compute blank locations" do
+        @repeater.input_address = nil
+        @repeater.input_locality = nil
+        @repeater.input_region = nil
+        @repeater.input_post_code = nil
+        @repeater.input_country_id = nil
+        @repeater.input_coordinates = nil
+        @repeater.input_grid_square = nil
+
+        @repeater.save!
+
+        expect(@repeater.address).to eq(nil)
+        expect(@repeater.locality).to eq(nil)
+        expect(@repeater.region).to eq(nil)
+        expect(@repeater.post_code).to eq(nil)
+        expect(@repeater.country_id).to eq(nil)
+        expect(@repeater.coordinates).to eq(nil)
+        expect(@repeater.grid_square).to eq(nil)
+      end
+
+      it "should compute from address" do
+        Geocoder::Lookup::Test.add_stub("225 Main Street, Newington, Connecticut, 06111, United States",
+          [
+            {
+              "coordinates" => [40.7143528, -74.0059731],
+              "address" => "225 Main Street, Newington, Connecticut, 06111, United States",
+              "state" => "Connecticut",
+              "state_code" => "CT",
+              "country" => "United States",
+              "country_code" => "US"
+            }
+          ])
+
+        @repeater.input_address = "225 Main Street"
+        @repeater.input_locality = "Newington"
+        @repeater.input_region = "Connecticut"
+        @repeater.input_post_code = "06111"
+        @repeater.input_country_id = "us"
+        @repeater.input_coordinates = nil
+        @repeater.input_grid_square = nil
+
+        @repeater.save!
+
+        expect(@repeater.address).to eq("225 Main Street")
+        expect(@repeater.locality).to eq("Newington")
+        expect(@repeater.region).to eq("Connecticut")
+        expect(@repeater.post_code).to eq("06111")
+        expect(@repeater.country_id).to eq("us")
+        expect(@repeater.latitude).to eq(40.7143528)
+        expect(@repeater.longitude).to eq(-74.0059731)
+        expect(@repeater.grid_square).to eq("FN20xr")
+      end
+
+      it "should attempt to compute from address even when failing" do
+        Geocoder::Lookup::Test.add_stub("225 Main Street, Newington, Connecticut, 06111, United States", [])
+
+        @repeater.input_address = "225 Main Street"
+        @repeater.input_locality = "Newington"
+        @repeater.input_region = "Connecticut"
+        @repeater.input_post_code = "06111"
+        @repeater.input_country_id = "us"
+        @repeater.input_coordinates = nil
+        @repeater.input_grid_square = nil
+        @repeater.save!
+
+        expect(@repeater.address).to eq("225 Main Street")
+        expect(@repeater.locality).to eq("Newington")
+        expect(@repeater.region).to eq("Connecticut")
+        expect(@repeater.post_code).to eq("06111")
+        expect(@repeater.country_id).to eq("us")
+        expect(@repeater.coordinates).to eq(nil)
+        expect(@repeater.grid_square).to eq(nil)
+        expect(@repeater.geocoded_at).to be > @start
+        expect(@repeater.geocoded_by).to eq("NilClass")
+      end
+
+      it "should compute from fixed coordinates" do
+        Geocoder::Lookup::Test.add_stub("225 Main Street, Newington, Connecticut, 06111, US",
+          [
+            {
+              "coordinates" => [40.7143528, -74.0059731],
+              "address" => "225 Main Street, Newington, Connecticut, 06111, US",
+              "state" => "Connecticut",
+              "state_code" => "CT",
+              "country" => "United States",
+              "country_code" => "US"
+            }
+          ])
+
+        @repeater.input_address = "225 Main Street"
+        @repeater.input_locality = "Newington"
+        @repeater.input_region = "Connecticut"
+        @repeater.input_post_code = "06111"
+        @repeater.input_country_id = "us"
+        @repeater.input_latitude = 11 # Made up coordinates
+        @repeater.input_longitude = 12
+        @repeater.input_grid_square = nil
+
+        @repeater.save!
+
+        expect(@repeater.address).to eq("225 Main Street")
+        expect(@repeater.locality).to eq("Newington")
+        expect(@repeater.region).to eq("Connecticut")
+        expect(@repeater.post_code).to eq("06111")
+        expect(@repeater.country_id).to eq("us")
+        expect(@repeater.latitude).to eq(11)
+        expect(@repeater.longitude).to eq(12)
+        expect(@repeater.grid_square).to eq("JK61aa")
+        expect(@repeater.geocoded_at).to eq(nil)
+        expect(@repeater.geocoded_by).to eq(nil)
+      end
+
+      it "should compute from grid square" do
+        @repeater.input_address = nil
+        @repeater.input_locality = nil
+        @repeater.input_region = nil
+        @repeater.input_post_code = nil
+        @repeater.input_country_id = nil
+        @repeater.input_coordinates = nil
+        @repeater.input_grid_square = "JK61aa"
+
+        @repeater.save!
+
+        expect(@repeater.address).to eq(nil)
+        expect(@repeater.locality).to eq(nil)
+        expect(@repeater.region).to eq(nil)
+        expect(@repeater.post_code).to eq(nil)
+        expect(@repeater.country_id).to eq(nil)
+        expect(@repeater.latitude).to eq(11.020833333333334)
+        expect(@repeater.longitude).to eq(12.041666666666666)
+        expect(@repeater.grid_square).to eq("JK61aa")
+        expect(@repeater.geocoded_at).to eq(nil)
+        expect(@repeater.geocoded_by).to eq(nil)
+      end
+
+      it "should override location with inputs" do
+        @repeater.input_address = nil
+        @repeater.input_locality = nil
+        @repeater.input_region = nil
+        @repeater.input_post_code = nil
+        @repeater.input_country_id = nil
+        @repeater.input_coordinates = nil
+        @repeater.input_grid_square = nil
+        @repeater.address = "225 Main Street"
+        @repeater.locality = "Newington"
+        @repeater.region = "Connecticut"
+        @repeater.post_code = "06111"
+        @repeater.country_id = "us"
+        @repeater.latitude = 11
+        @repeater.longitude = 12
+        @repeater.grid_square = "JK61aa"
+
+        @repeater.save!
+
+        expect(@repeater.address).to eq(nil)
+        expect(@repeater.locality).to eq(nil)
+        expect(@repeater.region).to eq(nil)
+        expect(@repeater.post_code).to eq(nil)
+        expect(@repeater.country_id).to eq(nil)
+        expect(@repeater.coordinates).to eq(nil)
+        expect(@repeater.grid_square).to eq(nil)
+      end
     end
   end
 end
@@ -90,6 +272,7 @@ end
 #  bearing                    :string
 #  call_sign                  :string
 #  channel                    :string
+#  coordinates                :geography        point, 4326
 #  dmr                        :boolean
 #  dmr_color_code             :integer
 #  dmr_network                :string
@@ -102,16 +285,17 @@ end
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
 #  fusion                     :boolean
-#  geocoded_address           :string
 #  geocoded_at                :datetime
 #  geocoded_by                :string
-#  geocoded_locality          :string
-#  geocoded_post_code         :string
-#  geocoded_region            :string
 #  grid_square                :string
+#  input_address              :string
+#  input_coordinates          :geography        point, 4326
+#  input_grid_square          :string
+#  input_locality             :string
+#  input_post_code            :string
+#  input_region               :string
 #  keeper                     :string
 #  locality                   :string
-#  location                   :geography        point, 4326
 #  m17                        :boolean
 #  m17_can                    :integer
 #  m17_reflector_name         :string
@@ -139,17 +323,20 @@ end
 #  updated_at                 :datetime         not null
 #  country_id                 :string
 #  external_id                :string
-#  geocoded_country_id        :string
+#  input_country_id           :string
 #  wires_x_node_id            :string
 #
 # Indexes
 #
-#  index_repeaters_on_call_sign   (call_sign)
-#  index_repeaters_on_country_id  (country_id)
-#  index_repeaters_on_location    (location) USING gist
-#  index_repeaters_on_slug        (slug) UNIQUE
+#  index_repeaters_on_call_sign          (call_sign)
+#  index_repeaters_on_coordinates        (coordinates) USING gist
+#  index_repeaters_on_country_id         (country_id)
+#  index_repeaters_on_input_coordinates  (input_coordinates)
+#  index_repeaters_on_input_country_id   (input_country_id)
+#  index_repeaters_on_slug               (slug) UNIQUE
 #
 # Foreign Keys
 #
 #  fk_rails_...  (country_id => countries.id)
+#  fk_rails_...  (input_country_id => countries.id)
 #
