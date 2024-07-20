@@ -117,6 +117,8 @@ class Repeater < ApplicationRecord
     friendly_id :generate_friendly_id, use: [:slugged, :history]
   end
 
+  has_paper_trail
+
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
   end
