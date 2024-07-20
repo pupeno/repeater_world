@@ -13,6 +13,8 @@
 # <https://www.gnu.org/licenses/>.
 
 class ApplicationController < ActionController::Base
+  before_action :set_paper_trail_whodunnit
+
   unless Rails.application.config.consider_all_requests_local
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
   end
