@@ -22,4 +22,8 @@ class ApplicationController < ActionController::Base
   def not_found
     render "static/not_found", status: :not_found
   end
+
+  def user_for_paper_trail
+    current_user
+  end
 end
