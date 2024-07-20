@@ -61,7 +61,7 @@ RailsAdmin.config do |config|
   # config.authorize_with :pundit
 
   ## == PaperTrail ==
-  # config.audit_with :paper_trail, 'User', 'PaperTrail::Version' # PaperTrail >= 3.0.0
+  config.audit_with :paper_trail, "User", "PaperTrail::Version"
 
   ### More at https://github.com/railsadminteam/rails_admin/wiki/Base-configuration
 
@@ -85,7 +85,15 @@ RailsAdmin.config do |config|
     # history_show
 
     mark_as_done do
-      only "SuggestedRepeater"
+      only ["SuggestedRepeater"]
+    end
+
+    auditable_models = ["Repeater"]
+    history_index do
+      only auditable_models
+    end
+    history_show do
+      only auditable_models
     end
   end
 
