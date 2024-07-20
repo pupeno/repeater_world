@@ -20,7 +20,6 @@ module RepeaterWorld
         RailsAdmin::Config::Actions.register(self)
 
         register_instance_option(:member) { true }
-        register_instance_option(:visible?) { true }
         register_instance_option(:pjax?) { true }
         register_instance_option(:bulkable?) { true }
         register_instance_option(:link_icon) { "fa-solid fa-check" }
@@ -85,7 +84,9 @@ RailsAdmin.config do |config|
     # history_index
     # history_show
 
-    mark_as_done
+    mark_as_done do
+      only "SuggestedRepeater"
+    end
   end
 
   config.label_methods << :to_s
