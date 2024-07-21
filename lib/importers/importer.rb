@@ -20,6 +20,7 @@ class Importer
   def initialize(working_directory: nil, logger: nil)
     @working_directory = working_directory || Rails.root.join("tmp", (self.class.name || SecureRandom.alphanumeric).downcase).to_s # Stable working directory to avoid re-downloading when developing.
     @logger = logger || Rails.logger
+    PaperTrail.request.whodunnit = "Repeater World Importer"
   end
 
   def import

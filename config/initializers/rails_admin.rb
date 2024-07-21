@@ -20,7 +20,6 @@ module RepeaterWorld
         RailsAdmin::Config::Actions.register(self)
 
         register_instance_option(:member) { true }
-        register_instance_option(:visible?) { true }
         register_instance_option(:pjax?) { true }
         register_instance_option(:bulkable?) { true }
         register_instance_option(:link_icon) { "fa-solid fa-check" }
@@ -37,6 +36,17 @@ module RepeaterWorld
             redirect_to_on_success
           }
         }
+      end
+    end
+
+    module ControllerExtension
+      def user_for_paper_trail
+        # This line, as provided by rails_admin, looks like this:
+        #    _current_user.try(:id) || _current_user
+        # but we don't want to save the id of a user, we want to save the global id, so we need to just pass the active
+        # record object to paper trail and let the global id deal with it.
+        # https://github.com/railsadminteam/rails_admin/blob/afee74e4fb7cb0b2ec0168475ae6ee606cdf02c5/lib/rails_admin/extensions/paper_trail/auditing_adapter.rb#L42
+        current_admin
       end
     end
   end
@@ -62,7 +72,8 @@ RailsAdmin.config do |config|
   # config.authorize_with :pundit
 
   ## == PaperTrail ==
-  # config.audit_with :paper_trail, 'User', 'PaperTrail::Version' # PaperTrail >= 3.0.0
+  config.audit_with :paper_trail, "Admin", "PaperTrail::Version"
+  RailsAdmin::Extensions::ControllerExtension.include RepeaterWorld::Admin::ControllerExtension
 
   ### More at https://github.com/railsadminteam/rails_admin/wiki/Base-configuration
 
@@ -85,7 +96,17 @@ RailsAdmin.config do |config|
     # history_index
     # history_show
 
-    mark_as_done
+    mark_as_done do
+      only ["SuggestedRepeater"]
+    end
+
+    auditable_models = ["Repeater"]
+    history_index do
+      only auditable_models
+    end
+    history_show do
+      only auditable_models
+    end
   end
 
   config.label_methods << :to_s
