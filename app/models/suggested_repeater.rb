@@ -93,13 +93,13 @@ class SuggestedRepeater < ApplicationRecord
       end
 
       group "Location" do
-        field :latitude
-        field :longitude
         field :address
         field :locality
         field :region
         field :post_code
         field :country
+        field :latitude
+        field :longitude
         field :grid_square
       end
 
@@ -187,13 +187,13 @@ class SuggestedRepeater < ApplicationRecord
       end
 
       group "Location" do
-        field :latitude
-        field :longitude
         field :address
         field :locality
         field :region
         field :post_code
         field :country
+        field :latitude
+        field :longitude
         field :grid_square
       end
 
