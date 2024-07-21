@@ -337,25 +337,14 @@ class Repeater < ApplicationRecord
         field :input_grid_square
       end
 
-      group "Input Location" do
-        field :input_latitude
-        field :input_longitude
-        field :input_address
-        field :input_locality
-        field :input_region
-        field :input_post_code
-        field :input_country
-        field :input_grid_square
-      end
-
       group "Location" do
-        field :latitude
-        field :longitude
         field :address
         field :locality
         field :region
         field :post_code
         field :country
+        field :latitude
+        field :longitude
         field :grid_square
         field :utc_offset
       end
@@ -448,25 +437,14 @@ class Repeater < ApplicationRecord
         field :input_grid_square
       end
 
-      group "Input Location" do
-        field :input_latitude
-        field :input_longitude
-        field :input_address
-        field :input_locality
-        field :input_region
-        field :input_post_code
-        field :input_country
-        field :input_grid_square
-      end
-
       group "Location" do
-        field :latitude
-        field :longitude
         field :address
         field :locality
         field :region
         field :post_code
         field :country
+        field :latitude
+        field :longitude
         field :grid_square
         field :utc_offset
       end
