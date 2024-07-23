@@ -258,7 +258,11 @@ class Repeater < ApplicationRecord
 
     # if we have grid square, but no coordinates, lets calculate them.
     if coordinates.blank? && grid_square.present?
-      self.latitude, self.longitude = DX::Grid.decode(grid_square)
+      begin
+        self.latitude, self.longitude = DX::Grid.decode(grid_square)
+      rescue ArgumentError => e
+        raise unless e.message.include? "Invalid grid"
+      end
     end
   end
 
@@ -480,12 +484,14 @@ class Repeater < ApplicationRecord
   private
 
   def geocode
-    geocode = Geocoder.search(RepeaterUtils.location_in_words(self)).first
-    self.coordinates = if geocode.present?
-      Geo.point(geocode.latitude, geocode.longitude)
+    if ENV["GOOGLE_GEOCODING_DISABLED"] != "true"
+      geocode = Geocoder.search(RepeaterUtils.location_in_words(self)).first
+      self.coordinates = if geocode.present?
+        Geo.point(geocode.latitude, geocode.longitude)
+      end
+      self.geocoded_at = Time.now
+      self.geocoded_by = geocode.class.name
     end
-    self.geocoded_at = Time.now
-    self.geocoded_by = geocode.class.name
   end
 
   def set_input_coordinates_if_not_nil
