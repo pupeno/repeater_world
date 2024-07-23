@@ -197,7 +197,7 @@ class Importer
       parsed_url = URI.parse(url)
       begin
         attempts ||= 1
-        src_stream = parsed_url.open({ "User-Agent" => USER_AGENT })
+        src_stream = parsed_url.open({"User-Agent" => USER_AGENT})
       rescue Net::OpenTimeout, OpenURI::HTTPError => e
         if attempts <= 10
           @logger.warn "Failed to download #{url} to #{dest} on attempt #{attempts}: #{e.message}. Retrying in 5 seconds."

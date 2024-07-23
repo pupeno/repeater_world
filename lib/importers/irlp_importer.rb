@@ -48,10 +48,10 @@ class IrlpImporter < Importer
       repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all.count
     end
 
-    { created_or_updated_ids: created_or_updated_ids,
-      ignored_due_to_source_count: ignored_due_to_source_count,
-      ignored_due_to_invalid_count: 0,
-      repeaters_deleted_count: repeaters_deleted_count }
+    {created_or_updated_ids: created_or_updated_ids,
+     ignored_due_to_source_count: ignored_due_to_source_count,
+     ignored_due_to_invalid_count: 0,
+     repeaters_deleted_count: repeaters_deleted_count}
   end
 
   def import_repeater(raw_repeater)
@@ -64,7 +64,7 @@ class IrlpImporter < Importer
       return [:ignored_due_to_broken_record, nil]
     end
 
-    tx_frequency = raw_repeater["Freq"].to_f.abs * 10 ** 6 # Yes, there's a repeater with negative frequency.
+    tx_frequency = raw_repeater["Freq"].to_f.abs * 10**6 # Yes, there's a repeater with negative frequency.
     if call_sign == "W7NJN" && tx_frequency == 147_500_000_000 # Someone mixed their Mhz and khz
       tx_frequency = 147_500_000
     elsif call_sign == "W7UPS" && tx_frequency == 446_525_000_000 # Someone mixed their Mhz and khz
@@ -83,24 +83,24 @@ class IrlpImporter < Importer
       return [:ignored_due_to_source, repeater]
     end
 
-    repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10 ** 3
+    repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10**3
     repeater.fm = true # Just making an assumption here, we don't have access code, so this is actually a bit useless.
 
     repeater.input_locality = raw_repeater["City"]
     repeater.input_country_id = parse_country(raw_repeater)
-    if repeater.input_country_id == "us"
-      repeater.input_region = figure_out_us_state(raw_repeater["Prov./St"])
+    repeater.input_region = if repeater.input_country_id == "us"
+      figure_out_us_state(raw_repeater["Prov./St"])
     elsif repeater.input_country_id == "ca"
-      repeater.input_region = figure_out_canadian_province(raw_repeater["Prov./St"])
+      figure_out_canadian_province(raw_repeater["Prov./St"])
     else
-      repeater.input_region = raw_repeater["Prov./St"]
+      raw_repeater["Prov./St"]
     end
 
     latitude = to_f_or_nil(raw_repeater["lat"])
     longitude = to_f_or_nil(raw_repeater["long"])
     if latitude.present? && longitude.present? &&
-      (latitude != 0 || longitude != 0) && # One should be different to 0, since 0,0 is used to represent lack of data and there are no repeaters in null island
-      (latitude <= 90 && latitude >= -90) # There can't be latitudes above 90 or below -90, those are typos.
+        (latitude != 0 || longitude != 0) && # One should be different to 0, since 0,0 is used to represent lack of data and there are no repeaters in null island
+        (latitude <= 90 && latitude >= -90) # There can't be latitudes above 90 or below -90, those are typos.
       repeater.input_latitude = latitude
       repeater.input_longitude = longitude
     end
