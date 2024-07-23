@@ -30,7 +30,7 @@ class Importer
     @logger.info "  #{result[:created_or_updated_ids].count} created or updated"
     @logger.info "  #{result[:ignored_due_to_source_count] || 0} ignored due to source"
     @logger.info "  #{result[:ignored_due_to_invalid_count] || 0} ignored due to being invalid"
-    @logger.info "  #{result[:repeaters_deleted_count] || 0} deleted."
+    @logger.info "  #{result[:repeaters_deleted_count] || 0} deleted"
   end
 
   def self.source
