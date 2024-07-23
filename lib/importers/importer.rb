@@ -150,6 +150,38 @@ class Importer
     end
   end
 
+  def figure_out_canadian_province(province)
+    province = province.downcase
+
+    if province.in? ["ab", ".canada-alberta"]
+      "Alberta"
+    elsif province.in? ["bc", ".canada-british columbia"]
+      "British Columbia"
+    elsif province.in? ["mb", ".canada-manitoba"]
+      "Manitoba"
+    elsif province.in? ["nl", ".canada-newfoundland"]
+      "Newfoundland"
+    elsif province.in? ["nt", ".canada-northwest territories"]
+      "Northwest Territories"
+    elsif province.in? ["ns", ".canada-nova scotia"]
+      "Nova Scotia"
+    elsif province.in? ["nu", ".canada-nunavut"]
+      "Nunavut"
+    elsif province.in? ["on", ".canada-ontario"]
+      "Ontario"
+    elsif province.in? ["qc", ".canada-quebec"]
+      "Quebec"
+    elsif province.in? ["sk", ".canada-saskatchewan"]
+      "Saskatchewan"
+    elsif province.in? ["pe"]
+      "Prince Edward Island	"
+    elsif province.in? ["yt"]
+      "Yukon"
+    else
+      raise "Unknown Canadian province: #{province}"
+    end
+  end
+
   private
 
   def import_data
@@ -165,7 +197,7 @@ class Importer
       parsed_url = URI.parse(url)
       begin
         attempts ||= 1
-        src_stream = parsed_url.open({"User-Agent" => USER_AGENT})
+        src_stream = parsed_url.open({ "User-Agent" => USER_AGENT })
       rescue Net::OpenTimeout, OpenURI::HTTPError => e
         if attempts <= 10
           @logger.warn "Failed to download #{url} to #{dest} on attempt #{attempts}: #{e.message}. Retrying in 5 seconds."

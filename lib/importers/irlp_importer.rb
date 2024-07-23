@@ -90,6 +90,8 @@ class IrlpImporter < Importer
     repeater.input_country_id = parse_country(raw_repeater)
     if repeater.input_country_id == "us"
       repeater.input_region = figure_out_us_state(raw_repeater["Prov./St"])
+    elsif repeater.input_country_id == "ca"
+      repeater.input_region = figure_out_canadian_province(raw_repeater["Prov./St"])
     else
       repeater.input_region = raw_repeater["Prov./St"]
     end

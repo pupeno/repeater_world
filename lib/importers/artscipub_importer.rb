@@ -405,7 +405,7 @@ class ArtscipubImporter < Importer
 
       case repeater.input_country_id
       when "ca"
-        repeater.input_region = figure_out_canadian_province(coordinates)
+        repeater.input_region = figure_out_canadian_province(coordinates.last)
         repeater.input_locality = coordinates[0..-2].join(", ")
       when "gb"
         case coordinates.last
@@ -501,33 +501,6 @@ class ArtscipubImporter < Importer
       "vi"
     else
       raise "Unknown country #{location.last} in location #{location}"
-    end
-  end
-
-  def figure_out_canadian_province(location)
-    case location.last
-    when ".Canada-Alberta"
-      "Alberta"
-    when ".Canada-British Columbia"
-      "British Columbia"
-    when ".Canada-Manitoba"
-      "Manitoba"
-    when ".Canada-Newfoundland"
-      "Newfoundland"
-    when ".Canada-Northwest Territories"
-      "Northwest Territories"
-    when ".Canada-Nova Scotia"
-      "Nova Scotia"
-    when ".Canada-Nunavut"
-      "Nunavut"
-    when ".Canada-Ontario"
-      "Ontario"
-    when ".Canada-Quebec"
-      "Quebec"
-    when ".Canada-Saskatchewan"
-      "Saskatchewan"
-    else
-      raise "Unknown Canadian province: #{location}"
     end
   end
 
