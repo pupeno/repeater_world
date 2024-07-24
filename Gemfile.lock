@@ -356,10 +356,10 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    sentry-rails (5.18.1)
+    sentry-rails (5.18.2)
       railties (>= 5.0)
-      sentry-ruby (~> 5.18.1)
-    sentry-ruby (5.18.1)
+      sentry-ruby (~> 5.18.2)
+    sentry-ruby (5.18.2)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
     simplecov (0.22.0)
@@ -459,7 +459,7 @@ DEPENDENCIES
   rbzip2 (~> 0.3)
   rspec-rails (~> 6.1)
   sassc-rails (~> 2.1)
-  sentry-rails (~> 5.16)
+  sentry-rails (~> 5.18)
   sentry-ruby (~> 5.16)
   simplecov (~> 0.22)
   simplecov-cobertura (~> 2.1)
