@@ -107,9 +107,13 @@ class NarccImporter < Importer
     repeater.notes += "Affiliated with RACES\n" if row[NOTES].text =~ /r/
     repeater.notes += "Affiliated with ARES\n" if row[NOTES].text =~ /s/
     repeater.notes += "Wide area coverage\n" if row[NOTES].text =~ /x/
-
     repeater.notes += "Station type: #{row[STATION_TYPE].text.strip}\n" if row[STATION_TYPE].text.strip.present?
 
+    echo_link = row[NOTES].text.match(/E:(\d+)/)
+    if echo_link.present?
+      repeater.echo_link = true
+      repeater.echo_link_node_number = echo_link[1]
+    end
 
     repeater.source = self.class.source
 
