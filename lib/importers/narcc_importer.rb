@@ -97,6 +97,20 @@ class NarccImporter < Importer
     repeater.input_region = "California"
     repeater.input_country_id = "us"
 
+    repeater.notes = ""
+    repeater.notes += "Sponsor: #{row[SPONSOR].text.strip}\n" if row[SPONSOR].text.strip.present?
+    repeater.notes += "Status: #{row[STATUS].text.strip}\n" if row[STATUS].text.strip.present?
+    repeater.notes += "Open station\n" if row[NOTES].text =~ /o/
+    repeater.notes += "Closed station (see FCC 97.205, paragraph \"e\")\n" if row[NOTES].text =~ /c/
+    repeater.notes += "Emergency power\n" if row[NOTES].text =~ /e/
+    repeater.notes += "Linked\n" if row[NOTES].text =~ /l/
+    repeater.notes += "Affiliated with RACES\n" if row[NOTES].text =~ /r/
+    repeater.notes += "Affiliated with ARES\n" if row[NOTES].text =~ /s/
+    repeater.notes += "Wide area coverage\n" if row[NOTES].text =~ /x/
+
+    repeater.notes += "Station type: #{row[STATION_TYPE].text.strip}\n" if row[STATION_TYPE].text.strip.present?
+
+
     repeater.source = self.class.source
 
     repeater.save!
