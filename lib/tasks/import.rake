@@ -47,6 +47,12 @@ task :import_all, [:stdout] => :environment do |_t, _args|
     Sentry.capture_exception(e)
   end
   begin
+    NarccImporter.new.import
+  rescue => e
+    Rails.logger.error(e.message)
+    Sentry.capture_exception(e)
+  end
+  begin
     ArtscipubImporter.new.import
   rescue => e
     Rails.logger.error(e.message)
@@ -92,14 +98,20 @@ task :import_irts, [:stdout] => :environment do |_t, _args|
   IrtsImporter.new.import
 end
 
-desc "Import repeaters from IRLP, https://www.irlp.net"
-task :import_irlp, [:stdout] => :environment do |_t, _args|
+desc "Import repeaters from NARCC, https://www.narcconline.org/narcc/repeater_list_menu.cfm"
+task :import_narcc, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
-  IrlpImporter.new.import
+  NarccImporter.new.import
 end
 
 desc "Import repeaters from Artscipub, http://www.artscipub.com/repeaters"
 task :import_artscipub, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
   ArtscipubImporter.new.import
+end
+
+desc "Import repeaters from IRLP, https://www.irlp.net"
+task :import_irlp, [:stdout] => :environment do |_t, _args|
+  Rails.logger = Logger.new($stdout)
+  IrlpImporter.new.import
 end
