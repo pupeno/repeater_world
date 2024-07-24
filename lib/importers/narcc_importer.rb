@@ -76,9 +76,7 @@ class NarccImporter < Importer
 
   def import_repeater(row)
     call_sign = row[CALL_SIGN].text.strip.upcase
-    puts call_sign
     tx_frequency = row[OUTPUT].text.to_f * 10 ** 6
-    puts tx_frequency
 
     repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
 
