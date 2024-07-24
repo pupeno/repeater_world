@@ -46,6 +46,12 @@ task :import_all, [:stdout] => :environment do |_t, _args|
     Rails.logger.error(e.message)
     Sentry.capture_exception(e)
   end
+  begin
+    ArtscipubImporter.new.import
+  rescue => e
+    Rails.logger.error(e.message)
+    Sentry.capture_exception(e)
+  end
 
   # Keep it at the bottom, since we don't access code and other sources might have them in better shape
   begin
