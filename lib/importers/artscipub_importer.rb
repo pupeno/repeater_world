@@ -42,7 +42,7 @@ class ArtscipubImporter < Importer
         raise "Failed to import record on #{raw_repeater}"
       end
 
-      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all
+      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all.count
     end
 
     # puts @mocks
@@ -281,7 +281,7 @@ class ArtscipubImporter < Importer
     elsif pl_tone.in? ["131", "131,8"] # Likely a typo
       repeater.fm = true
       repeater.fm_ctcss_tone = 131.8
-    elsif pl_tone == "130.5" # Likely a typo
+    elsif pl_tone.in? ["136.6", "130.5"] # Likely a typo
       repeater.fm = true
       repeater.fm_ctcss_tone = 136.5
     elsif pl_tone == "141.0" # Likely a typo
@@ -308,7 +308,7 @@ class ArtscipubImporter < Importer
     elsif pl_tone == "254.1" # Likely a typo
       repeater.fm = true
       repeater.fm_ctcss_tone = 250.3
-    elsif pl_tone.in?(["none", "no", "open", "n/a"])
+    elsif pl_tone.in?(["none", "no", "open", "n/a", "no [no]"])
       repeater.fm = true
       repeater.fm_tone_burst = true # Just guessing here.
     elsif pl_tone.in?(["d-star", "dstar", "dv", "na [dstar]", "d star"]) ||
@@ -323,7 +323,11 @@ class ArtscipubImporter < Importer
     elsif pl_tone == "c4fm"
       repeater.fm = true
       repeater.fusion = true
-    elsif pl_tone.in? ["dmr", "[dmr]", "[dmr ]", "dmr digital", "dmr only", "dmr only!"]
+    elsif pl_tone == "c4fm/136.5"
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 136.5
+      repeater.fusion = true
+    elsif pl_tone.in? ["dmr", "[dmr]", "[dmr ]", "dmr digital", "dmr only", "dmr only!", "[dmrplus]"]
       repeater.dmr = true
     elsif pl_tone == "dmr" && raw_repeater[:comments].include?("BrandMeister")
       repeater.dmr = true
@@ -344,7 +348,7 @@ class ArtscipubImporter < Importer
     elsif pl_tone == "[cc 4]"
       repeater.dmr = true
       repeater.dmr_color_code = 4
-    elsif pl_tone.in? ["[cc 7]", "cc7", "[cc7]"]
+    elsif pl_tone.in? ["[cc 7]", "cc7", "[cc7]", "ccode 1 [ccs7 /dmr ]"]
       repeater.dmr = true
       repeater.dmr_color_code = 7
     elsif pl_tone.in? ["[cc 8]", "cc8", "[cc8]"]
@@ -363,6 +367,11 @@ class ArtscipubImporter < Importer
       repeater.dmr = true
       repeater.dmr_color_code = 11
       repeater.dmr_network = "Brandmeister"
+    elsif pl_tone == "cc0 151.4"
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 151.4
+      repeater.dmr = true
+      repeater.dmr_color_code = 0
     elsif pl_tone == "nxdn"
       repeater.nxdn = true
     elsif pl_tone.in?(["ran1", "ran 1", "[ran 1]", "ran01", "[ran2]", "[ran 11]"])
@@ -381,7 +390,7 @@ class ArtscipubImporter < Importer
           "d023n", "d172", "d311", "d411", "d432", "data", "dts", "lafayette", "pl 218.1", "0", "a", "c", "yes",
           "[dtmf]", "d051", "d732n", "[dtmf5]", "d263", "5z", "d174", "d245n", "[*]", "152d", "293", "[nac]", "dtmf",
           "047", "073", "video", "[311]", "244", "tg99", "rock hill", "[nac 293]", "csq", "d125n", "d455", "[dgid:00]",
-          "432", "d047", "[visit srg]", "600", "atikokan", "cochin", "d073", "[d031]", "[d 244n]", "365n"]) # No idea what this is...
+          "432", "d047", "[visit srg]", "600", "atikokan", "cochin", "d073", "[d031]", "[d 244n]", "365n", "[365n]", "[nac$293]"]) # No idea what this is...
       # ...so not doing anything here.
     else
       raise "Unknown mode and access code \"#{pl_tone}\" for #{raw_repeater}."
@@ -396,7 +405,7 @@ class ArtscipubImporter < Importer
 
       case repeater.input_country_id
       when "ca"
-        repeater.input_region = figure_out_canadian_province(coordinates)
+        repeater.input_region = figure_out_canadian_province(coordinates.last)
         repeater.input_locality = coordinates[0..-2].join(", ")
       when "gb"
         case coordinates.last
@@ -436,7 +445,7 @@ class ArtscipubImporter < Importer
     else
       repeater.input_country_id = "us"
       repeater.input_locality = coordinates[0..-2].join(", ")
-      repeater.input_region = coordinates.last
+      repeater.input_region = figure_out_us_state(coordinates.last)
       repeater.input_post_code = raw_repeater[:zip_code] if raw_repeater[:zip_code].present? && raw_repeater[:zip_code] != "00000"
     end
   end
@@ -492,33 +501,6 @@ class ArtscipubImporter < Importer
       "vi"
     else
       raise "Unknown country #{location.last} in location #{location}"
-    end
-  end
-
-  def figure_out_canadian_province(location)
-    case location.last
-    when ".Canada-Alberta"
-      "Alberta"
-    when ".Canada-British Columbia"
-      "British Columbia"
-    when ".Canada-Manitoba"
-      "Manitoba"
-    when ".Canada-Newfoundland"
-      "Newfoundland"
-    when ".Canada-Northwest Territories"
-      "Northwest Territories"
-    when ".Canada-Nova Scotia"
-      "Nova Scotia"
-    when ".Canada-Nunavut"
-      "Nunavut"
-    when ".Canada-Ontario"
-      "Ontario"
-    when ".Canada-Quebec"
-      "Quebec"
-    when ".Canada-Saskatchewan"
-      "Saskatchewan"
-    else
-      raise "Unknown Canadian province: #{location}"
     end
   end
 

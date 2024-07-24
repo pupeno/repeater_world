@@ -45,7 +45,7 @@ class IrlpImporter < Importer
       rescue
         raise "Failed to import record on line #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
       end
-      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all
+      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all.count
     end
 
     {created_or_updated_ids: created_or_updated_ids,
@@ -87,8 +87,14 @@ class IrlpImporter < Importer
     repeater.fm = true # Just making an assumption here, we don't have access code, so this is actually a bit useless.
 
     repeater.input_locality = raw_repeater["City"]
-    repeater.input_region = raw_repeater["Prov./St"]
     repeater.input_country_id = parse_country(raw_repeater)
+    repeater.input_region = if repeater.input_country_id == "us"
+      figure_out_us_state(raw_repeater["Prov./St"])
+    elsif repeater.input_country_id == "ca"
+      figure_out_canadian_province(raw_repeater["Prov./St"])
+    else
+      raw_repeater["Prov./St"]
+    end
 
     latitude = to_f_or_nil(raw_repeater["lat"])
     longitude = to_f_or_nil(raw_repeater["long"])
