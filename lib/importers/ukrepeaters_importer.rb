@@ -244,6 +244,8 @@ class UkrepeatersImporter < Importer
       repeater.input_region = "Northern Ireland"
     when "CEN"
       repeater.input_region = "Central England"
+    when "EA"
+      repeater.input_region = "East of England & East Anglia"
     when "XXX"
       repeater.input_region = nil
     else
