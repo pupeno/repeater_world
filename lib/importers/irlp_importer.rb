@@ -23,8 +23,8 @@ class IrlpImporter < Importer
 
   def import_data
     ignored_due_to_source_count = 0
+    ignored_due_to_invalid_count = 0
     created_or_updated_ids = []
-    repeaters_deleted_count = 0
 
     compressed_file_name = download_file(EXPORT_URL, "irlp.tsv.bz2")
     uncompressed_file = RBzip2.default_adapter::Decompressor.new(File.open(compressed_file_name))
@@ -37,7 +37,7 @@ class IrlpImporter < Importer
       if action == :ignored_due_to_source
         ignored_due_to_source_count += 1
       elsif action == :ignored_due_to_broken_record
-        # Nothing to do really. Should we track this?
+        ignored_due_to_invalid_count += 1
       else
         created_or_updated_ids << imported_repeater.id
       end
@@ -48,7 +48,7 @@ class IrlpImporter < Importer
 
     {created_or_updated_ids: created_or_updated_ids,
      ignored_due_to_source_count: ignored_due_to_source_count,
-     ignored_due_to_invalid_count: 0,
+     ignored_due_to_invalid_count: ignored_due_to_invalid_count,
      repeaters_deleted_count: repeaters_deleted_count}
   end
 
