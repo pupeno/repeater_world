@@ -21,10 +21,6 @@ class SralfiImporter < Importer
     file_name = download_file(EXPORT_URL, "sralfi_export.json")
     stations = JSON.parse(File.read(file_name))
 
-    ignored_due_to_source_count = 0
-    created_or_updated_ids = []
-    repeaters_deleted_count = 0
-
     Repeater.transaction do
       stations["stations"].each do |raw_repeater|
         # Types:
@@ -38,16 +34,16 @@ class SralfiImporter < Importer
         if raw_repeater["type"] == "1"
           action, imported_repeater = import_repeater(raw_repeater)
           if action == :ignored_due_to_source
-            ignored_due_to_source_count += 1
+            @ignored_due_to_source_count += 1
           else
-            created_or_updated_ids << imported_repeater.id
+            @created_or_updated_ids << imported_repeater.id
           end
         end
       end
-      repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: created_or_updated_ids).destroy_all
+      @repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: @created_or_updated_ids).destroy_all
     end
 
-    @logger.info "Done importing from #{SOURCE}. #{created_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{repeaters_deleted_count} deleted."
+    @logger.info "Done importing from #{SOURCE}. #{@created_or_updated_ids.count} created or updated, #{@ignored_due_to_source_count} ignored due to source, #{@repeaters_deleted_count} deleted."
   end
 
   private

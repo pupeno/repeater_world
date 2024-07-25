@@ -21,11 +21,7 @@ class WiaImporter < Importer
 
   EXPORT_URL = "https://www.wia.org.au/members/repeaters/data/"
 
-  def import_data
-    ignored_due_to_source_count = 0
-    created_or_updated_ids = []
-    repeaters_deleted_count = 0
-
+  def import_all_repeaters
     csv_url = get_csv_url
     csv_file_name = download_file(csv_url, "wia.csv")
     csv_file = CSV.table(csv_file_name, headers: true)
@@ -35,23 +31,23 @@ class WiaImporter < Importer
       csv_file.each_with_index do |raw_repeater, line_number|
         action, imported_repeater = import_repeater(raw_repeater)
         if action == :ignored_due_to_source
-          ignored_due_to_source_count += 1
+          @ignored_due_to_source_count += 1
         elsif action == :ignored_due_to_broken_record
           # Nothing to do really. Should we track this?
         else
-          created_or_updated_ids << imported_repeater.id
+          @created_or_updated_ids << imported_repeater.id
         end
       rescue
         raise "Failed to import record on line #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
       end
 
-      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all
+      @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all
     end
 
-    {created_or_updated_ids: created_or_updated_ids,
-     ignored_due_to_source_count: ignored_due_to_source_count,
+    {created_or_updated_ids: @created_or_updated_ids,
+     ignored_due_to_source_count: @ignored_due_to_source_count,
      ignored_due_to_invalid_count: 0,
-     repeaters_deleted_count: repeaters_deleted_count}
+     repeaters_deleted_count: @repeaters_deleted_count}
   end
 
   def import_repeater(raw_repeater)

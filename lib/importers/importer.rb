@@ -20,12 +20,16 @@ class Importer
   def initialize(working_directory: nil, logger: nil)
     @working_directory = working_directory || Rails.root.join("tmp", (self.class.name || SecureRandom.alphanumeric).downcase).to_s # Stable working directory to avoid re-downloading when developing.
     @logger = logger || Rails.logger
+    @ignored_due_to_source_count = 0
+    @ignored_due_to_invalid_count = 0
+    @created_or_updated_ids = []
+    @repeaters_deleted_count = 0
     PaperTrail.request.whodunnit = "Repeater World Importer"
   end
 
   def import
     @logger.info "Importing repeaters from #{self.class.source}"
-    result = import_data
+    result = import_all_repeaters
     @logger.info "Done importing from #{self.class.source}:"
     @logger.info "  #{result[:created_or_updated_ids].count} created or updated"
     @logger.info "  #{result[:ignored_due_to_source_count] || 0} ignored due to source"
@@ -186,7 +190,7 @@ class Importer
 
   private
 
-  def import_data
+  def import_all_repeaters
     raise NotImplementedError.new("Importer subclasses must implement this method.")
   end
 

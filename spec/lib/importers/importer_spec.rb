@@ -20,6 +20,6 @@ RSpec.describe Importer do
     importer = Importer.new
     expect { importer.import }.to raise_error(/Importer subclasses must implement this method/)
     importer = Importer.new
-    expect { importer.send(:import_data) }.to raise_error(/Importer subclasses must implement this method/)
+    expect { importer.send(:import_all_repeaters) }.to raise_error(/Importer subclasses must implement this method/)
   end
 end

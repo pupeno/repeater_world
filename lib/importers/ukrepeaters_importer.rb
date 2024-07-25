@@ -24,10 +24,7 @@ class UkrepeatersImporter < Importer
     "https://ukrepeater.net"
   end
 
-  def import_data
-    created_or_updated_ids = []
-    repeaters_deleted_count = 0
-
+  def import_all_repeaters
     Repeater.transaction do
       process_repeaterlist3_csv
       process_repeaterlist_dv_csv
@@ -38,15 +35,15 @@ class UkrepeatersImporter < Importer
 
       @repeaters.values.each do |repeater|
         repeater.save!
-        created_or_updated_ids << repeater.id
+        @created_or_updated_ids << repeater.id
       end
-      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all.count
+      @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all.count
     end
 
-    {created_or_updated_ids: created_or_updated_ids,
+    {created_or_updated_ids: @created_or_updated_ids,
      ignored_due_to_source_count: 0,
      ignored_due_to_invalid_count: 0,
-     repeaters_deleted_count: repeaters_deleted_count}
+     repeaters_deleted_count: @repeaters_deleted_count}
   end
 
   private

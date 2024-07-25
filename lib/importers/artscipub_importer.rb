@@ -21,36 +21,32 @@ class ArtscipubImporter < Importer
 
   EXPORT_URL = "http://www.artscipub.com/repeaters/"
 
-  def import_data
-    ignored_due_to_source_count = 0
-    created_or_updated_ids = []
-    repeaters_deleted_count = 0
-
+  def import_all_repeaters
     raw_repeaters = get_raw_repeaters
 
     Repeater.transaction do
       raw_repeaters.each do |raw_repeater|
         action, imported_repeater = import_repeater(raw_repeater)
         if action == :ignored_due_to_source
-          ignored_due_to_source_count += 1
+          @ignored_due_to_source_count += 1
         elsif action == :ignored_due_to_broken_record
           # Nothing to do really. Should we track this?
         else
-          created_or_updated_ids << imported_repeater.id
+          @created_or_updated_ids << imported_repeater.id
         end
       rescue
         raise "Failed to import record on #{raw_repeater}"
       end
 
-      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all.count
+      @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all.count
     end
 
     # puts @mocks
 
-    {created_or_updated_ids: created_or_updated_ids,
-     ignored_due_to_source_count: ignored_due_to_source_count,
+    {created_or_updated_ids: @created_or_updated_ids,
+     ignored_due_to_source_count: @ignored_due_to_source_count,
      ignored_due_to_invalid_count: 0,
-     repeaters_deleted_count: repeaters_deleted_count}
+     repeaters_deleted_count: @repeaters_deleted_count}
   end
 
   def get_raw_repeaters
