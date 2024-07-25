@@ -21,7 +21,7 @@ class NerepeatersImporter < Importer
 
   EXPORT_URL = "http://www.nerepeaters.com/NERepeaters.php"
 
-  private def import_all_repeaters
+  def import_all_repeaters
     file_name = download_file(EXPORT_URL, "nerepeaters.csv")
     csv_file = CSV.table(file_name, headers: false)
 
