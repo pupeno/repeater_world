@@ -27,7 +27,8 @@ class NarccImporter < Importer
     "https://www.narcconline.org/narcc/Repeater_List_Menu.cfm?CZONE=All&SBAND=440&SType=All&Status=All",
     "https://www.narcconline.org/narcc/Repeater_List_Menu.cfm?CZONE=All&SBAND=902&SType=All&Status=All",
     "https://www.narcconline.org/narcc/Repeater_List_Menu.cfm?CZONE=All&SBAND=1240&SType=All&Status=All",
-    "https://www.narcconline.org/narcc/Repeater_List_Menu.cfm?CZONE=All&SBAND=2000&SType=All&Status=All"]
+    "https://www.narcconline.org/narcc/Repeater_List_Menu.cfm?CZONE=All&SBAND=2000&SType=All&Status=All"
+  ]
 
   def import_data
     ignored_due_to_source_count = 0
@@ -58,10 +59,10 @@ class NarccImporter < Importer
       repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all.count
     end
 
-    { created_or_updated_ids: created_or_updated_ids,
-      ignored_due_to_source_count: ignored_due_to_source_count,
-      ignored_due_to_invalid_count: 0,
-      repeaters_deleted_count: repeaters_deleted_count }
+    {created_or_updated_ids: created_or_updated_ids,
+     ignored_due_to_source_count: ignored_due_to_source_count,
+     ignored_due_to_invalid_count: 0,
+     repeaters_deleted_count: repeaters_deleted_count}
   end
 
   OUTPUT = 0
@@ -76,7 +77,7 @@ class NarccImporter < Importer
 
   def import_repeater(row)
     call_sign = row[CALL_SIGN].text.strip.upcase
-    tx_frequency = row[OUTPUT].text.to_f * 10 ** 6
+    tx_frequency = row[OUTPUT].text.to_f * 10**6
 
     repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
 
@@ -91,7 +92,8 @@ class NarccImporter < Importer
 
     repeater.name = repeater.call_sign
 
-    repeater.rx_frequency = row[INPUT].text.to_f * 10 ** 6
+    repeater.rx_frequency = row[INPUT].text.to_f * 10**6
+    repeater.fm = true # Odd, are they only FM? Surely there are other modes there.
     repeater.fm_ctcss_tone = row[CTCSS].text.to_f if row[CTCSS].text.strip.present?
     repeater.input_locality = row[LOCATION].text.strip
     repeater.input_region = "California"
@@ -100,19 +102,25 @@ class NarccImporter < Importer
     repeater.notes = ""
     repeater.notes += "Sponsor: #{row[SPONSOR].text.strip}\n" if row[SPONSOR].text.strip.present?
     repeater.notes += "Status: #{row[STATUS].text.strip}\n" if row[STATUS].text.strip.present?
-    repeater.notes += "Open station\n" if row[NOTES].text =~ /o/
-    repeater.notes += "Closed station (see FCC 97.205, paragraph \"e\")\n" if row[NOTES].text =~ /c/
-    repeater.notes += "Emergency power\n" if row[NOTES].text =~ /e/
-    repeater.notes += "Linked\n" if row[NOTES].text =~ /l/
-    repeater.notes += "Affiliated with RACES\n" if row[NOTES].text =~ /r/
-    repeater.notes += "Affiliated with ARES\n" if row[NOTES].text =~ /s/
-    repeater.notes += "Wide area coverage\n" if row[NOTES].text =~ /x/
+    repeater.notes += "Open station\n" if /o/.match?(row[NOTES].text)
+    repeater.notes += "Closed station (see FCC 97.205, paragraph \"e\")\n" if /c/.match?(row[NOTES].text)
+    repeater.notes += "Emergency power\n" if /e/.match?(row[NOTES].text)
+    repeater.notes += "Linked\n" if /l/.match?(row[NOTES].text)
+    repeater.notes += "Affiliated with RACES\n" if /r/.match?(row[NOTES].text)
+    repeater.notes += "Affiliated with ARES\n" if /s/.match?(row[NOTES].text)
+    repeater.notes += "Wide area coverage\n" if /x/.match?(row[NOTES].text)
     repeater.notes += "Station type: #{row[STATION_TYPE].text.strip}\n" if row[STATION_TYPE].text.strip.present?
 
     echo_link = row[NOTES].text.match(/E:(\d+)/)
     if echo_link.present?
       repeater.echo_link = true
       repeater.echo_link_node_number = echo_link[1]
+    end
+
+    irlp_node_number = row[NOTES].text.match(/I:(\d+)/)
+    if irlp_node_number.present?
+      repeater.irlp = true
+      repeater.irlp_node_number ||= irlp_node_number[1] # IRLP's authoritative value comes from the IrlpImporter.
     end
 
     repeater.source = self.class.source

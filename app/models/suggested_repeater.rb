@@ -246,6 +246,8 @@ end
 #  fm_tone_squelch         :boolean
 #  fusion                  :boolean
 #  grid_square             :string
+#  irlp                    :boolean
+#  irlp_node_number        :integer
 #  keeper                  :string
 #  latitude                :string
 #  locality                :string
