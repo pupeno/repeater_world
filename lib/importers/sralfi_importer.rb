@@ -13,11 +13,15 @@
 # <https://www.gnu.org/licenses/>.
 
 class SralfiImporter < Importer
-  SOURCE = "https://automatic.sral.fi/?p=export"
+  def self.source
+    "https://automatic.sral.fi/?p=export"
+  end
+
+  private
+
   EXPORT_URL = "https://automatic.sral.fi/api-v1.php?query=list"
 
-  def import
-    @logger.info "Importing repeaters from #{SOURCE}."
+  def import_all_repeaters
     file_name = download_file(EXPORT_URL, "sralfi_export.json")
     stations = JSON.parse(File.read(file_name))
 
@@ -39,9 +43,12 @@ class SralfiImporter < Importer
         end
       end
     end
-    @repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: @created_or_updated_ids).destroy_all
+    @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all
 
-    @logger.info "Done importing from #{SOURCE}. #{@created_or_updated_ids.count} created or updated, #{@ignored_due_to_source_count} ignored due to source, #{@repeaters_deleted_count} deleted."
+    {created_or_updated_ids: @created_or_updated_ids,
+     ignored_due_to_source_count: @ignored_due_to_source_count,
+     ignored_due_to_invalid_count: 0,
+     repeaters_deleted_count: @repeaters_deleted_count}
   end
 
   private
@@ -66,8 +73,8 @@ class SralfiImporter < Importer
     )
 
     # Only update repeaters that were sourced from automatic.sral.fi.
-    if repeater.persisted? && repeater.source != SOURCE && repeater.source != IrlpImporter.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+    if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source
+      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
       return [:ignored_due_to_source, repeater]
     end
 
@@ -102,7 +109,7 @@ class SralfiImporter < Importer
 
     import_notes(raw_repeater, repeater)
 
-    repeater.source = SOURCE
+    repeater.source = self.class.source
     repeater.redistribution_limitations = data_limitations_sral_fi_url(host: "repeater.world", protocol: "https")
     repeater.input_country_id = "fi"
 
