@@ -27,25 +27,23 @@ class IrtsImporter < Importer
     doc = Nokogiri::HTML(File.read(file_name))
     table = doc.at("table")
 
-    Repeater.transaction do
-      table.search("tr").each do |row|
-        row = row.search("td")
-        next if row.empty?
+    table.search("tr").each do |row|
+      row = row.search("td")
+      next if row.empty?
 
-        action, imported_repeater = import_repeater(row)
-        if action == :ignored_due_to_source
-          @ignored_due_to_source_count += 1
-        elsif action == :ignored_due_to_broken_record
-          # Nothing to do really. Should we track this?
-        else
-          @created_or_updated_ids << imported_repeater.id
-        end
-      rescue
-        raise "Failed to import record #{row}"
+      action, imported_repeater = import_repeater(row)
+      if action == :ignored_due_to_source
+        @ignored_due_to_source_count += 1
+      elsif action == :ignored_due_to_broken_record
+        # Nothing to do really. Should we track this?
+      else
+        @created_or_updated_ids << imported_repeater.id
       end
-
-      @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all
+    rescue
+      raise "Failed to import record #{row}"
     end
+
+    @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all
 
     {created_or_updated_ids: @created_or_updated_ids,
      ignored_due_to_source_count: @ignored_due_to_source_count,

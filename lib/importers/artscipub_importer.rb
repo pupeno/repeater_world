@@ -24,24 +24,20 @@ class ArtscipubImporter < Importer
   def import_all_repeaters
     raw_repeaters = get_raw_repeaters
 
-    Repeater.transaction do
-      raw_repeaters.each do |raw_repeater|
-        action, imported_repeater = import_repeater(raw_repeater)
-        if action == :ignored_due_to_source
-          @ignored_due_to_source_count += 1
-        elsif action == :ignored_due_to_broken_record
-          # Nothing to do really. Should we track this?
-        else
-          @created_or_updated_ids << imported_repeater.id
-        end
-      rescue
-        raise "Failed to import record on #{raw_repeater}"
+    raw_repeaters.each do |raw_repeater|
+      action, imported_repeater = import_repeater(raw_repeater)
+      if action == :ignored_due_to_source
+        @ignored_due_to_source_count += 1
+      elsif action == :ignored_due_to_broken_record
+        # Nothing to do really. Should we track this?
+      else
+        @created_or_updated_ids << imported_repeater.id
       end
-
-      @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all.count
+    rescue
+      raise "Failed to import record on #{raw_repeater}"
     end
 
-    # puts @mocks
+    @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all.count
 
     {created_or_updated_ids: @created_or_updated_ids,
      ignored_due_to_source_count: @ignored_due_to_source_count,

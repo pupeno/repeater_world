@@ -21,27 +21,25 @@ class SralfiImporter < Importer
     file_name = download_file(EXPORT_URL, "sralfi_export.json")
     stations = JSON.parse(File.read(file_name))
 
-    Repeater.transaction do
-      stations["stations"].each do |raw_repeater|
-        # Types:
-        # 1: Voice repeater,
-        # 2: Beacon,
-        # 3: APRS digipeater,
-        # 4: ATV repeater,
-        # 5: Data networks.
-        # https://m.pablofernandez.tech/@oh8hub@mastodon.radio/110406906005017761
-        # TODO: decide whether to add anything other than voice repeaters.
-        if raw_repeater["type"] == "1"
-          action, imported_repeater = import_repeater(raw_repeater)
-          if action == :ignored_due_to_source
-            @ignored_due_to_source_count += 1
-          else
-            @created_or_updated_ids << imported_repeater.id
-          end
+    stations["stations"].each do |raw_repeater|
+      # Types:
+      # 1: Voice repeater,
+      # 2: Beacon,
+      # 3: APRS digipeater,
+      # 4: ATV repeater,
+      # 5: Data networks.
+      # https://m.pablofernandez.tech/@oh8hub@mastodon.radio/110406906005017761
+      # TODO: decide whether to add anything other than voice repeaters.
+      if raw_repeater["type"] == "1"
+        action, imported_repeater = import_repeater(raw_repeater)
+        if action == :ignored_due_to_source
+          @ignored_due_to_source_count += 1
+        else
+          @created_or_updated_ids << imported_repeater.id
         end
       end
-      @repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: @created_or_updated_ids).destroy_all
     end
+    @repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: @created_or_updated_ids).destroy_all
 
     @logger.info "Done importing from #{SOURCE}. #{@created_or_updated_ids.count} created or updated, #{@ignored_due_to_source_count} ignored due to source, #{@repeaters_deleted_count} deleted."
   end
