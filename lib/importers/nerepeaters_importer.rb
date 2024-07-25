@@ -13,11 +13,15 @@
 # <https://www.gnu.org/licenses/>.
 
 class NerepeatersImporter < Importer
-  SOURCE = "http://www.nerepeaters.com/"
+  def self.source
+    "http://www.nerepeaters.com/"
+  end
+
+  private
+
   EXPORT_URL = "http://www.nerepeaters.com/NERepeaters.php"
 
-  def import
-    @logger.info "Importing repeaters from #{SOURCE}."
+  private def import_all_repeaters
     file_name = download_file(EXPORT_URL, "nerepeaters.csv")
     csv_file = CSV.table(file_name, headers: false)
 
@@ -34,9 +38,12 @@ class NerepeatersImporter < Importer
       raise "Failed to import record on line #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
 
-    @repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: @created_or_updated_ids).destroy_all
+    @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all
 
-    @logger.info "Done importing from #{SOURCE}. #{@created_or_updated_ids.count} created or updated, #{@ignored_due_to_source_count} ignored due to source, #{@ignored_due_to_invalid_count} ignored due to being invalid, and #{@repeaters_deleted_count} deleted."
+    {created_or_updated_ids: @created_or_updated_ids,
+     ignored_due_to_source_count: @ignored_due_to_source_count,
+     ignored_due_to_invalid_count: @ignored_due_to_invalid_count,
+     repeaters_deleted_count: @repeaters_deleted_count}
   end
 
   private
@@ -115,8 +122,8 @@ class NerepeatersImporter < Importer
       tx_frequency: raw_repeater[TX_FREQUENCY].to_f * 10**6)
 
     # Only update repeaters that were sourced from nerepeater.com.
-    if repeater.persisted? && repeater.source != SOURCE && repeater.source != IrlpImporter.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
+    if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source
+      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
       return [:ignored_due_to_source, repeater]
     end
 
@@ -143,7 +150,7 @@ class NerepeatersImporter < Importer
 
     fill_band(repeater)
     repeater.input_country_id = "us"
-    repeater.source = SOURCE
+    repeater.source = self.class.source
     repeater.save!
 
     [:created_or_updated, repeater]

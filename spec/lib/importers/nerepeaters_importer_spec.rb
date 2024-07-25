@@ -61,7 +61,7 @@ RSpec.describe NerepeatersImporter do
 
       # This repeater simulates a previously imported repeater that is no longer in the source files, so we should
       # delete it to avoid stale data.
-      deleted = create(:repeater, :full, call_sign: "N1PAH", tx_frequency: 145_000_001, source: NerepeatersImporter::SOURCE)
+      deleted = create(:repeater, :full, call_sign: "N1PAH", tx_frequency: 145_000_001, source: NerepeatersImporter.source)
       create(:suggested_repeater, repeater: deleted) # To simulated a suggested repeater on a repeater that gets deleted.
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
@@ -105,7 +105,7 @@ RSpec.describe NerepeatersImporter do
       # This got updated.
       secondary_source.reload
       expect(secondary_source.rx_frequency).to eq(secondary_source_rx_frequency_was)
-      expect(secondary_source.source).to eq(NerepeatersImporter::SOURCE)
+      expect(secondary_source.source).to eq(NerepeatersImporter.source)
 
       # This one didn't change.
       independent.reload
