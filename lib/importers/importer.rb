@@ -177,6 +177,8 @@ class Importer
       "Prince Edward Island	"
     elsif province.in? ["yt"]
       "Yukon"
+    elsif province.in? ["nb"]
+      "New Brunswick"
     else
       raise "Unknown Canadian province: #{province}"
     end
