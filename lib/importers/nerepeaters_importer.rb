@@ -32,63 +32,6 @@ class NerepeatersImporter < Importer
 
   private
 
-  # TODO: move this to a generic place if we get other use cases.
-  US_STATES = {"AK" => "Alaska",
-               "AL" => "Alabama",
-               "AR" => "Arkansas",
-               "AS" => "American Samoa",
-               "AZ" => "Arizona",
-               "CA" => "California",
-               "CO" => "Colorado",
-               "CT" => "Connecticut",
-               "DC" => "District of Columbia",
-               "DE" => "Delaware",
-               "FL" => "Florida",
-               "GA" => "Georgia",
-               "GU" => "Guam",
-               "HI" => "Hawaii",
-               "IA" => "Iowa",
-               "ID" => "Idaho",
-               "IL" => "Illinois",
-               "IN" => "Indiana",
-               "KS" => "Kansas",
-               "KY" => "Kentucky",
-               "LA" => "Louisiana",
-               "MA" => "Massachusetts",
-               "MD" => "Maryland",
-               "ME" => "Maine",
-               "MI" => "Michigan",
-               "MN" => "Minnesota",
-               "MO" => "Missouri",
-               "MS" => "Mississippi",
-               "MT" => "Montana",
-               "NC" => "North Carolina",
-               "ND" => "North Dakota",
-               "NE" => "Nebraska",
-               "NH" => "New Hampshire",
-               "NJ" => "New Jersey",
-               "NM" => "New Mexico",
-               "NV" => "Nevada",
-               "NY" => "New York",
-               "OH" => "Ohio",
-               "OK" => "Oklahoma",
-               "OR" => "Oregon",
-               "PA" => "Pennsylvania",
-               "PR" => "Puerto Rico",
-               "RI" => "Rhode Island",
-               "SC" => "South Carolina",
-               "SD" => "South Dakota",
-               "TN" => "Tennessee",
-               "TX" => "Texas",
-               "UT" => "Utah",
-               "VA" => "Virginia",
-               "VI" => "Virgin Islands",
-               "VT" => "Vermont",
-               "WA" => "Washington",
-               "WI" => "Wisconsin",
-               "WV" => "West Virginia",
-               "WY" => "Wyoming"}
-
   # Columns
   TX_FREQUENCY = 0
   RX_OFFSET = 1
@@ -126,7 +69,7 @@ class NerepeatersImporter < Importer
     end
 
     import_rx_frequency(repeater, raw_repeater)
-    repeater.input_region = US_STATES[raw_repeater[STATE]]
+    repeater.input_region = figure_out_us_state(raw_repeater[STATE])
     repeater.input_locality = raw_repeater[CITY]
     repeater.name = "#{raw_repeater[CITY]} #{repeater.call_sign}"
     import_mode(repeater, raw_repeater)
