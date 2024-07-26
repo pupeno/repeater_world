@@ -61,8 +61,8 @@ class ArtscipubImporter < Importer
         raw_repeater[:pl_tone]&.downcase&.in?(["gone", "closed", "private"]) || # Closed repeaters.
         raw_repeater[:call_sign] == "General" || # Frequency out of band plan, not a call sign.
         raw_repeater[:call_sign] == "154.445" # Not a valid call sign, data entry error.
-      # @logger.info "Not importing because of data issues: #{raw_repeater}"
-      return [:ignored_due_to_broken_record, nil]
+      @ignored_due_to_invalid_count += 1
+      return
     end
 
     if raw_repeater[:call_sign] == "W6SAR" && raw_repeater[:frequency] == "164.640-" # Typo in the freq.
@@ -97,7 +97,7 @@ class ArtscipubImporter < Importer
     repeater.source = self.class.source
     repeater.save!
 
-    [:created_or_updated, repeater]
+    repeater
   end
 
   def get_raw_repeaters

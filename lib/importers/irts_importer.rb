@@ -60,7 +60,7 @@ class IrtsImporter < Importer
     repeater.source = self.class.source
 
     repeater.save!
-    [:created_or_updated, repeater]
+    repeater
   rescue => e
     raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end

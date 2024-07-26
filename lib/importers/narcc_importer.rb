@@ -59,11 +59,11 @@ class NarccImporter < Importer
 
   def call_sign_and_tx_frequency(raw_repeater)
     [raw_repeater[CALL_SIGN].text.strip.upcase,
-     raw_repeater[OUTPUT].text.to_f * 10 ** 6]
+      raw_repeater[OUTPUT].text.to_f * 10**6]
   end
 
   def import_repeater(raw_repeater, repeater)
-    repeater.rx_frequency = raw_repeater[INPUT].text.to_f * 10 ** 6
+    repeater.rx_frequency = raw_repeater[INPUT].text.to_f * 10**6
     repeater.fm = true # Odd, are they only FM? Surely there are other modes there.
     repeater.fm_ctcss_tone = raw_repeater[CTCSS].text.to_f if raw_repeater[CTCSS].text.strip.present?
     repeater.input_locality = raw_repeater[LOCATION].text.strip
@@ -97,7 +97,7 @@ class NarccImporter < Importer
     repeater.source = self.class.source
 
     repeater.save!
-    [:created_or_updated, repeater]
+    repeater
   rescue => e
     raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end

@@ -52,12 +52,14 @@ class NerepeatersImporter < Importer
     # https://nedecn.org/maine-repeaters/peru-w1bkw/ seem to point to it being DMR (color code), and
     # https://www.qrz.com/db/W1BKW seems to be a person, not a repeater.
     if raw_repeater[CALL_SIGN] == "W1BKW" && raw_repeater[MODE].strip == "YSF"
-      return [:ignored_due_to_invalid, repeater]
+      @ignored_due_to_invalid_count += 1
+      return
     end
 
     # K1PQ is there twice, with different data, so we are ignoring one of the two.
     if raw_repeater[CALL_SIGN] == "K1PQ" && raw_repeater[COMMENT] == "*Input: 146.400 (+0 kHz), 444.950 (Brownville,ME)"
-      return [:ignored_due_to_invalid, repeater]
+      @ignored_due_to_invalid_count += 1
+      return
     end
 
     import_rx_frequency(repeater, raw_repeater)
@@ -73,7 +75,7 @@ class NerepeatersImporter < Importer
     repeater.source = self.class.source
     repeater.save!
 
-    [:created_or_updated, repeater]
+    repeater
   end
 
   def import_rx_frequency(repeater, raw_repeater)

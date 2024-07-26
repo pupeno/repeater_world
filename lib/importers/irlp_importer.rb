@@ -93,7 +93,7 @@ class IrlpImporter < Importer
     repeater.source ||= self.class.source
     repeater.save!
 
-    [:created_or_updated, repeater]
+    repeater
   end
 
   def parse_country(raw_repeater)

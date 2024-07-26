@@ -42,15 +42,12 @@ class Importer
           repeater.source != IrlpImporter.source # ... or IRLP
         @ignored_due_to_source_count += 1
       else
-        action, imported_repeater = import_repeater(raw_repeater, repeater)
-        if action == :ignored_due_to_broken_record
-          @ignored_due_to_invalid_count += 1
-        else
-          @created_or_updated_ids << imported_repeater.id
-        end
+        imported_repeater = import_repeater(raw_repeater, repeater)
+        @created_or_updated_ids << imported_repeater.id if imported_repeater.present?
       end
     rescue => e
-      raise "Failed to import record #{record_number} with #{e.message}: #{raw_repeater}"
+      @logger.error "Failed to import record #{record_number} with #{e.message}: #{raw_repeater}"
+      raise
     end
     @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all.count
 

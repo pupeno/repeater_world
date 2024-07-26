@@ -89,7 +89,7 @@ class WiaImporter < Importer
     repeater.source = self.class.source
     repeater.save!
 
-    [:created_or_updated, repeater]
+    repeater
   end
 
   # WIA seems to publish a different CSV file every quarter, so first we need to find the latest CSV file name.

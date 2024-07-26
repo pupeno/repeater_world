@@ -45,7 +45,7 @@ class UkrepeatersImporter < Importer
 
   def import_repeater(repeater, _)
     repeater.save!
-    [:created_or_updated, repeater]
+    repeater
   end
 
   def process_repeaterlist3_csv

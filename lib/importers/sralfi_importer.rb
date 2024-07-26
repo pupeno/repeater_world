@@ -93,7 +93,7 @@ class SralfiImporter < Importer
 
     repeater.save!
 
-    [:created_or_updated, repeater]
+    repeater
   end
 
   def import_notes(raw_repeater, repeater)
