@@ -141,6 +141,8 @@ class NerepeatersImporter < Importer
         repeater.rx_frequency = 902_062_500
       elsif repeater.call_sign == "K1RK" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
         repeater.rx_frequency = 902_062_500
+      elsif repeater.call_sign == "W1EHT" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
+        repeater.rx_frequency = 902_062_500
       elsif repeater.call_sign == "K1GHZ" && raw_repeater[COMMENT]&.include?(" 1270.1000 ")
         repeater.rx_frequency = 1_270_100_000
       elsif repeater.call_sign.in? %w[W1AFD W2FCC NO1A K1GAS KB1ISZ KB1ISZ NN1PA N1PA N1MYY KX1X KC1EGN NB1RI W1MLL K1IR
