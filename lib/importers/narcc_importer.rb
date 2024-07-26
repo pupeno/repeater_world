@@ -30,6 +30,17 @@ class NarccImporter < Importer
     "https://www.narcconline.org/narcc/Repeater_List_Menu.cfm?CZONE=All&SBAND=2000&SType=All&Status=All"
   ]
 
+  # Columns
+  OUTPUT = 0
+  INPUT = 1
+  CTCSS = 2
+  CALL_SIGN = 3
+  LOCATION = 4
+  SPONSOR = 5
+  STATUS = 6
+  NOTES = 7
+  STATION_TYPE = 8
+
   def import_all_repeaters
     EXPORT_URLS.each do |export_url|
       local_file_name = "#{export_url.match(/SBAND=(\d+)/)[1]}.html"
@@ -46,57 +57,38 @@ class NarccImporter < Importer
     end
   end
 
-  OUTPUT = 0
-  INPUT = 1
-  CTCSS = 2
-  CALL_SIGN = 3
-  LOCATION = 4
-  SPONSOR = 5
-  STATUS = 6
-  NOTES = 7
-  STATION_TYPE = 8
+  def call_sign_and_tx_frequency(raw_repeater)
+    [raw_repeater[CALL_SIGN].text.strip.upcase,
+     raw_repeater[OUTPUT].text.to_f * 10 ** 6]
+  end
 
-  def import_repeater(row)
-    call_sign = row[CALL_SIGN].text.strip.upcase
-    tx_frequency = row[OUTPUT].text.to_f * 10**6
-
-    repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
-
-    # Only update repeaters that were sourced from this same source, or artscipub which we override, are considered.
-    if repeater.persisted? && !(repeater.source == self.class.source ||
-      repeater.source == ArtscipubImporter.source ||
-      repeater.source == IrlpImporter.source)
-      return [:ignored_due_to_source, repeater]
-    end
-
-    repeater.name = repeater.call_sign
-
-    repeater.rx_frequency = row[INPUT].text.to_f * 10**6
+  def import_repeater(raw_repeater, repeater)
+    repeater.rx_frequency = raw_repeater[INPUT].text.to_f * 10 ** 6
     repeater.fm = true # Odd, are they only FM? Surely there are other modes there.
-    repeater.fm_ctcss_tone = row[CTCSS].text.to_f if row[CTCSS].text.strip.present?
-    repeater.input_locality = row[LOCATION].text.strip
+    repeater.fm_ctcss_tone = raw_repeater[CTCSS].text.to_f if raw_repeater[CTCSS].text.strip.present?
+    repeater.input_locality = raw_repeater[LOCATION].text.strip
     repeater.input_region = "California"
     repeater.input_country_id = "us"
 
     repeater.notes = ""
-    repeater.notes += "Sponsor: #{row[SPONSOR].text.strip}\n" if row[SPONSOR].text.strip.present?
-    repeater.notes += "Status: #{row[STATUS].text.strip}\n" if row[STATUS].text.strip.present?
-    repeater.notes += "Open station\n" if /o/.match?(row[NOTES].text)
-    repeater.notes += "Closed station (see FCC 97.205, paragraph \"e\")\n" if /c/.match?(row[NOTES].text)
-    repeater.notes += "Emergency power\n" if /e/.match?(row[NOTES].text)
-    repeater.notes += "Linked\n" if /l/.match?(row[NOTES].text)
-    repeater.notes += "Affiliated with RACES\n" if /r/.match?(row[NOTES].text)
-    repeater.notes += "Affiliated with ARES\n" if /s/.match?(row[NOTES].text)
-    repeater.notes += "Wide area coverage\n" if /x/.match?(row[NOTES].text)
-    repeater.notes += "Station type: #{row[STATION_TYPE].text.strip}\n" if row[STATION_TYPE].text.strip.present?
+    repeater.notes += "Sponsor: #{raw_repeater[SPONSOR].text.strip}\n" if raw_repeater[SPONSOR].text.strip.present?
+    repeater.notes += "Status: #{raw_repeater[STATUS].text.strip}\n" if raw_repeater[STATUS].text.strip.present?
+    repeater.notes += "Open station\n" if /o/.match?(raw_repeater[NOTES].text)
+    repeater.notes += "Closed station (see FCC 97.205, paragraph \"e\")\n" if /c/.match?(raw_repeater[NOTES].text)
+    repeater.notes += "Emergency power\n" if /e/.match?(raw_repeater[NOTES].text)
+    repeater.notes += "Linked\n" if /l/.match?(raw_repeater[NOTES].text)
+    repeater.notes += "Affiliated with RACES\n" if /r/.match?(raw_repeater[NOTES].text)
+    repeater.notes += "Affiliated with ARES\n" if /s/.match?(raw_repeater[NOTES].text)
+    repeater.notes += "Wide area coverage\n" if /x/.match?(raw_repeater[NOTES].text)
+    repeater.notes += "Station type: #{raw_repeater[STATION_TYPE].text.strip}\n" if raw_repeater[STATION_TYPE].text.strip.present?
 
-    echo_link = row[NOTES].text.match(/E:(\d+)/)
+    echo_link = raw_repeater[NOTES].text.match(/E:(\d+)/)
     if echo_link.present?
       repeater.echo_link = true
       repeater.echo_link_node_number = echo_link[1]
     end
 
-    irlp_node_number = row[NOTES].text.match(/I:(\d+)/)
+    irlp_node_number = raw_repeater[NOTES].text.match(/I:(\d+)/)
     if irlp_node_number.present?
       repeater.irlp = true
       repeater.irlp_node_number ||= irlp_node_number[1] # IRLP's authoritative value comes from the IrlpImporter.

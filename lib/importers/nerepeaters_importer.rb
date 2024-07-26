@@ -21,17 +21,6 @@ class NerepeatersImporter < Importer
 
   EXPORT_URL = "http://www.nerepeaters.com/NERepeaters.php"
 
-  def import_all_repeaters
-    file_name = download_file(EXPORT_URL, "nerepeaters.csv")
-    csv_file = CSV.table(file_name, headers: false)
-
-    csv_file.each_with_index do |raw_repeater, line_number|
-      yield(raw_repeater, line_number)
-    end
-  end
-
-  private
-
   # Columns
   TX_FREQUENCY = 0
   RX_OFFSET = 1
@@ -44,17 +33,20 @@ class NerepeatersImporter < Importer
   COUNTY = 9 # Is it county? no idea. We are not importing it.
   COMMENT = 12
 
-  def import_repeater(raw_repeater)
-    repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[CALL_SIGN].upcase,
-      tx_frequency: raw_repeater[TX_FREQUENCY].to_f * 10**6)
+  def import_all_repeaters
+    file_name = download_file(EXPORT_URL, "nerepeaters.csv")
+    csv_file = CSV.table(file_name, headers: false)
 
-    # Only update repeaters that were sourced from this same source, or artscipub which we override, are considered.
-    if repeater.persisted? && !(repeater.source == self.class.source ||
-      repeater.source == ArtscipubImporter.source ||
-      repeater.source == IrlpImporter.source)
-      return [:ignored_due_to_source, repeater]
+    csv_file.each_with_index do |raw_repeater, line_number|
+      yield(raw_repeater, line_number)
     end
+  end
 
+  def call_sign_and_tx_frequency(raw_repeater)
+    [raw_repeater[CALL_SIGN].upcase, raw_repeater[TX_FREQUENCY].to_f * 10**6]
+  end
+
+  def import_repeater(raw_repeater, repeater)
     # Something odd is going on here, NE Repeaters claims this is Yaesu System Fusion, but gives a CTCSS code,
     # https://nedecn.org/maine-repeaters/buckfield-streaked-mtn-w1bkw/ and
     # https://nedecn.org/maine-repeaters/peru-w1bkw/ seem to point to it being DMR (color code), and
@@ -82,8 +74,6 @@ class NerepeatersImporter < Importer
     repeater.save!
 
     [:created_or_updated, repeater]
-  rescue => e
-    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   def import_rx_frequency(repeater, raw_repeater)

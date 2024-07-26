@@ -43,31 +43,18 @@ class IrtsImporter < Importer
     end
   end
 
-  def import_repeater(row)
-    call_sign = row[CALL_SIGN].text.strip.upcase
-    tx_frequency = row[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.first.to_f * 10**6
+  def call_sign_and_tx_frequency(raw_repeater)
+    [raw_repeater[CALL_SIGN].text.strip.upcase,
+      raw_repeater[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.first.to_f * 10**6]
+  end
 
-    repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
-
-    # Only update repeaters that were sourced from this same source, or artscipub which we override, are considered.
-    if repeater.persisted? && !(repeater.source == self.class.source ||
-      repeater.source == ArtscipubImporter.source ||
-      repeater.source == IrlpImporter.source)
-      return [:ignored_due_to_source, repeater]
-    end
-
-    # Only update repeaters that were sourced from this same source.
-    if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
-      return [:ignored_due_to_source, repeater]
-    end
-    repeater.name = repeater.call_sign
-
-    repeater.channel = row[CHANNEL].text.strip
-    repeater.rx_frequency = row[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.second.to_f * 10**6
-    import_mode_access_code(repeater, row[ACCESS].text.strip, row[NOTES].text.strip)
-    import_location(repeater, row[LOCATION])
-    repeater.notes = row[NOTES].text.strip
+  def import_repeater(raw_repeater, repeater)
+    repeater.name = nil # It used to be repeater.call_sign, it needs to be blanked.
+    repeater.channel = raw_repeater[CHANNEL].text.strip
+    repeater.rx_frequency = raw_repeater[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.second.to_f * 10**6
+    import_mode_access_code(repeater, raw_repeater[ACCESS].text.strip, raw_repeater[NOTES].text.strip)
+    import_location(repeater, raw_repeater[LOCATION])
+    repeater.notes = raw_repeater[NOTES].text.strip
 
     repeater.input_country_id = "ie"
     repeater.source = self.class.source

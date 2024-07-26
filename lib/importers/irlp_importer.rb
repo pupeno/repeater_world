@@ -33,14 +33,16 @@ class IrlpImporter < Importer
     end
   end
 
-  def import_repeater(raw_repeater)
+  def call_sign_and_tx_frequency(raw_repeater)
     call_sign = raw_repeater["CallSign"]&.upcase
     if call_sign.blank? || call_sign == "*"
       @logger.info "Ignoring repeater since the call sign is #{raw_repeater["CallSign"]}"
-      return [:ignored_due_to_broken_record, nil]
+      @ignored_due_to_invalid_count += 1
+      return nil
     elsif call_sign == "K5NX" && raw_repeater["Freq"] == "157.5600"
       @logger.info "Ignoring repeater since frequency is outside the band plan #{raw_repeater["CallSign"]}"
-      return [:ignored_due_to_broken_record, nil]
+      @ignored_due_to_invalid_count += 1
+      return nil
     end
 
     tx_frequency = raw_repeater["Freq"].to_f.abs * 10**6 # Yes, there's a repeater with negative frequency.
@@ -51,11 +53,13 @@ class IrlpImporter < Importer
     end
     if tx_frequency == 0
       @logger.info "Ignoring #{call_sign} since the frequency is 0"
-      return [:ignored_due_to_broken_record, nil]
+      @ignored_due_to_invalid_count += 1
+      return nil
     end
+    [call_sign, tx_frequency]
+  end
 
-    repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
-
+  def import_repeater(raw_repeater, repeater)
     repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10**3 if repeater.rx_frequency.blank? || repeater.source == self.class.source
     repeater.fm = true # Just making an assumption here, we don't have access code, so this is actually a bit useless.
 
@@ -90,8 +94,6 @@ class IrlpImporter < Importer
     repeater.save!
 
     [:created_or_updated, repeater]
-  rescue => e
-    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   def parse_country(raw_repeater)

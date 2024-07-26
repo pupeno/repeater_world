@@ -31,16 +31,26 @@ class Importer
     @logger.info "Importing repeaters from #{self.class.source}"
 
     import_all_repeaters do |raw_repeater, record_number|
-      action, imported_repeater = import_repeater(raw_repeater)
-      if action == :ignored_due_to_source
-        @ignored_due_to_source_count += 1
-      elsif action == :ignored_due_to_broken_record
-        @ignored_due_to_invalid_count += 1
-      else
-        @created_or_updated_ids << imported_repeater.id
+      call_sign, tx_frequency = call_sign_and_tx_frequency(raw_repeater)
+      if call_sign.blank? || tx_frequency.blank?
+        next
       end
-    rescue
-      raise "Failed to import record #{record_number}: #{raw_repeater}"
+      repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
+      if repeater.persisted? &&
+          repeater.source != self.class.source && # Only update repeaters that were sourced from this same source...
+          repeater.source != ArtscipubImporter.source && # ...or artscipub...
+          repeater.source != IrlpImporter.source # ... or IRLP
+        @ignored_due_to_source_count += 1
+      else
+        action, imported_repeater = import_repeater(raw_repeater, repeater)
+        if action == :ignored_due_to_broken_record
+          @ignored_due_to_invalid_count += 1
+        else
+          @created_or_updated_ids << imported_repeater.id
+        end
+      end
+    rescue => e
+      raise "Failed to import record #{record_number} with #{e.message}: #{raw_repeater}"
     end
     @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all.count
 
@@ -61,7 +71,11 @@ class Importer
     raise NotImplementedError.new("Importer subclasses must implement this method.")
   end
 
-  def import_repeater(raw_repeater)
+  def call_sign_and_tx_frequency(raw_repeater)
+    raise NotImplementedError.new("Importer subclasses must implement this method.")
+  end
+
+  def import_repeater(raw_repeater, repeater)
     raise NotImplementedError.new("Importer subclasses must implement this method.")
   end
 

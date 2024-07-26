@@ -39,14 +39,11 @@ class UkrepeatersImporter < Importer
     end
   end
 
-  def import_repeater(repeater)
-    # Only update repeaters that were sourced from this same source, or artscipub which we override, are considered.
-    if repeater.persisted? && !(repeater.source == self.class.source ||
-      repeater.source == ArtscipubImporter.source ||
-      repeater.source == IrlpImporter.source)
-      return [:ignored_due_to_source, repeater]
-    end
+  def call_sign_and_tx_frequency(repeater)
+    [repeater.call_sign, repeater.tx_frequency]
+  end
 
+  def import_repeater(repeater, _)
     repeater.save!
     [:created_or_updated, repeater]
   end

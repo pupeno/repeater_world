@@ -28,26 +28,20 @@ class WiaImporter < Importer
 
     # TODO: this code is duplicated in nerepeaters_importer.rb.
     csv_file.each_with_index do |raw_repeater, line_number|
+      if raw_repeater[:output].blank? # The CSV has sections separated by blank lines.
+        @ignored_due_to_invalid_count += 1
+        next
+      end
       yield(raw_repeater, line_number)
     end
   end
 
-  def import_repeater(raw_repeater)
-    if raw_repeater[:output].blank? # The CSV has sections separated by blank lines.
-      return [:ignored_due_to_broken_record, nil]
-    end
+  def call_sign_and_tx_frequency(raw_repeater)
+    [raw_repeater[:call].upcase,
+      raw_repeater[:output].to_f * 10**6]
+  end
 
-    call_sign = raw_repeater[:call].upcase
-    tx_frequency = raw_repeater[:output].to_f * 10**6
-    repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
-
-    # Only update repeaters that were sourced from this same source, or artscipub which we override, are considered.
-    if repeater.persisted? && !(repeater.source == self.class.source ||
-      repeater.source == ArtscipubImporter.source ||
-      repeater.source == IrlpImporter.source)
-      return [:ignored_due_to_source, repeater]
-    end
-
+  def import_repeater(raw_repeater, repeater)
     repeater.name = raw_repeater[:mnemonic] if raw_repeater[:mnemonic].present? && raw_repeater[:mnemonic].strip != "-"
     repeater.name ||= "#{raw_repeater[:location]} #{raw_repeater[:call]}"
 
@@ -96,8 +90,6 @@ class WiaImporter < Importer
     repeater.save!
 
     [:created_or_updated, repeater]
-  rescue => e
-    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   # WIA seems to publish a different CSV file every quarter, so first we need to find the latest CSV file name.

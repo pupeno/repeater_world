@@ -21,6 +21,17 @@ class SralfiImporter < Importer
 
   EXPORT_URL = "https://automatic.sral.fi/api-v1.php?query=list"
 
+  BAND_MAPPING = {
+    "28MHz/10m" => Repeater::BAND_10M,
+    "50MHz/6m" => Repeater::BAND_6M,
+    "70MHz/4m" => Repeater::BAND_4M,
+    "144MHz/2m" => Repeater::BAND_2M,
+    "145MHz/2m" => Repeater::BAND_2M,
+    "432MHz/70cm" => Repeater::BAND_70CM,
+    "433MHz/70cm" => Repeater::BAND_70CM,
+    "1296MHz/23cm" => Repeater::BAND_23CM
+  }
+
   def import_all_repeaters
     file_name = download_file(EXPORT_URL, "sralfi_export.json")
     stations = JSON.parse(File.read(file_name))
@@ -40,34 +51,11 @@ class SralfiImporter < Importer
     end
   end
 
-  private
+  def call_sign_and_tx_frequency(raw_repeater)
+    [raw_repeater["callsign"].upcase, raw_repeater["tx_freq"].to_f * 10**6]
+  end
 
-  BAND_MAPPING = {
-    "28MHz/10m" => Repeater::BAND_10M,
-    "50MHz/6m" => Repeater::BAND_6M,
-    "70MHz/4m" => Repeater::BAND_4M,
-    "144MHz/2m" => Repeater::BAND_2M,
-    "145MHz/2m" => Repeater::BAND_2M,
-    "432MHz/70cm" => Repeater::BAND_70CM,
-    "433MHz/70cm" => Repeater::BAND_70CM,
-    "1296MHz/23cm" => Repeater::BAND_23CM
-  }
-
-  private
-
-  def import_repeater(raw_repeater)
-    repeater = Repeater.find_or_initialize_by(
-      call_sign: raw_repeater["callsign"].upcase,
-      tx_frequency: raw_repeater["tx_freq"].to_f * 10**6
-    )
-
-    # Only update repeaters that were sourced from this same source, or artscipub which we override, are considered.
-    if repeater.persisted? && !(repeater.source == self.class.source ||
-      repeater.source == ArtscipubImporter.source ||
-      repeater.source == IrlpImporter.source)
-      return [:ignored_due_to_source, repeater]
-    end
-
+  def import_repeater(raw_repeater, repeater)
     repeater.external_id = raw_repeater["id"]
     import_status(raw_repeater, repeater)
     import_mode(raw_repeater, repeater)
@@ -106,8 +94,6 @@ class SralfiImporter < Importer
     repeater.save!
 
     [:created_or_updated, repeater]
-  rescue => e
-    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   def import_notes(raw_repeater, repeater)
