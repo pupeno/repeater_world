@@ -46,9 +46,11 @@ class Importer
       else
         about_to_create = !repeater.persisted?
         imported_repeater = import_repeater(raw_repeater, repeater)
-        @created_or_updated_ids << imported_repeater.id if imported_repeater.present?
-        @created_repeaters_count += 1 if about_to_create
-        @updated_repeaters_count += 1 if !about_to_create
+        if imported_repeater.present?
+          @created_or_updated_ids << imported_repeater.id
+          @created_repeaters_count += 1 if about_to_create
+          @updated_repeaters_count += 1 if !about_to_create
+        end
       end
     rescue => e
       @logger.error "Failed to import record #{record_number} with #{e.message}: #{raw_repeater}"
