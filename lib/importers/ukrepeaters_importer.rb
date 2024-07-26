@@ -49,8 +49,6 @@ class UkrepeatersImporter < Importer
   end
 
   def process_repeaterlist3_csv
-    @logger.info "Processing repeaterlist3.csv..."
-
     file_name = download_file("https://ukrepeater.net/csvcreate3.php", "repeaterlist3.csv")
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:callsign, :band, :channel, :tx, :rx, :modes, :qthr, :ngr, :where, :postcode, :region, :ctcsscc, :keeper, :lat, :lon, nil], "https://ukrepeater.net/csvcreate3.php", file_name)
@@ -59,15 +57,12 @@ class UkrepeatersImporter < Importer
       repeater = build_repeater(raw_repeater)
       @repeaters["#{raw_repeater[:callsign]} #{raw_repeater[:tx]}"] = repeater
     rescue
-      raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      @logger.error "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      raise
     end
-
-    @logger.info "Done processing repeaterlist3.csv..."
   end
 
   def process_repeaterlist_dv_csv
-    @logger.info "Processing repeaterlist_dv.csv..."
-
     file_name = download_file("https://ukrepeater.net/csvcreate_dv.php", "repeaterlist_dv.csv")
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :reg, :netw, :col, :qthr, :ngr, :where, :dmr, :dstar, :fusion, :nxdn, nil], "https://ukrepeater.net/csvcreate_dv.php", file_name)
@@ -75,10 +70,7 @@ class UkrepeatersImporter < Importer
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = @repeaters["#{raw_repeater[:call]} #{raw_repeater[:txmhz]}"]
       if !repeater
-        @logger.info "Repeater not found: #{raw_repeater[:call]} when importing #{raw_repeater}"
-        next # TODO: create these repeaters.
-      elsif repeater.source != self.class.source && repeater.source != IrlpImporter.source
-        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
+        @ignored_due_to_invalid_count += 1
         next
       end
 
@@ -91,15 +83,12 @@ class UkrepeatersImporter < Importer
       repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
       repeater.nxdn = true if raw_repeater[:nxdn]&.strip == "Y"
     rescue
-      raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      @logger.error "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      raise
     end
-
-    @logger.info "Done processing repeaterlist_dv.csv."
   end
 
   def process_repeaterlist_all_csv
-    @logger.info "Processing repeaterlist_all.csv..."
-
     file_name = download_file("https://ukrepeater.net/csvcreate_all.php", "repeaterlist_all.csv")
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :qthr, :ngr, :where, :analog, :dmr, :dstar, :fusion, nil], "https://ukrepeater.net/csvcreate_all.php", file_name)
@@ -107,11 +96,8 @@ class UkrepeatersImporter < Importer
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = @repeaters["#{raw_repeater[:call]} #{raw_repeater[:txmhz]}"]
       if !repeater
-        @logger.info "Repeater not found: #{raw_repeater[:call]}"
+        @ignored_due_to_invalid_count += 1
         next # TODO: create these repeaters.
-      elsif repeater.source != self.class.source && repeater.source != IrlpImporter.source
-        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
-        next
       end
 
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
@@ -126,15 +112,12 @@ class UkrepeatersImporter < Importer
 
       repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
     rescue
-      raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      @logger.error "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      raise
     end
-
-    @logger.info "Done processing repeaterlist_all.csv."
   end
 
   def process_repeaterlist_alt2_csv
-    @logger.info "Processing repeaterlist_alt2.csv..."
-
     file_name = download_file("https://ukrepeater.net/repeaterlist-alt.php", "repeaterlist_alt2.csv")
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :shift, :qthr, :ngr, :where, :reg, :ctcss, :dmrcc, :dmrcon, :lat, :lon, :status, :analg, :dmr, :dstar, :fusion, :nxdn, nil], "https://ukrepeater.net/repeaterlist-alt.php", file_name)
@@ -142,11 +125,8 @@ class UkrepeatersImporter < Importer
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = @repeaters["#{raw_repeater[:call]} #{raw_repeater[:txmhz]}"]
       if !repeater
-        @logger.info "Repeater not found: #{raw_repeater[:call]}"
+        @ignored_due_to_invalid_count += 1
         next # TODO: create these repeaters.
-      elsif repeater.source != self.class.source && repeater.source != IrlpImporter.source
-        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
-        next
       end
 
       repeater.fm = raw_repeater[:analg] == 1
@@ -161,15 +141,12 @@ class UkrepeatersImporter < Importer
 
       parse_operational(raw_repeater, repeater)
     rescue
-      raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      @logger.error "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      raise
     end
-
-    @logger.info "Done processing repeaterlist_alt2.csv."
   end
 
   def process_repeaterlist_status_csv
-    @logger.info "Processing repeaterlist_status.csv..."
-
     file_name = download_file("https://ukrepeater.net/csvcreatewithstatus.php", "repeaterlist_status.csv")
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:repeater, :band, :channel, :tx, :rx, :modes, :qthr, :ngr, :where, :region, :ctcsscc, :keeper, :status, nil], "https://ukrepeater.net/csvcreatewithstatus.php", file_name)
@@ -178,20 +155,15 @@ class UkrepeatersImporter < Importer
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = @repeaters["#{raw_repeater[:repeater]} #{raw_repeater[:tx]}"]
       if !repeater
-        @logger.info "Repeater not found: #{raw_repeater[:repeater]}"
-        next # TODO: create these repeaters.
-      elsif repeater.source != self.class.source && repeater.source != IrlpImporter.source
-        @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
+        @ignored_due_to_invalid_count += 1
         next
       end
 
       parse_operational(raw_repeater, repeater)
     rescue
-      raise "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      @logger.error "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      raise
     end
-
-    @logger.info "Done processing repeaterlist_status.csv."
-    {created_or_updated_ids: repeaters.map(&:id)}
   end
 
   # Create repeater from a record in voice_repeater_list.csv

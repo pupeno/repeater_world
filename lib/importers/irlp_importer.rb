@@ -36,11 +36,9 @@ class IrlpImporter < Importer
   def call_sign_and_tx_frequency(raw_repeater)
     call_sign = raw_repeater["CallSign"]&.upcase
     if call_sign.blank? || call_sign == "*"
-      @logger.info "Ignoring repeater since the call sign is #{raw_repeater["CallSign"]}"
       @ignored_due_to_invalid_count += 1
       return nil
     elsif call_sign == "K5NX" && raw_repeater["Freq"] == "157.5600"
-      @logger.info "Ignoring repeater since frequency is outside the band plan #{raw_repeater["CallSign"]}"
       @ignored_due_to_invalid_count += 1
       return nil
     end
@@ -52,7 +50,6 @@ class IrlpImporter < Importer
       tx_frequency = 446_525_000
     end
     if tx_frequency == 0
-      @logger.info "Ignoring #{call_sign} since the frequency is 0"
       @ignored_due_to_invalid_count += 1
       return nil
     end
