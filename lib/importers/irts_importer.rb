@@ -39,21 +39,22 @@ class IrtsImporter < Importer
     table.search("tr").each_with_index do |row, index|
       row = row.search("td")
       next if row.empty?
-
-      action, imported_repeater = yield(row, index)
+      yield(row, index)
     end
   end
 
   def import_repeater(row)
     call_sign = row[CALL_SIGN].text.strip.upcase
-
-    if call_sign.start_with? "GB"
-      return [:ignored_due_to_broken_record, nil] # GB repeaters are being imported from UKRepeater.net.
-    end
-
     tx_frequency = row[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.first.to_f * 10**6
 
     repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
+
+    # Only update repeaters that were sourced from this same source, or artscipub which we override, are considered.
+    if repeater.persisted? && !(repeater.source == self.class.source ||
+      repeater.source == ArtscipubImporter.source ||
+      repeater.source == IrlpImporter.source)
+      return [:ignored_due_to_source, repeater]
+    end
 
     # Only update repeaters that were sourced from this same source.
     if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source

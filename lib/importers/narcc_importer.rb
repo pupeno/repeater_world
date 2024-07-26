@@ -66,8 +66,6 @@ class NarccImporter < Importer
     if repeater.persisted? && !(repeater.source == self.class.source ||
       repeater.source == ArtscipubImporter.source ||
       repeater.source == IrlpImporter.source)
-
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect}."
       return [:ignored_due_to_source, repeater]
     end
 

@@ -105,9 +105,10 @@ class NerepeatersImporter < Importer
     repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[CALL_SIGN].upcase,
       tx_frequency: raw_repeater[TX_FREQUENCY].to_f * 10**6)
 
-    # Only update repeaters that were sourced from nerepeater.com.
-    if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
+    # Only update repeaters that were sourced from this same source, or artscipub which we override, are considered.
+    if repeater.persisted? && !(repeater.source == self.class.source ||
+      repeater.source == ArtscipubImporter.source ||
+      repeater.source == IrlpImporter.source)
       return [:ignored_due_to_source, repeater]
     end
 

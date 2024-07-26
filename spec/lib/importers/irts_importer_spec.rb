@@ -30,7 +30,7 @@ RSpec.describe IrtsImporter do
     Dir.mktmpdir("IrtsImporter") do |dir|
       expect do
         IrtsImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(12)
+      end.to change { Repeater.count }.by(13)
 
       # Grab one repeater and verify it was imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "EI0IPG")

@@ -61,9 +61,10 @@ class SralfiImporter < Importer
       tx_frequency: raw_repeater["tx_freq"].to_f * 10**6
     )
 
-    # Only update repeaters that were sourced from automatic.sral.fi.
-    if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
+    # Only update repeaters that were sourced from this same source, or artscipub which we override, are considered.
+    if repeater.persisted? && !(repeater.source == self.class.source ||
+      repeater.source == ArtscipubImporter.source ||
+      repeater.source == IrlpImporter.source)
       return [:ignored_due_to_source, repeater]
     end
 

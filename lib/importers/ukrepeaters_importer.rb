@@ -36,11 +36,17 @@ class UkrepeatersImporter < Importer
 
     @repeaters.values.each_with_index do |repeater, index|
       yield(repeater, index)
-      repeater.save!
     end
   end
 
   def import_repeater(repeater)
+    # Only update repeaters that were sourced from this same source, or artscipub which we override, are considered.
+    if repeater.persisted? && !(repeater.source == self.class.source ||
+      repeater.source == ArtscipubImporter.source ||
+      repeater.source == IrlpImporter.source)
+      return [:ignored_due_to_source, repeater]
+    end
+
     repeater.save!
     [:created_or_updated, repeater]
   end
