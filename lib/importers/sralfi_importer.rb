@@ -25,7 +25,7 @@ class SralfiImporter < Importer
     file_name = download_file(EXPORT_URL, "sralfi_export.json")
     stations = JSON.parse(File.read(file_name))
 
-    stations["stations"].each do |raw_repeater|
+    stations["stations"].each_with_index do |raw_repeater, index|
       # Types:
       # 1: Voice repeater,
       # 2: Beacon,
@@ -35,20 +35,9 @@ class SralfiImporter < Importer
       # https://m.pablofernandez.tech/@oh8hub@mastodon.radio/110406906005017761
       # TODO: decide whether to add anything other than voice repeaters.
       if raw_repeater["type"] == "1"
-        action, imported_repeater = import_repeater(raw_repeater)
-        if action == :ignored_due_to_source
-          @ignored_due_to_source_count += 1
-        else
-          @created_or_updated_ids << imported_repeater.id
-        end
+        yield(raw_repeater, index)
       end
     end
-    @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all
-
-    {created_or_updated_ids: @created_or_updated_ids,
-     ignored_due_to_source_count: @ignored_due_to_source_count,
-     ignored_due_to_invalid_count: 0,
-     repeaters_deleted_count: @repeaters_deleted_count}
   end
 
   private

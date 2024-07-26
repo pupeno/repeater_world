@@ -32,33 +32,18 @@ class NarccImporter < Importer
 
   def import_all_repeaters
     EXPORT_URLS.each do |export_url|
-      file_name = download_file(export_url, "#{export_url.match(/SBAND=(\d+)/)[1]}.html")
+      local_file_name = "#{export_url.match(/SBAND=(\d+)/)[1]}.html"
+      file_name = download_file(export_url, local_file_name)
 
       doc = Nokogiri::HTML(File.read(file_name))
       table = doc.at("table")
-      table.search("tr").each do |row|
+      table.search("tr").each_with_index do |row, index|
         row = row.search("td")
         next if row[1].nil? || row[0].text.strip == "Output" # Various header rows.
 
-        action, imported_repeater = import_repeater(row)
-        if action == :ignored_due_to_source
-          @ignored_due_to_source_count += 1
-        elsif action == :ignored_due_to_broken_record
-          @ignored_due_to_invalid_count += 1
-        else
-          @created_or_updated_ids << imported_repeater.id
-        end
-      rescue
-        raise "Failed to import record #{row}"
+        yield(row, "#{local_file_name}:#{index}")
       end
-
-      @repeaters_deleted_count += Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all.count
     end
-
-    {created_or_updated_ids: @created_or_updated_ids,
-     ignored_due_to_source_count: @ignored_due_to_source_count,
-     ignored_due_to_invalid_count: @ignored_due_to_invalid_count,
-     repeaters_deleted_count: @repeaters_deleted_count}
   end
 
   OUTPUT = 0

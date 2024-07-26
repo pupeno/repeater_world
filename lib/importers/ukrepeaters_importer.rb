@@ -24,29 +24,26 @@ class UkrepeatersImporter < Importer
     "https://ukrepeater.net"
   end
 
+  private
+
   def import_all_repeaters
-    Repeater.transaction do
-      process_repeaterlist3_csv
-      process_repeaterlist_dv_csv
-      process_repeaterlist_all_csv
-      process_repeaterlist_alt2_csv
-      # TODO: process packetlist: https://ukrepeater.net/csvfiles.html https://ukrepeater.net/csvcreate4.php
-      process_repeaterlist_status_csv
+    process_repeaterlist3_csv
+    process_repeaterlist_dv_csv
+    process_repeaterlist_all_csv
+    process_repeaterlist_alt2_csv
+    # TODO: process packetlist: https://ukrepeater.net/csvfiles.html https://ukrepeater.net/csvcreate4.php
+    process_repeaterlist_status_csv
 
-      @repeaters.values.each do |repeater|
-        repeater.save!
-        @created_or_updated_ids << repeater.id
-      end
-      @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all.count
+    @repeaters.values.each_with_index do |repeater, index|
+      yield(repeater, index)
+      repeater.save!
     end
-
-    {created_or_updated_ids: @created_or_updated_ids,
-     ignored_due_to_source_count: 0,
-     ignored_due_to_invalid_count: 0,
-     repeaters_deleted_count: @repeaters_deleted_count}
   end
 
-  private
+  def import_repeater(repeater)
+    repeater.save!
+    [:created_or_updated, repeater]
+  end
 
   def process_repeaterlist3_csv
     @logger.info "Processing repeaterlist3.csv..."

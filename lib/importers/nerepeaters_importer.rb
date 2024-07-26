@@ -26,24 +26,8 @@ class NerepeatersImporter < Importer
     csv_file = CSV.table(file_name, headers: false)
 
     csv_file.each_with_index do |raw_repeater, line_number|
-      action, imported_repeater = import_repeater(raw_repeater)
-      if action == :ignored_due_to_source
-        @ignored_due_to_source_count += 1
-      elsif action == :ignored_due_to_invalid
-        @ignored_due_to_invalid_count += 1
-      else
-        @created_or_updated_ids << imported_repeater.id
-      end
-    rescue
-      raise "Failed to import record on line #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+      yield(raw_repeater, line_number)
     end
-
-    @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all
-
-    {created_or_updated_ids: @created_or_updated_ids,
-     ignored_due_to_source_count: @ignored_due_to_source_count,
-     ignored_due_to_invalid_count: @ignored_due_to_invalid_count,
-     repeaters_deleted_count: @repeaters_deleted_count}
   end
 
   private

@@ -21,36 +21,6 @@ class IrtsImporter < Importer
 
   EXPORT_URL = "https://www.irts.ie/cgi/repeater.cgi?printable"
 
-  def import_all_repeaters
-    file_name = download_file(EXPORT_URL, "irts.html")
-
-    doc = Nokogiri::HTML(File.read(file_name))
-    table = doc.at("table")
-
-    table.search("tr").each do |row|
-      row = row.search("td")
-      next if row.empty?
-
-      action, imported_repeater = import_repeater(row)
-      if action == :ignored_due_to_source
-        @ignored_due_to_source_count += 1
-      elsif action == :ignored_due_to_broken_record
-        # Nothing to do really. Should we track this?
-      else
-        @created_or_updated_ids << imported_repeater.id
-      end
-    rescue
-      raise "Failed to import record #{row}"
-    end
-
-    @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all
-
-    {created_or_updated_ids: @created_or_updated_ids,
-     ignored_due_to_source_count: @ignored_due_to_source_count,
-     ignored_due_to_invalid_count: 0,
-     repeaters_deleted_count: @repeaters_deleted_count}
-  end
-
   CHANNEL = 0
   FREQUENCY = 1
   CALL_SIGN = 2
@@ -59,6 +29,20 @@ class IrtsImporter < Importer
   NOTES = 5
 
   FREQUENCY_REGEX = /Output:[^\d]+([\d.]+)Input:[^\d]+([\d.]+)/
+
+  def import_all_repeaters
+    file_name = download_file(EXPORT_URL, "irts.html")
+
+    doc = Nokogiri::HTML(File.read(file_name))
+    table = doc.at("table")
+
+    table.search("tr").each_with_index do |row, index|
+      row = row.search("td")
+      next if row.empty?
+
+      action, imported_repeater = yield(row, index)
+    end
+  end
 
   def import_repeater(row)
     call_sign = row[CALL_SIGN].text.strip.upcase
