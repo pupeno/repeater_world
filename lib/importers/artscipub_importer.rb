@@ -30,6 +30,13 @@ class ArtscipubImporter < Importer
   end
 
   def call_sign_and_tx_frequency(raw_repeater)
+    if raw_repeater[:call_sign] == "W6SAR" && raw_repeater[:frequency] == "164.640-" # Typo in the freq.
+      raw_repeater[:frequency] = "146.640-"
+    elsif raw_repeater[:call_sign] == "N1KGN" && raw_repeater[:frequency] == "141.7+" # Typo in the freq.
+      raw_repeater[:frequency] = "441.7+"
+    elsif raw_repeater[:call_sign] == "W4MOT" && raw_repeater[:frequency] == "149.790-" # Typo in the freq.
+      raw_repeater[:frequency] = "147.105+"
+    end
     [raw_repeater[:call_sign].tr("Ø", "0").upcase, raw_repeater[:frequency].to_f * 10**6]
   end
 
@@ -63,14 +70,6 @@ class ArtscipubImporter < Importer
         raw_repeater[:call_sign] == "154.445" # Not a valid call sign, data entry error.
       @ignored_due_to_invalid_count += 1
       return
-    end
-
-    if raw_repeater[:call_sign] == "W6SAR" && raw_repeater[:frequency] == "164.640-" # Typo in the freq.
-      raw_repeater[:frequency] = "146.640-"
-    elsif raw_repeater[:call_sign] == "N1KGN" && raw_repeater[:frequency] == "141.7+" # Typo in the freq.
-      raw_repeater[:frequency] = "441.7+"
-    elsif raw_repeater[:call_sign] == "W4MOT" && raw_repeater[:frequency] == "149.790-" # Typo in the freq.
-      raw_repeater[:frequency] = "147.105+"
     end
 
     repeater.external_id = raw_repeater[:external_id]
