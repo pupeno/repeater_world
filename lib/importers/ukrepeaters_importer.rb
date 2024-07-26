@@ -151,7 +151,6 @@ class UkrepeatersImporter < Importer
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:repeater, :band, :channel, :tx, :rx, :modes, :qthr, :ngr, :where, :region, :ctcsscc, :keeper, :status, nil], "https://ukrepeater.net/csvcreatewithstatus.php", file_name)
 
-    repeaters = []
     csv_file.each_with_index do |raw_repeater, line_number|
       repeater = @repeaters["#{raw_repeater[:repeater]} #{raw_repeater[:tx]}"]
       if !repeater

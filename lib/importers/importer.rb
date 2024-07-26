@@ -20,9 +20,11 @@ class Importer
   def initialize(working_directory: nil, logger: nil)
     @working_directory = working_directory || Rails.root.join("tmp", (self.class.name || SecureRandom.alphanumeric).downcase).to_s # Stable working directory to avoid re-downloading when developing.
     @logger = logger || Rails.logger
+    @created_or_updated_ids = []
+    @created_repeaters_count = 0
+    @updated_repeaters_count = 0
     @ignored_due_to_source_count = 0
     @ignored_due_to_invalid_count = 0
-    @created_or_updated_ids = []
     @repeaters_deleted_count = 0
     PaperTrail.request.whodunnit = "Repeater World Importer"
   end
@@ -42,8 +44,11 @@ class Importer
           repeater.source != IrlpImporter.source # ... or IRLP
         @ignored_due_to_source_count += 1
       else
+        about_to_create = !repeater.persisted?
         imported_repeater = import_repeater(raw_repeater, repeater)
         @created_or_updated_ids << imported_repeater.id if imported_repeater.present?
+        @created_repeaters_count += 1 if about_to_create
+        @updated_repeaters_count += 1 if !about_to_create
       end
     rescue => e
       @logger.error "Failed to import record #{record_number} with #{e.message}: #{raw_repeater}"
@@ -52,10 +57,11 @@ class Importer
     @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all.count
 
     @logger.info "Done importing from #{self.class.source}:"
-    @logger.info "  #{@created_or_updated_ids.count} created or updated"
-    @logger.info "  #{@ignored_due_to_source_count || 0} ignored due to source"
-    @logger.info "  #{@ignored_due_to_invalid_count || 0} ignored due to being invalid"
-    @logger.info "  #{@repeaters_deleted_count || 0} deleted"
+    @logger.info "  #{@created_repeaters_count} created repeaters"
+    @logger.info "  #{@updated_repeaters_count} updated repeaters"
+    @logger.info "  #{@ignored_due_to_source_count} ignored repeaters due to source"
+    @logger.info "  #{@ignored_due_to_invalid_count} ignored repeaters due to being invalid"
+    @logger.info "  #{@repeaters_deleted_count} repeaters deleted"
   end
 
   def self.source
