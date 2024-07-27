@@ -230,10 +230,10 @@ class SralfiImporter < Importer
   end
 
   def import_status(raw_repeater, repeater)
-    if raw_repeater["status"] == "QRV"
+    if raw_repeater["status"].in? ["QRV", "Event"]
       repeater.operational = true
     elsif raw_repeater["status"] == "QRT"
-      repeater.operational = true
+      repeater.operational = false
     else
       raise "Unknown status: #{raw_repeater["status"]}"
     end
