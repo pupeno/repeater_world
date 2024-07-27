@@ -29,6 +29,10 @@ class Importer
     PaperTrail.request.whodunnit = "Repeater World Importer"
   end
 
+  def self.source
+    raise NotImplementedError.new("Importer subclasses must implement this method")
+  end
+
   def import
     @logger.info "Importing repeaters from #{self.class.source}"
 
@@ -65,22 +69,18 @@ class Importer
     @logger.info "  #{@repeaters_deleted_count} repeaters deleted"
   end
 
-  def self.source
-    raise NotImplementedError.new("Importer subclasses must implement this method.")
-  end
-
   private
 
   def import_all_repeaters
-    raise NotImplementedError.new("Importer subclasses must implement this method.")
+    raise NotImplementedError.new("Importer subclasses must implement this method")
   end
 
   def call_sign_and_tx_frequency(raw_repeater)
-    raise NotImplementedError.new("Importer subclasses must implement this method.")
+    raise NotImplementedError.new("Importer subclasses must implement this method")
   end
 
   def import_repeater(raw_repeater, repeater)
-    raise NotImplementedError.new("Importer subclasses must implement this method.")
+    raise NotImplementedError.new("Importer subclasses must implement this method")
   end
 
   def should_import?(repeater)
@@ -207,12 +207,12 @@ class Importer
       "Wisconsin"
     elsif state.in? ["wy", "wyoming"]
       "Wyoming"
-    elsif state.in? ["vi"]
-      "US Virgin Islands"
-    elsif state.in? ["puerto rico"]
-      "Puerto Rico"
     elsif state.in? ["dc", "district of columbia", "na"]
       nil
+    elsif state.in? ["vi"] # this is not correct, having it here for simplicity's sake for now.
+      "US Virgin Islands"
+    elsif state.in? ["puerto rico"] # this is not correct, having it here for simplicity's sake for now.
+      "Puerto Rico"
     else
       raise "Invalid US state: #{state}"
     end
@@ -228,7 +228,7 @@ class Importer
     elsif province.in? ["mb", ".canada-manitoba"]
       "Manitoba"
     elsif province.in? ["nl", ".canada-newfoundland"]
-      "Newfoundland"
+      "Newfoundland and Labrador"
     elsif province.in? ["nt", ".canada-northwest territories"]
       "Northwest Territories"
     elsif province.in? ["ns", ".canada-nova scotia"]
@@ -242,13 +242,13 @@ class Importer
     elsif province.in? ["sk", ".canada-saskatchewan"]
       "Saskatchewan"
     elsif province.in? ["pe"]
-      "Prince Edward Island	"
+      "Prince Edward Island"
     elsif province.in? ["yt"]
       "Yukon"
     elsif province.in? ["nb"]
       "New Brunswick"
     else
-      raise "Unknown Canadian province: #{province}"
+      raise "Invalid Canadian province: #{province}"
     end
   end
 
