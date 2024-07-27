@@ -172,8 +172,6 @@ class SralfiImporter < Importer
 
   def import_name(raw_repeater, repeater)
     repeater.name = raw_repeater["name"]&.strip
-    repeater.name = raw_repeater["qth_city"]&.strip if repeater.name.blank?
-    repeater.name = raw_repeater["callsign"]&.upcase&.strip if repeater.name.blank?
   end
 
   def import_mode(raw_repeater, repeater)

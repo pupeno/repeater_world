@@ -65,7 +65,7 @@ class NerepeatersImporter < Importer
     import_rx_frequency(repeater, raw_repeater)
     repeater.input_region = figure_out_us_state(raw_repeater[STATE])
     repeater.input_locality = raw_repeater[CITY]
-    repeater.name = "#{raw_repeater[CITY]} #{repeater.call_sign}"
+    repeater.name = nil # It used to be "#{raw_repeater[CITY]} #{repeater.call_sign}", now it needs to be blank.
     import_mode(repeater, raw_repeater)
     import_access_code(repeater, raw_repeater)
     repeater.notes = "#{raw_repeater[COMMENT]}\nAccess codes: #{raw_repeater[ACCESS_CODE]} #{raw_repeater[ACCESS_CODE_2]}"

@@ -34,7 +34,7 @@ RSpec.describe IrtsImporter do
 
       # Grab one repeater and verify it was imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "EI0IPG")
-      expect(repeater.name).to eq("Carndonagh EI0IPG")
+      expect(repeater.name).to eq(nil)
       expect(repeater.band).to eq(Repeater::BAND_10M)
       expect(repeater.tx_frequency).to eq(29_680_000)
       expect(repeater.rx_frequency).to eq(29_580_000)

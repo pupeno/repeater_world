@@ -123,10 +123,6 @@ class Repeater < ApplicationRecord
     super("#{name}:#{call_sign}")
   end
 
-  def name
-    super || [locality, call_sign].compact.join(" ")
-  end
-
   def input_latitude
     input_coordinates&.latitude
   end

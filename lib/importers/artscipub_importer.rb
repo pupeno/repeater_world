@@ -72,6 +72,7 @@ class ArtscipubImporter < Importer
       return
     end
 
+    repeater.name = nil # If there's no explicit name, we should keep it blank.
     repeater.external_id = raw_repeater[:external_id]
 
     import_rx_frequency(repeater, raw_repeater)

@@ -34,7 +34,7 @@ RSpec.describe IrlpImporter do
 
       # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "VE7RHS")
-      expect(repeater.name).to eq("Vancouver VE7RHS")
+      expect(repeater.name).to eq(nil)
       expect(repeater.band).to eq(Repeater::BAND_2M)
       expect(repeater.tx_frequency).to eq(145_270_000)
       expect(repeater.rx_frequency).to eq(144_670_000)
