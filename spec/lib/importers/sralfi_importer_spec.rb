@@ -20,7 +20,7 @@ RSpec.describe SralfiImporter do
     files = {"https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json"}
     files.each do |url, local_file|
       file = double("file")
-      local_file = Rails.root.join("spec", "factories", "sralfi_importer_data", local_file)
+      local_file = Rails.root.join("spec", "lib", "importers", "sralfi_importer_data", local_file)
       expect(file).to receive(:open).and_return(File.new(local_file))
       expect(URI).to receive(:parse).with(url).and_return(file)
     end

@@ -24,7 +24,7 @@ RSpec.describe UkrepeatersImporter do
              "https://ukrepeater.net/csvcreatewithstatus.php" => "repeaterlist_status.csv"}
     files.each do |url, local_file|
       file = double("file")
-      local_file = Rails.root.join("spec", "factories", "ukrepeaters_importer_data", local_file)
+      local_file = Rails.root.join("spec", "lib", "importers", "ukrepeaters_importer_data", local_file)
       expect(file).to receive(:open).and_return(File.new(local_file))
       expect(URI).to receive(:parse).with(url).and_return(file)
     end

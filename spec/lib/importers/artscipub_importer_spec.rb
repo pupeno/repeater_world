@@ -300,9 +300,7 @@ RSpec.describe ArtscipubImporter do
              "http://www.artscipub.com/repeaters/detail.asp?rid=21583&ln=K4QXT_repeater_information_on_147.000_in_York,_Alabama" => "21583.html"}
     files.each do |url, local_file|
       file = double("file")
-      local_file = Rails.root.join("spec",
-        "factories",
-        "artscipub_importer_data", local_file)
+      local_file = Rails.root.join("spec", "lib", "importers", "artscipub_importer_data", local_file)
       expect(file).to receive(:open).and_return(File.new(local_file))
       expect(URI).to receive(:parse).with(url).and_return(file)
     end

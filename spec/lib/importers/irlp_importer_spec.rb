@@ -20,7 +20,7 @@ RSpec.describe IrlpImporter do
     files = {"https://status.irlp.net/nohtmlstatus.txt.bz2" => "irlp.tsv.bz2"}
     files.each do |url, local_file|
       file = double("file")
-      local_file = Rails.root.join("spec", "factories", "irlp_importer_data", local_file)
+      local_file = Rails.root.join("spec", "lib", "importers", "irlp_importer_data", local_file)
       expect(file).to receive(:open).and_return(File.new(local_file))
       expect(URI).to receive(:parse).with(url).and_return(file)
     end

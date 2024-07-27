@@ -21,7 +21,7 @@ RSpec.describe WiaImporter do
              "https://www.wia.org.au/members/repeaters/data/documents/Repeater%20Directory%20230304.csv" => "wia.csv"}
     files.each do |url, local_file|
       file = double("file")
-      local_file = Rails.root.join("spec", "factories", "wia_importer_data", local_file)
+      local_file = Rails.root.join("spec", "lib", "importers", "wia_importer_data", local_file)
       expect(file).to receive(:open).and_return(File.new(local_file))
       expect(URI).to receive(:parse).with(url).and_return(file)
     end
