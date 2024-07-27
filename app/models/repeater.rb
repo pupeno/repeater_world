@@ -299,6 +299,7 @@ class Repeater < ApplicationRecord
         field :p25
         field :tetra
         field :echo_link
+        field :irlp
       end
 
       group "FM" do
@@ -326,8 +327,11 @@ class Repeater < ApplicationRecord
       end
 
       group "EchoLink" do
-        field :echo_link
         field :echo_link_node_number
+      end
+
+      group "IRLP" do
+        field :irlp_node_number
       end
 
       group "Input Location" do
@@ -400,6 +404,7 @@ class Repeater < ApplicationRecord
         field :p25
         field :tetra
         field :echo_link
+        field :irlp
       end
 
       group "FM" do
@@ -428,6 +433,10 @@ class Repeater < ApplicationRecord
 
       group "EchoLink" do
         field :echo_link_node_number
+      end
+
+      group "IRLP" do
+        field :irlp_node_number
       end
 
       group "Input Location" do
