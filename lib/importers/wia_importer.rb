@@ -21,54 +21,27 @@ class WiaImporter < Importer
 
   EXPORT_URL = "https://www.wia.org.au/members/repeaters/data/"
 
-  def import_data
-    ignored_due_to_source_count = 0
-    created_or_updated_ids = []
-    repeaters_deleted_count = 0
-
+  def import_all_repeaters
     csv_url = get_csv_url
     csv_file_name = download_file(csv_url, "wia.csv")
     csv_file = CSV.table(csv_file_name, headers: true)
 
-    Repeater.transaction do
-      # TODO: this code is duplicated in nerepeaters_importer.rb.
-      csv_file.each_with_index do |raw_repeater, line_number|
-        action, imported_repeater = import_repeater(raw_repeater)
-        if action == :ignored_due_to_source
-          ignored_due_to_source_count += 1
-        elsif action == :ignored_due_to_broken_record
-          # Nothing to do really. Should we track this?
-        else
-          created_or_updated_ids << imported_repeater.id
-        end
-      rescue
-        raise "Failed to import record on line #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
+    # TODO: this code is duplicated in nerepeaters_importer.rb.
+    csv_file.each_with_index do |raw_repeater, line_number|
+      if raw_repeater[:output].blank? # The CSV has sections separated by blank lines.
+        @ignored_due_to_invalid_count += 1
+        next
       end
-
-      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all
+      yield(raw_repeater, line_number)
     end
-
-    {created_or_updated_ids: created_or_updated_ids,
-     ignored_due_to_source_count: ignored_due_to_source_count,
-     ignored_due_to_invalid_count: 0,
-     repeaters_deleted_count: repeaters_deleted_count}
   end
 
-  def import_repeater(raw_repeater)
-    if raw_repeater[:output].blank? # The CSV has sections separated by blank lines.
-      return [:ignored_due_to_broken_record, nil]
-    end
+  def call_sign_and_tx_frequency(raw_repeater)
+    [raw_repeater[:call].upcase,
+      raw_repeater[:output].to_f * 10**6]
+  end
 
-    call_sign = raw_repeater[:call].upcase
-    tx_frequency = raw_repeater[:output].to_f * 10**6
-    repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
-
-    # Only update repeaters that were sourced from this same source.
-    if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
-      return [:ignored_due_to_source, repeater]
-    end
-
+  def import_repeater(raw_repeater, repeater)
     repeater.name = raw_repeater[:mnemonic] if raw_repeater[:mnemonic].present? && raw_repeater[:mnemonic].strip != "-"
     repeater.name ||= "#{raw_repeater[:location]} #{raw_repeater[:call]}"
 
@@ -116,9 +89,7 @@ class WiaImporter < Importer
     repeater.source = self.class.source
     repeater.save!
 
-    [:created_or_updated, repeater]
-  rescue => e
-    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
+    repeater
   end
 
   # WIA seems to publish a different CSV file every quarter, so first we need to find the latest CSV file name.

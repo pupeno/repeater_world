@@ -13,97 +13,13 @@
 # <https://www.gnu.org/licenses/>.
 
 class NerepeatersImporter < Importer
-  SOURCE = "http://www.nerepeaters.com/"
-  EXPORT_URL = "http://www.nerepeaters.com/NERepeaters.php"
-
-  def import
-    @logger.info "Importing repeaters from #{SOURCE}."
-    file_name = download_file(EXPORT_URL, "nerepeaters.csv")
-    csv_file = CSV.table(file_name, headers: false)
-
-    ignored_due_to_source_count = 0
-    ignored_due_to_invalid_count = 0
-    created_or_updated_ids = []
-    repeaters_deleted_count = 0
-
-    Repeater.transaction do
-      csv_file.each_with_index do |raw_repeater, line_number|
-        action, imported_repeater = import_repeater(raw_repeater)
-        if action == :ignored_due_to_source
-          ignored_due_to_source_count += 1
-        elsif action == :ignored_due_to_invalid
-          ignored_due_to_invalid_count += 1
-        else
-          created_or_updated_ids << imported_repeater.id
-        end
-      rescue
-        raise "Failed to import record on line #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
-      end
-
-      repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: created_or_updated_ids).destroy_all
-    end
-
-    @logger.info "Done importing from #{SOURCE}. #{created_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{ignored_due_to_invalid_count} ignored due to being invalid, and #{repeaters_deleted_count} deleted."
+  def self.source
+    "http://www.nerepeaters.com/"
   end
 
   private
 
-  # TODO: move this to a generic place if we get other use cases.
-  US_STATES = {"AK" => "Alaska",
-               "AL" => "Alabama",
-               "AR" => "Arkansas",
-               "AS" => "American Samoa",
-               "AZ" => "Arizona",
-               "CA" => "California",
-               "CO" => "Colorado",
-               "CT" => "Connecticut",
-               "DC" => "District of Columbia",
-               "DE" => "Delaware",
-               "FL" => "Florida",
-               "GA" => "Georgia",
-               "GU" => "Guam",
-               "HI" => "Hawaii",
-               "IA" => "Iowa",
-               "ID" => "Idaho",
-               "IL" => "Illinois",
-               "IN" => "Indiana",
-               "KS" => "Kansas",
-               "KY" => "Kentucky",
-               "LA" => "Louisiana",
-               "MA" => "Massachusetts",
-               "MD" => "Maryland",
-               "ME" => "Maine",
-               "MI" => "Michigan",
-               "MN" => "Minnesota",
-               "MO" => "Missouri",
-               "MS" => "Mississippi",
-               "MT" => "Montana",
-               "NC" => "North Carolina",
-               "ND" => "North Dakota",
-               "NE" => "Nebraska",
-               "NH" => "New Hampshire",
-               "NJ" => "New Jersey",
-               "NM" => "New Mexico",
-               "NV" => "Nevada",
-               "NY" => "New York",
-               "OH" => "Ohio",
-               "OK" => "Oklahoma",
-               "OR" => "Oregon",
-               "PA" => "Pennsylvania",
-               "PR" => "Puerto Rico",
-               "RI" => "Rhode Island",
-               "SC" => "South Carolina",
-               "SD" => "South Dakota",
-               "TN" => "Tennessee",
-               "TX" => "Texas",
-               "UT" => "Utah",
-               "VA" => "Virginia",
-               "VI" => "Virgin Islands",
-               "VT" => "Vermont",
-               "WA" => "Washington",
-               "WI" => "Wisconsin",
-               "WV" => "West Virginia",
-               "WY" => "Wyoming"}
+  EXPORT_URL = "http://www.nerepeaters.com/NERepeaters.php"
 
   # Columns
   TX_FREQUENCY = 0
@@ -117,45 +33,49 @@ class NerepeatersImporter < Importer
   COUNTY = 9 # Is it county? no idea. We are not importing it.
   COMMENT = 12
 
-  def import_repeater(raw_repeater)
-    repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[CALL_SIGN].upcase,
-      tx_frequency: raw_repeater[TX_FREQUENCY].to_f * 10**6)
+  def import_all_repeaters
+    file_name = download_file(EXPORT_URL, "nerepeaters.csv")
+    csv_file = CSV.table(file_name, headers: false)
 
-    # Only update repeaters that were sourced from nerepeater.com.
-    if repeater.persisted? && repeater.source != SOURCE && repeater.source != IrlpImporter.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
-      return [:ignored_due_to_source, repeater]
+    csv_file.each_with_index do |raw_repeater, line_number|
+      yield(raw_repeater, line_number)
     end
+  end
 
+  def call_sign_and_tx_frequency(raw_repeater)
+    [raw_repeater[CALL_SIGN].upcase, raw_repeater[TX_FREQUENCY].to_f * 10**6]
+  end
+
+  def import_repeater(raw_repeater, repeater)
     # Something odd is going on here, NE Repeaters claims this is Yaesu System Fusion, but gives a CTCSS code,
     # https://nedecn.org/maine-repeaters/buckfield-streaked-mtn-w1bkw/ and
     # https://nedecn.org/maine-repeaters/peru-w1bkw/ seem to point to it being DMR (color code), and
     # https://www.qrz.com/db/W1BKW seems to be a person, not a repeater.
     if raw_repeater[CALL_SIGN] == "W1BKW" && raw_repeater[MODE].strip == "YSF"
-      return [:ignored_due_to_invalid, repeater]
+      @ignored_due_to_invalid_count += 1
+      return
     end
 
     # K1PQ is there twice, with different data, so we are ignoring one of the two.
     if raw_repeater[CALL_SIGN] == "K1PQ" && raw_repeater[COMMENT] == "*Input: 146.400 (+0 kHz), 444.950 (Brownville,ME)"
-      return [:ignored_due_to_invalid, repeater]
+      @ignored_due_to_invalid_count += 1
+      return
     end
 
     import_rx_frequency(repeater, raw_repeater)
-    repeater.input_region = US_STATES[raw_repeater[STATE]]
+    repeater.input_region = figure_out_us_state(raw_repeater[STATE])
     repeater.input_locality = raw_repeater[CITY]
-    repeater.name = "#{raw_repeater[CITY]} #{repeater.call_sign}"
+    repeater.name = nil # It used to be "#{raw_repeater[CITY]} #{repeater.call_sign}", now it needs to be blank.
     import_mode(repeater, raw_repeater)
     import_access_code(repeater, raw_repeater)
     repeater.notes = "#{raw_repeater[COMMENT]}\nAccess codes: #{raw_repeater[ACCESS_CODE]} #{raw_repeater[ACCESS_CODE_2]}"
 
     fill_band(repeater)
     repeater.input_country_id = "us"
-    repeater.source = SOURCE
+    repeater.source = self.class.source
     repeater.save!
 
-    [:created_or_updated, repeater]
-  rescue => e
-    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
+    repeater
   end
 
   def import_rx_frequency(repeater, raw_repeater)
@@ -220,6 +140,8 @@ class NerepeatersImporter < Importer
       elsif repeater.call_sign == "W1AEC" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
         repeater.rx_frequency = 902_062_500
       elsif repeater.call_sign == "K1RK" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
+        repeater.rx_frequency = 902_062_500
+      elsif repeater.call_sign == "W1EHT" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
         repeater.rx_frequency = 902_062_500
       elsif repeater.call_sign == "K1GHZ" && raw_repeater[COMMENT]&.include?(" 1270.1000 ")
         repeater.rx_frequency = 1_270_100_000

@@ -123,10 +123,6 @@ class Repeater < ApplicationRecord
     super("#{name}:#{call_sign}")
   end
 
-  def name
-    super || [locality, call_sign].compact.join(" ")
-  end
-
   def input_latitude
     input_coordinates&.latitude
   end
@@ -299,6 +295,7 @@ class Repeater < ApplicationRecord
         field :p25
         field :tetra
         field :echo_link
+        field :irlp
       end
 
       group "FM" do
@@ -326,8 +323,11 @@ class Repeater < ApplicationRecord
       end
 
       group "EchoLink" do
-        field :echo_link
         field :echo_link_node_number
+      end
+
+      group "IRLP" do
+        field :irlp_node_number
       end
 
       group "Input Location" do
@@ -400,6 +400,7 @@ class Repeater < ApplicationRecord
         field :p25
         field :tetra
         field :echo_link
+        field :irlp
       end
 
       group "FM" do
@@ -428,6 +429,10 @@ class Repeater < ApplicationRecord
 
       group "EchoLink" do
         field :echo_link_node_number
+      end
+
+      group "IRLP" do
+        field :irlp_node_number
       end
 
       group "Input Location" do
@@ -542,6 +547,8 @@ end
 #  input_locality             :string
 #  input_post_code            :string
 #  input_region               :string
+#  irlp                       :boolean
+#  irlp_node_number           :integer
 #  keeper                     :string
 #  locality                   :string
 #  m17                        :boolean

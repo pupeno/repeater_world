@@ -20,7 +20,7 @@ RSpec.describe SralfiImporter do
     files = {"https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json"}
     files.each do |url, local_file|
       file = double("file")
-      local_file = Rails.root.join("spec", "factories", "sralfi_importer_data", local_file)
+      local_file = Rails.root.join("spec", "lib", "importers", "sralfi_importer_data", local_file)
       expect(file).to receive(:open).and_return(File.new(local_file))
       expect(URI).to receive(:parse).with(url).and_return(file)
     end
@@ -63,7 +63,7 @@ RSpec.describe SralfiImporter do
 
       # This repeater simulates a previously imported repeater that is no longer in the source files, so we should
       # delete it to avoid stale data.
-      deleted = create(:repeater, :full, call_sign: "OH3RNE", tx_frequency: 145_000_001, source: SralfiImporter::SOURCE)
+      deleted = create(:repeater, :full, call_sign: "OH3RNE", tx_frequency: 145_000_001, source: SralfiImporter.source)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
       changed = Repeater.find_by(call_sign: "OH1RHU")
@@ -101,7 +101,7 @@ RSpec.describe SralfiImporter do
       # This got updated.
       secondary_source.reload
       expect(secondary_source.rx_frequency).to eq(secondary_source_rx_frequency_was)
-      expect(secondary_source.source).to eq(SralfiImporter::SOURCE)
+      expect(secondary_source.source).to eq(SralfiImporter.source)
 
       # This one didn't change.
       independent.reload

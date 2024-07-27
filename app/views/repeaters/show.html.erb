@@ -13,8 +13,8 @@ You should have received a copy of the GNU Affero General Public License along w
 <https://www.gnu.org/licenses/>.%>
 
 <%= render "shared/page_header",
-           title: @repeater.name,
-           head_title: "#{@repeater.name} - #{@repeater.call_sign} - #{location_in_words @repeater}" %>
+           head_title: [@repeater.name, @repeater.call_sign, location_in_words(@repeater)].reject(&:blank?).join(" - "),
+           title: [@repeater.name, @repeater.call_sign, @repeater.locality].reject(&:blank?).join(" - ") %>
 
 <div class="w-full sm:max-w-7xl mx-auto px-0 sm:px-4">
   <%= render "shared/flash_messages" %>
