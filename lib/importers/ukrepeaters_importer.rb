@@ -15,11 +15,6 @@
 require "open-uri"
 
 class UkrepeatersImporter < Importer
-  def initialize(working_directory: nil, logger: nil)
-    super
-    @repeaters = {}
-  end
-
   def self.source
     "https://ukrepeater.net"
   end
@@ -27,226 +22,213 @@ class UkrepeatersImporter < Importer
   private
 
   def import_all_repeaters
-    process_repeaterlist3_csv
-    process_repeaterlist_dv_csv
-    process_repeaterlist_all_csv
-    process_repeaterlist_alt2_csv
+    repeaters = process_repeaterlist3_csv({})
+    repeaters = process_repeaterlist_dv_csv(repeaters)
+    repeaters = process_repeaterlist_all_csv(repeaters)
+    repeaters = process_repeaterlist_alt2_csv(repeaters)
     # TODO: process packetlist: https://ukrepeater.net/csvfiles.html https://ukrepeater.net/csvcreate4.php
-    process_repeaterlist_status_csv
+    repeaters = process_repeaterlist_status_csv(repeaters)
 
-    @repeaters.values.each_with_index do |repeater, index|
-      yield(repeater, index)
+    repeaters.values.each_with_index do |raw_repeater, index|
+      yield(raw_repeater, index)
     end
   end
 
-  def call_sign_and_tx_frequency(repeater)
-    [repeater.call_sign, repeater.tx_frequency]
+  def call_sign_and_tx_frequency(raw_repeater)
+    [raw_repeater[:call_sign].upcase, raw_repeater[:tx_frequency]]
   end
 
-  def import_repeater(repeater, _)
+  def import_repeater(raw_repeater, repeater)
+    # When a repeater changes mode, the old modes that are no longer there shouldn't remain set to true.
+    repeater.disable_all_modes
+    repeater.assign_attributes(raw_repeater)
     repeater.save!
     repeater
   end
 
-  def process_repeaterlist3_csv
+  def process_repeaterlist3_csv(repeaters)
     file_name = download_file("https://ukrepeater.net/csvcreate3.php", "repeaterlist3.csv")
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:callsign, :band, :channel, :tx, :rx, :modes, :qthr, :ngr, :where, :postcode, :region, :ctcsscc, :keeper, :lat, :lon, nil], "https://ukrepeater.net/csvcreate3.php", file_name)
 
-    csv_file.each_with_index do |raw_repeater, line_number|
-      repeater = build_repeater(raw_repeater)
-      @repeaters["#{raw_repeater[:callsign]} #{raw_repeater[:tx]}"] = repeater
-    rescue
-      @logger.error "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
-      raise
+    csv_file.each_with_index do |row, line_number|
+      raw_repeater = {call_sign: parse_call_sign(row[:callsign]),
+                      tx_frequency: parse_frequency(row[:tx])}
+
+      # Some metadata.
+      raw_repeater[:name] = row[:where].titleize
+      raw_repeater[:band] = row[:band]&.downcase
+      raw_repeater[:channel] = row[:channel]
+      raw_repeater[:keeper] = row[:keeper]
+
+      # How to access the repeater.
+      raw_repeater[:rx_frequency] = row[:rx].to_f * 10**6
+      if row[:ctcsscc].present?
+        if Repeater::CTCSS_TONES.include?(row[:ctcsscc].to_f)
+          raw_repeater[:fm_ctcss_tone] = row[:ctcsscc]
+          raw_repeater[:fm_tone_squelch] = false # TODO: how do we know when this should be true? https://github.com/pupeno/repeater_world/issues/23
+        elsif Repeater::DMR_COLOR_CODES.include?(row[:ctcsscc].to_f)
+          raw_repeater[:dmr_color_code] = row[:ctcsscc]
+        end
+      end
+
+      # The location of the repeater
+      raw_repeater[:input_grid_square] = row[:qthr].upcase
+      raw_repeater[:input_latitude] = row[:lat]
+      raw_repeater[:input_longitude] = row[:lon]
+      raw_repeater[:input_locality] = row[:where].titleize
+      case row[:region]
+      when "SE"
+        raw_repeater[:input_region] = "South East, England"
+      when "SW"
+        raw_repeater[:input_region] = "South West, England"
+      when "NOR"
+        raw_repeater[:input_region] = "North England"
+      when "SCOT"
+        raw_repeater[:input_region] = "Scotland"
+      when "WM"
+        raw_repeater[:input_region] = "Wales & Marches"
+      when "NI"
+        raw_repeater[:input_region] = "Northern Ireland"
+      when "CEN"
+        raw_repeater[:input_region] = "Central England"
+      when "EA"
+        raw_repeater[:input_region] = "East of England & East Anglia"
+      when "XXX"
+        raw_repeater[:input_region] = nil
+      else
+        raise "Unknown region #{row[:region]} for repeater #{row}"
+      end
+      raw_repeater[:input_post_code] = row[:postcode]
+      raw_repeater[:input_country_id] = "gb"
+
+      raw_repeater[:source] = self.class.source
+      raw_repeater[:redistribution_limitations] = data_limitations_ukrepeater_net_url(host: "repeater.world", protocol: "https")
+
+      repeaters["#{raw_repeater[:call_sign]} #{raw_repeater[:tx_frequency]}"] = raw_repeater
     end
+
+    repeaters
   end
 
-  def process_repeaterlist_dv_csv
+  def process_repeaterlist_dv_csv(repeaters)
     file_name = download_file("https://ukrepeater.net/csvcreate_dv.php", "repeaterlist_dv.csv")
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :reg, :netw, :col, :qthr, :ngr, :where, :dmr, :dstar, :fusion, :nxdn, nil], "https://ukrepeater.net/csvcreate_dv.php", file_name)
 
-    csv_file.each_with_index do |raw_repeater, line_number|
-      repeater = @repeaters["#{raw_repeater[:call]} #{raw_repeater[:txmhz]}"]
-      if !repeater
+    csv_file.each do |row|
+      raw_repeater = repeaters["#{parse_call_sign(row[:call])} #{parse_frequency(row[:txmhz])}"]
+      if raw_repeater.blank?
         @ignored_due_to_invalid_count += 1
         next
       end
 
-      # When a repeater changes mode, the old modes that are no longer there shouldn't remain set to true.
-      repeater.disable_all_modes
-
       # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
-      repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
-      repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"
-      repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
-      repeater.nxdn = true if raw_repeater[:nxdn]&.strip == "Y"
-    rescue
-      @logger.error "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
-      raise
+      raw_repeater[:dmr] = true if row[:dmr]&.strip == "Y"
+      raw_repeater[:dstar] = true if row[:dstar]&.strip == "Y"
+      raw_repeater[:fusion] = true if row[:fusion]&.strip == "Y"
+      raw_repeater[:nxdn] = true if row[:nxdn]&.strip == "Y"
     end
+
+    repeaters
   end
 
-  def process_repeaterlist_all_csv
+  def process_repeaterlist_all_csv(repeaters)
     file_name = download_file("https://ukrepeater.net/csvcreate_all.php", "repeaterlist_all.csv")
     csv_file = CSV.table(file_name)
     assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :ctcss, :qthr, :ngr, :where, :analog, :dmr, :dstar, :fusion, nil], "https://ukrepeater.net/csvcreate_all.php", file_name)
 
-    csv_file.each_with_index do |raw_repeater, line_number|
-      repeater = @repeaters["#{raw_repeater[:call]} #{raw_repeater[:txmhz]}"]
-      if !repeater
-        @ignored_due_to_invalid_count += 1
-        next # TODO: create these repeaters.
-      end
-
-      # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
-      repeater.fm = true if raw_repeater[:analog]&.strip == "Y"
-      if repeater.fm && raw_repeater[:ctcss].present? # This file contains some improvements on CTCSS code.
-        repeater.fm_ctcss_tone = raw_repeater[:ctcss]
-      end
-
-      repeater.dstar = true if raw_repeater[:dstar]&.strip == "Y"
-
-      repeater.fusion = true if raw_repeater[:fusion]&.strip == "Y"
-
-      repeater.dmr = true if raw_repeater[:dmr]&.strip == "Y"
-    rescue
-      @logger.error "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
-      raise
-    end
-  end
-
-  def process_repeaterlist_alt2_csv
-    file_name = download_file("https://ukrepeater.net/repeaterlist-alt.php", "repeaterlist_alt2.csv")
-    csv_file = CSV.table(file_name)
-    assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :shift, :qthr, :ngr, :where, :reg, :ctcss, :dmrcc, :dmrcon, :lat, :lon, :status, :analg, :dmr, :dstar, :fusion, :nxdn, nil], "https://ukrepeater.net/repeaterlist-alt.php", file_name)
-
-    csv_file.each_with_index do |raw_repeater, line_number|
-      repeater = @repeaters["#{raw_repeater[:call]} #{raw_repeater[:txmhz]}"]
-      if !repeater
-        @ignored_due_to_invalid_count += 1
-        next # TODO: create these repeaters.
-      end
-
-      repeater.fm = raw_repeater[:analg] == 1
-
-      repeater.dstar = raw_repeater[:dstar] == 1
-
-      repeater.fusion = raw_repeater[:fusion] == 1
-
-      repeater.dmr = raw_repeater[:dmr] == 1
-      repeater.dmr_color_code = raw_repeater[:dmrcc]
-      repeater.dmr_network = raw_repeater[:dmrcon]
-
-      parse_operational(raw_repeater, repeater)
-    rescue
-      @logger.error "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
-      raise
-    end
-  end
-
-  def process_repeaterlist_status_csv
-    file_name = download_file("https://ukrepeater.net/csvcreatewithstatus.php", "repeaterlist_status.csv")
-    csv_file = CSV.table(file_name)
-    assert_fields(csv_file, [:repeater, :band, :channel, :tx, :rx, :modes, :qthr, :ngr, :where, :region, :ctcsscc, :keeper, :status, nil], "https://ukrepeater.net/csvcreatewithstatus.php", file_name)
-
-    csv_file.each_with_index do |raw_repeater, line_number|
-      repeater = @repeaters["#{raw_repeater[:repeater]} #{raw_repeater[:tx]}"]
-      if !repeater
+    csv_file.each do |row|
+      raw_repeater = repeaters["#{parse_call_sign(row[:call])} #{parse_frequency(row[:txmhz])}"]
+      if raw_repeater.blank?
         @ignored_due_to_invalid_count += 1
         next
       end
 
-      parse_operational(raw_repeater, repeater)
-    rescue
-      @logger.error "Failed to import record on #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
-      raise
+      # We set them to true if "Y", we leave them as NULL otherwise. Let's not assume false when we don't have info.
+      raw_repeater[:fm] = true if row[:analog]&.strip == "Y"
+      if raw_repeater[:fm] && row[:ctcss].present? # This file contains some improvements on CTCSS code.
+        raw_repeater[:fm_ctcss_tone] = row[:ctcss]
+      end
+
+      raw_repeater[:dstar] = true if row[:dstar]&.strip == "Y"
+
+      raw_repeater[:fusion] = true if row[:fusion]&.strip == "Y"
+
+      raw_repeater[:dmr] = true if row[:dmr]&.strip == "Y"
     end
+
+    repeaters
   end
 
-  # Create repeater from a record in voice_repeater_list.csv
-  def build_repeater(raw_repeater)
-    # For the UK, we treat the call sign as unique and the identifier of the repeater.
-    repeater = Repeater.find_or_initialize_by(call_sign: raw_repeater[:callsign].upcase, tx_frequency: raw_repeater[:tx].to_f * 10**6)
+  def process_repeaterlist_alt2_csv(repeaters)
+    file_name = download_file("https://ukrepeater.net/repeaterlist-alt.php", "repeaterlist_alt2.csv")
+    csv_file = CSV.table(file_name)
+    assert_fields(csv_file, [:call, :band, :chan, :txmhz, :rxmhz, :shift, :qthr, :ngr, :where, :reg, :ctcss, :dmrcc, :dmrcon, :lat, :lon, :status, :analg, :dmr, :dstar, :fusion, :nxdn, nil], "https://ukrepeater.net/repeaterlist-alt.php", file_name)
 
-    # Only update repeaters that were sourced from ukrepeater.
-    if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
-      return repeater
-    end
-
-    # Some metadata.
-    repeater.name = raw_repeater[:where].titleize
-    repeater.band = raw_repeater[:band]&.downcase
-    repeater.channel = raw_repeater[:channel]
-    repeater.keeper = raw_repeater[:keeper]
-
-    # How to access the repeater.
-    repeater.rx_frequency = raw_repeater[:rx].to_f * 10**6
-    if raw_repeater[:ctcsscc].present?
-      if Repeater::CTCSS_TONES.include?(raw_repeater[:ctcsscc].to_f)
-        repeater.fm_ctcss_tone = raw_repeater[:ctcsscc]
-        repeater.fm_tone_squelch = false # TODO: how do we know when this should be true? https://github.com/pupeno/repeater_world/issues/23
-      elsif Repeater::DMR_COLOR_CODES.include?(raw_repeater[:ctcsscc].to_f)
-        repeater.dmr_color_code = raw_repeater[:ctcsscc]
-      else
-        @logger.info "Ignoring invalid code #{raw_repeater[:ctcsscc]} in #{raw_repeater}"
+    csv_file.each do |row|
+      raw_repeater = repeaters["#{parse_call_sign(row[:call])} #{parse_frequency(row[:txmhz])}"]
+      if raw_repeater.blank?
+        @ignored_due_to_invalid_count += 1
+        next
       end
+
+      raw_repeater[:fm] = row[:analg] == 1
+
+      raw_repeater[:dstar] = row[:dstar] == 1
+
+      raw_repeater[:fusion] = row[:fusion] == 1
+
+      raw_repeater[:dmr] = row[:dmr] == 1
+      raw_repeater[:dmr_color_code] = row[:dmrcc]
+      raw_repeater[:dmr_network] = row[:dmrcon]
+
+      parse_operational(row, raw_repeater)
     end
 
-    # The location of the repeater
-    repeater.input_grid_square = raw_repeater[:qthr].upcase
-    repeater.input_latitude = raw_repeater[:lat]
-    repeater.input_longitude = raw_repeater[:lon]
-    repeater.input_locality = raw_repeater[:where].titleize
-    case raw_repeater[:region]
-    when "SE"
-      repeater.input_region = "South East, England"
-    when "SW"
-      repeater.input_region = "South West, England"
-    when "NOR"
-      repeater.input_region = "North England"
-    when "SCOT"
-      repeater.input_region = "Scotland"
-    when "WM"
-      repeater.input_region = "Wales & Marches"
-    when "NI"
-      repeater.input_region = "Northern Ireland"
-    when "CEN"
-      repeater.input_region = "Central England"
-    when "EA"
-      repeater.input_region = "East of England & East Anglia"
-    when "XXX"
-      repeater.input_region = nil
-    else
-      raise "Unknown region #{raw_repeater[:region]} for repeater #{raw_repeater}"
+    repeaters
+  end
+
+  def process_repeaterlist_status_csv(repeaters)
+    file_name = download_file("https://ukrepeater.net/csvcreatewithstatus.php", "repeaterlist_status.csv")
+    csv_file = CSV.table(file_name)
+    assert_fields(csv_file, [:repeater, :band, :channel, :tx, :rx, :modes, :qthr, :ngr, :where, :region, :ctcsscc, :keeper, :status, nil], "https://ukrepeater.net/csvcreatewithstatus.php", file_name)
+
+    csv_file.each do |row|
+      raw_repeater = repeaters["#{parse_call_sign(row[:repeater])} #{parse_frequency(row[:tx])}"]
+      if raw_repeater.blank?
+        @ignored_due_to_invalid_count += 1
+        next
+      end
+
+      parse_operational(row, raw_repeater)
     end
-    repeater.input_post_code = raw_repeater[:postcode]
-    repeater.input_country_id = "gb"
 
-    repeater.utc_offset = "0:00"
+    repeaters
+  end
 
-    repeater.source = self.class.source
-    repeater.redistribution_limitations = data_limitations_ukrepeater_net_url(host: "repeater.world", protocol: "https")
+  def parse_call_sign(call_sign)
+    call_sign.upcase
+  end
 
-    repeater
+  def parse_frequency(frequency)
+    (frequency.to_f * 10**6).to_i
   end
 
   def parse_operational(raw_repeater, repeater)
     if raw_repeater[:status] == "OPERATIONAL"
-      repeater.operational = true
+      repeater[:operational] = true
     elsif raw_repeater[:status] == "REDUCED OUTPUT"
-      repeater.operational = true
-      repeater.notes = "Reduced output."
+      repeater[:operational] = true
+      repeater[:notes] = "Reduced output."
     elsif raw_repeater[:status] == "DMR ONLY"
-      repeater.operational = true
-      repeater.notes = "DMR only."
+      repeater[:operational] = true
+      repeater[:notes] = "DMR only."
     elsif raw_repeater[:status] == "NOT OPERATIONAL" ||
         raw_repeater[:status] == "CLOSED DOWN"
-      repeater.operational = false
+      repeater[:operational] = false
     elsif raw_repeater[:status].blank?
-      repeater.operational = nil
+      repeater[:operational] = nil
     else
       raise "Unknown status #{raw_repeater[:status].inspect}"
     end

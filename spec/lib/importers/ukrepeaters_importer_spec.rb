@@ -63,7 +63,6 @@ RSpec.describe UkrepeatersImporter do
       expect(repeater.locality).to eq("Derby")
       expect(repeater.post_code).to eq("DE21")
       expect(repeater.region).to eq("Central England")
-      expect(repeater.utc_offset).to eq("0:00")
     end
   end
 
