@@ -34,7 +34,7 @@ You should have received a copy of the GNU Affero General Public License along w
          tooltip: repeater.call_sign,
          band: repeater.band,
          modes: modes_as_sym(repeater),
-         info: "<h1 class='font-bold text-lg link'>#{link_to repeater.name, repeater}</h1>
+         info: "<h1 class='font-bold text-lg link'>#{link_to repeater.moniker, repeater}</h1>
                 <p class='link'>#{link_to repeater.call_sign, repeater}</p>
                 #{distance} #{azimuth}
                 <p>Band: <span class='font-bold'>#{h repeater.band}</span></p>

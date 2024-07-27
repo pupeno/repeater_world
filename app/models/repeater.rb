@@ -123,6 +123,18 @@ class Repeater < ApplicationRecord
     super("#{name}:#{call_sign}")
   end
 
+  def moniker(long_location: false)
+    parts = []
+    parts << name if name.present?
+    parts << call_sign if !parts.join(" ").include?(call_sign)
+    if long_location
+      parts << RepeaterUtils.location_in_words(self)
+    elsif locality.present? && !parts.join(" ").include?(locality)
+      parts << locality
+    end
+    parts.join(" - ")
+  end
+
   def input_latitude
     input_coordinates&.latitude
   end
