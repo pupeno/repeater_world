@@ -247,7 +247,7 @@ class NerepeatersImporter < Importer
     elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :nxdn] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
       # TODO: import the first part correctly, it's likely for NXDN.
       repeater.fm_ctcss_tone = access_code.split("/").second.to_f
-    elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :p25] && access_code.in?(%w[NAC353/D244 NAC250/D244])
+    elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :p25] && access_code.in?(%w[NAC353/D244 NAC250/D244 NAC671/D411])
       # TODO: import the first part correctly, it's likely for P25.
       # TODO: what's the second part? What are these D numbers?
     elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :dstar] &&

@@ -145,6 +145,9 @@ class SralfiImporter < Importer
     elsif raw_repeater["rep_access"]&.strip&.in? ["CC1 / CTCSS 123.0Hz"]
       repeater.fm_ctcss_tone = 123.0
       repeater.dmr_color_code = 1 # Just guessing here.
+    elsif raw_repeater["rep_access"]&.strip&.in? ["CC1, CTCSS 118.8Hz"]
+      repeater.fm_ctcss_tone = 118.8
+      repeater.dmr_color_code = 1
     elsif raw_repeater["rep_access"]&.strip&.in? ["MCC901/MNC9999"]
       # Nothing to do, this is the Tetra repeater (there's literally 1 in Finland so far), not being properly handled yet.
     elsif raw_repeater["rep_access"].blank?
@@ -198,7 +201,7 @@ class SralfiImporter < Importer
       repeater.dmr = true
     elsif raw_repeater["mode"] == "DMR"
       repeater.dmr = true
-    elsif raw_repeater["mode"] == "TETRA"
+    elsif raw_repeater["mode"].in? ["TETRA", "TETRA TMO"]
       repeater.tetra = true
     elsif raw_repeater["mode"].blank?
       # Nothing to do.
@@ -230,10 +233,10 @@ class SralfiImporter < Importer
   end
 
   def import_status(raw_repeater, repeater)
-    if raw_repeater["status"] == "QRV"
+    if raw_repeater["status"].in? ["QRV", "EVENT"]
       repeater.operational = true
     elsif raw_repeater["status"] == "QRT"
-      repeater.operational = true
+      repeater.operational = false
     else
       raise "Unknown status: #{raw_repeater["status"]}"
     end
