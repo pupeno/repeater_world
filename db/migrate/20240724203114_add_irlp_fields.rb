@@ -20,7 +20,5 @@ class AddIrlpFields < ActiveRecord::Migration[7.1]
   def change
     add_column :repeaters, :irlp, :boolean
     add_column :repeaters, :irlp_node_number, :integer
-    add_column :suggested_repeaters, :irlp, :boolean
-    add_column :suggested_repeaters, :irlp_node_number, :integer
   end
 end

@@ -239,8 +239,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_24_203114) do
     t.boolean "m17"
     t.integer "m17_can"
     t.string "m17_reflector_name"
-    t.boolean "irlp"
-    t.integer "irlp_node_number"
     t.index ["country_id"], name: "index_suggested_repeaters_on_country_id"
     t.index ["repeater_id"], name: "index_suggested_repeaters_on_repeater_id"
   end
