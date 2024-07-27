@@ -57,19 +57,26 @@ class IrlpImporter < Importer
   end
 
   def import_repeater(raw_repeater, repeater)
-    repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10**3 if repeater.rx_frequency.blank? || repeater.source == self.class.source
+    repeater.irlp = true # In this case, IRLP is authoritative
+    repeater.irlp_node_number = raw_repeater["Record"] # In this case, IRLP is authoritative
+
+    # If the source is not IrlpImporter, we keep importing the IRLP node number from this importer, but nothing else.
+    if repeater.persisted? && repeater.source != self.class.source
+      repeater.save!
+      return repeater
+    end
+
+    repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10**3
     repeater.fm = true # Just making an assumption here, we don't have access code, so this is actually a bit useless.
 
-    repeater.input_locality = raw_repeater["City"] if repeater.input_locality.blank? || repeater.source == self.class.source
-    repeater.input_country_id = parse_country(raw_repeater) if repeater.input_country_id.blank? || repeater.source == self.class.source
-    if repeater.input_region.blank? || repeater.source == self.class.source
-      repeater.input_region = if repeater.input_country_id == "us"
-        figure_out_us_state(raw_repeater["Prov./St"])
-      elsif repeater.input_country_id == "ca"
-        figure_out_canadian_province(raw_repeater["Prov./St"])
-      else
-        raw_repeater["Prov./St"]
-      end
+    repeater.input_locality = raw_repeater["City"]
+    repeater.input_country_id = parse_country(raw_repeater)
+    repeater.input_region = if repeater.input_country_id == "us"
+      figure_out_us_state(raw_repeater["Prov./St"])
+    elsif repeater.input_country_id == "ca"
+      figure_out_canadian_province(raw_repeater["Prov./St"])
+    else
+      raw_repeater["Prov./St"]
     end
 
     latitude = to_f_or_nil(raw_repeater["lat"])
@@ -77,15 +84,13 @@ class IrlpImporter < Importer
     if latitude.present? && longitude.present? &&
         (latitude != 0 || longitude != 0) && # One should be different to 0, since 0,0 is used to represent lack of data and there are no repeaters in null island
         (latitude <= 90 && latitude >= -90) # There can't be latitudes above 90 or below -90, those are typos.
-      repeater.input_latitude = latitude if repeater.input_latitude.blank? || repeater.source == self.class.source
-      repeater.input_longitude = longitude if repeater.input_longitude.blank? || repeater.source == self.class.source
+      repeater.input_latitude = latitude
+      repeater.input_longitude = longitude
     end
 
-    repeater.external_id = raw_repeater["Record"] if repeater.input_region.blank? || repeater.source == self.class.source
-    repeater.irlp = true # In this case, IRLP is authoritative
-    repeater.irlp_node_number = raw_repeater["Record"] # In this case, IRLP is authoritative
-    repeater.keeper = raw_repeater["Owner"] if repeater.keeper.blank? || repeater.source == self.class.source
-    repeater.web_site = raw_repeater["URL"] if repeater.web_site.blank? || repeater.source == self.class.source
+    repeater.external_id = raw_repeater["Record"]
+    repeater.keeper = raw_repeater["Owner"]
+    repeater.web_site = raw_repeater["URL"]
 
     repeater.source ||= self.class.source
     repeater.save!

@@ -38,12 +38,9 @@ class Importer
         next
       end
       repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
-      if repeater.persisted? &&
-          repeater.source != self.class.source && # Only update repeaters that were sourced from this same source...
-          repeater.source != ArtscipubImporter.source && # ...or artscipub...
-          repeater.source != IrlpImporter.source # ... or IRLP
-        @ignored_due_to_source_count += 1
-      else
+      # puts repeater
+      # puts should_import?(repeater)
+      if should_import?(repeater)
         about_to_create = !repeater.persisted?
         imported_repeater = import_repeater(raw_repeater, repeater)
         if imported_repeater.present?
@@ -51,6 +48,8 @@ class Importer
           @created_repeaters_count += 1 if about_to_create
           @updated_repeaters_count += 1 if !about_to_create
         end
+      else
+        @ignored_due_to_source_count += 1
       end
     rescue => e
       @logger.error "Failed to import record \"#{record_number}\" with message \n> #{e.message}\nand raw repeater:\n#{raw_repeater}"
@@ -82,6 +81,28 @@ class Importer
 
   def import_repeater(raw_repeater, repeater)
     raise NotImplementedError.new("Importer subclasses must implement this method.")
+  end
+
+  def should_import?(repeater)
+    if repeater.new_record? # New repeater, we should import it.
+      return true
+    end
+    if repeater.source == self.class.source # The existing repeater matches the current source.
+      return true
+    end
+    # The repeater was originally imported by Artscipub, so other importers can import it and take over.
+    if repeater.source == ArtscipubImporter.source
+      return true
+    end
+    # The repeater was originally imported by IRLP, so other importers can import it and take over.
+    if repeater.source == IrlpImporter.source
+      return true
+    end
+    # We always import IrlpImporter, so it keeps the Irlp node number up to date (but other fields are ignored).
+    if self.class.source == IrlpImporter.source
+      return true
+    end
+    false
   end
 
   def figure_out_us_state(state)
