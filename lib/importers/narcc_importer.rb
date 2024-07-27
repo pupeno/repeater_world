@@ -98,7 +98,5 @@ class NarccImporter < Importer
 
     repeater.save!
     repeater
-  rescue => e
-    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 end
