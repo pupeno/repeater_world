@@ -53,7 +53,7 @@ class Importer
         end
       end
     rescue => e
-      @logger.error "Failed to import record #{record_number} with #{e.message}: #{raw_repeater}"
+      @logger.error "Failed to import record \"#{record_number}\" with message \n> #{e.message}\nand raw repeater:\n#{raw_repeater}"
       raise
     end
     @repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: @created_or_updated_ids).destroy_all.count
