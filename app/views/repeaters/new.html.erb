@@ -34,6 +34,9 @@ You should have received a copy of the GNU Affero General Public License along w
                               choices: Repeater::BANDS,
                               options: { include_blank: "Band for this repeater" },
                               help_text: "The band this repeater operates on." %>
+        <%= form_boolean_field form, :cross_band,
+                               label: "Cross band?",
+                               help_text: "Does this repeater receive in a different band that it transmits?" %>
         <%= form_text_field form, :keeper, label: "Keeper's call sign",
                             help_text: "Whoever maintains and/or runs this repeater." %>
         <%= form_textarea_field form, :notes, help_text: "This will be in the public record of the repeater." %>

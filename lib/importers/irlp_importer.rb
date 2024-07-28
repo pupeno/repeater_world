@@ -66,7 +66,11 @@ class IrlpImporter < Importer
       return repeater
     end
 
+    repeater.band = RepeaterUtils.band_for_frequency(repeater.tx_frequency)
     repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10**3
+    if !RepeaterUtils.is_frequency_in_band?(repeater.rx_frequency, repeater.band)
+      repeater.cross_band = true
+    end
     repeater.fm = true # Just making an assumption here, we don't have access code, so this is actually a bit useless.
 
     repeater.input_locality = raw_repeater["City"]

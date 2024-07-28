@@ -62,7 +62,8 @@ class NerepeatersImporter < Importer
       return
     end
 
-    import_rx_frequency(repeater, raw_repeater)
+    repeater.band = RepeaterUtils.band_for_frequency(repeater.tx_frequency)
+    repeater.rx_frequency = import_rx_frequency(repeater, raw_repeater)
     repeater.input_region = figure_out_us_state(raw_repeater[STATE])
     repeater.input_locality = raw_repeater[CITY]
     repeater.name = nil # It used to be "#{raw_repeater[CITY]} #{repeater.call_sign}", now it needs to be blank.
@@ -70,7 +71,6 @@ class NerepeatersImporter < Importer
     import_access_code(repeater, raw_repeater)
     repeater.notes = "#{raw_repeater[COMMENT]}\nAccess codes: #{raw_repeater[ACCESS_CODE]} #{raw_repeater[ACCESS_CODE_2]}"
 
-    fill_band(repeater)
     repeater.input_country_id = "us"
     repeater.source = self.class.source
     repeater.save!
@@ -96,59 +96,62 @@ class NerepeatersImporter < Importer
       {min: 902_000_000, max: 928_000_000, neg_offset: -12_000_000},
       {min: 927_000_000, max: 928_000_000, neg_offset: -25_000_000},
       {min: 1240_000_000, max: 1300_000_000, neg_offset: -20_000_000}] # TODO: find the exact ones, I just guessed here.
+    if repeater.call_sign == "KI1P" && repeater.tx_frequency == 445_075_000
+      return 440_075_000 # Data is wrong, should be -, not + https://nedecn.org/home/repeaters/vermont-repeaters/bolton-ricker-mountain-ki1p/
+    end
     if raw_repeater[RX_OFFSET].in? %w[- +] # Standard offsets.
       offsets.each do |offset|
         if repeater.tx_frequency >= offset[:min] && repeater.tx_frequency <= offset[:max]
           if raw_repeater[RX_OFFSET] == "-" && offset[:neg_offset].present?
-            repeater.rx_frequency = repeater.tx_frequency + offset[:neg_offset]
+            return repeater.tx_frequency + offset[:neg_offset]
           elsif raw_repeater[RX_OFFSET] == "+" && offset[:pos_offset].present?
-            repeater.rx_frequency = repeater.tx_frequency + offset[:pos_offset]
+            return repeater.tx_frequency + offset[:pos_offset]
           end
         end
       end
     elsif raw_repeater[RX_OFFSET].in? ["*", "S"] # Some exceptions.
       if repeater.call_sign == "W1BST" && raw_repeater[COMMENT]&.include?(" 51.140 ")
-        repeater.rx_frequency = 51_140_000
+        return 51_140_000
       elsif repeater.call_sign == "W1DSR" && raw_repeater[COMMENT]&.include?(" 147.975 ")
-        repeater.rx_frequency = 147_975_000
+        return 147_975_000
       elsif repeater.call_sign == "K1BEP" # it seems to be just a D-Star gateway, not a repeater
-        repeater.rx_frequency = repeater.tx_frequency
+        return repeater.tx_frequency
       elsif repeater.call_sign == "KB1MMR" && raw_repeater[COMMENT]&.include?(" 147.415 ")
-        repeater.rx_frequency = 147_415_000
+        return 147_415_000
       elsif repeater.call_sign == "WA1RJI" && raw_repeater[COMMENT]&.include?(" 147.445 ")
-        repeater.rx_frequency = 147_445_000
+        return 147_445_000
       elsif repeater.call_sign == "W1NLK" && raw_repeater[COMMENT]&.include?(" 147.475 ")
-        repeater.rx_frequency = 147_475_000
+        return 147_475_000
       elsif repeater.call_sign == "K1IFF" && raw_repeater[COMMENT]&.include?(" 147.5925 ")
-        repeater.rx_frequency = 147_592_500
+        return 147_592_500
       elsif repeater.call_sign == "N1NTP" && raw_repeater[COMMENT]&.include?(" 147.885 ")
-        repeater.rx_frequency = 147_885_000
+        return 147_885_000
       elsif repeater.call_sign == "NW1P" && raw_repeater[COMMENT]&.include?(" 441.700 ")
-        repeater.rx_frequency = 441_700_000
+        return 441_700_000
       elsif repeater.call_sign == "W1ATD" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
-        repeater.rx_frequency = 902_062_500
+        return 902_062_500
       elsif repeater.call_sign == "N1JBC" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
-        repeater.rx_frequency = 902_062_500
+        return 902_062_500
       elsif repeater.call_sign == "W1DMR" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
-        repeater.rx_frequency = 902_062_500
+        return 902_062_500
       elsif repeater.call_sign == "WA1ABC" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
-        repeater.rx_frequency = 902_062_500
+        return 902_062_500
       elsif repeater.call_sign == "W1KK" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
-        repeater.rx_frequency = 902_062_500
+        return 902_062_500
       elsif repeater.call_sign == "W1SGL" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
-        repeater.rx_frequency = 902_062_500
+        return 902_062_500
       elsif repeater.call_sign == "W1AEC" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
-        repeater.rx_frequency = 902_062_500
+        return 902_062_500
       elsif repeater.call_sign == "K1RK" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
-        repeater.rx_frequency = 902_062_500
+        return 902_062_500
       elsif repeater.call_sign == "W1EHT" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
-        repeater.rx_frequency = 902_062_500
+        return 902_062_500
       elsif repeater.call_sign == "K1GHZ" && raw_repeater[COMMENT]&.include?(" 1270.1000 ")
-        repeater.rx_frequency = 1_270_100_000
+        return 1_270_100_000
       elsif repeater.call_sign.in? %w[W1AFD W2FCC NO1A K1GAS KB1ISZ KB1ISZ NN1PA N1PA N1MYY KX1X KC1EGN NB1RI W1MLL K1IR
         K1KZP WE1CT KB1KVD W1STT KX1X WA1REQ W1AW AB1EX N1DOT WA3ITR W1SPC KB1VKY WX1PBD AA1TT KB1FX AA1PR WW1VT W1KK
         WB1GOF]
-        repeater.rx_frequency = repeater.tx_frequency # No idea what's going on here, we just don't have the rx frequency.
+        return repeater.tx_frequency # No idea what's going on here, we just don't have the rx frequency.
       end
     end
     if repeater.rx_frequency.blank?
@@ -271,26 +274,6 @@ class NerepeatersImporter < Importer
       # Nothing we can do here really, we have no idea.
     else
       raise "Unknown access code \"#{access_code}\" (extracted form \"#{raw_repeater[ACCESS_CODE]}\" and \"#{raw_repeater[ACCESS_CODE_2]}\") when importing repeater #{raw_repeater}"
-    end
-  end
-
-  def fill_band(repeater)
-    # TODO: this can probably be generalized and moved to the Repeater model.
-    bands = [{min: 28_000_000, max: 29_700_000, band: Repeater::BAND_10M},
-      {min: 50_000_000, max: 54_000_000, band: Repeater::BAND_6M},
-      {min: 144_000_000, max: 148_000_000, band: Repeater::BAND_2M},
-      {min: 222_000_000, max: 225_000_000, band: Repeater::BAND_1_25M},
-      {min: 420_000_000, max: 450_000_000, band: Repeater::BAND_70CM},
-      {min: 902_000_000, max: 928_000_000, band: Repeater::BAND_33CM},
-      {min: 1240_000_000, max: 1300_000_000, band: Repeater::BAND_23CM}]
-    bands.each do |band|
-      if repeater.tx_frequency >= band[:min] && repeater.tx_frequency < band[:max]
-        repeater.band = band[:band]
-        break
-      end
-    end
-    if repeater.band.blank?
-      raise "Unknown band for tx frequency #{repeater.tx_frequency}."
     end
   end
 end

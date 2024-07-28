@@ -29,20 +29,20 @@ class Repeater < ApplicationRecord
   ]
 
   # These are a mix of various band plans to ensure coverage. It can be expanded to cover more regions.
-  BAND_FREQUENCIES = [
-    {min: 28_000_000, max: 29_700_000, band: BAND_10M},
-    {min: 50_000_000, max: 54_000_000, band: BAND_6M},
-    {min: 70_000_000, max: 70_500_000, band: BAND_4M},
-    {min: 144_000_000, max: 148_000_000, band: BAND_2M},
-    {min: 222_000_000, max: 225_000_000, band: BAND_1_25M},
-    {min: 420_000_000, max: 450_000_000, band: BAND_70CM},
-    {min: 902_000_000, max: 928_000_000, band: BAND_33CM},
-    {min: 1_240_000_000, max: 1_300_000_000, band: BAND_23CM},
-    {min: 2_300_000_000, max: 2_450_000_000, band: BAND_13CM},
-    {min: 3_300_000_000, max: 3_600_000_000, band: BAND_9CM},
-    {min: 5_650_000_000, max: 5_850_000_000, band: BAND_6CM},
-    {min: 10_000_000_000, max: 10_500_000_000, band: BAND_3CM}
-  ]
+  BAND_FREQUENCIES = {
+    BAND_10M => {min: 28_000_000, max: 29_700_000},
+    BAND_6M => {min: 50_000_000, max: 54_000_000},
+    BAND_4M => {min: 70_000_000, max: 70_500_000},
+    BAND_2M => {min: 144_000_000, max: 148_000_000},
+    BAND_1_25M => {min: 222_000_000, max: 225_000_000},
+    BAND_70CM => {min: 420_000_000, max: 450_000_000},
+    BAND_33CM => {min: 902_000_000, max: 928_000_000},
+    BAND_23CM => {min: 1_240_000_000, max: 1_300_000_000},
+    BAND_13CM => {min: 2_300_000_000, max: 2_450_000_000},
+    BAND_9CM => {min: 3_300_000_000, max: 3_600_000_000},
+    BAND_6CM => {min: 5_650_000_000, max: 5_850_000_000},
+    BAND_3CM => {min: 10_000_000_000, max: 10_500_000_000}
+  }
 
   MODES = [
     FM = "fm",
@@ -88,13 +88,15 @@ class Repeater < ApplicationRecord
 
   validates :call_sign, presence: true
   validates :band, presence: true, inclusion: BANDS
-  validates :tx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
-  validates :rx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
+  validates :tx_frequency, presence: true
+  validates :tx_frequency, numericality: true
+  validates :rx_frequency, presence: true
+  validates :rx_frequency, numericality: true
+  validate :ensure_frequencies_are_within_band
   validates :fm_ctcss_tone, inclusion: CTCSS_TONES, allow_blank: true
   validates :m17_can, inclusion: M17_CANS, allow_blank: true
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
 
-  before_validation :ensure_fields_are_set
   before_validation :compute_location_fields
 
   include PgSearch::Model
@@ -189,17 +191,18 @@ class Repeater < ApplicationRecord
     super
   end
 
-  def ensure_fields_are_set
-    if band.blank? && tx_frequency.present?
-      BAND_FREQUENCIES.each do |band_frequency|
-        if tx_frequency >= band_frequency[:min] && tx_frequency <= band_frequency[:max]
-          self.band = band_frequency[:band]
-          break
+  def ensure_frequencies_are_within_band
+    if band.present?
+      if tx_frequency.present? && tx_frequency.is_a?(Numeric)
+        if !RepeaterUtils.is_frequency_in_band?(tx_frequency, band)
+          errors.add(:tx_frequency, "is not within band #{band}. It should be between #{RepeaterUtils.frequency_in_mhz(BAND_FREQUENCIES[band][:min])} and #{RepeaterUtils.frequency_in_mhz(BAND_FREQUENCIES[band][:max])}.")
         end
       end
-    end
-    if bandwidth.blank?
-      self.bandwidth = FM_WIDE
+      if !cross_band? && rx_frequency.present? && rx_frequency.is_a?(Numeric)
+        if !RepeaterUtils.is_frequency_in_band?(rx_frequency, band)
+          errors.add(:rx_frequency, "is not within band #{band}. It should be between #{RepeaterUtils.frequency_in_mhz(BAND_FREQUENCIES[band][:min])} and #{RepeaterUtils.frequency_in_mhz(BAND_FREQUENCIES[band][:max])}.")
+        end
+      end
     end
   end
 
@@ -382,6 +385,7 @@ class Repeater < ApplicationRecord
         field :altitude_asl
         field :bearing
         field :band
+        field :cross_band
         field :channel
       end
 
@@ -489,6 +493,7 @@ class Repeater < ApplicationRecord
         field :altitude_asl
         field :bearing
         field :band
+        field :cross_band
         field :channel
       end
 
@@ -538,6 +543,7 @@ end
 #  call_sign                  :string
 #  channel                    :string
 #  coordinates                :geography        point, 4326
+#  cross_band                 :boolean
 #  dmr                        :boolean
 #  dmr_color_code             :integer
 #  dmr_network                :string

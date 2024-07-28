@@ -18,14 +18,14 @@ RSpec.describe "/api/next/repeaters", type: :request do
   context "With some repeaters" do
     before(:all) do
       Repeater.destroy_all
-      create(:repeater, name: "23CM FM", fm: true, band: Repeater::BAND_23CM, input_latitude: 0.07, input_longitude: 0)
-      create(:repeater, name: "70CM FM", fm: true, band: Repeater::BAND_70CM, input_latitude: 0.13, input_longitude: 0)
-      create(:repeater, name: "2M FM", fm: true, band: Repeater::BAND_2M, input_latitude: 1.4, input_longitude: 0)
-      create(:repeater, name: "4M FM", fm: true, band: Repeater::BAND_4M, input_latitude: 2, input_longitude: 0)
-      create(:repeater, name: "23CM D-Star", dstar: true, band: Repeater::BAND_23CM)
-      create(:repeater, name: "70CM Fusion", fusion: true, band: Repeater::BAND_70CM)
-      create(:repeater, name: "2M DMR", dmr: true, band: Repeater::BAND_2M)
-      create(:repeater, name: "4M NXDN", nxdn: true, band: Repeater::BAND_4M)
+      create(:repeater, name: "23CM FM", fm: true, band: Repeater::BAND_23CM, tx_frequency: 1240_000_000, rx_frequency: 1240_000_000, input_latitude: 0.07, input_longitude: 0)
+      create(:repeater, name: "70CM FM", fm: true, band: Repeater::BAND_70CM, tx_frequency: 420_000_000, rx_frequency: 420_000_000, input_latitude: 0.13, input_longitude: 0)
+      create(:repeater, name: "2M FM", fm: true, band: Repeater::BAND_2M, tx_frequency: 144_000_000, rx_frequency: 144_000_000, input_latitude: 1.4, input_longitude: 0)
+      create(:repeater, name: "4M FM", fm: true, band: Repeater::BAND_4M, tx_frequency: 70_000_000, rx_frequency: 70_000_000, input_latitude: 2, input_longitude: 0)
+      create(:repeater, name: "23CM D-Star", dstar: true, band: Repeater::BAND_23CM, tx_frequency: 1240_000_000, rx_frequency: 1240_000_000)
+      create(:repeater, name: "70CM Fusion", fusion: true, band: Repeater::BAND_70CM, tx_frequency: 420_000_000, rx_frequency: 420_000_000)
+      create(:repeater, name: "2M DMR", dmr: true, band: Repeater::BAND_2M, tx_frequency: 144_000_000, rx_frequency: 144_000_000)
+      create(:repeater, name: "4M NXDN", nxdn: true, band: Repeater::BAND_4M, tx_frequency: 70_000_000, rx_frequency: 70_000_000)
     end
 
     it "creates a json output" do

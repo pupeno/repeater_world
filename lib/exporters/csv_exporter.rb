@@ -16,7 +16,7 @@
 class CsvExporter < Exporter
   def export
     columns = [
-      :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency,
+      :name, :call_sign, :web_site, :keeper, :band, :cross_band, :operational, :tx_frequency, :rx_frequency,
       :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch,
       :m17, :m17_can, :m17_reflector_name,
       :dstar, :dstar_port,

@@ -63,7 +63,11 @@ class NarccImporter < Importer
   end
 
   def import_repeater(raw_repeater, repeater)
+    repeater.band = RepeaterUtils.band_for_frequency(repeater.tx_frequency)
     repeater.rx_frequency = raw_repeater[INPUT].text.to_f * 10**6
+    if !RepeaterUtils.is_frequency_in_band?(repeater.rx_frequency, repeater.band)
+      repeater.cross_band = true
+    end
     repeater.fm = true # Odd, are they only FM? Surely there are other modes there.
     repeater.fm_ctcss_tone = raw_repeater[CTCSS].text.to_f if raw_repeater[CTCSS].text.strip.present?
     repeater.input_locality = raw_repeater[LOCATION].text.strip

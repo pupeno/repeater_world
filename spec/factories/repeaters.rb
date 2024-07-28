@@ -116,6 +116,7 @@ end
 #  call_sign                  :string
 #  channel                    :string
 #  coordinates                :geography        point, 4326
+#  cross_band                 :boolean
 #  dmr                        :boolean
 #  dmr_color_code             :integer
 #  dmr_network                :string

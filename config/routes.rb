@@ -93,7 +93,12 @@ end
 #                                          PATCH  /repeater_searches/:id(.:format)                                                                  repeater_searches#update
 #                                          PUT    /repeater_searches/:id(.:format)                                                                  repeater_searches#update
 #                                          DELETE /repeater_searches/:id(.:format)                                                                  repeater_searches#destroy
+#                                repeaters POST   /repeaters(.:format)                                                                              repeaters#create
+#                             new_repeater GET    /repeaters/new(.:format)                                                                          repeaters#new
+#                            edit_repeater GET    /repeaters/:id/edit(.:format)                                                                     repeaters#edit
 #                                 repeater GET    /repeaters/:id(.:format)                                                                          repeaters#show
+#                                          PATCH  /repeaters/:id(.:format)                                                                          repeaters#update
+#                                          PUT    /repeaters/:id(.:format)                                                                          repeaters#update
 #                      suggested_repeaters POST   /suggested_repeaters(.:format)                                                                    suggested_repeaters#create
 #                   new_suggested_repeater GET    /suggested_repeaters/new(.:format)                                                                suggested_repeaters#new
 #                                directory GET    /directory(.:format)                                                                              directory#countries

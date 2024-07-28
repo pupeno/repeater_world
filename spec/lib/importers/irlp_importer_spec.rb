@@ -67,13 +67,13 @@ RSpec.describe IrlpImporter do
       # This repeater represents one where the upstream data changed and should be updated by the importer.
       changed = Repeater.find_by(call_sign: "VE7RHS", irlp_node_number: 1000)
       changed_rx_frequency_was = changed.rx_frequency
-      changed.rx_frequency = 1_000_000
+      changed.rx_frequency = 144_000_123
       changed.save!
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
       independent = Repeater.find_by(call_sign: "W7NJN")
-      independent.rx_frequency = 1_000_000
+      independent_rx_frequency = independent.rx_frequency = 144_000_123
       independent.source = nil
       independent.save!
 
@@ -92,7 +92,7 @@ RSpec.describe IrlpImporter do
 
       # This one didn't change.
       independent.reload
-      expect(independent.rx_frequency).to eq(1_000_000)
+      expect(independent.rx_frequency).to eq(independent_rx_frequency)
     end
   end
 end

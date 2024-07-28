@@ -25,6 +25,36 @@ RSpec.describe Repeater, type: :model do
       expect(@repeater.to_s).to include(@repeater.call_sign)
     end
 
+    it "should validate tx frequency" do
+      expect(@repeater).to be_valid
+      @repeater.tx_frequency = nil
+      expect(@repeater).not_to be_valid
+      @repeater.tx_frequency = "a"
+      expect(@repeater).not_to be_valid
+      @repeater.tx_frequency = -1
+      expect(@repeater).not_to be_valid
+      @repeater.tx_frequency = Repeater::BAND_FREQUENCIES[@repeater.band][:min] - 1
+      expect(@repeater).not_to be_valid
+      @repeater.tx_frequency = Repeater::BAND_FREQUENCIES[@repeater.band][:max] + 1
+      expect(@repeater).not_to be_valid
+    end
+
+    it "should validate rx frequency" do
+      expect(@repeater).to be_valid
+      @repeater.rx_frequency = nil
+      expect(@repeater).not_to be_valid
+      @repeater.rx_frequency = "a"
+      expect(@repeater).not_to be_valid
+      @repeater.rx_frequency = -1
+      expect(@repeater).not_to be_valid
+      @repeater.rx_frequency = Repeater::BAND_FREQUENCIES[@repeater.band][:min] - 1
+      expect(@repeater).not_to be_valid
+      @repeater.rx_frequency = Repeater::BAND_FREQUENCIES[@repeater.band][:max] + 1
+      expect(@repeater).not_to be_valid
+      @repeater.cross_band = true
+      expect(@repeater).to be_valid
+    end
+
     it "fixes web site" do
       @repeater.web_site = "example.com"
       expect(@repeater.web_site).to eq("http://example.com")
@@ -273,6 +303,7 @@ end
 #  call_sign                  :string
 #  channel                    :string
 #  coordinates                :geography        point, 4326
+#  cross_band                 :boolean
 #  dmr                        :boolean
 #  dmr_color_code             :integer
 #  dmr_network                :string

@@ -42,10 +42,15 @@ class WiaImporter < Importer
   end
 
   def import_repeater(raw_repeater, repeater)
+    repeater.band = RepeaterUtils.band_for_frequency(repeater.tx_frequency)
+    repeater.rx_frequency = raw_repeater[:input].to_f * 10**6
+    if !RepeaterUtils.is_frequency_in_band?(repeater.rx_frequency, repeater.band)
+      repeater.cross_band = true
+    end
+
     repeater.name = raw_repeater[:mnemonic] if raw_repeater[:mnemonic].present? && raw_repeater[:mnemonic].strip != "-"
     repeater.name ||= "#{raw_repeater[:location]} #{raw_repeater[:call]}"
 
-    repeater.rx_frequency = raw_repeater[:input].to_f * 10**6
     repeater.tx_power = raw_repeater[:erp] if raw_repeater[:erp].is_a? Numeric
     repeater.fm = true # Massive assumption here, since it's not part of the data.
     repeater.fm_ctcss_tone = raw_repeater[:tone] if raw_repeater[:tone].is_a? Numeric
