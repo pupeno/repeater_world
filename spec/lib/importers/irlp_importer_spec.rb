@@ -20,7 +20,7 @@ RSpec.describe IrlpImporter do
     files = {"https://status.irlp.net/nohtmlstatus.txt.bz2" => "irlp.tsv.bz2"}
     files.each do |url, local_file|
       file = double("file")
-      local_file = Rails.root.join("spec", "factories", "irlp_importer_data", local_file)
+      local_file = Rails.root.join("spec", "lib", "importers", "irlp_importer_data", local_file)
       expect(file).to receive(:open).and_return(File.new(local_file))
       expect(URI).to receive(:parse).with(url).and_return(file)
     end
@@ -34,7 +34,7 @@ RSpec.describe IrlpImporter do
 
       # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "VE7RHS")
-      expect(repeater.name).to eq("Vancouver VE7RHS")
+      expect(repeater.name).to eq(nil)
       expect(repeater.band).to eq(Repeater::BAND_2M)
       expect(repeater.tx_frequency).to eq(145_270_000)
       expect(repeater.rx_frequency).to eq(144_670_000)
@@ -62,10 +62,10 @@ RSpec.describe IrlpImporter do
       # This repeater simulates a previously imported repeater that is no longer in the source files, so we should
       # delete it to avoid stale data.
       deleted = create(:repeater, :full, call_sign: "VE7RHS", tx_frequency: 145_000_001, source: IrlpImporter.source,
-        external_id: 9999)
+        irlp_node_number: 9999)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      changed = Repeater.find_by(call_sign: "VE7RHS", external_id: 1000)
+      changed = Repeater.find_by(call_sign: "VE7RHS", irlp_node_number: 1000)
       changed_rx_frequency_was = changed.rx_frequency
       changed.rx_frequency = 1_000_000
       changed.save!

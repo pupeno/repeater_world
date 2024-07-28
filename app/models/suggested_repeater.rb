@@ -54,10 +54,10 @@ class SuggestedRepeater < ApplicationRecord
         field :tx_frequency
         field :rx_frequency
         field :fm
+        field :m17
         field :dstar
         field :fusion
         field :dmr
-        field :m17
         field :nxdn
         field :p25
         field :tetra
@@ -93,13 +93,13 @@ class SuggestedRepeater < ApplicationRecord
       end
 
       group "Location" do
-        field :latitude
-        field :longitude
         field :address
         field :locality
         field :region
         field :post_code
         field :country
+        field :latitude
+        field :longitude
         field :grid_square
       end
 
@@ -187,13 +187,13 @@ class SuggestedRepeater < ApplicationRecord
       end
 
       group "Location" do
-        field :latitude
-        field :longitude
         field :address
         field :locality
         field :region
         field :post_code
         field :country
+        field :latitude
+        field :longitude
         field :grid_square
       end
 

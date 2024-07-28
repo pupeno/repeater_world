@@ -75,7 +75,6 @@ RailsAdmin.config do |config|
   config.audit_with :paper_trail, "Admin", "PaperTrail::Version"
   RailsAdmin::Extensions::ControllerExtension.include RepeaterWorld::Admin::ControllerExtension
 
-
   ### More at https://github.com/railsadminteam/rails_admin/wiki/Base-configuration
 
   ## == Gravatar integration ==

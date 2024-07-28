@@ -68,7 +68,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <% repeater = result.searchable %>
         <tr class="<%= index.even? ? "" : "bg-gray-100 dark:bg-gray-800" %>">
           <th scope="row" class="<%= TableHelper::TD_CLASSES %> text-left">
-            <%= link_to repeater.name, repeater, class: "link font-bold" %>
+            <%= link_to repeater.moniker, repeater, class: "link font-bold" %>
           </th>
           <td class="<%= TableHelper::TD_CLASSES %>">
             <%= link_to repeater.call_sign, repeater, class: "link font-bold" %>

@@ -13,44 +13,13 @@
 # <https://www.gnu.org/licenses/>.
 
 class SralfiImporter < Importer
-  SOURCE = "https://automatic.sral.fi/?p=export"
-  EXPORT_URL = "https://automatic.sral.fi/api-v1.php?query=list"
-
-  def import
-    @logger.info "Importing repeaters from #{SOURCE}."
-    file_name = download_file(EXPORT_URL, "sralfi_export.json")
-    stations = JSON.parse(File.read(file_name))
-
-    ignored_due_to_source_count = 0
-    created_or_updated_ids = []
-    repeaters_deleted_count = 0
-
-    Repeater.transaction do
-      stations["stations"].each do |raw_repeater|
-        # Types:
-        # 1: Voice repeater,
-        # 2: Beacon,
-        # 3: APRS digipeater,
-        # 4: ATV repeater,
-        # 5: Data networks.
-        # https://m.pablofernandez.tech/@oh8hub@mastodon.radio/110406906005017761
-        # TODO: decide whether to add anything other than voice repeaters.
-        if raw_repeater["type"] == "1"
-          action, imported_repeater = import_repeater(raw_repeater)
-          if action == :ignored_due_to_source
-            ignored_due_to_source_count += 1
-          else
-            created_or_updated_ids << imported_repeater.id
-          end
-        end
-      end
-      repeaters_deleted_count = Repeater.where(source: SOURCE).where.not(id: created_or_updated_ids).destroy_all
-    end
-
-    @logger.info "Done importing from #{SOURCE}. #{created_or_updated_ids.count} created or updated, #{ignored_due_to_source_count} ignored due to source, #{repeaters_deleted_count} deleted."
+  def self.source
+    "https://automatic.sral.fi/?p=export"
   end
 
   private
+
+  EXPORT_URL = "https://automatic.sral.fi/api-v1.php?query=list"
 
   BAND_MAPPING = {
     "28MHz/10m" => Repeater::BAND_10M,
@@ -63,20 +32,30 @@ class SralfiImporter < Importer
     "1296MHz/23cm" => Repeater::BAND_23CM
   }
 
-  private
+  def import_all_repeaters
+    file_name = download_file(EXPORT_URL, "sralfi_export.json")
+    stations = JSON.parse(File.read(file_name))
 
-  def import_repeater(raw_repeater)
-    repeater = Repeater.find_or_initialize_by(
-      call_sign: raw_repeater["callsign"].upcase,
-      tx_frequency: raw_repeater["tx_freq"].to_f * 10**6
-    )
-
-    # Only update repeaters that were sourced from automatic.sral.fi.
-    if repeater.persisted? && repeater.source != SOURCE && repeater.source != IrlpImporter.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{SOURCE.inspect}"
-      return [:ignored_due_to_source, repeater]
+    stations["stations"].each_with_index do |raw_repeater, index|
+      # Types:
+      # 1: Voice repeater,
+      # 2: Beacon,
+      # 3: APRS digipeater,
+      # 4: ATV repeater,
+      # 5: Data networks.
+      # https://m.pablofernandez.tech/@oh8hub@mastodon.radio/110406906005017761
+      # TODO: decide whether to add anything other than voice repeaters.
+      if raw_repeater["type"] == "1"
+        yield(raw_repeater, index)
+      end
     end
+  end
 
+  def call_sign_and_tx_frequency(raw_repeater)
+    [raw_repeater["callsign"].upcase, raw_repeater["tx_freq"].to_f * 10**6]
+  end
+
+  def import_repeater(raw_repeater, repeater)
     repeater.external_id = raw_repeater["id"]
     import_status(raw_repeater, repeater)
     import_mode(raw_repeater, repeater)
@@ -108,15 +87,13 @@ class SralfiImporter < Importer
 
     import_notes(raw_repeater, repeater)
 
-    repeater.source = SOURCE
+    repeater.source = self.class.source
     repeater.redistribution_limitations = data_limitations_sral_fi_url(host: "repeater.world", protocol: "https")
     repeater.input_country_id = "fi"
 
     repeater.save!
 
-    [:created_or_updated, repeater]
-  rescue => e
-    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
+    repeater
   end
 
   def import_notes(raw_repeater, repeater)
@@ -168,6 +145,9 @@ class SralfiImporter < Importer
     elsif raw_repeater["rep_access"]&.strip&.in? ["CC1 / CTCSS 123.0Hz"]
       repeater.fm_ctcss_tone = 123.0
       repeater.dmr_color_code = 1 # Just guessing here.
+    elsif raw_repeater["rep_access"]&.strip&.in? ["CC1, CTCSS 118.8Hz"]
+      repeater.fm_ctcss_tone = 118.8
+      repeater.dmr_color_code = 1
     elsif raw_repeater["rep_access"]&.strip&.in? ["MCC901/MNC9999"]
       # Nothing to do, this is the Tetra repeater (there's literally 1 in Finland so far), not being properly handled yet.
     elsif raw_repeater["rep_access"].blank?
@@ -195,8 +175,6 @@ class SralfiImporter < Importer
 
   def import_name(raw_repeater, repeater)
     repeater.name = raw_repeater["name"]&.strip
-    repeater.name = raw_repeater["qth_city"]&.strip if repeater.name.blank?
-    repeater.name = raw_repeater["callsign"]&.upcase&.strip if repeater.name.blank?
   end
 
   def import_mode(raw_repeater, repeater)
@@ -223,7 +201,7 @@ class SralfiImporter < Importer
       repeater.dmr = true
     elsif raw_repeater["mode"] == "DMR"
       repeater.dmr = true
-    elsif raw_repeater["mode"] == "TETRA"
+    elsif raw_repeater["mode"].in? ["TETRA", "TETRA TMO"]
       repeater.tetra = true
     elsif raw_repeater["mode"].blank?
       # Nothing to do.
@@ -255,10 +233,10 @@ class SralfiImporter < Importer
   end
 
   def import_status(raw_repeater, repeater)
-    if raw_repeater["status"] == "QRV"
+    if raw_repeater["status"].in? ["QRV", "EVENT"]
       repeater.operational = true
     elsif raw_repeater["status"] == "QRT"
-      repeater.operational = true
+      repeater.operational = false
     else
       raise "Unknown status: #{raw_repeater["status"]}"
     end

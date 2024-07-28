@@ -123,8 +123,16 @@ class Repeater < ApplicationRecord
     super("#{name}:#{call_sign}")
   end
 
-  def name
-    super || [locality, call_sign].compact.join(" ")
+  def moniker(long_location: false)
+    parts = []
+    parts << name if name.present?
+    parts << call_sign if !parts.join(" ").include?(call_sign)
+    if long_location
+      parts << RepeaterUtils.location_in_words(self)
+    elsif locality.present? && !parts.join(" ").include?(locality)
+      parts << locality
+    end
+    parts.join(" - ")
   end
 
   def input_latitude
@@ -258,7 +266,11 @@ class Repeater < ApplicationRecord
 
     # if we have grid square, but no coordinates, lets calculate them.
     if coordinates.blank? && grid_square.present?
-      self.latitude, self.longitude = DX::Grid.decode(grid_square)
+      begin
+        self.latitude, self.longitude = DX::Grid.decode(grid_square)
+      rescue ArgumentError => e
+        raise unless e.message.include? "Invalid grid"
+      end
     end
   end
 
@@ -295,6 +307,7 @@ class Repeater < ApplicationRecord
         field :p25
         field :tetra
         field :echo_link
+        field :irlp
       end
 
       group "FM" do
@@ -322,40 +335,32 @@ class Repeater < ApplicationRecord
       end
 
       group "EchoLink" do
-        field :echo_link
         field :echo_link_node_number
       end
 
-      group "Input Location" do
-        field :input_address
-        field :input_locality
-        field :input_region
-        field :input_post_code
-        field :input_country
-        field :input_latitude
-        field :input_longitude
-        field :input_grid_square
+      group "IRLP" do
+        field :irlp_node_number
       end
 
       group "Input Location" do
-        field :input_latitude
-        field :input_longitude
         field :input_address
         field :input_locality
         field :input_region
         field :input_post_code
         field :input_country
+        field :input_latitude
+        field :input_longitude
         field :input_grid_square
       end
 
       group "Location" do
-        field :latitude
-        field :longitude
         field :address
         field :locality
         field :region
         field :post_code
         field :country
+        field :latitude
+        field :longitude
         field :grid_square
         field :utc_offset
       end
@@ -407,6 +412,7 @@ class Repeater < ApplicationRecord
         field :p25
         field :tetra
         field :echo_link
+        field :irlp
       end
 
       group "FM" do
@@ -437,36 +443,29 @@ class Repeater < ApplicationRecord
         field :echo_link_node_number
       end
 
-      group "Input Location" do
-        field :input_address
-        field :input_locality
-        field :input_region
-        field :input_post_code
-        field :input_country
-        field :input_latitude
-        field :input_longitude
-        field :input_grid_square
+      group "IRLP" do
+        field :irlp_node_number
       end
 
       group "Input Location" do
-        field :input_latitude
-        field :input_longitude
         field :input_address
         field :input_locality
         field :input_region
         field :input_post_code
         field :input_country
+        field :input_latitude
+        field :input_longitude
         field :input_grid_square
       end
 
       group "Location" do
-        field :latitude
-        field :longitude
         field :address
         field :locality
         field :region
         field :post_code
         field :country
+        field :latitude
+        field :longitude
         field :grid_square
         field :utc_offset
       end
@@ -502,12 +501,14 @@ class Repeater < ApplicationRecord
   private
 
   def geocode
-    geocode = Geocoder.search(RepeaterUtils.location_in_words(self)).first
-    self.coordinates = if geocode.present?
-      Geo.point(geocode.latitude, geocode.longitude)
+    if ENV["GOOGLE_GEOCODING_DISABLED"] != "true"
+      geocode = Geocoder.search(RepeaterUtils.location_in_words(self)).first
+      self.coordinates = if geocode.present?
+        Geo.point(geocode.latitude, geocode.longitude)
+      end
+      self.geocoded_at = Time.now
+      self.geocoded_by = geocode.class.name
     end
-    self.geocoded_at = Time.now
-    self.geocoded_by = geocode.class.name
   end
 
   def set_input_coordinates_if_not_nil
@@ -558,6 +559,8 @@ end
 #  input_locality             :string
 #  input_post_code            :string
 #  input_region               :string
+#  irlp                       :boolean
+#  irlp_node_number           :integer
 #  keeper                     :string
 #  locality                   :string
 #  m17                        :boolean

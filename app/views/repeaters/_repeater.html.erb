@@ -17,7 +17,7 @@ You should have received a copy of the GNU Affero General Public License along w
               flex flex-col sm:flex-row">
     <div class="flex-1 px-4 py-5 sm:p-0">
       <dl class="divide-y divide-gray-200 dark:divide-gray-700">
-        <%= card_entry(label: "Name", value: repeater.name) %>
+        <%= card_entry(label: "Name", value: repeater.name, optional: true) %>
         <%= card_entry(label: "Call Sign", value: repeater.call_sign) %>
         <%= card_entry(label: "Web Site", value: repeater.web_site, optional: true) do %>
           <%= link_to repeater.web_site, repeater.web_site, class: "link" %>

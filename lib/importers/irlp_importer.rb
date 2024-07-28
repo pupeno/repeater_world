@@ -21,47 +21,26 @@ class IrlpImporter < Importer
 
   EXPORT_URL = "https://status.irlp.net/nohtmlstatus.txt.bz2"
 
-  def import_data
-    ignored_due_to_source_count = 0
-    created_or_updated_ids = []
-    repeaters_deleted_count = 0
-
+  def import_all_repeaters
     compressed_file_name = download_file(EXPORT_URL, "irlp.tsv.bz2")
     uncompressed_file = RBzip2.default_adapter::Decompressor.new(File.open(compressed_file_name))
     file_contents = uncompressed_file.read.force_encoding("utf-8")
     file_contents.gsub!("http://www.lcarc.ca/          TARGET=\"_blank\"", "http://www.lcarc.ca/") # Makes the CSV parser fail.
     tsv_file = CSV.parse(file_contents, col_sep: "\t", headers: true)
 
-    Repeater.transaction do
-      tsv_file.each_with_index do |raw_repeater, line_number|
-        action, imported_repeater = import_repeater(raw_repeater)
-        if action == :ignored_due_to_source
-          ignored_due_to_source_count += 1
-        elsif action == :ignored_due_to_broken_record
-          # Nothing to do really. Should we track this?
-        else
-          created_or_updated_ids << imported_repeater.id
-        end
-      rescue
-        raise "Failed to import record on line #{line_number + 2}: #{raw_repeater}" # Line numbers start at 1, not 0, and there's a header, hence the +2
-      end
-      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all
+    tsv_file.each_with_index do |raw_repeater, line_number|
+      yield(raw_repeater, line_number + 2) # Line numbers start at 1, not 0, and there's a header, hence the +2
     end
-
-    {created_or_updated_ids: created_or_updated_ids,
-     ignored_due_to_source_count: ignored_due_to_source_count,
-     ignored_due_to_invalid_count: 0,
-     repeaters_deleted_count: repeaters_deleted_count}
   end
 
-  def import_repeater(raw_repeater)
+  def call_sign_and_tx_frequency(raw_repeater)
     call_sign = raw_repeater["CallSign"]&.upcase
     if call_sign.blank? || call_sign == "*"
-      @logger.info "Ignoring repeater since the call sign is #{raw_repeater["CallSign"]}"
-      return [:ignored_due_to_broken_record, nil]
+      @ignored_due_to_invalid_count += 1
+      return nil
     elsif call_sign == "K5NX" && raw_repeater["Freq"] == "157.5600"
-      @logger.info "Ignoring repeater since frequency is outside the band plan #{raw_repeater["CallSign"]}"
-      return [:ignored_due_to_broken_record, nil]
+      @ignored_due_to_invalid_count += 1
+      return nil
     end
 
     tx_frequency = raw_repeater["Freq"].to_f.abs * 10**6 # Yes, there's a repeater with negative frequency.
@@ -71,24 +50,34 @@ class IrlpImporter < Importer
       tx_frequency = 446_525_000
     end
     if tx_frequency == 0
-      @logger.info "Ignoring #{call_sign} since the frequency is 0"
-      return [:ignored_due_to_broken_record, nil]
+      @ignored_due_to_invalid_count += 1
+      return nil
     end
+    [call_sign, tx_frequency]
+  end
 
-    repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
+  def import_repeater(raw_repeater, repeater)
+    repeater.irlp = true # In this case, IRLP is authoritative
+    repeater.irlp_node_number = raw_repeater["Record"] # In this case, IRLP is authoritative
 
-    # Only update repeaters that were sourced from this same source.
+    # If the source is not IrlpImporter, we keep importing the IRLP node number from this importer, but nothing else.
     if repeater.persisted? && repeater.source != self.class.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
-      return [:ignored_due_to_source, repeater]
+      repeater.save!
+      return repeater
     end
 
     repeater.rx_frequency = repeater.tx_frequency + raw_repeater["Offset"].to_f * 10**3
     repeater.fm = true # Just making an assumption here, we don't have access code, so this is actually a bit useless.
 
     repeater.input_locality = raw_repeater["City"]
-    repeater.input_region = raw_repeater["Prov./St"]
     repeater.input_country_id = parse_country(raw_repeater)
+    repeater.input_region = if repeater.input_country_id == "us"
+      figure_out_us_state(raw_repeater["Prov./St"])
+    elsif repeater.input_country_id == "ca"
+      figure_out_canadian_province(raw_repeater["Prov./St"])
+    else
+      raw_repeater["Prov./St"]
+    end
 
     latitude = to_f_or_nil(raw_repeater["lat"])
     longitude = to_f_or_nil(raw_repeater["long"])
@@ -103,12 +92,10 @@ class IrlpImporter < Importer
     repeater.keeper = raw_repeater["Owner"]
     repeater.web_site = raw_repeater["URL"]
 
-    repeater.source = self.class.source
+    repeater.source ||= self.class.source
     repeater.save!
 
-    [:created_or_updated, repeater]
-  rescue => e
-    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
+    repeater
   end
 
   def parse_country(raw_repeater)

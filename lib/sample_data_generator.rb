@@ -51,7 +51,7 @@ class SampleDataGenerator
   def create_repeaters
     Rails.logger.info "Creating UK repeaters from saved snapshot..."
     importer = UkrepeatersImporter.new(
-      working_directory: Rails.root.join("spec", "factories", "ukrepeaters_importer_data"),
+      working_directory: Rails.root.join("spec", "lib", "importers", "ukrepeaters_importer_data"),
       logger: Logger.new("/dev/null")
     )
     importer.import

@@ -21,36 +21,83 @@ class ArtscipubImporter < Importer
 
   EXPORT_URL = "http://www.artscipub.com/repeaters/"
 
-  def import_data
-    ignored_due_to_source_count = 0
-    created_or_updated_ids = []
-    repeaters_deleted_count = 0
-
+  def import_all_repeaters
     raw_repeaters = get_raw_repeaters
 
-    Repeater.transaction do
-      raw_repeaters.each do |raw_repeater|
-        action, imported_repeater = import_repeater(raw_repeater)
-        if action == :ignored_due_to_source
-          ignored_due_to_source_count += 1
-        elsif action == :ignored_due_to_broken_record
-          # Nothing to do really. Should we track this?
-        else
-          created_or_updated_ids << imported_repeater.id
-        end
-      rescue
-        raise "Failed to import record on #{raw_repeater}"
-      end
+    raw_repeaters.each_with_index do |raw_repeater, index|
+      yield(raw_repeater, index)
+    end
+  end
 
-      repeaters_deleted_count = Repeater.where(source: self.class.source).where.not(id: created_or_updated_ids).destroy_all
+  def call_sign_and_tx_frequency(raw_repeater)
+    if raw_repeater[:call_sign] == "W6SAR" && raw_repeater[:frequency] == "164.640-" # Typo in the freq.
+      raw_repeater[:frequency] = "146.640-"
+    elsif raw_repeater[:call_sign] == "N1KGN" && raw_repeater[:frequency] == "141.7+" # Typo in the freq.
+      raw_repeater[:frequency] = "441.7+"
+    elsif raw_repeater[:call_sign] == "W4MOT" && raw_repeater[:frequency] == "149.790-" # Typo in the freq.
+      raw_repeater[:frequency] = "147.105+"
+    end
+    [raw_repeater[:call_sign].tr("Ø", "0").upcase, raw_repeater[:frequency].to_f * 10**6]
+  end
+
+  def import_repeater(raw_repeater, repeater)
+    if raw_repeater[:comments]&.downcase&.include?("noaa") || # Not importing NOAA weather stations. Should we?
+        raw_repeater[:web_site]&.downcase&.include?("noaa") || # Not importing NOAA weather stations. Should we?
+        raw_repeater[:web_site]&.downcase&.include?("weather.gov") || # Not importing NOAA weather stations. Should we?
+        raw_repeater[:call_sign].blank? || # Can't import a repeater without a call sign.
+        raw_repeater[:frequency].blank? || raw_repeater[:frequency].to_f < 1 || # Can't import a repeater without a frequency.
+        raw_repeater[:call_sign] =~ /[a-zA-Z]{3,4}[-\s]?\d{3,4}/ || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
+        raw_repeater[:comments]&.downcase&.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
+        raw_repeater[:web_site]&.downcase&.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
+        raw_repeater[:call_sign] == "k6yo" || # Frequency out of band plan, comment is Private Repeater. DMR
+        # raw_repeater[:call_sign] == "kan654" || # Frequency out of band plan, odd call sign.
+        # raw_repeater[:call_sign] == "KAA 494" || # Frequency out of band plan, odd call sign.
+        # raw_repeater[:call_sign] == "KAE0182" || # Frequency out of band plan, odd call sign.
+        (raw_repeater[:call_sign] == "W0OES" && raw_repeater[:frequency] == "462.675+") || # Frequency out of band plan.
+        (raw_repeater[:call_sign] == "W7YB" && raw_repeater[:frequency] == "148.88-") || # Frequency out of band plan.
+        (raw_repeater[:call_sign] == "N4GSM" && raw_repeater[:frequency] == "154.110-") || # Frequency out of band plan.
+        (raw_repeater[:call_sign] == "WX4CTC" && raw_repeater[:frequency] == "467.5875+") || # Frequency out of band plan.
+        (raw_repeater[:call_sign] == "K1KYI" && raw_repeater[:frequency] == "149.94-") || # Frequency out of band plan.
+        (raw_repeater[:call_sign] == "k5pc" && raw_repeater[:frequency] == "162.620-") || # Frequency out of band plan.
+        (raw_repeater[:call_sign] == "xe2lmc" && raw_repeater[:frequency] == "148.880-") || # Frequency out of band plan.
+        raw_repeater[:call_sign] == "koni" || # Frequency out of band plan, odd call sign.
+        raw_repeater[:call_sign] == "USCG Aux" || # Frequency out of band plan, odd call sign.
+        raw_repeater[:call_sign] == "WXL-51" || # What is this even?
+        raw_repeater[:call_sign] == "unknown" || # Frequency out of band plan, not a call sign.
+        raw_repeater[:call_sign] == "private" || # Frequency out of band plan, not a call sign..
+        raw_repeater[:pl_tone]&.downcase&.in?(["gone", "closed", "private"]) || # Closed repeaters.
+        raw_repeater[:call_sign] == "General" || # Frequency out of band plan, not a call sign.
+        raw_repeater[:call_sign] == "154.445" # Not a valid call sign, data entry error.
+      @ignored_due_to_invalid_count += 1
+      return
     end
 
-    # puts @mocks
+    repeater.name = nil # If there's no explicit name, we should keep it blank.
+    repeater.external_id = raw_repeater[:external_id]
 
-    {created_or_updated_ids: created_or_updated_ids,
-     ignored_due_to_source_count: ignored_due_to_source_count,
-     ignored_due_to_invalid_count: 0,
-     repeaters_deleted_count: repeaters_deleted_count}
+    import_rx_frequency(repeater, raw_repeater)
+    import_mode_and_access_codes(repeater, raw_repeater)
+
+    import_address(repeater, raw_repeater)
+    repeater.input_grid_square = raw_repeater[:grid_square] if raw_repeater[:grid_square].present?
+    if raw_repeater[:latitude].present? && raw_repeater[:longitude].present?
+      latitude = raw_repeater[:latitude].to_f
+      longitude = raw_repeater[:longitude].to_f
+
+      if (-90..90).cover?(latitude) && (-180..180).cover?(longitude) && latitude != 0 && longitude != 0
+        repeater.latitude = latitude
+        repeater.longitude = longitude
+      else
+        repeater.coordinates = nil
+      end
+    end
+
+    repeater.notes = raw_repeater[:comments] if raw_repeater[:comments].present?
+
+    repeater.source = self.class.source
+    repeater.save!
+
+    repeater
   end
 
   def get_raw_repeaters
@@ -122,85 +169,6 @@ class ArtscipubImporter < Importer
     raw_repeater[:comments] = table.at_xpath("tr[td[normalize-space() = 'Comments']]/td[2]").text&.strip
 
     raw_repeater
-  end
-
-  def import_repeater(raw_repeater)
-    if raw_repeater[:comments]&.downcase&.include?("noaa") || # Not importing NOAA weather stations. Should we?
-        raw_repeater[:web_site]&.downcase&.include?("noaa") || # Not importing NOAA weather stations. Should we?
-        raw_repeater[:web_site]&.downcase&.include?("weather.gov") || # Not importing NOAA weather stations. Should we?
-        raw_repeater[:call_sign].blank? || # Can't import a repeater without a call sign.
-        raw_repeater[:frequency].blank? || raw_repeater[:frequency].to_f < 1 || # Can't import a repeater without a frequency.
-        raw_repeater[:call_sign] =~ /[a-zA-Z]{3,4}[-\s]?\d{3,4}/ || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
-        raw_repeater[:comments]&.downcase&.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
-        raw_repeater[:web_site]&.downcase&.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
-        raw_repeater[:call_sign] == "k6yo" || # Frequency out of band plan, comment is Private Repeater. DMR
-        # raw_repeater[:call_sign] == "kan654" || # Frequency out of band plan, odd call sign.
-        # raw_repeater[:call_sign] == "KAA 494" || # Frequency out of band plan, odd call sign.
-        # raw_repeater[:call_sign] == "KAE0182" || # Frequency out of band plan, odd call sign.
-        (raw_repeater[:call_sign] == "W0OES" && raw_repeater[:frequency] == "462.675+") || # Frequency out of band plan.
-        (raw_repeater[:call_sign] == "W7YB" && raw_repeater[:frequency] == "148.88-") || # Frequency out of band plan.
-        (raw_repeater[:call_sign] == "N4GSM" && raw_repeater[:frequency] == "154.110-") || # Frequency out of band plan.
-        (raw_repeater[:call_sign] == "WX4CTC" && raw_repeater[:frequency] == "467.5875+") || # Frequency out of band plan.
-        (raw_repeater[:call_sign] == "K1KYI" && raw_repeater[:frequency] == "149.94-") || # Frequency out of band plan.
-        (raw_repeater[:call_sign] == "k5pc" && raw_repeater[:frequency] == "162.620-") || # Frequency out of band plan.
-        (raw_repeater[:call_sign] == "xe2lmc" && raw_repeater[:frequency] == "148.880-") || # Frequency out of band plan.
-        raw_repeater[:call_sign] == "koni" || # Frequency out of band plan, odd call sign.
-        raw_repeater[:call_sign] == "USCG Aux" || # Frequency out of band plan, odd call sign.
-        raw_repeater[:call_sign] == "WXL-51" || # What is this even?
-        raw_repeater[:call_sign] == "unknown" || # Frequency out of band plan, not a call sign.
-        raw_repeater[:call_sign] == "private" || # Frequency out of band plan, not a call sign..
-        raw_repeater[:pl_tone]&.downcase&.in?(["gone", "closed", "private"]) || # Closed repeaters.
-        raw_repeater[:call_sign] == "General" || # Frequency out of band plan, not a call sign.
-        raw_repeater[:call_sign] == "154.445" # Not a valid call sign, data entry error.
-      # @logger.info "Not importing because of data issues: #{raw_repeater}"
-      return [:ignored_due_to_broken_record, nil]
-    end
-
-    if raw_repeater[:call_sign] == "W6SAR" && raw_repeater[:frequency] == "164.640-" # Typo in the freq.
-      raw_repeater[:frequency] = "146.640-"
-    elsif raw_repeater[:call_sign] == "N1KGN" && raw_repeater[:frequency] == "141.7+" # Typo in the freq.
-      raw_repeater[:frequency] = "441.7+"
-    elsif raw_repeater[:call_sign] == "W4MOT" && raw_repeater[:frequency] == "149.790-" # Typo in the freq.
-      raw_repeater[:frequency] = "147.105+"
-    end
-
-    call_sign = raw_repeater[:call_sign].tr("Ø", "0").upcase
-    tx_frequency = raw_repeater[:frequency].to_f * 10**6
-    repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
-
-    # Only update repeaters that were sourced from this same source.
-    if repeater.persisted? && repeater.source != self.class.source && repeater.source != IrlpImporter.source
-      @logger.info "Not updating #{repeater} since the source is #{repeater.source.inspect} and not #{self.class.source.inspect}"
-      return [:ignored_due_to_source, repeater]
-    end
-
-    repeater.external_id = raw_repeater[:external_id]
-
-    import_rx_frequency(repeater, raw_repeater)
-    import_mode_and_access_codes(repeater, raw_repeater)
-
-    import_address(repeater, raw_repeater)
-    repeater.input_grid_square = raw_repeater[:grid_square] if raw_repeater[:grid_square].present?
-    if raw_repeater[:latitude].present? && raw_repeater[:longitude].present?
-      latitude = raw_repeater[:latitude].to_f
-      longitude = raw_repeater[:longitude].to_f
-
-      if (-90..90).cover?(latitude) && (-180..180).cover?(longitude) && latitude != 0 && longitude != 0
-        repeater.latitude = latitude
-        repeater.longitude = longitude
-      else
-        repeater.coordinates = nil
-      end
-    end
-
-    repeater.notes = raw_repeater[:comments] if raw_repeater[:comments].present?
-
-    repeater.source = self.class.source
-    repeater.save!
-
-    [:created_or_updated, repeater]
-  rescue => e
-    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   def import_rx_frequency(repeater, raw_repeater)
@@ -281,7 +249,7 @@ class ArtscipubImporter < Importer
     elsif pl_tone.in? ["131", "131,8"] # Likely a typo
       repeater.fm = true
       repeater.fm_ctcss_tone = 131.8
-    elsif pl_tone == "130.5" # Likely a typo
+    elsif pl_tone.in? ["136.6", "130.5"] # Likely a typo
       repeater.fm = true
       repeater.fm_ctcss_tone = 136.5
     elsif pl_tone == "141.0" # Likely a typo
@@ -308,7 +276,7 @@ class ArtscipubImporter < Importer
     elsif pl_tone == "254.1" # Likely a typo
       repeater.fm = true
       repeater.fm_ctcss_tone = 250.3
-    elsif pl_tone.in?(["none", "no", "open", "n/a"])
+    elsif pl_tone.in?(["none", "no", "open", "n/a", "no [no]"])
       repeater.fm = true
       repeater.fm_tone_burst = true # Just guessing here.
     elsif pl_tone.in?(["d-star", "dstar", "dv", "na [dstar]", "d star"]) ||
@@ -323,7 +291,11 @@ class ArtscipubImporter < Importer
     elsif pl_tone == "c4fm"
       repeater.fm = true
       repeater.fusion = true
-    elsif pl_tone.in? ["dmr", "[dmr]", "[dmr ]", "dmr digital", "dmr only", "dmr only!"]
+    elsif pl_tone == "c4fm/136.5"
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 136.5
+      repeater.fusion = true
+    elsif pl_tone.in? ["dmr", "[dmr]", "[dmr ]", "dmr digital", "dmr only", "dmr only!", "[dmrplus]"]
       repeater.dmr = true
     elsif pl_tone == "dmr" && raw_repeater[:comments].include?("BrandMeister")
       repeater.dmr = true
@@ -344,7 +316,7 @@ class ArtscipubImporter < Importer
     elsif pl_tone == "[cc 4]"
       repeater.dmr = true
       repeater.dmr_color_code = 4
-    elsif pl_tone.in? ["[cc 7]", "cc7", "[cc7]"]
+    elsif pl_tone.in? ["[cc 7]", "cc7", "[cc7]", "ccode 1 [ccs7 /dmr ]"]
       repeater.dmr = true
       repeater.dmr_color_code = 7
     elsif pl_tone.in? ["[cc 8]", "cc8", "[cc8]"]
@@ -363,6 +335,11 @@ class ArtscipubImporter < Importer
       repeater.dmr = true
       repeater.dmr_color_code = 11
       repeater.dmr_network = "Brandmeister"
+    elsif pl_tone == "cc0 151.4"
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 151.4
+      repeater.dmr = true
+      repeater.dmr_color_code = 0
     elsif pl_tone == "nxdn"
       repeater.nxdn = true
     elsif pl_tone.in?(["ran1", "ran 1", "[ran 1]", "ran01", "[ran2]", "[ran 11]"])
@@ -381,7 +358,7 @@ class ArtscipubImporter < Importer
           "d023n", "d172", "d311", "d411", "d432", "data", "dts", "lafayette", "pl 218.1", "0", "a", "c", "yes",
           "[dtmf]", "d051", "d732n", "[dtmf5]", "d263", "5z", "d174", "d245n", "[*]", "152d", "293", "[nac]", "dtmf",
           "047", "073", "video", "[311]", "244", "tg99", "rock hill", "[nac 293]", "csq", "d125n", "d455", "[dgid:00]",
-          "432", "d047", "[visit srg]", "600", "atikokan", "cochin", "d073", "[d031]", "[d 244n]", "365n"]) # No idea what this is...
+          "432", "d047", "[visit srg]", "600", "atikokan", "cochin", "d073", "[d031]", "[d 244n]", "365n", "[365n]", "[nac$293]"]) # No idea what this is...
       # ...so not doing anything here.
     else
       raise "Unknown mode and access code \"#{pl_tone}\" for #{raw_repeater}."
@@ -396,7 +373,7 @@ class ArtscipubImporter < Importer
 
       case repeater.input_country_id
       when "ca"
-        repeater.input_region = figure_out_canadian_province(coordinates)
+        repeater.input_region = figure_out_canadian_province(coordinates.last)
         repeater.input_locality = coordinates[0..-2].join(", ")
       when "gb"
         case coordinates.last
@@ -436,7 +413,7 @@ class ArtscipubImporter < Importer
     else
       repeater.input_country_id = "us"
       repeater.input_locality = coordinates[0..-2].join(", ")
-      repeater.input_region = coordinates.last
+      repeater.input_region = figure_out_us_state(coordinates.last)
       repeater.input_post_code = raw_repeater[:zip_code] if raw_repeater[:zip_code].present? && raw_repeater[:zip_code] != "00000"
     end
   end
@@ -492,33 +469,6 @@ class ArtscipubImporter < Importer
       "vi"
     else
       raise "Unknown country #{location.last} in location #{location}"
-    end
-  end
-
-  def figure_out_canadian_province(location)
-    case location.last
-    when ".Canada-Alberta"
-      "Alberta"
-    when ".Canada-British Columbia"
-      "British Columbia"
-    when ".Canada-Manitoba"
-      "Manitoba"
-    when ".Canada-Newfoundland"
-      "Newfoundland"
-    when ".Canada-Northwest Territories"
-      "Northwest Territories"
-    when ".Canada-Nova Scotia"
-      "Nova Scotia"
-    when ".Canada-Nunavut"
-      "Nunavut"
-    when ".Canada-Ontario"
-      "Ontario"
-    when ".Canada-Quebec"
-      "Quebec"
-    when ".Canada-Saskatchewan"
-      "Saskatchewan"
-    else
-      raise "Unknown Canadian province: #{location}"
     end
   end
 

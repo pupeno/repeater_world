@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_20_095718) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_24_203114) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -173,6 +173,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_20_095718) do
     t.string "input_country_id"
     t.geography "input_coordinates", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.string "grid_square"
+    t.boolean "irlp"
+    t.integer "irlp_node_number"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["coordinates"], name: "index_repeaters_on_coordinates", using: :gist
     t.index ["country_id"], name: "index_repeaters_on_country_id"
