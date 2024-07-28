@@ -27,7 +27,7 @@ Rails.application.routes.draw do
       get "export"
     end
   end
-  resources :repeaters, only: [:show]
+  resources :repeaters, only: [:show, :new, :create, :edit, :update]
   resources :suggested_repeaters, only: [:new, :create]
   get "/directory", to: "directory#countries"
   get "/directory/:country_id", to: "directory#by_country", as: "directory_by_country"

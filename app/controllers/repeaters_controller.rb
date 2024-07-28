@@ -24,4 +24,67 @@ class RepeatersController < ApplicationController
       redirect_to @repeater, status: :moved_permanently
     end
   end
+
+  def new
+    @repeater = Repeater.new
+  end
+
+  def create
+    @repeater = Repeater.new(repeater_params)
+    if @repeater.save
+      redirect_to @repeater, notice: "Thank you, this repeater is now live"
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def repeater_params
+    params.fetch(:repeater, {}).permit(
+      :input_address,
+      :altitude_agl,
+      :altitude_asl,
+      :band,
+      :bearing,
+      :call_sign,
+      :channel,
+      :input_country_id,
+      :dmr,
+      :dmr_color_code,
+      :dmr_network,
+      :dstar,
+      :dstar_port,
+      :echo_link,
+      :echo_link_node_number,
+      :fm,
+      :fm_ctcss_tone,
+      :fm_tone_burst,
+      :fm_tone_squelch,
+      :fusion,
+      :grid_square,
+      :keeper,
+      :input_latitude,
+      :input_locality,
+      :input_longitude,
+      :m17,
+      :m17_can,
+      :m17_reflector_name,
+      :name,
+      :notes,
+      :nxdn,
+      :p25,
+      :input_post_code,
+      :private_notes,
+      :input_region,
+      :rx_antenna,
+      :rx_antenna_polarization,
+      :rx_frequency,
+      :tetra,
+      :tx_antenna,
+      :tx_antenna_polarization,
+      :tx_frequency,
+      :tx_power,
+      :web_site,
+      :wires_x_node_id
+    )
+  end
 end
