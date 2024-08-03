@@ -104,9 +104,9 @@ RSpec.describe "/repeaters", type: :request do
       repeater = Repeater.last
       email = ActionMailer::Base.deliveries.last
       expect(email.subject).to eq("New repeater added Repeater BL4NK")
-      expect(email.body).to include("New repeater added Repeater BL4NK")
-      expect(email.body).to include(repeater.to_s)
-      expect(email.body).to include(@current_user.to_s)
+      expect(email.body.to_s).to include("New repeater added Repeater BL4NK")
+      expect(email.body.to_s).to include(repeater.to_s)
+      expect(email.body.to_s).to include(@current_user.to_s)
       expect(response).to redirect_to(repeater_url(repeater))
       follow_redirect!
       expect(response.body).to include(repeater.moniker)
@@ -168,9 +168,9 @@ RSpec.describe "/repeaters", type: :request do
           .and change { ActionMailer::Base.deliveries.count }.by(1)
         email = ActionMailer::Base.deliveries.last
         expect(email.subject).to eq("Repeater updated #{@repeater.moniker}")
-        expect(email.body).to include("Repeater updated")
-        expect(email.body).to include(@repeater.to_s)
-        expect(email.body).to include(@current_user.to_s)
+        expect(email.body.to_s).to include("Repeater updated")
+        expect(email.body.to_s).to include(@repeater.to_s)
+        expect(email.body.to_s).to include(@current_user.to_s)
         expect(response).to redirect_to(repeater_url(@repeater))
         follow_redirect!
         expect(response.body).to include(@repeater.moniker)
