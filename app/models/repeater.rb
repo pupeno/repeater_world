@@ -128,6 +128,8 @@ class Repeater < ApplicationRecord
     dmr_network: "DMR network",
     dstar: "D-Star",
     dstar_port: "D-Star port",
+    echolink: "EchoLink",
+    echolink_node_number: "EchoLink node number",
     fm: "FM",
     fm_ctcss_tone: "CTCSS tone",
     fm_tone_burst: "Tone burst",

@@ -13,13 +13,9 @@
 # <https://www.gnu.org/licenses/>.
 
 class RepeatersController < ApplicationController
+  before_action :set_repeater, only: %i[show edit update destroy]
+
   def show
-    begin
-      @repeater = Repeater.friendly.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      @repeater = Repeater.find_by_id(params[:id].split("-").take(5).join("-")) # Old "slug", starting with the UUID of the record.
-      raise if @repeater.blank?
-    end
     if request.path != repeater_path(@repeater)
       redirect_to @repeater, status: :moved_permanently
     end
@@ -32,10 +28,45 @@ class RepeatersController < ApplicationController
   def create
     @repeater = Repeater.new(repeater_params)
     if @repeater.save
-      redirect_to @repeater, notice: "Thank you, this repeater is now live"
+      ActionMailer::Base.mail(
+        from: "Repeater World <info@repeater.world>",
+        to: "Repeater World <info@repeater.world>",
+        subject: "New repeater added #{@repeater.moniker}",
+        body: "New repeater added #{@repeater.moniker} #{@repeater} by #{current_user}"
+      ).deliver
+      redirect_to @repeater, notice: "Thank you. Your repeater is now live."
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def edit
+    if request.path != edit_repeater_path(@repeater)
+      redirect_to edit_repeater_url(@repeater), status: :moved_permanently
+    end
+  end
+
+  def update
+    if @repeater.update(repeater_params)
+      ActionMailer::Base.mail(
+        from: "Repeater World <info@repeater.world>",
+        to: "Repeater World <info@repeater.world>",
+        subject: "Repeater updated #{@repeater.moniker}",
+        body: "Repeater updated #{@repeater.moniker} #{@repeater} by #{current_user}"
+      ).deliver
+      redirect_to repeater_url(@repeater), notice: "Thank you. The details for this repeater have been updated."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def set_repeater
+    @repeater = Repeater.friendly.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    @repeater = Repeater.find_by_id(params[:id].split("-").take(5).join("-")) # Old "slug", starting with the UUID of the record.
+    raise if @repeater.blank?
   end
 
   def repeater_params
@@ -75,7 +106,6 @@ class RepeatersController < ApplicationController
       :notes,
       :nxdn,
       :p25,
-      :private_notes,
       :rx_antenna,
       :rx_antenna_polarization,
       :rx_frequency,
