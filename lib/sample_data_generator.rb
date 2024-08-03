@@ -22,30 +22,68 @@ class SampleDataGenerator
     raise "Are you out of your vulcan mind?" unless can_run? # Just protect destroying production data.
   end
 
-  def generate
-    delete_data
+  def generate(mode: :full)
+    if mode == :full
+      delete_data
+    end
     create_admins
+    create_users
     # create_repeaters
     # call rake import_all instead
-    create_users
   end
 
   private
 
+  def delete_data
+    Rails.logger.info "Deleting data..."
+    table_names = [User, RepeaterSearch, Repeater, SuggestedRepeater].map(&:table_name)
+    Rails.logger.info "  Truncating tables: #{table_names.join(", ")}"
+    Admin.connection.truncate_tables(*table_names)
+    Rails.logger.info "Done deleting data."
+  end
+
   def create_admins
-    created_any_admins = false
     ADMINS.each do |admin_email|
       admin = Admin.find_or_initialize_by(email: admin_email)
-      if admin.new_record?
-        admin.password = PASSWORD
-        admin.skip_confirmation!
-        admin.save!
-        Rails.logger.info "Creating administrators..." if !created_any_admins
-        Rails.logger.info "  Created \"#{admin_email}\" with password \"#{PASSWORD}\"."
-        created_any_admins = true
-      end
+      admin.password = PASSWORD
+      admin.skip_confirmation!
+      admin.save!
+      Rails.logger.info "Creating (or updating) admins..."
+      Rails.logger.info "  \"#{admin_email}\" with password \"#{PASSWORD}\"."
     end
-    Rails.logger.info "Done creating administrators." if created_any_admins
+    Rails.logger.info "Done creating (or updating) admins."
+  end
+
+  def create_users
+    Rails.logger.info "Creating (or updating) users..."
+    _nick_fury = create_user(email: "nick.fury@avengers.asm", can_edit_repeaters: true)
+    _tony_stark = create_user(email: "tony.stark@avengers.asm")
+    _steve_rogers = create_user(email: "steve.rogers@avengers.asm")
+    _natasha_romanoff = create_user(email: "natasha.romanoff@avengers.asm")
+    _clint_barton = create_user(email: "clint.barton@avengers.asm")
+    _peter_parker = create_user(email: "peter.parker@avengers.asm")
+    _thor_odinson = create_user(email: "thor@avengers.asm")
+    _robert_banner = create_user(email: "robert.banner@avengers.asm")
+    _stephen_stranger = create_user(email: "stephen.strange@avengers.asm")
+    _scott_lang = create_user(email: "stepher.strange@avengers.asm")
+    _phli_coulson = create_user(email: "phil.coulson@avengers.asm")
+    _wanda_maximoff = create_user(email: "wanda.maximoff@avengers.asm")
+    _pepper_potts = create_user(email: "pepper.potts@avengers.asm")
+    _james_rhodes = create_user(email: "james.rhodes@avengers.asm")
+    _vision = create_user(email: "vision@avengers.asm")
+    _matt_murdock = create_user(email: "matt.murdock@defenders.alt")
+    _jessica_jones = create_user(email: "jessica.jones@defenders.alt")
+    _luke_cage = create_user(email: "luke.cage@defenders.alt")
+    Rails.logger.info "Done creating users."
+  end
+
+  def create_user(**args)
+    user = create(:user, **args)
+    user.password = PASSWORD
+    user.skip_confirmation!
+    user.save!
+    Rails.logger.info "  \"#{args[:email]}\" has password \"#{PASSWORD}\"."
+    user
   end
 
   def create_repeaters
@@ -56,42 +94,6 @@ class SampleDataGenerator
     )
     importer.import
     Rails.logger.info "Created UK repeaters from saved snapshot."
-  end
-
-  def create_users
-    Rails.logger.info "Creating users..."
-    _nick_fury = create_user("nick.fury@avengers.asm")
-    _tony_stark = create_user("tony.stark@avengers.asm")
-    _steve_rogers = create_user("steve.rogers@avengers.asm")
-    _natasha_romanoff = create_user("natasha.romanoff@avengers.asm")
-    _clint_barton = create_user("clint.barton@avengers.asm")
-    _peter_parker = create_user("peter.parker@avengers.asm")
-    _thor_odinson = create_user("thor@avengers.asm")
-    _robert_banner = create_user("robert.banner@avengers.asm")
-    _stephen_stranger = create_user("stephen.strange@avengers.asm")
-    _scott_lang = create_user("stepher.strange@avengers.asm")
-    _phli_coulson = create_user("phil.coulson@avengers.asm")
-    _wanda_maximoff = create_user("wanda.maximoff@avengers.asm")
-    _pepper_potts = create_user("pepper.potts@avengers.asm")
-    _james_rhodes = create_user("james.rhodes@avengers.asm")
-    _vision = create_user("vision@avengers.asm")
-    _matt_murdock = create_user("matt.murdock@defenders.alt")
-    _jessica_jones = create_user("jessica.jones@defenders.alt")
-    _luke_cage = create_user("luke.cage@defenders.alt")
-    Rails.logger.info "Done creating users."
-  end
-
-  def create_user(email)
-    create(:user, email: email)
-    Rails.logger.info " Created user \"#{email}\" with password \"#{PASSWORD}\"."
-  end
-
-  def delete_data
-    Rails.logger.info "Deleting data..."
-    table_names = [User, RepeaterSearch, Repeater, SuggestedRepeater].map(&:table_name)
-    Rails.logger.info "  Truncating tables: #{table_names.join(", ")}"
-    Admin.connection.truncate_tables(*table_names)
-    Rails.logger.info "Done deleting data."
   end
 
   ##

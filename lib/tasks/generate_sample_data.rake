@@ -12,9 +12,16 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-desc "Generate sample data for development, staging, review apps."
+desc "Generate full sample data for development, staging, review apps."
 task generate_sample_data: :environment do
   Rails.logger = Logger.new($stdout)
   Rake::Task["db:seed"].execute
   SampleDataGenerator.new.generate
+end
+
+desc "Generate sample users for development, staging, review apps."
+task generate_sample_users: :environment do
+  Rails.logger = Logger.new($stdout)
+  Rake::Task["db:seed"].execute
+  SampleDataGenerator.new.generate(mode: :users_only)
 end

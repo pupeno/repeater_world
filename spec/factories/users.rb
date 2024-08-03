@@ -18,6 +18,11 @@ FactoryBot.define do
     password { SampleDataGenerator::PASSWORD }
     confirmed_at { 3.days.ago }
   end
+
+  to_create do |instance| # https://dev.to/jooeycheng/factorybot-findorcreateby-3h8k
+    instance.attributes = User.find_or_create_by(email: instance.email).attributes
+    instance.instance_variable_set(:@new_record, false)
+  end
 end
 
 # == Schema Information
@@ -25,6 +30,7 @@ end
 # Table name: users
 #
 #  id                     :uuid             not null, primary key
+#  can_edit_repeaters     :boolean
 #  confirmation_sent_at   :datetime
 #  confirmation_token     :string
 #  confirmed_at           :datetime
