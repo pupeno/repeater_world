@@ -110,43 +110,41 @@ class NerepeatersImporter < Importer
         end
       end
     elsif raw_repeater[RX_OFFSET].in? ["*", "S"] # Some exceptions.
-      if repeater.call_sign == "W1BST" && raw_repeater[COMMENT]&.include?(" 51.140 ")
+      if repeater.call_sign == "W1BST" && raw_repeater[COMMENT].include?(" 51.140 ")
         return 51_140_000
-      elsif repeater.call_sign == "W1DSR" && raw_repeater[COMMENT]&.include?(" 147.975 ")
+      elsif repeater.call_sign == "W1DSR" && raw_repeater[COMMENT].include?(" 147.975 ")
         return 147_975_000
       elsif repeater.call_sign == "K1BEP" # it seems to be just a D-Star gateway, not a repeater
         return repeater.tx_frequency
-      elsif repeater.call_sign == "KB1MMR" && raw_repeater[COMMENT]&.include?(" 147.415 ")
+      elsif repeater.call_sign == "KB1MMR" && raw_repeater[COMMENT].include?(" 147.415 ")
         return 147_415_000
-      elsif repeater.call_sign == "WA1RJI" && raw_repeater[COMMENT]&.include?(" 147.445 ")
+      elsif repeater.call_sign == "WA1RJI" && raw_repeater[COMMENT].include?(" 147.445 ")
         return 147_445_000
-      elsif repeater.call_sign == "W1NLK" && raw_repeater[COMMENT]&.include?(" 147.475 ")
+      elsif repeater.call_sign == "W1NLK" && raw_repeater[COMMENT].include?(" 147.475 ")
         return 147_475_000
-      elsif repeater.call_sign == "K1IFF" && raw_repeater[COMMENT]&.include?(" 147.5925 ")
-        return 147_592_500
-      elsif repeater.call_sign == "N1NTP" && raw_repeater[COMMENT]&.include?(" 147.885 ")
+      elsif repeater.call_sign == "N1NTP" && raw_repeater[COMMENT].include?(" 147.885 ")
         return 147_885_000
-      elsif repeater.call_sign == "NW1P" && raw_repeater[COMMENT]&.include?(" 441.700 ")
+      elsif repeater.call_sign == "NW1P" && raw_repeater[COMMENT].include?(" 441.700 ")
         return 441_700_000
-      elsif repeater.call_sign == "W1ATD" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
+      elsif repeater.call_sign == "W1ATD" && raw_repeater[COMMENT].include?(" 902.0625 ")
         return 902_062_500
-      elsif repeater.call_sign == "N1JBC" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
+      elsif repeater.call_sign == "N1JBC" && raw_repeater[COMMENT].include?(" 902.0625 ")
         return 902_062_500
-      elsif repeater.call_sign == "W1DMR" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
+      elsif repeater.call_sign == "W1DMR" && raw_repeater[COMMENT].include?(" 902.0625 ")
         return 902_062_500
-      elsif repeater.call_sign == "WA1ABC" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
+      elsif repeater.call_sign == "WA1ABC" && raw_repeater[COMMENT].include?(" 902.0625 ")
         return 902_062_500
-      elsif repeater.call_sign == "W1KK" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
+      elsif repeater.call_sign == "W1KK" && raw_repeater[COMMENT].include?(" 902.0625 ")
         return 902_062_500
-      elsif repeater.call_sign == "W1SGL" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
+      elsif repeater.call_sign == "W1SGL" && raw_repeater[COMMENT].include?(" 902.0625 ")
         return 902_062_500
-      elsif repeater.call_sign == "W1AEC" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
+      elsif repeater.call_sign == "W1AEC" && raw_repeater[COMMENT].include?(" 902.0625 ")
         return 902_062_500
-      elsif repeater.call_sign == "K1RK" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
+      elsif repeater.call_sign == "K1RK" && raw_repeater[COMMENT].include?(" 902.0625 ")
         return 902_062_500
-      elsif repeater.call_sign == "W1EHT" && raw_repeater[COMMENT]&.include?(" 902.0625 ")
+      elsif repeater.call_sign == "W1EHT" && raw_repeater[COMMENT].include?(" 902.0625 ")
         return 902_062_500
-      elsif repeater.call_sign == "K1GHZ" && raw_repeater[COMMENT]&.include?(" 1270.1000 ")
+      elsif repeater.call_sign == "K1GHZ" && raw_repeater[COMMENT].include?(" 1270.1000 ")
         return 1_270_100_000
       elsif repeater.call_sign.in? %w[W1AFD W2FCC NO1A K1GAS KB1ISZ KB1ISZ NN1PA N1PA N1MYY KX1X KC1EGN NB1RI W1MLL K1IR
         K1KZP WE1CT KB1KVD W1STT KX1X WA1REQ W1AW AB1EX N1DOT WA3ITR W1SPC KB1VKY WX1PBD AA1TT KB1FX AA1PR WW1VT W1KK
@@ -191,10 +189,6 @@ class NerepeatersImporter < Importer
     elsif raw_repeater[MODE].strip == "YSF/FM"
       repeater.fm = true
       repeater.fusion = true
-    elsif raw_repeater[MODE].strip == "DMR/NFM"
-      repeater.fm = true
-      repeater.bandwidth = Repeater::FM_NARROW
-      repeater.dmr = true
     elsif raw_repeater[MODE].strip == "DMR/FM"
       repeater.fm = true
       repeater.dmr = true
@@ -239,10 +233,9 @@ class NerepeatersImporter < Importer
     if access_code.blank?
       access_code = raw_repeater[ACCESS_CODE_2]
     end
-    access_code = access_code.to_s
-    access_code = access_code.strip if access_code.respond_to? :strip
+    access_code = access_code.to_s.strip
 
-    if repeater.fm? && access_code.to_f&.in?(Repeater::CTCSS_TONES)
+    if repeater.fm? && access_code.to_f.in?(Repeater::CTCSS_TONES)
       repeater.fm_ctcss_tone = access_code.to_f
     elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :p25] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
       # TODO: import the first part correctly, it's likely for P25.
