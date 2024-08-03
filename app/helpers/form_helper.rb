@@ -23,15 +23,6 @@ module FormHelper
                wrapper_html_options: wrapper_html_options}
   end
 
-  def form_email_field(form, field_name, label: nil, input_html_options: {}, help_text: nil)
-    render partial: "shared/forms/email_field",
-      locals: {form: form,
-               field_name: field_name,
-               label: label,
-               input_html_options: input_html_options,
-               help_text: help_text}
-  end
-
   def form_textarea_field(form, field_name, label: nil, input_html_options: {}, help_text: nil)
     render partial: "shared/forms/textarea_field",
       locals: {form: form,
