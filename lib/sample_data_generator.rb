@@ -78,7 +78,11 @@ class SampleDataGenerator
   end
 
   def create_user(**args)
-    user = create(:user, **args)
+    user = User.find_by(email: args[:email])
+    if user.blank?
+      user = create(:user, **args)
+    end
+    user.assign_attributes(**args)
     user.password = PASSWORD
     user.skip_confirmation!
     user.save!
