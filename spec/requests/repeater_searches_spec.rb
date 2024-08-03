@@ -332,7 +332,7 @@ RSpec.describe "/repeater_searches", type: :request do
         expect {
           post repeater_searches_url, params: {s: attributes_for(:repeater_search).merge({distance: "hello"})}
         }.to change(RepeaterSearch, :count).by(0)
-        expect(response).to have_http_status(422)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "updates a repeater search" do
@@ -354,7 +354,7 @@ RSpec.describe "/repeater_searches", type: :request do
       it "fails to update due to validations" do
         repeater_search = create(:repeater_search, user: @current_user)
         patch repeater_search_url(repeater_search), params: {s: {distance: "hello"}}
-        expect(response).to have_http_status(422)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "fails to update due search belonging to someone else" do
