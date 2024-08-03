@@ -25,6 +25,22 @@ RSpec.describe Repeater, type: :model do
       expect(@repeater.to_s).to include(@repeater.call_sign)
     end
 
+    it "should have a moniker" do
+      @repeater.name = nil
+      expect(@repeater.moniker).to eq(@repeater.call_sign)
+      @repeater.name = "name"
+      expect(@repeater.moniker).to eq("#{@repeater.name} - #{@repeater.call_sign}")
+      @repeater.name = @repeater.call_sign
+      expect(@repeater.moniker).to eq(@repeater.call_sign)
+      @repeater.name = nil
+      @repeater.locality = "locality"
+      @repeater.region = "region"
+      @repeater.post_code = "post code"
+      @repeater.country_id = "us"
+      expect(@repeater.moniker).to eq("#{@repeater.call_sign} - #{@repeater.locality}")
+      expect(@repeater.moniker(long_location: true)).to eq("#{@repeater.call_sign} - #{RepeaterUtils.location_in_words(@repeater)}")
+    end
+
     it "should validate tx frequency" do
       expect(@repeater).to be_valid
       @repeater.tx_frequency = nil
@@ -254,6 +270,29 @@ RSpec.describe Repeater, type: :model do
         expect(@repeater.latitude).to eq(11.020833333333334)
         expect(@repeater.longitude).to eq(12.041666666666666)
         expect(@repeater.grid_square).to eq("JK61aa")
+        expect(@repeater.geocoded_at).to eq(nil)
+        expect(@repeater.geocoded_by).to eq(nil)
+      end
+
+      it "should not crash when computing from invalid grid square" do
+        @repeater.input_address = nil
+        @repeater.input_locality = nil
+        @repeater.input_region = nil
+        @repeater.input_post_code = nil
+        @repeater.input_country_id = nil
+        @repeater.input_coordinates = nil
+        @repeater.input_grid_square = "invalid grid"
+
+        @repeater.save!
+
+        expect(@repeater.address).to eq(nil)
+        expect(@repeater.locality).to eq(nil)
+        expect(@repeater.region).to eq(nil)
+        expect(@repeater.post_code).to eq(nil)
+        expect(@repeater.country_id).to eq(nil)
+        expect(@repeater.latitude).to eq(nil)
+        expect(@repeater.longitude).to eq(nil)
+        expect(@repeater.grid_square).to eq("invalid grid")
         expect(@repeater.geocoded_at).to eq(nil)
         expect(@repeater.geocoded_by).to eq(nil)
       end
