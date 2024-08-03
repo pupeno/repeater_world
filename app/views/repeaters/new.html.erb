@@ -28,8 +28,8 @@ You should have received a copy of the GNU Affero General Public License along w
       <div class="flex flex-col gap-y-8 md:col-span-2">
         <%= form_text_field form, :name, help_text: "Optional name of the repeater. Some have a name, most don't." %>
         <%= form_text_field form, :call_sign, help_text: "Call sign of the repeater itself." %>
-        <%= form_text_field form, :tx_frequency, label: "Transmit frequency", help_text: "The frequency the repeater transmits on, expressed in Hz." %>
-        <%= form_text_field form, :rx_frequency, label: "Receive frequency", help_text: "The frequency the repeater receives on, expressed in Hz." %>
+        <%= form_text_field form, :tx_frequency, help_text: "The frequency the repeater transmits on, expressed in Hz." %>
+        <%= form_text_field form, :rx_frequency, help_text: "The frequency the repeater receives on, expressed in Hz." %>
         <%= form_select_field form, :band,
                               choices: Repeater::BANDS,
                               options: { include_blank: "Band for this repeater" },
@@ -65,7 +65,6 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= form_select_field form, :fm_ctcss_tone,
                               choices: Repeater::CTCSS_TONES,
                               options: { include_blank: "None" },
-                              label: "CTCSS tone",
                               help_text: "The CTCSS or access tone for this repeater, if it uses one. " %>
         <%= form_boolean_field form, :fm_tone_burst, label: "Tone burst?",
                                second_label: "Yes, this repeater uses tone burst." %>
@@ -79,9 +78,8 @@ You should have received a copy of the GNU Affero General Public License along w
       <div class="flex flex-col gap-y-8 md:col-span-2">
         <%= form_select_field form, :m17_can,
                               choices: Repeater::M17_CANS,
-                              options: { include_blank: "None" },
-                              label: "Channel Access Number" %>
-        <%= form_text_field form, :m17_reflector_name, label: "M17 Reflector Name" %>
+                              options: { include_blank: "None" } %>
+        <%= form_text_field form, :m17_reflector_name %>
       </div>
     </div>
     <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
@@ -91,7 +89,7 @@ You should have received a copy of the GNU Affero General Public License along w
       </div>
 
       <div class="flex flex-col gap-y-8 md:col-span-2">
-        <%= form_text_field form, :dstar_port, label: "Port" %>
+        <%= form_text_field form, :dstar_port %>
       </div>
     </div>
     <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
@@ -101,7 +99,7 @@ You should have received a copy of the GNU Affero General Public License along w
       </div>
 
       <div class="flex flex-col gap-y-8 md:col-span-2">
-        <%= form_text_field form, :wires_x_node_id, label: "Wires-X Node Id" %>
+        <%= form_text_field form, :wires_x_node_id %>
       </div>
     </div>
     <div class="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-300 dark:border-gray-600 pb-12 md:grid-cols-3">
@@ -113,10 +111,8 @@ You should have received a copy of the GNU Affero General Public License along w
       <div class="flex flex-col gap-y-8 md:col-span-2">
         <%= form_select_field form, :dmr_color_code,
                               choices: Repeater::DMR_COLOR_CODES,
-                              options: { include_blank: "None" },
-                              label: "Color Code" %>
-        <%= form_text_field form, :dmr_network, label: "DMR Connectivity",
-                            help_text: "Likely something like BRANDMEISTER or freeDMR, but there are many others." %>
+                              options: { include_blank: "None" } %>
+        <%= form_text_field form, :dmr_network, help_text: "Likely something like BRANDMEISTER or freeDMR, but there are many others." %>
 
       </div>
     </div>
@@ -139,9 +135,9 @@ You should have received a copy of the GNU Affero General Public License along w
 
       <div class="flex flex-col gap-y-8 md:col-span-2">
         <%= form_text_field form, :input_address, help_text: "Address where the repeater is. You can leave it blank and still have the rest of the fields here." %>
-        <%= form_text_field form, :input_locality, label: "City or town" %>
-        <%= form_text_field form, :input_region, label: "State or province", help_text: "Or any other region demarcation" %>
-        <%= form_text_field form, :input_post_code, label: "Post code or ZIP" %>
+        <%= form_text_field form, :input_locality %>
+        <%= form_text_field form, :input_region, help_text: "Or any other region demarcation" %>
+        <%= form_text_field form, :input_post_code %>
         <%= form_select_field form, :input_country_id,
                               choices: Country.order(:name).map { |c| [c.name, c.id] },
                               options: { include_blank: "Please, choose a country" } %>
@@ -157,22 +153,15 @@ You should have received a copy of the GNU Affero General Public License along w
       </div>
 
       <div class="flex flex-col gap-y-8 md:col-span-2">
-        <%= form_text_field form, :tx_antenna, label: "Transmit antenna", help_text: "Model or any details about the transmit antenna." %>
-        <%= form_select_field form, :tx_antenna_polarization,
-                              label: "Transmit antenna polarization",
-                              choices: %w[vertical horizontal],
-                              options: { include_blank: "Unknown" } %>
+        <%= form_text_field form, :tx_antenna, help_text: "Model or any details about the transmit antenna." %>
+        <%= form_select_field form, :tx_antenna_polarization, choices: %w[vertical horizontal], options: { include_blank: "Unknown" } %>
         <%= form_text_field form, :tx_power, label: "Transmit power", help_text: "Expressed in watts." %>
         <%= form_text_field form, :rx_antenna, label: "Receive antenna", help_text: "Model or any details about the receive antenna." %>
-        <%= form_select_field form, :rx_antenna_polarization,
-                              label: "Receive antenna polarization",
-                              choices: %w[vertical horizontal],
-                              options: { include_blank: "Unknown" } %>
+        <%= form_select_field form, :rx_antenna_polarization, choices: %w[vertical horizontal], options: { include_blank: "Unknown" } %>
         <%= form_text_field form, :bearing %>
-        <%= form_text_field form, :altitude_agl, label: "Altitude above ground level", help_text: "This is expressed in meters. If you have it in feet, multiply by 0.3048." %>
-        <%= form_text_field form, :altitude_asl, label: "Altitude above sea level", help_text: "This is expressed in meters. If you have it in feet, multiply by 0.3048." %>
-        <%= form_text_field form, :channel,
-                            help_text: "In some countries, the frequencies are divided in channels. Here you can enter the channel information." %>
+        <%= form_text_field form, :altitude_agl, help_text: "This is expressed in meters. If you have it in feet, multiply by 0.3048." %>
+        <%= form_text_field form, :altitude_asl, help_text: "This is expressed in meters. If you have it in feet, multiply by 0.3048." %>
+        <%= form_text_field form, :channel, help_text: "In some countries, the frequencies are divided in channels. Here you can enter the channel information." %>
 
       </div>
     </div>
