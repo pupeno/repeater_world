@@ -1,4 +1,4 @@
-# Copyright 2024, Pablo Fernandez
+# Copyright 2023-2024, Pablo Fernandez
 #
 # This file is part of Repeater World.
 #
@@ -12,54 +12,20 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-class ApplicationPolicy
-  attr_reader :user, :record
+require "rails_helper"
 
-  def initialize(user, record)
-    @user = user
-    @record = record
-  end
+RSpec.describe ApplicationPolicy do
+  subject { described_class }
 
-  def index?
-    false
-  end
-
-  def show?
-    false
-  end
-
-  def create?
-    false
-  end
-
-  def new?
-    create?
-  end
-
-  def update?
-    false
-  end
-
-  def edit?
-    update?
-  end
-
-  def destroy?
-    false
-  end
-
-  class Scope
-    def initialize(user, scope)
-      @user = user
-      @scope = scope
+  permissions :index?, :show?, :new?, :create?, :edit?, :update?, :destroy? do
+    it "denies everything" do
+      expect(subject).not_to permit(nil, nil)
     end
+  end
 
-    def resolve
-      raise NotImplementedError.new("You must define #resolve in #{self.class}")
-    end
-
-    private
-
-    attr_reader :user, :scope
+  it "has a scope" do
+    user = create(:user)
+    scope = ApplicationPolicy::Scope.new(user, RepeaterSearch)
+    expect { scope.resolve }.to raise_error(NotImplementedError)
   end
 end
