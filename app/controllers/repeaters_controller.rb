@@ -13,7 +13,7 @@
 # <https://www.gnu.org/licenses/>.
 
 class RepeatersController < ApplicationController
-  before_action :set_repeater, only: %i[show edit update destroy]
+  before_action :set_repeater, only: %i[show edit update]
 
   def show
     if request.path != repeater_path(@repeater)
