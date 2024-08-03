@@ -121,6 +121,30 @@ class Repeater < ApplicationRecord
 
   has_paper_trail
 
+  HUMANIZED_ATTRIBUTES = {
+    fm: "FM",
+    fm_tone_burst: "Tone Burst",
+    fm_ctcss_tone: "CTCSS Tone",
+    fm_tone_squelch: "Tone Squelch",
+    m17: "M17",
+    m17_can: "M17 Channel Access Number",
+    m17_reflector_name: "M17 Reflector Name",
+    dstar: "D-Star",
+    dstar_port: "D-Star Port",
+    dmr: "DMR",
+    dmr_color_code: "DMR Color Code",
+    dmr_network: "DMR Network",
+    nxdn: "NXDN",
+    bandwidth: "Bandwidth",
+    country_id: "Country Code",
+    utc_offset: "UTC Offset",
+    redistribution_limitations: "Redistribution Limitations"
+  }
+
+  def self.human_attribute_name(attr)
+    HUMANIZED_ATTRIBUTES[attr.to_sym] || super
+  end
+
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
   end

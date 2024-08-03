@@ -173,7 +173,7 @@ RSpec.describe "/repeater_searches", type: :request do
         get export_url(s: attributes_for(:repeater_search, band_2m: true, fm: true),
           e: {format: "csv"})
         expect(response).to be_successful
-        expect(response.body).to include("Name,Call Sign,Web Site,Keeper,Band,Cross Band,Operational,Tx Frequency,Rx Frequency,FM,Tone Burst,CTCSS Tone,Tone Squelch,M17,M17 Channel Access Number,M17 Reflector Name,D-Star,D-Star Port,Fusion,DMR,DMR Color Code,DMR Network,NXDN,P25,Tetra,Bandwidth,Latitude,Longitude,Grid Square,Address,Locality,Region,Post Code,Country Code,Tx Power,Tx Antenna,Tx Antenna Polarization,Rx Antenna,Rx Antenna Polarization,Altitude Asl,Altitude Agl,Bearing,UTC Offset,Channel,Notes,Source,Redistribution Limitations")
+        expect(response.body).to include("Name,Call sign,Web site,Keeper,Band,Cross band,Operational,Tx frequency,Rx frequency,FM,Tone Burst,CTCSS Tone,Tone Squelch,M17,M17 Channel Access Number,M17 Reflector Name,D-Star,D-Star Port,Fusion,DMR,DMR Color Code,DMR Network,NXDN,P25,Tetra,Bandwidth,Latitude,Longitude,Grid square,Address,Locality,Region,Post code,Country Code,Tx power,Tx antenna,Tx antenna polarization,Rx antenna,Rx antenna polarization,Altitude asl,Altitude agl,Bearing,UTC Offset,Channel,Notes,Source,Redistribution Limitations")
         expect(response.body).to include("2M FM,")
       end
 
@@ -313,7 +313,7 @@ RSpec.describe "/repeater_searches", type: :request do
         repeater_search = create(:repeater_search, user: @current_user, band_2m: true, fm: true)
         get export_repeater_search_url(repeater_search, e: {format: "csv"})
         expect(response).to be_successful
-        expect(response.body).to include("Name,Call Sign,Web Site,Keeper,Band,Cross Band,Operational,Tx Frequency,Rx Frequency,FM,Tone Burst,CTCSS Tone,Tone Squelch,M17,M17 Channel Access Number,M17 Reflector Name,D-Star,D-Star Port,Fusion,DMR,DMR Color Code,DMR Network,NXDN,P25,Tetra,Bandwidth,Latitude,Longitude,Grid Square,Address,Locality,Region,Post Code,Country Code,Tx Power,Tx Antenna,Tx Antenna Polarization,Rx Antenna,Rx Antenna Polarization,Altitude Asl,Altitude Agl,Bearing,UTC Offset,Channel,Notes,Source,Redistribution Limitations")
+        expect(response.body).to include("Name,Call sign,Web site,Keeper,Band,Cross band,Operational,Tx frequency,Rx frequency,FM,Tone Burst,CTCSS Tone,Tone Squelch,M17,M17 Channel Access Number,M17 Reflector Name,D-Star,D-Star Port,Fusion,DMR,DMR Color Code,DMR Network,NXDN,P25,Tetra,Bandwidth,Latitude,Longitude,Grid square,Address,Locality,Region,Post code,Country Code,Tx power,Tx antenna,Tx antenna polarization,Rx antenna,Rx antenna polarization,Altitude asl,Altitude agl,Bearing,UTC Offset,Channel,Notes,Source,Redistribution Limitations")
         expect(response.body).to include("2M FM,")
       end
 
