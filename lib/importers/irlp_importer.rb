@@ -34,7 +34,7 @@ class IrlpImporter < Importer
   end
 
   def call_sign_and_tx_frequency(raw_repeater)
-    call_sign = raw_repeater["CallSign"]&.upcase
+    call_sign = raw_repeater["CallSign"].upcase
     if call_sign.blank? || call_sign == "*"
       @ignored_due_to_invalid_count += 1
       return nil
