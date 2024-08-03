@@ -101,7 +101,7 @@ RSpec.describe "/repeaters", type: :request do
         post repeaters_url, params: {repeater: attributes_for(:repeater)}
       end.to change { Repeater.count }.by(1)
         .and change { ActionMailer::Base.deliveries.count }.by(1)
-      repeater = Repeater.last
+      repeater = Repeater.order(:created_at).last
       email = ActionMailer::Base.deliveries.last
       expect(email.subject).to eq("New repeater added Repeater BL4NK")
       expect(email.body.to_s).to include("New repeater added Repeater BL4NK")
