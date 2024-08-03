@@ -139,3 +139,5 @@ RSpec.configure do |config|
     )
   end
 end
+
+require "pundit/rspec"

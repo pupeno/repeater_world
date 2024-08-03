@@ -12,20 +12,32 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-class ApplicationController < ActionController::Base
-  include Pundit::Authorization
-
-  before_action :set_paper_trail_whodunnit
-
-  unless Rails.application.config.consider_all_requests_local
-    rescue_from ActiveRecord::RecordNotFound, with: :not_found
+class RepeaterPolicy < ApplicationPolicy
+  def index?
+    true # Everybody can list all repeaters.
   end
 
-  def not_found
-    render "static/not_found", status: :not_found
+  def show?
+    true # Everybody can show any repeater.
   end
 
-  def user_for_paper_trail
-    current_user
+  def create?
+    @user.present? # Everybody that is logged in can edit a repeater.
+  end
+
+  def new?
+    create?
+  end
+
+  def update?
+    @user.present? && @user.can_edit_repeaters?
+  end
+
+  def edit?
+    update?
+  end
+
+  def destroy?
+    false # Nobody can delete repeaters for now.
   end
 end

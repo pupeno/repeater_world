@@ -23,10 +23,14 @@ class RepeatersController < ApplicationController
 
   def new
     @repeater = Repeater.new
+    authorize @repeater
+  rescue Pundit::NotAuthorizedError
+    cannot_add_repeater!
   end
 
   def create
     @repeater = Repeater.new(repeater_params)
+    authorize @repeater
     if @repeater.save
       ActionMailer::Base.mail(
         from: "Repeater World <info@repeater.world>",
@@ -38,15 +42,21 @@ class RepeatersController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
+  rescue Pundit::NotAuthorizedError
+    cannot_add_repeater!
   end
 
   def edit
+    authorize @repeater
     if request.path != edit_repeater_path(@repeater)
       redirect_to edit_repeater_url(@repeater), status: :moved_permanently
     end
+  rescue Pundit::NotAuthorizedError
+    cannot_edit_repeater!
   end
 
   def update
+    authorize @repeater
     if @repeater.update(repeater_params)
       ActionMailer::Base.mail(
         from: "Repeater World <info@repeater.world>",
@@ -58,6 +68,8 @@ class RepeatersController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  rescue Pundit::NotAuthorizedError
+    cannot_edit_repeater!
   end
 
   private
@@ -67,6 +79,18 @@ class RepeatersController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     @repeater = Repeater.find_by_id(params[:id].split("-").take(5).join("-")) # Old "slug", starting with the UUID of the record.
     raise if @repeater.blank?
+  end
+
+  def cannot_add_repeater!
+    redirect_to new_user_registration_url, alert: "To be able to create repeaters you need to sign up or log in."
+  end
+
+  def cannot_edit_repeater!
+    if user_signed_in?
+      redirect_to @repeater, alert: "To be able to edit repeaters you need to get in touch with us at info@repeater.world."
+    else
+      redirect_to new_user_registration_url, alert: "To be able to edit repeaters you need to log in or sign up. If you are signing up with a new account, you also need to reach out to info@repeater.world to have editing repeaters activated."
+    end
   end
 
   def repeater_params

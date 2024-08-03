@@ -98,8 +98,6 @@ end
 #                                 repeater GET    /repeaters/:id(.:format)                                                                          repeaters#show
 #                                          PATCH  /repeaters/:id(.:format)                                                                          repeaters#update
 #                                          PUT    /repeaters/:id(.:format)                                                                          repeaters#update
-#                      suggested_repeaters POST   /suggested_repeaters(.:format)                                                                    suggested_repeaters#create
-#                   new_suggested_repeater GET    /suggested_repeaters/new(.:format)                                                                suggested_repeaters#new
 #                                directory GET    /directory(.:format)                                                                              directory#countries
 #                     directory_by_country GET    /directory/:country_id(.:format)                                                                  directory#by_country
 #                         new_user_session GET    /users/sign_in(.:format)                                                                          devise/sessions#new
