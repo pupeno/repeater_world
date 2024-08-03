@@ -135,16 +135,13 @@ class SralfiImporter < Importer
       repeater.fm_ctcss_tone = 118.8
     elsif raw_repeater["rep_access"]&.strip&.in? ["CC1 / CTCSS 103.5Hz"]
       repeater.fm_ctcss_tone = 103.5
-      repeater.dmr_color_code = 1 # Just guessing here.
-    elsif raw_repeater["rep_access"]&.strip&.in? ["CC1 / CTCSS 110,9"]
-      repeater.fm_ctcss_tone = 110.9
-      repeater.dmr_color_code = 1 # Just guessing here.
+      repeater.dmr_color_code = 1
     elsif raw_repeater["rep_access"]&.strip&.in? ["CC1 / CTCSS 118.8Hz"]
       repeater.fm_ctcss_tone = 118.8
-      repeater.dmr_color_code = 1 # Just guessing here.
+      repeater.dmr_color_code = 1
     elsif raw_repeater["rep_access"]&.strip&.in? ["CC1 / CTCSS 123.0Hz"]
       repeater.fm_ctcss_tone = 123.0
-      repeater.dmr_color_code = 1 # Just guessing here.
+      repeater.dmr_color_code = 1
     elsif raw_repeater["rep_access"]&.strip&.in? ["CC1, CTCSS 118.8Hz"]
       repeater.fm_ctcss_tone = 118.8
       repeater.dmr_color_code = 1
@@ -174,7 +171,7 @@ class SralfiImporter < Importer
   end
 
   def import_name(raw_repeater, repeater)
-    repeater.name = raw_repeater["name"]&.strip
+    repeater.name = raw_repeater["name"].strip
   end
 
   def import_mode(raw_repeater, repeater)
@@ -194,10 +191,6 @@ class SralfiImporter < Importer
       repeater.fusion = true
     elsif raw_repeater["mode"].in? ["DMR, FM", "FM/DMR"]
       repeater.fm = true
-      repeater.dmr = true
-    elsif raw_repeater["mode"].in? ["FM,DMR,D-S"] # I'm assuming D-S is D-Star.
-      repeater.fm = true
-      repeater.dstar = true
       repeater.dmr = true
     elsif raw_repeater["mode"] == "DMR"
       repeater.dmr = true
