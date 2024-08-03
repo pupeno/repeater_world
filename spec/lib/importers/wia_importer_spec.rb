@@ -31,7 +31,7 @@ RSpec.describe WiaImporter do
     Dir.mktmpdir("WiaImporter") do |dir|
       expect do
         WiaImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(18)
+      end.to change { Repeater.count }.by(19)
 
       # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "VK2RMB")
