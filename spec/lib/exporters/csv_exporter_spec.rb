@@ -27,8 +27,6 @@ RSpec.describe CsvExporter do
 
     headers = CSV.parse(exported_csv).first
     Repeater.columns.map { |c| Repeater.human_attribute_name(c.name) }.each do |column_name|
-      puts @non_exportable_columns
-      puts column_name.inspect
       if column_name.in? @non_exportable_columns
         expect(headers).not_to include(column_name)
       else
@@ -37,7 +35,7 @@ RSpec.describe CsvExporter do
     end
 
     expect(exported_csv).to eq(<<~CSV)
-      Name,Call sign,Web site,Keeper,Band,Cross band,Operational,Transmit frequency,Receive frequency,FM,Tone burst,CTCSS tone,Tone squelch,M17,M17 channel access number,M17 reflector name,D-Star,D-Star port,Fusion,Wires-X Node Id,DMR,DMR color code,DMR network,NXDN,P25,Tetra,EchoLink,EchoLink node number,Bandwidth,Address,City or town,"Region, state, or province",Post code or ZIP,Country,Grid square,Latitude,Longitude,Transmit power,Transmit antenna,Transmit antenna polarization,Receive antenna,Receive antenna polarization,Altitude above sea level,Altitude above ground level,Bearing,Irlp,Irlp node number,UTC offset,Channel,Notes,Source,Redistribution limitations,External id
+      Name,Call sign,Web site,Keeper,Band,Cross band,Operational,Transmit frequency,Receive frequency,FM,Tone burst,CTCSS tone,Tone squelch,M17,M17 channel access number,M17 reflector name,D-Star,D-Star port,Fusion,Wires-X Node Id,DMR,DMR color code,DMR network,NXDN,P25,Tetra,EchoLink,EchoLink node number,Bandwidth,Address,City or town,"Region, state, or province",Post code or ZIP,Country code,Grid square,Latitude,Longitude,Transmit power,Transmit antenna,Transmit antenna polarization,Receive antenna,Receive antenna polarization,Altitude above sea level,Altitude above ground level,Bearing,Irlp,Irlp node number,UTC offset,Channel,Notes,Source,Redistribution limitations,External id
       Amersham,GB3AM,,M0ZPU,6m,,true,50840000,51340000,true,false,77.0,false,false,,,false,,false,,false,,,false,false,false,,,,,Amersham,"South West, England",HP7,gb,IO91QP,51.65,-0.62,,,,,,,,,,,0:00,R50-13,,ukrepeater.net,,
       Cleobury North,GB3BX,,G4VZO,2m,,true,145675000,145075000,false,false,,false,false,,,false,,false,,true,13,SALOP DMR,false,false,false,,,,,Cleobury North,Wales & Marches,SY7,gb,IO82QL,52.5,-2.6,,,,,,,,,,,0:00,RV54,,ukrepeater.net,,
       Derby,GB7DC,,G7NPW,70cm,,,430875000,438475000,true,false,71.9,false,false,,,true,,true,,true,1,BRANDMEISTER,true,false,false,,,,,Derby,"Midlands, England",DE21,gb,IO92GW,52.9,-1.4,,,,,,,,,,,,RU70,Reduced output.,ukrepeater.net,,
