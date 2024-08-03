@@ -86,10 +86,10 @@ class NarccImporter < Importer
     repeater.notes += "Wide area coverage\n" if /x/.match?(raw_repeater[NOTES].text)
     repeater.notes += "Station type: #{raw_repeater[STATION_TYPE].text.strip}\n" if raw_repeater[STATION_TYPE].text.strip.present?
 
-    echo_link = raw_repeater[NOTES].text.match(/E:(\d+)/)
-    if echo_link.present?
-      repeater.echo_link = true
-      repeater.echo_link_node_number = echo_link[1]
+    echolink = raw_repeater[NOTES].text.match(/E:(\d+)/)
+    if echolink.present?
+      repeater.echolink = true
+      repeater.echolink_node_number = echolink[1]
     end
 
     irlp_node_number = raw_repeater[NOTES].text.match(/I:(\d+)/)

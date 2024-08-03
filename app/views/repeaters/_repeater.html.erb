@@ -56,9 +56,9 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= card_entry(label: "NXDN", value: repeater.nxdn?) if repeater.nxdn? %>
         <%= card_entry(label: "P25", value: repeater.p25?) if repeater.p25? %>
         <%= card_entry(label: "Tetra", value: repeater.tetra?) if repeater.tetra? %>
-        <% if repeater.echo_link? %>
-          <%= card_entry(label: "EchoLink", value: repeater.echo_link?) %>
-          <%= card_entry(label: "EchoLink Node Number", value: repeater.echo_link_node_number) %>
+        <% if repeater.echolink? %>
+          <%= card_entry(label: "EchoLink", value: repeater.echolink?) %>
+          <%= card_entry(label: "EchoLink Node Number", value: repeater.echolink_node_number) %>
         <% end %>
         <%= card_entry(label: "Location") do %>
           <%= render "shared/repeater/location", repeater: repeater %>

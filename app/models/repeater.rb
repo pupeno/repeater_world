@@ -333,7 +333,7 @@ class Repeater < ApplicationRecord
         field :nxdn
         field :p25
         field :tetra
-        field :echo_link
+        field :echolink
         field :irlp
       end
 
@@ -362,7 +362,7 @@ class Repeater < ApplicationRecord
       end
 
       group "EchoLink" do
-        field :echo_link_node_number
+        field :echolink_node_number
       end
 
       group "IRLP" do
@@ -439,7 +439,7 @@ class Repeater < ApplicationRecord
         field :nxdn
         field :p25
         field :tetra
-        field :echo_link
+        field :echolink
         field :irlp
       end
 
@@ -468,7 +468,7 @@ class Repeater < ApplicationRecord
       end
 
       group "EchoLink" do
-        field :echo_link_node_number
+        field :echolink_node_number
       end
 
       group "IRLP" do
@@ -573,8 +573,8 @@ end
 #  dmr_network                :string
 #  dstar                      :boolean
 #  dstar_port                 :string
-#  echo_link                  :boolean
-#  echo_link_node_number      :integer
+#  echolink                   :boolean
+#  echolink_node_number       :integer
 #  fm                         :boolean
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean
