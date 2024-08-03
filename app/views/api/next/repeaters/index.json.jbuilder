@@ -13,5 +13,5 @@
 # <https://www.gnu.org/licenses/>.
 
 json.array! @repeaters do |repeater|
-  json.extract! repeater, *@fields
+  json.extract! repeater, *Repeater::EXPORTABLE_ATTRIBUTES
 end

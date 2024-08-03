@@ -20,27 +20,13 @@ class Api::Next::RepeatersController < ApplicationController
     # bit. Once we're happy with the model, we'll change the version to "v1" and then we'll be stuck with it.
 
     @repeaters = Repeater.all.includes(:country)
-    @fields = [
-      :name, :call_sign, :web_site, :keeper, :band, :operational, :tx_frequency, :rx_frequency,
-      :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch,
-      :m17, :m17_can, :m17_reflector_name,
-      :dstar, :dstar_port,
-      :fusion,
-      :dmr, :dmr_color_code, :dmr_network,
-      :nxdn, :p25, :tetra,
-      :bandwidth,
-      :latitude, :longitude, :grid_square, :address, :locality, :region, :post_code, :country_id,
-      :tx_power, :tx_antenna, :tx_antenna_polarization, :rx_antenna, :rx_antenna_polarization,
-      :altitude_asl, :altitude_agl, :bearing,
-      :utc_offset, :channel, :notes, :source, :redistribution_limitations, :external_id
-    ]
 
     respond_to do |format|
       format.json { render }
       format.csv do
-        csv = CSV.generate(headers: @fields, write_headers: true) do |csv|
+        csv = CSV.generate(headers: Repeater::EXPORTABLE_ATTRIBUTES, write_headers: true) do |csv|
           @repeaters.each do |repeater|
-            csv << @fields.map { |column| repeater.send(column) }
+            csv << Repeater::EXPORTABLE_ATTRIBUTES.map { |column| repeater.send(column) }
           end
         end
 

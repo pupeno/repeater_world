@@ -81,6 +81,73 @@ class Repeater < ApplicationRecord
     FM_NARROW = 12_500
   ]
 
+  HUMANIZED_ATTRIBUTES = {
+    address: "Address",
+    altitude_agl: "Altitude above ground level",
+    altitude_asl: "Altitude above sea level",
+    country_id: "Country code",
+    country_id: "Country",
+    dmr: "DMR",
+    dmr_color_code: "DMR color code",
+    dmr_network: "DMR network",
+    dstar: "D-Star",
+    dstar_port: "D-Star port",
+    echolink: "EchoLink",
+    echolink_node_number: "EchoLink node number",
+    external_id: "External id",
+    fm: "FM",
+    fm_ctcss_tone: "CTCSS tone",
+    fm_tone_burst: "Tone burst",
+    fm_tone_squelch: "Tone squelch",
+    grid_square: "Grid square",
+    input_address: "Address",
+    input_country_id: "Country",
+    input_grid_square: "Grid square",
+    input_latitude: "Latitude",
+    input_locality: "City or town",
+    input_longitude: "Longitude",
+    input_post_code: "Post code or ZIP",
+    input_region: "Region, state, or province",
+    latitude: "Latitude",
+    locality: "City or town",
+    longitude: "Longitude",
+    m17: "M17",
+    m17_can: "M17 channel access number",
+    m17_reflector_name: "M17 reflector name",
+    nxdn: "NXDN",
+    post_code: "Post code or ZIP",
+    redistribution_limitations: "Redistribution limitations",
+    region: "Region, state, or province",
+    rx_antenna: "Receive antenna",
+    rx_antenna_polarization: "Receive antenna polarization",
+    rx_frequency: "Receive frequency",
+    tx_antenna: "Transmit antenna",
+    tx_antenna_polarization: "Transmit antenna polarization",
+    tx_frequency: "Transmit frequency",
+    tx_power: "Transmit power",
+    utc_offset: "UTC offset",
+    wires_x_node_id: "Wires-X Node Id"
+  }
+
+  EXPORTABLE_ATTRIBUTES = [
+    :name, :call_sign, :web_site, :keeper, :band, :cross_band, :operational, :tx_frequency, :rx_frequency,
+    :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch,
+    :m17, :m17_can, :m17_reflector_name,
+    :dstar, :dstar_port,
+    :fusion, :wires_x_node_id,
+    :dmr, :dmr_color_code, :dmr_network,
+    :nxdn,
+    :p25,
+    :tetra,
+    :echolink, :echolink_node_number,
+    :bandwidth,
+    :address, :locality, :region, :post_code, :country_id, :grid_square, :latitude, :longitude,
+    :tx_power, :tx_antenna, :tx_antenna_polarization, :rx_antenna, :rx_antenna_polarization,
+    :altitude_asl, :altitude_agl, :bearing,
+    :irlp, :irlp_node_number,
+    :utc_offset, :channel, :notes, :source, :redistribution_limitations, :external_id
+  ]
+
   belongs_to :country, optional: true
   belongs_to :input_country, class_name: "Country", optional: true
   belongs_to :geocoded_country, class_name: "Country", optional: true
@@ -118,45 +185,6 @@ class Repeater < ApplicationRecord
   end
 
   has_paper_trail
-
-  HUMANIZED_ATTRIBUTES = {
-    altitude_agl: "Altitude above ground level",
-    altitude_asl: "Altitude above sea level",
-    country_id: "Country code",
-    dmr: "DMR",
-    dmr_color_code: "DMR color code",
-    dmr_network: "DMR network",
-    dstar: "D-Star",
-    dstar_port: "D-Star port",
-    echolink: "EchoLink",
-    echolink_node_number: "EchoLink node number",
-    fm: "FM",
-    fm_ctcss_tone: "CTCSS tone",
-    fm_tone_burst: "Tone burst",
-    fm_tone_squelch: "Tone squelch",
-    input_address: "Address",
-    input_country_id: "Country",
-    input_grid_square: "Grid square",
-    input_latitude: "Latitude",
-    input_locality: "City or town",
-    input_longitude: "Longitude",
-    input_post_code: "Post code or ZIP",
-    input_region: "Region, state, or province",
-    m17: "M17",
-    m17_can: "M17 channel access number",
-    m17_reflector_name: "M17 reflector name",
-    nxdn: "NXDN",
-    redistribution_limitations: "Redistribution limitations",
-    rx_antenna: "Receive antenna",
-    rx_antenna_polarization: "Receive antenna polarization",
-    rx_frequency: "Receive frequency",
-    tx_antenna: "Transmit antenna",
-    tx_antenna_polarization: "Transmit antenna polarization",
-    tx_frequency: "Transmit frequency",
-    tx_power: "Transmit power",
-    utc_offset: "UTC fffset",
-    wires_x_node_id: "Wires-X Node Id"
-  }
 
   def self.human_attribute_name(attr, options = {})
     HUMANIZED_ATTRIBUTES[attr.to_sym] || super

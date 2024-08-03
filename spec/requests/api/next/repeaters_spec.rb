@@ -17,6 +17,10 @@ require "rails_helper"
 RSpec.describe "/api/next/repeaters", type: :request do
   context "With some repeaters" do
     before(:all) do
+      @non_exportable_columns = %w[id coordinates input_address input_country_id input_grid_square input_latitude
+        input_locality input_coordinates input_longitude input_post_code input_region
+        created_at updated_at geocoded_at geocoded_by slug]
+
       Repeater.destroy_all
       create(:repeater, name: "23CM FM", fm: true, band: Repeater::BAND_23CM, tx_frequency: 1240_000_000, rx_frequency: 1240_000_000, input_latitude: 0.07, input_longitude: 0)
       create(:repeater, name: "70CM FM", fm: true, band: Repeater::BAND_70CM, tx_frequency: 420_000_000, rx_frequency: 420_000_000, input_latitude: 0.13, input_longitude: 0)
@@ -33,7 +37,16 @@ RSpec.describe "/api/next/repeaters", type: :request do
       expect(response).to be_successful
       body = JSON.parse(response.body)
       expect(body.size).to eq(8)
-      # TODO: write better assertions.
+
+      # Check the right columns are being exported.
+      headers = body.first.keys
+      Repeater.columns.map(&:name).each do |column_name|
+        if column_name.in? @non_exportable_columns
+          expect(headers).not_to include(column_name)
+        else
+          expect(headers).to include(column_name)
+        end
+      end
     end
 
     it "creates a csv output" do
@@ -41,7 +54,16 @@ RSpec.describe "/api/next/repeaters", type: :request do
       expect(response).to be_successful
       body = CSV.parse(response.body)
       expect(body.size).to eq(9)
-      # TODO: write better assertions.
+
+      # Check the right columns are being exported.
+      headers = body.first
+      Repeater.columns.map(&:name).each do |column_name|
+        if column_name.in? @non_exportable_columns
+          expect(headers).not_to include(column_name)
+        else
+          expect(headers).to include(column_name)
+        end
+      end
     end
   end
 end

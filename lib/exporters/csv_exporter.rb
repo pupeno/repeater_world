@@ -15,26 +15,11 @@
 # Hopefully when we add more exporters, this class will get a better name.
 class CsvExporter < Exporter
   def export
-    columns = [
-      :name, :call_sign, :web_site, :keeper, :band, :cross_band, :operational, :tx_frequency, :rx_frequency,
-      :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch,
-      :m17, :m17_can, :m17_reflector_name,
-      :dstar, :dstar_port,
-      :fusion,
-      :dmr, :dmr_color_code, :dmr_network,
-      :nxdn, :p25, :tetra,
-      :bandwidth,
-      :latitude, :longitude, :grid_square, :address, :locality, :region, :post_code, :country_id,
-      :tx_power, :tx_antenna, :tx_antenna_polarization, :rx_antenna, :rx_antenna_polarization,
-      :altitude_asl, :altitude_agl, :bearing,
-      :utc_offset, :channel, :notes, :source, :redistribution_limitations
-    ]
-
-    headers = columns.map { |c| Repeater.human_attribute_name(c) }
+    headers = Repeater::EXPORTABLE_ATTRIBUTES.map { |c| Repeater.human_attribute_name(c) }
     CSV.generate(headers: headers, write_headers: true, encoding: Encoding::UTF_8) do |csv|
       @results.each do |result|
         repeater = result.searchable
-        csv << columns.each_with_object({}) do |column, line|
+        csv << Repeater::EXPORTABLE_ATTRIBUTES.each_with_object({}) do |column, line|
           line[Repeater.human_attribute_name(column)] = repeater.send(column)
         end
       end
