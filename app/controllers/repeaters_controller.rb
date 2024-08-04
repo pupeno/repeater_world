@@ -57,6 +57,8 @@ class RepeatersController < ApplicationController
 
   def update
     authorize @repeater
+    @repeater.source = nil
+    @repeater.redistribution_limitations = nil
     if @repeater.update(repeater_params)
       ActionMailer::Base.mail(
         from: "Repeater World <info@repeater.world>",
