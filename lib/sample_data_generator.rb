@@ -28,8 +28,6 @@ class SampleDataGenerator
     end
     create_admins
     create_users
-    # create_repeaters
-    # call rake import_all instead
   end
 
   private
@@ -88,16 +86,6 @@ class SampleDataGenerator
     user.save!
     Rails.logger.info "  \"#{args[:email]}\" has password \"#{PASSWORD}\"."
     user
-  end
-
-  def create_repeaters
-    Rails.logger.info "Creating UK repeaters from saved snapshot..."
-    importer = UkrepeatersImporter.new(
-      working_directory: Rails.root.join("spec", "lib", "importers", "ukrepeaters_importer_data"),
-      logger: Logger.new("/dev/null")
-    )
-    importer.import
-    Rails.logger.info "Created UK repeaters from saved snapshot."
   end
 
   ##

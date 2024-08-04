@@ -25,7 +25,16 @@ RSpec.describe SampleDataGenerator do
       @generator.generate
     end
 
-    it "should create admins" do
+    it "should idempotently create users" do
+      expect do
+        @generator.generate(mode: :users_only)
+      end.to change { User.count }.by(18).and change { Admin.count }.by(SampleDataGenerator::ADMINS.length)
+      expect do
+        @generator.generate(mode: :users_only)
+      end.to change { User.count }.by(0).and change { Admin.count }.by(0)
+    end
+
+    it "should idempotently create admins" do
       expect { @generator.send(:create_admins) }.to change { Admin.count }.by(SampleDataGenerator::ADMINS.length)
       # And not delete them, it kills the session and it's annoying:
       expect { @generator.send(:delete_data) }.to change { Admin.count }.by(0)
