@@ -29,20 +29,20 @@ class Repeater < ApplicationRecord
   ]
 
   # These are a mix of various band plans to ensure coverage. It can be expanded to cover more regions.
-  BAND_FREQUENCIES = [
-    {min: 28_000_000, max: 29_700_000, band: BAND_10M},
-    {min: 50_000_000, max: 54_000_000, band: BAND_6M},
-    {min: 70_000_000, max: 70_500_000, band: BAND_4M},
-    {min: 144_000_000, max: 148_000_000, band: BAND_2M},
-    {min: 222_000_000, max: 225_000_000, band: BAND_1_25M},
-    {min: 420_000_000, max: 450_000_000, band: BAND_70CM},
-    {min: 902_000_000, max: 928_000_000, band: BAND_33CM},
-    {min: 1_240_000_000, max: 1_300_000_000, band: BAND_23CM},
-    {min: 2_300_000_000, max: 2_450_000_000, band: BAND_13CM},
-    {min: 3_300_000_000, max: 3_600_000_000, band: BAND_9CM},
-    {min: 5_650_000_000, max: 5_850_000_000, band: BAND_6CM},
-    {min: 10_000_000_000, max: 10_500_000_000, band: BAND_3CM}
-  ]
+  BAND_FREQUENCIES = {
+    BAND_10M => {min: 28_000_000, max: 29_700_000},
+    BAND_6M => {min: 50_000_000, max: 54_000_000},
+    BAND_4M => {min: 70_000_000, max: 70_500_000},
+    BAND_2M => {min: 144_000_000, max: 148_000_000},
+    BAND_1_25M => {min: 222_000_000, max: 225_000_000},
+    BAND_70CM => {min: 420_000_000, max: 450_000_000},
+    BAND_33CM => {min: 902_000_000, max: 928_000_000},
+    BAND_23CM => {min: 1_240_000_000, max: 1_300_000_000},
+    BAND_13CM => {min: 2_300_000_000, max: 2_450_000_000},
+    BAND_9CM => {min: 3_300_000_000, max: 3_600_000_000},
+    BAND_6CM => {min: 5_650_000_000, max: 5_850_000_000},
+    BAND_3CM => {min: 10_000_000_000, max: 10_500_000_000}
+  }
 
   MODES = [
     FM = "fm",
@@ -81,20 +81,86 @@ class Repeater < ApplicationRecord
     FM_NARROW = 12_500
   ]
 
+  HUMANIZED_ATTRIBUTES = {
+    address: "Address",
+    altitude_agl: "Altitude above ground level",
+    altitude_asl: "Altitude above sea level",
+    country_id: "Country code",
+    dmr: "DMR",
+    dmr_color_code: "DMR color code",
+    dmr_network: "DMR network",
+    dstar: "D-Star",
+    dstar_port: "D-Star port",
+    echolink: "EchoLink",
+    echolink_node_number: "EchoLink node number",
+    external_id: "External id",
+    fm: "FM",
+    fm_ctcss_tone: "CTCSS tone",
+    fm_tone_burst: "Tone burst",
+    fm_tone_squelch: "Tone squelch",
+    grid_square: "Grid square",
+    input_address: "Address",
+    input_country_id: "Country code",
+    input_grid_square: "Grid square",
+    input_latitude: "Latitude",
+    input_locality: "City or town",
+    input_longitude: "Longitude",
+    input_post_code: "Post code or ZIP",
+    input_region: "Region, state, or province",
+    latitude: "Latitude",
+    locality: "City or town",
+    longitude: "Longitude",
+    m17: "M17",
+    m17_can: "M17 channel access number",
+    m17_reflector_name: "M17 reflector name",
+    nxdn: "NXDN",
+    post_code: "Post code or ZIP",
+    redistribution_limitations: "Redistribution limitations",
+    region: "Region, state, or province",
+    rx_antenna: "Receive antenna",
+    rx_antenna_polarization: "Receive antenna polarization",
+    rx_frequency: "Receive frequency",
+    tx_antenna: "Transmit antenna",
+    tx_antenna_polarization: "Transmit antenna polarization",
+    tx_frequency: "Transmit frequency",
+    tx_power: "Transmit power",
+    utc_offset: "UTC offset",
+    wires_x_node_id: "Wires-X Node Id"
+  }
+
+  EXPORTABLE_ATTRIBUTES = [
+    :name, :call_sign, :web_site, :keeper, :band, :cross_band, :operational, :tx_frequency, :rx_frequency,
+    :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch,
+    :m17, :m17_can, :m17_reflector_name,
+    :dstar, :dstar_port,
+    :fusion, :wires_x_node_id,
+    :dmr, :dmr_color_code, :dmr_network,
+    :nxdn,
+    :p25,
+    :tetra,
+    :echolink, :echolink_node_number,
+    :bandwidth,
+    :address, :locality, :region, :post_code, :country_id, :grid_square, :latitude, :longitude,
+    :tx_power, :tx_antenna, :tx_antenna_polarization, :rx_antenna, :rx_antenna_polarization,
+    :altitude_asl, :altitude_agl, :bearing,
+    :irlp, :irlp_node_number,
+    :utc_offset, :channel, :notes, :source, :redistribution_limitations, :external_id
+  ]
+
   belongs_to :country, optional: true
   belongs_to :input_country, class_name: "Country", optional: true
   belongs_to :geocoded_country, class_name: "Country", optional: true
   has_many :suggested_repeaters, dependent: :nullify
 
   validates :call_sign, presence: true
-  validates :band, presence: true, inclusion: BANDS
-  validates :tx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
-  validates :rx_frequency, presence: true # TODO: validate the frequency is within the band: https://github.com/pupeno/repeater_world/issues/20
+  validates :band, inclusion: BANDS
+  validates :tx_frequency, numericality: true
+  validates :rx_frequency, numericality: true
+  validate :ensure_frequencies_are_within_band
   validates :fm_ctcss_tone, inclusion: CTCSS_TONES, allow_blank: true
   validates :m17_can, inclusion: M17_CANS, allow_blank: true
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
 
-  before_validation :ensure_fields_are_set
   before_validation :compute_location_fields
 
   include PgSearch::Model
@@ -118,6 +184,10 @@ class Repeater < ApplicationRecord
   end
 
   has_paper_trail
+
+  def self.human_attribute_name(attr, options = {})
+    HUMANIZED_ATTRIBUTES[attr.to_sym] || super
+  end
 
   def to_s(extra = nil)
     super("#{name}:#{call_sign}")
@@ -189,17 +259,18 @@ class Repeater < ApplicationRecord
     super
   end
 
-  def ensure_fields_are_set
-    if band.blank? && tx_frequency.present?
-      BAND_FREQUENCIES.each do |band_frequency|
-        if tx_frequency >= band_frequency[:min] && tx_frequency <= band_frequency[:max]
-          self.band = band_frequency[:band]
-          break
+  def ensure_frequencies_are_within_band
+    if band.present?
+      if tx_frequency.present? && tx_frequency.is_a?(Numeric)
+        if !RepeaterUtils.is_frequency_in_band?(tx_frequency, band)
+          errors.add(:tx_frequency, "is not within band #{band}. It should be between #{RepeaterUtils.frequency_in_mhz(BAND_FREQUENCIES[band][:min])} and #{RepeaterUtils.frequency_in_mhz(BAND_FREQUENCIES[band][:max])}.")
         end
       end
-    end
-    if bandwidth.blank?
-      self.bandwidth = FM_WIDE
+      if !cross_band? && rx_frequency.present? && rx_frequency.is_a?(Numeric)
+        if !RepeaterUtils.is_frequency_in_band?(rx_frequency, band)
+          errors.add(:rx_frequency, "is not within band #{band}. It should be between #{RepeaterUtils.frequency_in_mhz(BAND_FREQUENCIES[band][:min])} and #{RepeaterUtils.frequency_in_mhz(BAND_FREQUENCIES[band][:max])}.")
+        end
+      end
     end
   end
 
@@ -306,7 +377,7 @@ class Repeater < ApplicationRecord
         field :nxdn
         field :p25
         field :tetra
-        field :echo_link
+        field :echolink
         field :irlp
       end
 
@@ -335,7 +406,7 @@ class Repeater < ApplicationRecord
       end
 
       group "EchoLink" do
-        field :echo_link_node_number
+        field :echolink_node_number
       end
 
       group "IRLP" do
@@ -382,6 +453,7 @@ class Repeater < ApplicationRecord
         field :altitude_asl
         field :bearing
         field :band
+        field :cross_band
         field :channel
       end
 
@@ -411,7 +483,7 @@ class Repeater < ApplicationRecord
         field :nxdn
         field :p25
         field :tetra
-        field :echo_link
+        field :echolink
         field :irlp
       end
 
@@ -440,7 +512,7 @@ class Repeater < ApplicationRecord
       end
 
       group "EchoLink" do
-        field :echo_link_node_number
+        field :echolink_node_number
       end
 
       group "IRLP" do
@@ -489,6 +561,7 @@ class Repeater < ApplicationRecord
         field :altitude_asl
         field :bearing
         field :band
+        field :cross_band
         field :channel
       end
 
@@ -538,13 +611,14 @@ end
 #  call_sign                  :string
 #  channel                    :string
 #  coordinates                :geography        point, 4326
+#  cross_band                 :boolean
 #  dmr                        :boolean
 #  dmr_color_code             :integer
 #  dmr_network                :string
 #  dstar                      :boolean
 #  dstar_port                 :string
-#  echo_link                  :boolean
-#  echo_link_node_number      :integer
+#  echolink                   :boolean
+#  echolink_node_number       :integer
 #  fm                         :boolean
 #  fm_ctcss_tone              :decimal(, )
 #  fm_tone_burst              :boolean

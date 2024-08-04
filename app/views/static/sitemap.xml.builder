@@ -19,7 +19,7 @@ xml.urlset xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9" do
   end
 
   xml.url do
-    xml.loc new_suggested_repeater_url
+    xml.loc new_repeater_url
   end
 
   xml.url do

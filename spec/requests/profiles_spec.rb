@@ -44,7 +44,7 @@ RSpec.describe "/profiles", type: :request do
       context "with invalid parameters" do
         it "renders a successful response (i.e. to display the 'edit' template)" do
           patch profile_url, params: {user: {email: ""}}
-          expect(response).to have_http_status(422)
+          expect(response).to have_http_status(:unprocessable_entity)
         end
       end
     end

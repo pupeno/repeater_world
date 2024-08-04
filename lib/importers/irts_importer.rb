@@ -52,6 +52,8 @@ class IrtsImporter < Importer
     repeater.name = nil # It used to be repeater.call_sign, it needs to be blanked.
     repeater.channel = raw_repeater[CHANNEL].text.strip
     repeater.rx_frequency = raw_repeater[FREQUENCY].text.scan(FREQUENCY_REGEX).flatten.second.to_f * 10**6
+    repeater.band = RepeaterUtils.band_for_frequency(repeater.tx_frequency)
+
     import_mode_access_code(repeater, raw_repeater[ACCESS].text.strip, raw_repeater[NOTES].text.strip)
     import_location(repeater, raw_repeater[LOCATION])
     repeater.notes = raw_repeater[NOTES].text.strip
@@ -61,8 +63,6 @@ class IrtsImporter < Importer
 
     repeater.save!
     repeater
-  rescue => e
-    raise "Failed to save #{repeater.inspect} due to: #{e.message}"
   end
 
   def import_mode_access_code(repeater, access, notes)

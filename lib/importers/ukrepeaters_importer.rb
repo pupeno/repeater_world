@@ -35,7 +35,7 @@ class UkrepeatersImporter < Importer
   end
 
   def call_sign_and_tx_frequency(raw_repeater)
-    [raw_repeater[:call_sign].upcase, raw_repeater[:tx_frequency]]
+    [raw_repeater[:call_sign], raw_repeater[:tx_frequency]]
   end
 
   def import_repeater(raw_repeater, repeater)
@@ -52,17 +52,25 @@ class UkrepeatersImporter < Importer
     assert_fields(csv_file, [:callsign, :band, :channel, :tx, :rx, :modes, :qthr, :ngr, :where, :postcode, :region, :ctcsscc, :keeper, :lat, :lon, nil], "https://ukrepeater.net/csvcreate3.php", file_name)
 
     csv_file.each_with_index do |row, line_number|
-      raw_repeater = {call_sign: parse_call_sign(row[:callsign]),
-                      tx_frequency: parse_frequency(row[:tx])}
+      raw_repeater = {}
+      raw_repeater[:call_sign] = parse_call_sign(row[:callsign])
+      raw_repeater[:tx_frequency] = parse_frequency(row[:tx])
+      raw_repeater[:band] = row[:band]&.downcase
+      raw_repeater[:band] = RepeaterUtils.band_for_frequency(raw_repeater[:tx_frequency]) if Repeater::BAND_FREQUENCIES[raw_repeater[:band]].blank?
+      raw_repeater[:rx_frequency] = row[:rx].to_f * 10**6
+      if raw_repeater[:rx_frequency] == 0
+        raw_repeater[:rx_frequency] = raw_repeater[:tx_frequency]
+      end
+      if !RepeaterUtils.is_frequency_in_band?(raw_repeater[:rx_frequency], raw_repeater[:band])
+        raw_repeater[:cross_band] = true
+      end
 
       # Some metadata.
       raw_repeater[:name] = row[:where].titleize
-      raw_repeater[:band] = row[:band]&.downcase
       raw_repeater[:channel] = row[:channel]
       raw_repeater[:keeper] = row[:keeper]
 
       # How to access the repeater.
-      raw_repeater[:rx_frequency] = row[:rx].to_f * 10**6
       if row[:ctcsscc].present?
         if Repeater::CTCSS_TONES.include?(row[:ctcsscc].to_f)
           raw_repeater[:fm_ctcss_tone] = row[:ctcsscc]
@@ -212,7 +220,7 @@ class UkrepeatersImporter < Importer
   end
 
   def parse_frequency(frequency)
-    (frequency.to_f * 10**6).to_i
+    (frequency.to_f.abs * 10**6).to_i
   end
 
   def parse_operational(raw_repeater, repeater)

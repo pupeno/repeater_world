@@ -18,14 +18,14 @@ RSpec.describe "/repeater_searches", type: :request do
   context "With some repeaters" do
     before(:all) do
       Repeater.destroy_all
-      create(:repeater, name: "23CM FM", fm: true, band: Repeater::BAND_23CM, input_latitude: 0.07, input_longitude: 0)
-      create(:repeater, name: "70CM FM", fm: true, band: Repeater::BAND_70CM, input_latitude: 0.13, input_longitude: 0)
-      create(:repeater, name: "2M FM", fm: true, band: Repeater::BAND_2M, input_latitude: 1.4, input_longitude: 0)
-      create(:repeater, name: "4M FM", fm: true, band: Repeater::BAND_4M, input_latitude: 2, input_longitude: 0)
-      create(:repeater, name: "23CM D-Star", dstar: true, band: Repeater::BAND_23CM)
-      create(:repeater, name: "70CM Fusion", fusion: true, band: Repeater::BAND_70CM)
-      create(:repeater, name: "2M DMR", dmr: true, band: Repeater::BAND_2M)
-      create(:repeater, name: "4M NXDN", nxdn: true, band: Repeater::BAND_4M)
+      create(:repeater, name: "23CM FM", fm: true, band: Repeater::BAND_23CM, tx_frequency: 1240_000_000, rx_frequency: 1240_000_000, input_latitude: 0.07, input_longitude: 0, input_country_id: "us")
+      create(:repeater, name: "70CM FM", fm: true, band: Repeater::BAND_70CM, tx_frequency: 420_000_000, rx_frequency: 420_000_000, input_latitude: 0.13, input_longitude: 0, input_country_id: "us")
+      create(:repeater, name: "2M FM", fm: true, band: Repeater::BAND_2M, tx_frequency: 144_000_000, rx_frequency: 144_000_000, input_latitude: 1.4, input_longitude: 0, input_country_id: "us")
+      create(:repeater, name: "4M FM", fm: true, band: Repeater::BAND_4M, tx_frequency: 70_000_000, rx_frequency: 70_000_000, input_latitude: 2, input_longitude: 0, input_country_id: "gb")
+      create(:repeater, name: "23CM D-Star", dstar: true, band: Repeater::BAND_23CM, tx_frequency: 1240_000_000, rx_frequency: 1240_000_000, input_latitude: 20, input_longitude: 20, input_country_id: "us")
+      create(:repeater, name: "70CM Fusion", fusion: true, band: Repeater::BAND_70CM, tx_frequency: 420_000_000, rx_frequency: 420_000_000, input_latitude: 20, input_longitude: 20, input_country_id: "us")
+      create(:repeater, name: "2M DMR", dmr: true, band: Repeater::BAND_2M, tx_frequency: 144_000_000, rx_frequency: 144_000_000, input_latitude: 20, input_longitude: 20, input_country_id: "us")
+      create(:repeater, name: "4M NXDN", nxdn: true, band: Repeater::BAND_4M, tx_frequency: 70_000_000, rx_frequency: 70_000_000, input_latitude: 20, input_longitude: 20, input_country_id: "gb")
     end
 
     context "as anonymous" do
@@ -70,11 +70,9 @@ RSpec.describe "/repeater_searches", type: :request do
       end
 
       it "runs a search by coordinates" do
-        get search_url(s: attributes_for(
-          :repeater_search,
+        get search_url(s: attributes_for(:repeater_search,
           geosearch_type: RepeaterSearch::COORDINATES,
-          distance: 160, distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0
-        ))
+          distance: 160, distance_unit: RepeaterSearch::KM, latitude: 0, longitude: 0))
         expect(response).to be_successful
         expect(response).to render_template(:new)
         expect(response.body).to include("Search")
@@ -83,7 +81,7 @@ RSpec.describe "/repeater_searches", type: :request do
         expect(response.body).not_to include("4M FM")
       end
 
-      it "runs a search by coordinates" do
+      it "fails to runs a search by coordinates due to missing coordinates" do
         get search_url(s: attributes_for(:repeater_search,
           geosearch_type: RepeaterSearch::COORDINATES,
           distance: 160, distance_unit: RepeaterSearch::KM))
@@ -105,13 +103,42 @@ RSpec.describe "/repeater_searches", type: :request do
         expect(response.body).not_to include("4M FM")
       end
 
-      it "runs a search by grid square" do
+      it "fails to run a search by grid square due to missing grid square" do
         get search_url(s: attributes_for(:repeater_search,
           geosearch_type: RepeaterSearch::GRID_SQUARE,
           distance: 160, distance_unit: RepeaterSearch::KM))
         expect(response).to be_successful
         expect(response).to render_template(:new)
         expect(response.body).to include("Grid square can&#39;t be blank")
+      end
+
+      it "fails to run a search by grid square due to invalid grid square" do
+        get search_url(s: attributes_for(:repeater_search,
+          geosearch_type: RepeaterSearch::GRID_SQUARE,
+          distance: 160, distance_unit: RepeaterSearch::KM, grid_square: "not a grid square"))
+        expect(response).to be_successful
+        expect(response).to render_template(:new)
+        expect(response.body).to include("Grid square is not a valid grid square")
+      end
+
+      it "runs a search by country" do
+        get search_url(s: attributes_for(:repeater_search,
+          geosearch_type: RepeaterSearch::WITHIN_A_COUNTRY,
+          country_id: "us"))
+        expect(response).to be_successful
+        expect(response).to render_template(:new)
+        expect(response.body).to include("Search")
+        expect(response.body).to include("Save Search")
+        expect(response.body).to include("2M FM")
+        expect(response.body).not_to include("4M FM")
+      end
+
+      it "fails to run a search by country due to missing grid square" do
+        get search_url(s: attributes_for(:repeater_search,
+          geosearch_type: RepeaterSearch::WITHIN_A_COUNTRY))
+        expect(response).to be_successful
+        expect(response).to render_template(:new)
+        expect(response.body).to include("Country can&#39;t be blank")
       end
 
       it "runs a full text search" do
@@ -173,7 +200,9 @@ RSpec.describe "/repeater_searches", type: :request do
         get export_url(s: attributes_for(:repeater_search, band_2m: true, fm: true),
           e: {format: "csv"})
         expect(response).to be_successful
-        expect(response.body).to include("Name,Call Sign,Web Site,Keeper,Band,Operational,Tx Frequency,Rx Frequency,FM,Tone Burst,CTCSS Tone,Tone Squelch,M17,M17 Channel Access Number,M17 Reflector Name,D-Star,D-Star Port,Fusion,DMR,DMR Color Code,DMR Network,NXDN,P25,Tetra,Bandwidth,Latitude,Longitude,Grid Square,Address,Locality,Region,Post Code,Country Code,Tx Power,Tx Antenna,Tx Antenna Polarization,Rx Antenna,Rx Antenna Polarization,Altitude Asl,Altitude Agl,Bearing,UTC Offset,Channel,Notes,Source,Redistribution Limitations")
+        expect(response.body).to include(<<~HEAD)
+          Name,Call sign,Web site,Keeper,Band,Cross band,Operational,Transmit frequency,Receive frequency,FM,Tone burst,CTCSS tone,Tone squelch,M17,M17 channel access number,M17 reflector name,D-Star,D-Star port,Fusion,Wires-X Node Id,DMR,DMR color code,DMR network,NXDN,P25,Tetra,EchoLink,EchoLink node number,Bandwidth,Address,City or town,"Region, state, or province",Post code or ZIP,Country code,Grid square,Latitude,Longitude,Transmit power,Transmit antenna,Transmit antenna polarization,Receive antenna,Receive antenna polarization,Altitude above sea level,Altitude above ground level,Bearing,Irlp,Irlp node number,UTC offset,Channel,Notes,Source,Redistribution limitations,External id
+        HEAD
         expect(response.body).to include("2M FM,")
       end
 
@@ -313,7 +342,9 @@ RSpec.describe "/repeater_searches", type: :request do
         repeater_search = create(:repeater_search, user: @current_user, band_2m: true, fm: true)
         get export_repeater_search_url(repeater_search, e: {format: "csv"})
         expect(response).to be_successful
-        expect(response.body).to include("Name,Call Sign,Web Site,Keeper,Band,Operational,Tx Frequency,Rx Frequency,FM,Tone Burst,CTCSS Tone,Tone Squelch,M17,M17 Channel Access Number,M17 Reflector Name,D-Star,D-Star Port,Fusion,DMR,DMR Color Code,DMR Network,NXDN,P25,Tetra,Bandwidth,Latitude,Longitude,Grid Square,Address,Locality,Region,Post Code,Country Code,Tx Power,Tx Antenna,Tx Antenna Polarization,Rx Antenna,Rx Antenna Polarization,Altitude Asl,Altitude Agl,Bearing,UTC Offset,Channel,Notes,Source,Redistribution Limitations")
+        expect(response.body).to include(<<~HEAD)
+          Name,Call sign,Web site,Keeper,Band,Cross band,Operational,Transmit frequency,Receive frequency,FM,Tone burst,CTCSS tone,Tone squelch,M17,M17 channel access number,M17 reflector name,D-Star,D-Star port,Fusion,Wires-X Node Id,DMR,DMR color code,DMR network,NXDN,P25,Tetra,EchoLink,EchoLink node number,Bandwidth,Address,City or town,"Region, state, or province",Post code or ZIP,Country code,Grid square,Latitude,Longitude,Transmit power,Transmit antenna,Transmit antenna polarization,Receive antenna,Receive antenna polarization,Altitude above sea level,Altitude above ground level,Bearing,Irlp,Irlp node number,UTC offset,Channel,Notes,Source,Redistribution limitations,External id
+        HEAD
         expect(response.body).to include("2M FM,")
       end
 
@@ -328,7 +359,7 @@ RSpec.describe "/repeater_searches", type: :request do
         expect {
           post repeater_searches_url, params: {s: attributes_for(:repeater_search).merge({distance: "hello"})}
         }.to change(RepeaterSearch, :count).by(0)
-        expect(response).to have_http_status(422)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "updates a repeater search" do
@@ -350,7 +381,7 @@ RSpec.describe "/repeater_searches", type: :request do
       it "fails to update due to validations" do
         repeater_search = create(:repeater_search, user: @current_user)
         patch repeater_search_url(repeater_search), params: {s: {distance: "hello"}}
-        expect(response).to have_http_status(422)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "fails to update due search belonging to someone else" do

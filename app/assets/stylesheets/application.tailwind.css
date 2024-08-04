@@ -77,11 +77,6 @@
         @apply bg-transparent;
     }
 
-    /* Make the select options work in dark mode, transparency doesn't work for them */
-    select option, select optgroup {
-        @apply bg-gray-50 dark:bg-gray-800;
-    }
-
     .field-text {
         @apply py-1.5
         rounded-md border shadow-sm border-gray-300 dark:border-gray-600
@@ -101,6 +96,18 @@
         rounded text-orange-500 dark:bg-gray-700
         focus:ring-0 focus:ring-offset-0
         focus:outline-2 focus:outline-offset-2 focus:outline-orange-500;
+    }
+
+    /* Make the select options work in dark mode, transparency doesn't work for them */
+    select option, select optgroup {
+        @apply bg-gray-50 dark:bg-gray-800;
+    }
+
+    .field_with_errors > select {
+        @apply text-red-900 dark:text-red-200 placeholder-red-300 dark:placeholder-red-500
+        bg-red-50 dark:bg-red-900/25
+        border border-red-500 dark:border-red-500
+        focus:outline-red-500 focus:outline-red-500 focus:border;
     }
 
     .geosearch .field_with_errors {

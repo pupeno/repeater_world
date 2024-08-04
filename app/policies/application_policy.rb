@@ -1,4 +1,4 @@
-# Copyright 2023-2024, Pablo Fernandez
+# Copyright 2024, Pablo Fernandez
 #
 # This file is part of Repeater World.
 #
@@ -12,16 +12,54 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-desc "Generate full sample data for development, staging, review apps."
-task generate_sample_data: :environment do
-  Rails.logger = Logger.new($stdout)
-  Rake::Task["db:seed"].execute
-  SampleDataGenerator.new.generate
-end
+class ApplicationPolicy
+  attr_reader :user, :record
 
-desc "Generate sample users for development, staging, review apps."
-task generate_sample_users: :environment do
-  Rails.logger = Logger.new($stdout)
-  Rake::Task["db:seed"].execute
-  SampleDataGenerator.new.generate(mode: :users_only)
+  def initialize(user, record)
+    @user = user
+    @record = record
+  end
+
+  def index?
+    false
+  end
+
+  def show?
+    false
+  end
+
+  def create?
+    false
+  end
+
+  def new?
+    create?
+  end
+
+  def update?
+    false
+  end
+
+  def edit?
+    update?
+  end
+
+  def destroy?
+    false
+  end
+
+  class Scope
+    def initialize(user, scope)
+      @user = user
+      @scope = scope
+    end
+
+    def resolve
+      raise NotImplementedError.new("You must define #resolve in #{self.class}")
+    end
+
+    private
+
+    attr_reader :user, :scope
+  end
 end

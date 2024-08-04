@@ -17,37 +17,37 @@ require "rails_helper"
 RSpec.describe "Statics", type: :request do
   it "renders the home page" do
     get "/"
-    expect(response).to have_http_status(:success)
+    expect(response).to be_successful
   end
 
   it "renders values" do
     get "/values"
-    expect(response).to have_http_status(:success)
+    expect(response).to be_successful
   end
 
   it "renders data-limitations/ukrepeater-net" do
     get "/data-limitations/ukrepeater-net"
-    expect(response).to have_http_status(:success)
+    expect(response).to be_successful
   end
 
   it "renders data-limitations/sral-fi" do
     get "/data-limitations/sral-fi"
-    expect(response).to have_http_status(:success)
+    expect(response).to be_successful
   end
 
   it "renders crawler" do
     get "/crawler"
-    expect(response).to have_http_status(:success)
+    expect(response).to be_successful
   end
 
   it "renders privacy-policy" do
     get "/privacy-policy"
-    expect(response).to have_http_status(:success)
+    expect(response).to be_successful
   end
 
   it "renders cookie-policy" do
     get "/cookie-policy"
-    expect(response).to have_http_status(:success)
+    expect(response).to be_successful
   end
 
   it "shows a 404" do

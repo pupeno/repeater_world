@@ -13,6 +13,8 @@
 # <https://www.gnu.org/licenses/>.
 
 class ApplicationController < ActionController::Base
+  include Pundit::Authorization
+
   before_action :set_paper_trail_whodunnit
 
   unless Rails.application.config.consider_all_requests_local

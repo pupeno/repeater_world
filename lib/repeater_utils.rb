@@ -47,4 +47,16 @@ module RepeaterUtils
   def self.location_in_words(repeater)
     [repeater.address, repeater.locality, repeater.region, repeater.post_code, repeater.country_name].reject(&:blank?).join(", ")
   end
+
+  def self.band_for_frequency(frequency)
+    Repeater::BAND_FREQUENCIES.each do |band, freqs|
+      if frequency >= freqs[:min] && frequency <= freqs[:max]
+        return band
+      end
+    end
+  end
+
+  def self.is_frequency_in_band?(frequency, band)
+    frequency >= Repeater::BAND_FREQUENCIES[band][:min] && frequency <= Repeater::BAND_FREQUENCIES[band][:max]
+  end
 end
