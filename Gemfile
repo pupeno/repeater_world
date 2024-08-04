@@ -36,6 +36,8 @@ gem "importmap-rails", "~> 2.0" # Use JavaScript with ESM import maps [https://g
 gem "jbuilder", "~> 2.11"
 gem "kaminari", "~> 1.2"
 gem "mailgun-ruby", "~>1.2"
+gem "paper_trail", "~> 15.1"
+gem "paper_trail-globalid", "~> 0.2"
 gem "pg", "~> 1.5" # Use postgresql as the database for Active Record
 gem "pg_search", "~> 2.3"
 gem "puma", "~> 6.4" # Use the Puma web server [https://github.com/puma/puma]
@@ -43,7 +45,7 @@ gem "rails", "~> 7.1" # Bundle edge Rails instead: gem "rails", github: "rails/r
 gem "rails_admin", "~> 3.1"
 gem "rbzip2", "~> 0.3"
 gem "sassc-rails", "~> 2.1" # Asked by rails_admin... but it's not a dependency??? the world is complicated.
-gem "sentry-rails", "~> 5.16"
+gem "sentry-rails", "~> 5.18"
 gem "sentry-ruby", "~> 5.16"
 gem "sprockets-rails", "~> 3.5" # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "stimulus-rails", "~> 1.3" # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
@@ -62,7 +64,7 @@ group :development, :test do
   gem "brakeman", "~> 6.1"
   gem "debug", "~> 1.9", platforms: %i[mri mingw x64_mingw] # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "rspec-rails", "~> 6.1"
-  gem "standard", "~> 1.37"
+  gem "standard", "~> 1.39"
   gem "tzinfo-data", "~> 1.2022", platforms: %i[mingw mswin x64_mingw jruby] # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 end
 

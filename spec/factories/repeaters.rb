@@ -137,6 +137,8 @@ end
 #  input_locality             :string
 #  input_post_code            :string
 #  input_region               :string
+#  irlp                       :boolean
+#  irlp_node_number           :integer
 #  keeper                     :string
 #  locality                   :string
 #  m17                        :boolean

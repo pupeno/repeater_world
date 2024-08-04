@@ -14,7 +14,7 @@
 
 if Rails.env.test?
   Geocoder.configure(lookup: :test, ip_lookup: :test)
-else
+elsif ENV["GOOGLE_GEOCODING_DISABLED"] != "true"
   Geocoder.configure(
     # Geocoding options
     # timeout: 3,                 # geocoding service timeout (secs)
@@ -42,4 +42,6 @@ else
     #   prefix: 'geocoder:'
     # }
   )
+else
+  Geocoder.configure(lookup: :test, ip_lookup: :test)
 end

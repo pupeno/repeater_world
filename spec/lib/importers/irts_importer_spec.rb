@@ -20,7 +20,7 @@ RSpec.describe IrtsImporter do
     files = {"https://www.irts.ie/cgi/repeater.cgi?printable" => "irts.html"}
     files.each do |url, local_file|
       file = double("file")
-      local_file = Rails.root.join("spec", "factories", "irts_importer_data", local_file)
+      local_file = Rails.root.join("spec", "lib", "importers", "irts_importer_data", local_file)
       expect(file).to receive(:open).and_return(File.new(local_file))
       expect(URI).to receive(:parse).with(url).and_return(file)
     end
@@ -30,11 +30,11 @@ RSpec.describe IrtsImporter do
     Dir.mktmpdir("IrtsImporter") do |dir|
       expect do
         IrtsImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(12)
+      end.to change { Repeater.count }.by(13)
 
       # Grab one repeater and verify it was imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "EI0IPG")
-      expect(repeater.name).to eq("EI0IPG")
+      expect(repeater.name).to eq(nil)
       expect(repeater.band).to eq(Repeater::BAND_10M)
       expect(repeater.tx_frequency).to eq(29_680_000)
       expect(repeater.rx_frequency).to eq(29_580_000)

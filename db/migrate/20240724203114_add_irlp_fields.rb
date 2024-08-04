@@ -1,4 +1,4 @@
-# Copyright 2023-2024, Pablo Fernandez
+# Copyright 2024, Pablo Fernandez
 #
 # This file is part of Repeater World.
 #
@@ -12,18 +12,13 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-class ApplicationController < ActionController::Base
-  before_action :set_paper_trail_whodunnit
+# This migration adds the optional `object_changes` column, in which PaperTrail
+# will store the `changes` diff for each update event. See the readme for
+# details.
 
-  unless Rails.application.config.consider_all_requests_local
-    rescue_from ActiveRecord::RecordNotFound, with: :not_found
-  end
-
-  def not_found
-    render "static/not_found", status: :not_found
-  end
-
-  def user_for_paper_trail
-    current_user
+class AddIrlpFields < ActiveRecord::Migration[7.1]
+  def change
+    add_column :repeaters, :irlp, :boolean
+    add_column :repeaters, :irlp_node_number, :integer
   end
 end
