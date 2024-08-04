@@ -33,5 +33,6 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/typography'),
-  ]
+  ],
+  safelist: [".field_with_errors > select"]
 }

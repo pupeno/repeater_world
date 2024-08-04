@@ -31,6 +31,7 @@ end
 # Table name: users
 #
 #  id                     :uuid             not null, primary key
+#  can_edit_repeaters     :boolean
 #  confirmation_sent_at   :datetime
 #  confirmation_token     :string
 #  confirmed_at           :datetime

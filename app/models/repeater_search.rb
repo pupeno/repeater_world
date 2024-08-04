@@ -85,6 +85,7 @@ class RepeaterSearch < ApplicationRecord
   validates :longitude, numericality: true, allow_blank: true
   validates :grid_square, presence: true, if: :grid_square_required?
   validate :grid_square_format_valid
+  validates :country_id, presence: true, if: :country_required?
 
   after_validation :geosearch_post_processing
 
@@ -173,6 +174,10 @@ class RepeaterSearch < ApplicationRecord
     geosearch_type == GRID_SQUARE
   end
 
+  def country_required?
+    geosearch_type == WITHIN_A_COUNTRY
+  end
+
   def geosearch_post_processing
     # If we are searching for my location and we didn't get valid latitude and longitude from the browser, add an error
     # to the geosearch_type field so that it's actually visible in the form.
@@ -229,7 +234,7 @@ class RepeaterSearch < ApplicationRecord
       "within #{distance}#{distance_unit} of coordinates"
     elsif geosearch_type == RepeaterSearch::GRID_SQUARE
       "within #{distance}#{distance_unit} of grid square #{grid_square}"
-    elsif geosearch_type == RepeaterSearch::WITHIN_A_COUNTRY
+    elsif geosearch_type == RepeaterSearch::WITHIN_A_COUNTRY && country.present?
       "within #{country.name}"
     end
     if latitude.present? && longitude.present? && geosearch_type.in?([RepeaterSearch::MY_LOCATION, RepeaterSearch::PLACE, RepeaterSearch::GRID_SQUARE])

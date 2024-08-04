@@ -12,16 +12,32 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-desc "Generate full sample data for development, staging, review apps."
-task generate_sample_data: :environment do
-  Rails.logger = Logger.new($stdout)
-  Rake::Task["db:seed"].execute
-  SampleDataGenerator.new.generate
-end
+class RepeaterPolicy < ApplicationPolicy
+  def index?
+    true # Everybody can list all repeaters.
+  end
 
-desc "Generate sample users for development, staging, review apps."
-task generate_sample_users: :environment do
-  Rails.logger = Logger.new($stdout)
-  Rake::Task["db:seed"].execute
-  SampleDataGenerator.new.generate(mode: :users_only)
+  def show?
+    true # Everybody can show any repeater.
+  end
+
+  def create?
+    @user.present? # Everybody that is logged in can edit a repeater.
+  end
+
+  def new?
+    create?
+  end
+
+  def update?
+    @user.present? && @user.can_edit_repeaters?
+  end
+
+  def edit?
+    update?
+  end
+
+  def destroy?
+    false # Nobody can delete repeaters for now.
+  end
 end

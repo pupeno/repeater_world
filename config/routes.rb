@@ -27,8 +27,7 @@ Rails.application.routes.draw do
       get "export"
     end
   end
-  resources :repeaters, only: [:show]
-  resources :suggested_repeaters, only: [:new, :create]
+  resources :repeaters, only: [:show, :new, :create, :edit, :update]
   get "/directory", to: "directory#countries"
   get "/directory/:country_id", to: "directory#by_country", as: "directory_by_country"
 
@@ -93,9 +92,12 @@ end
 #                                          PATCH  /repeater_searches/:id(.:format)                                                                  repeater_searches#update
 #                                          PUT    /repeater_searches/:id(.:format)                                                                  repeater_searches#update
 #                                          DELETE /repeater_searches/:id(.:format)                                                                  repeater_searches#destroy
+#                                repeaters POST   /repeaters(.:format)                                                                              repeaters#create
+#                             new_repeater GET    /repeaters/new(.:format)                                                                          repeaters#new
+#                            edit_repeater GET    /repeaters/:id/edit(.:format)                                                                     repeaters#edit
 #                                 repeater GET    /repeaters/:id(.:format)                                                                          repeaters#show
-#                      suggested_repeaters POST   /suggested_repeaters(.:format)                                                                    suggested_repeaters#create
-#                   new_suggested_repeater GET    /suggested_repeaters/new(.:format)                                                                suggested_repeaters#new
+#                                          PATCH  /repeaters/:id(.:format)                                                                          repeaters#update
+#                                          PUT    /repeaters/:id(.:format)                                                                          repeaters#update
 #                                directory GET    /directory(.:format)                                                                              directory#countries
 #                     directory_by_country GET    /directory/:country_id(.:format)                                                                  directory#by_country
 #                         new_user_session GET    /users/sign_in(.:format)                                                                          devise/sessions#new

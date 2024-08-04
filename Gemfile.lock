@@ -3,6 +3,7 @@ GIT
   revision: e8d0afe2773b9eb6a23c39e9e437f6fc0fc7c733
   specs:
     net-pop (0.1.2)
+      net-protocol
 
 GEM
   remote: https://rubygems.org/
@@ -136,7 +137,7 @@ GEM
       activejob (>= 5.0)
       devise (>= 4.0)
     diff-lcs (1.5.1)
-    docile (1.4.0)
+    docile (1.4.1)
     domain_name (0.6.20240107)
     dotenv (3.1.2)
     dotenv-rails (3.1.2)
@@ -239,9 +240,11 @@ GEM
       activesupport (>= 5.2)
     psych (5.1.2)
       stringio
-    public_suffix (6.0.0)
+    public_suffix (6.0.1)
     puma (6.4.2)
       nio4r (~> 2.0)
+    pundit (2.3.2)
+      activesupport (>= 3.0.0)
     racc (1.8.1)
     rack (3.1.7)
     rack-session (2.0.0)
@@ -308,7 +311,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rexml (3.3.3)
+    rexml (3.3.4)
       strscan
     rgeo (3.0.1)
     rgeo-activerecord (7.0.1)
@@ -453,6 +456,7 @@ DEPENDENCIES
   pg (~> 1.5)
   pg_search (~> 2.3)
   puma (~> 6.4)
+  pundit (~> 2.3)
   rails (~> 7.1)
   rails-controller-testing (~> 1.0)
   rails_admin (~> 3.1)

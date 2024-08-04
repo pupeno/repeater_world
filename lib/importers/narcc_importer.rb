@@ -63,7 +63,11 @@ class NarccImporter < Importer
   end
 
   def import_repeater(raw_repeater, repeater)
+    repeater.band = RepeaterUtils.band_for_frequency(repeater.tx_frequency)
     repeater.rx_frequency = raw_repeater[INPUT].text.to_f * 10**6
+    if !RepeaterUtils.is_frequency_in_band?(repeater.rx_frequency, repeater.band)
+      repeater.cross_band = true
+    end
     repeater.fm = true # Odd, are they only FM? Surely there are other modes there.
     repeater.fm_ctcss_tone = raw_repeater[CTCSS].text.to_f if raw_repeater[CTCSS].text.strip.present?
     repeater.input_locality = raw_repeater[LOCATION].text.strip
@@ -82,10 +86,10 @@ class NarccImporter < Importer
     repeater.notes += "Wide area coverage\n" if /x/.match?(raw_repeater[NOTES].text)
     repeater.notes += "Station type: #{raw_repeater[STATION_TYPE].text.strip}\n" if raw_repeater[STATION_TYPE].text.strip.present?
 
-    echo_link = raw_repeater[NOTES].text.match(/E:(\d+)/)
-    if echo_link.present?
-      repeater.echo_link = true
-      repeater.echo_link_node_number = echo_link[1]
+    echolink = raw_repeater[NOTES].text.match(/E:(\d+)/)
+    if echolink.present?
+      repeater.echolink = true
+      repeater.echolink_node_number = echolink[1]
     end
 
     irlp_node_number = raw_repeater[NOTES].text.match(/I:(\d+)/)

@@ -12,16 +12,20 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-desc "Generate full sample data for development, staging, review apps."
-task generate_sample_data: :environment do
-  Rails.logger = Logger.new($stdout)
-  Rake::Task["db:seed"].execute
-  SampleDataGenerator.new.generate
-end
+require "rails_helper"
 
-desc "Generate sample users for development, staging, review apps."
-task generate_sample_users: :environment do
-  Rails.logger = Logger.new($stdout)
-  Rake::Task["db:seed"].execute
-  SampleDataGenerator.new.generate(mode: :users_only)
+RSpec.describe ApplicationPolicy do
+  subject { described_class }
+
+  permissions :index?, :show?, :new?, :create?, :edit?, :update?, :destroy? do
+    it "denies everything" do
+      expect(subject).not_to permit(nil, nil)
+    end
+  end
+
+  it "has a scope" do
+    user = create(:user)
+    scope = ApplicationPolicy::Scope.new(user, RepeaterSearch)
+    expect { scope.resolve }.to raise_error(NotImplementedError)
+  end
 end

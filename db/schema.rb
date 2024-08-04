@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_24_203114) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_03_123215) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -162,8 +162,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_24_203114) do
     t.string "locality"
     t.string "region"
     t.string "post_code"
-    t.boolean "echo_link"
-    t.integer "echo_link_node_number"
+    t.boolean "echolink"
+    t.integer "echolink_node_number"
     t.string "wires_x_node_id"
     t.integer "bandwidth"
     t.string "slug", null: false
@@ -175,6 +175,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_24_203114) do
     t.string "grid_square"
     t.boolean "irlp"
     t.integer "irlp_node_number"
+    t.boolean "cross_band"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["coordinates"], name: "index_repeaters_on_coordinates", using: :gist
     t.index ["country_id"], name: "index_repeaters_on_country_id"
@@ -263,6 +264,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_24_203114) do
     t.datetime "locked_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "can_edit_repeaters"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

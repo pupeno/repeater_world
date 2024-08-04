@@ -1,4 +1,4 @@
-# Copyright 2023-2024, Pablo Fernandez
+# Copyright 2024, Pablo Fernandez
 #
 # This file is part of Repeater World.
 #
@@ -12,16 +12,12 @@
 # You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 # <https://www.gnu.org/licenses/>.
 
-desc "Generate full sample data for development, staging, review apps."
-task generate_sample_data: :environment do
-  Rails.logger = Logger.new($stdout)
-  Rake::Task["db:seed"].execute
-  SampleDataGenerator.new.generate
-end
+# This migration adds the optional `object_changes` column, in which PaperTrail
+# will store the `changes` diff for each update event. See the readme for
+# details.
 
-desc "Generate sample users for development, staging, review apps."
-task generate_sample_users: :environment do
-  Rails.logger = Logger.new($stdout)
-  Rake::Task["db:seed"].execute
-  SampleDataGenerator.new.generate(mode: :users_only)
+class AddCrossBandFieldToRepeaters < ActiveRecord::Migration[7.1]
+  def change
+    add_column :repeaters, :cross_band, :boolean
+  end
 end

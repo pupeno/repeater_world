@@ -75,7 +75,11 @@ class ArtscipubImporter < Importer
     repeater.name = nil # If there's no explicit name, we should keep it blank.
     repeater.external_id = raw_repeater[:external_id]
 
-    import_rx_frequency(repeater, raw_repeater)
+    repeater.rx_frequency = parse_rx_frequency(repeater, raw_repeater)
+    repeater.band = RepeaterUtils.band_for_frequency(repeater.tx_frequency)
+    if !RepeaterUtils.is_frequency_in_band?(repeater.rx_frequency, repeater.band)
+      repeater.cross_band = true
+    end
     import_mode_and_access_codes(repeater, raw_repeater)
 
     import_address(repeater, raw_repeater)
@@ -171,31 +175,28 @@ class ArtscipubImporter < Importer
     raw_repeater
   end
 
-  def import_rx_frequency(repeater, raw_repeater)
+  def parse_rx_frequency(repeater, raw_repeater)
     if raw_repeater[:input].present?
-      repeater.rx_frequency = raw_repeater[:input].to_f * 10**6
+      raw_repeater[:input].to_f * 10**6
+    elsif repeater.band == Repeater::BAND_10M && raw_repeater[:frequency].last == "+"
+      repeater.tx_frequency + 100_000
+    elsif repeater.band == Repeater::BAND_10M && raw_repeater[:frequency].last == "-"
+      repeater.tx_frequency - 100_000
+    elsif repeater.band == Repeater::BAND_2M && raw_repeater[:frequency].last == "+"
+      repeater.tx_frequency + 600_000
+    elsif repeater.band == Repeater::BAND_2M && raw_repeater[:frequency].last == "-"
+      repeater.tx_frequency + 600_000
+    elsif repeater.band == Repeater::BAND_1_25M && raw_repeater[:frequency].last == "+"
+      repeater.tx_frequency - 1_600_000
+    elsif repeater.band == Repeater::BAND_1_25M && raw_repeater[:frequency].last == "-"
+      repeater.tx_frequency + 1_600_000
+    elsif repeater.band == Repeater::BAND_70CM && raw_repeater[:frequency].last == "+"
+      repeater.tx_frequency + 5_000_000
+    elsif repeater.band == Repeater::BAND_70CM && raw_repeater[:frequency].last == "-"
+      repeater.tx_frequency - 5_000_000
     else
-      repeater.ensure_fields_are_set
-      repeater.rx_frequency = if repeater.band == Repeater::BAND_10M && raw_repeater[:frequency].last == "+"
-        repeater.tx_frequency + 100_000 # This one might not exist.
-      elsif repeater.band == Repeater::BAND_10M && raw_repeater[:frequency].last == "-"
-        repeater.tx_frequency - 100_000
-      elsif repeater.band == Repeater::BAND_2M && raw_repeater[:frequency].last == "+"
-        repeater.tx_frequency + 600_000
-      elsif repeater.band == Repeater::BAND_2M && raw_repeater[:frequency].last == "-"
-        repeater.tx_frequency + 600_000
-      elsif repeater.band == Repeater::BAND_1_25M && raw_repeater[:frequency].last == "+"
-        repeater.tx_frequency - 1_600_000
-      elsif repeater.band == Repeater::BAND_1_25M && raw_repeater[:frequency].last == "-"
-        repeater.tx_frequency + 1_600_000
-      elsif repeater.band == Repeater::BAND_70CM && raw_repeater[:frequency].last == "+"
-        repeater.tx_frequency + 5_000_000
-      elsif repeater.band == Repeater::BAND_70CM && raw_repeater[:frequency].last == "-"
-        repeater.tx_frequency - 5_000_000
-      else
-        repeater.tx_frequency # There's at least one IRLP node without an input frequency. I think I need to improve my understanding of IRLP.
-        # raise "Couldn't figure out rx frequency for tx frequency #{raw_repeater[:frequency]} in band #{repeater.band} in #{raw_repeater}"
-      end
+      repeater.tx_frequency # There's at least one IRLP node without an input frequency. I think I need to improve my understanding of IRLP.
+      # raise "Couldn't figure out rx frequency for tx frequency #{raw_repeater[:frequency]} in band #{repeater.band} in #{raw_repeater}"
     end
   end
 

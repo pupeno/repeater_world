@@ -1,4 +1,4 @@
-<%# Copyright 2023-2024, Pablo Fernandez
+<%# Copyright 2024, Pablo Fernandez
 
 This file is part of Repeater World.
 
@@ -12,16 +12,11 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<%# top_bar_mobile_menu should have the same items as top_bar_desktop_menu+top_bar_extra_menu %>
-<%= top_bar_desktop_link root_url, active: :exact do %>
-  <i class="fa-solid fa-magnifying-glass mr-3"></i>
-  Search
-<% end %>
-<%= top_bar_desktop_link new_repeater_url do %>
-  <i class="fa-solid fa-plus mr-3"></i>
-  Add a Repeater
-<% end %>
-<%= top_bar_desktop_link new_user_registration_url do %>
-  <i class="fa-solid fa-right-to-bracket mr-3"></i>
-  Sign up
-<% end unless user_signed_in? %>
+<%= render "shared/page_header", title: "Add a New Repeater" %>
+
+<div class="w-full sm:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <%= render "shared/flash_messages" %>
+
+
+  <%= render "form", repeater: @repeater %>
+</div>
