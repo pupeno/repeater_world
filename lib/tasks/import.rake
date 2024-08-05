@@ -16,61 +16,22 @@ desc "Import repeaters from all sources"
 task :import_all, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
 
-  begin
-    UkrepeatersImporter.new.import
-  rescue => e
-    Rails.logger.error(e.message)
-    Rails.logger.error(e.backtrace.join("\n"))
-    Sentry.capture_exception(e)
-  end
-  begin
-    SralfiImporter.new.import
-  rescue => e
-    Rails.logger.error(e.message)
-    Rails.logger.error(e.backtrace.join("\n"))
-    Sentry.capture_exception(e)
-  end
-  begin
-    NerepeatersImporter.new.import
-  rescue => e
-    Rails.logger.error(e.message)
-    Rails.logger.error(e.backtrace.join("\n"))
-    Sentry.capture_exception(e)
-  end
-  begin
-    WiaImporter.new.import
-  rescue => e
-    Rails.logger.error(e.message)
-    Rails.logger.error(e.backtrace.join("\n"))
-    Sentry.capture_exception(e)
-  end
-  begin
-    IrtsImporter.new.import
-  rescue => e
-    Rails.logger.error(e.message)
-    Rails.logger.error(e.backtrace.join("\n"))
-    Sentry.capture_exception(e)
-  end
-  begin
-    NarccImporter.new.import
-  rescue => e
-    Rails.logger.error(e.message)
-    Rails.logger.error(e.backtrace.join("\n"))
-    Sentry.capture_exception(e)
-  end
-  begin
-    IrlpImporter.new.import
-  rescue => e
-    Rails.logger.error(e.message)
-    Rails.logger.error(e.backtrace.join("\n"))
-    Sentry.capture_exception(e)
-  end
-  begin
-    ArtscipubImporter.new.import
-  rescue => e
-    Rails.logger.error(e.message)
-    Rails.logger.error(e.backtrace.join("\n"))
-    Sentry.capture_exception(e)
+  [UkrepeatersImporter.new,
+   SralfiImporter.new,
+   NerepeatersImporter.new,
+   WiaImporter.new,
+   IrtsImporter.new,
+   NarccImporter.new,
+   IrlpImporter.new, # This enhances other importers, it's better to do it close to the end.
+   ArtscipubImporter.new # Should always be the last one.
+  ].each do |importer|
+    begin
+      importer.import
+    rescue => e
+      Rails.logger.error(e.message)
+      Rails.logger.error(e.backtrace.join("\n"))
+      Sentry.capture_exception(e)
+    end
   end
 end
 
