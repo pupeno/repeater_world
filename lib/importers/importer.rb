@@ -42,8 +42,6 @@ class Importer
         next
       end
       repeater = Repeater.find_or_initialize_by(call_sign: call_sign, tx_frequency: tx_frequency)
-      # puts repeater
-      # puts should_import?(repeater)
       if should_import?(repeater)
         about_to_create = !repeater.persisted?
         imported_repeater = import_repeater(raw_repeater, repeater)
