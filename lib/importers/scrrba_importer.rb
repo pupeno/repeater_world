@@ -42,9 +42,9 @@ class ScrrbaImporter < Importer
       table = doc.at("table[border=2]")
       table.search("tr").each_with_index do |row, index|
         row = row.search("td")
-        row = row.map { |cell| cell.text.strip.gsub(/\s+/, ' ') }
+        row = row.map { |cell| cell.text.strip.gsub(/\s+/, " ") }
         if row[OUTPUT].blank? || row[OUTPUT] == "Frequency (MHz)" ||
-          row[CALL_SIGN].blank? || row[CALL_SIGN] == "--"
+            row[CALL_SIGN].blank? || row[CALL_SIGN] == "--"
           next # Not really repeater lines.
         end
         yield(row, "#{local_file_name}:#{index}")
@@ -54,23 +54,23 @@ class ScrrbaImporter < Importer
 
   def call_sign_and_tx_frequency(raw_repeater)
     [raw_repeater[CALL_SIGN].upcase,
-     raw_repeater[OUTPUT].to_f * 10 ** 6]
+      raw_repeater[OUTPUT].to_f * 10**6]
   end
 
   def import_repeater(raw_repeater, repeater)
     repeater.band = RepeaterUtils.band_for_frequency(repeater.tx_frequency)
 
     repeater.rx_frequency = if repeater.band == Repeater::BAND_10M
-                              repeater.tx_frequency - 100_000
-                            elsif repeater.band == Repeater::BAND_6M
-                              repeater.tx_frequency - 500_000
-                            elsif repeater.band == Repeater::BAND_70CM
-                              repeater.tx_frequency - 5_000_000
-                            elsif repeater.band == Repeater::BAND_33CM
-                              repeater.tx_frequency - 25_000_000
-                            elsif repeater.band == Repeater::BAND_23CM
-                              repeater.tx_frequency - 12_000_000
-                            end
+      repeater.tx_frequency - 100_000
+    elsif repeater.band == Repeater::BAND_6M
+      repeater.tx_frequency - 500_000
+    elsif repeater.band == Repeater::BAND_70CM
+      repeater.tx_frequency - 5_000_000
+    elsif repeater.band == Repeater::BAND_33CM
+      repeater.tx_frequency - 25_000_000
+    elsif repeater.band == Repeater::BAND_23CM
+      repeater.tx_frequency - 12_000_000
+    end
     repeater.fm = true
     if raw_repeater[MODE_OR_ACCESS] == "103.8"
       repeater.fm_ctcss_tone = 103.5 # Guessing it's a typo.

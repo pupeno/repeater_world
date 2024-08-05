@@ -16,23 +16,21 @@ desc "Import repeaters from all sources"
 task :import_all, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
 
-  [UkrepeatersImporter.new,
-   SralfiImporter.new,
-   NerepeatersImporter.new,
-   WiaImporter.new,
-   IrtsImporter.new,
-   NarccImporter.new,
-   ScrrbaImporter.new,
-   IrlpImporter.new, # This enhances other importers, it's better to do it close to the end.
-   ArtscipubImporter.new # Should always be the last one.
-  ].each do |importer|
-    begin
-      importer.import
-    rescue => e
-      Rails.logger.error(e.message)
-      Rails.logger.error(e.backtrace.join("\n"))
-      Sentry.capture_exception(e)
-    end
+  importers = [UkrepeatersImporter.new,
+    SralfiImporter.new,
+    NerepeatersImporter.new,
+    WiaImporter.new,
+    IrtsImporter.new,
+    NarccImporter.new,
+    ScrrbaImporter.new,
+    IrlpImporter.new, # This enhances other importers, it's better to do it close to the end.
+    ArtscipubImporter.new] # This one should always be the last, it takes long, it fails, and it's only enhancement.
+  importers.each do |importer|
+    importer.import
+  rescue => e
+    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
+    Sentry.capture_exception(e)
   end
 end
 

@@ -97,7 +97,7 @@ RSpec.describe ScrrbaImporter do
       expect do
         ScrrbaImporter.new(working_directory: dir).import
       end.to change { Repeater.count }.by(-1)
-                                      .and change { Repeater.where(call_sign: deleted.call_sign, tx_frequency: deleted.tx_frequency).count }.by(-1)
+        .and change { Repeater.where(call_sign: deleted.call_sign, tx_frequency: deleted.tx_frequency).count }.by(-1)
 
       # This one got deleted
       expect { deleted.reload }.to raise_error(ActiveRecord::RecordNotFound)
