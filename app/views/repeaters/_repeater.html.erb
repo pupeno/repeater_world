@@ -38,27 +38,30 @@ You should have received a copy of the GNU Affero General Public License along w
           <%= card_entry(label: "CTCSS Tone", value: repeater.fm_ctcss_tone, optional: true) %>
           <%= card_entry(label: "Tone Squelch", value: repeater.fm_tone_squelch, optional: true) %>
         <% end %>
-        <%= card_entry(label: "D-Star", value: repeater.dstar?) %>
-        <%= card_entry(label: "Fusion", value: repeater.fusion?) %>
-        <% if repeater.fusion? %>
-          <%= card_entry(label: "Wires X Node Id", value: repeater.wires_x_node_id, optional: true) %>
-        <% end %>
-        <%= card_entry(label: "DMR", value: repeater.dmr?) %>
-        <% if repeater.dmr? %>
-          <%= card_entry(label: "DMR color code", value: repeater.dmr_color_code, optional: true) %>
-          <%= card_entry(label: "DMR network", value: repeater.dmr_network, optional: true) %>
-        <% end %>
-        <%= card_entry(label: "M17", value: repeater.m17?) %>
+        <%= card_entry(label: "M17", value: repeater.m17?, optional: true) %>
         <% if repeater.m17? %>
           <%= card_entry(label: "M17 Channel Access Number", value: repeater.m17_can, optional: true) %>
           <%= card_entry(label: "M17 Reflector Name", value: repeater.m17_reflector_name, optional: true) %>
         <% end %>
-        <%= card_entry(label: "NXDN", value: repeater.nxdn?) if repeater.nxdn? %>
-        <%= card_entry(label: "P25", value: repeater.p25?) if repeater.p25? %>
-        <%= card_entry(label: "Tetra", value: repeater.tetra?) if repeater.tetra? %>
+        <%= card_entry(label: "D-Star", value: repeater.dstar?, optional: true) %>
+        <% if repeater.dstar? %>
+          <%= card_entry(label: "D-Star Port", value: repeater.dstar_port, optional: true) %>
+        <% end %>
+        <%= card_entry(label: "Fusion", value: repeater.fusion?, optional: true) %>
+        <% if repeater.fusion? %>
+          <%= card_entry(label: "Wires X Node Id", value: repeater.wires_x_node_id, optional: true) %>
+        <% end %>
+        <%= card_entry(label: "DMR", value: repeater.dmr?, optional: true) %>
+        <% if repeater.dmr? %>
+          <%= card_entry(label: "DMR color code", value: repeater.dmr_color_code, optional: true) %>
+          <%= card_entry(label: "DMR network", value: repeater.dmr_network, optional: true) %>
+        <% end %>
+        <%= card_entry(label: "NXDN", value: repeater.nxdn?, optional: true)  %>
+        <%= card_entry(label: "P25", value: repeater.p25?, optional: true)  %>
+        <%= card_entry(label: "Tetra", value: repeater.tetra?, optional: true) %>
+        <%= card_entry(label: "EchoLink", value: repeater.echolink?, optional: true) %>
         <% if repeater.echolink? %>
-          <%= card_entry(label: "EchoLink", value: repeater.echolink?) %>
-          <%= card_entry(label: "EchoLink Node Number", value: repeater.echolink_node_number) %>
+          <%= card_entry(label: "EchoLink Node Number", value: repeater.echolink_node_number, optional: true) %>
         <% end %>
         <%= card_entry(label: "Location") do %>
           <%= render "shared/repeater/location", repeater: repeater %>

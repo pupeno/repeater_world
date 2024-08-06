@@ -351,9 +351,10 @@ class Repeater < ApplicationRecord
       field :name
       field :call_sign
       field :band
-      field :operational
       field :tx_frequency
+      field :operational
       field :fm
+      field :m17
       field :dstar
       field :fusion
       field :dmr
