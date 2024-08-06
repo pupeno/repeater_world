@@ -37,7 +37,7 @@ RSpec.describe UkrepeatersImporter do
       end.to change { Repeater.count }.by(15)
 
       # Grab some repeaters and verify they were imported correctly.
-      repeater = Repeater.find_by(call_sign: "GB7DC")
+      repeater = Repeater.find_sole_by(call_sign: "GB7DC")
       expect(repeater.name).to eq("Derby")
       expect(repeater.band).to eq(Repeater::BAND_70CM)
       expect(repeater.channel).to eq("DMU28")
@@ -86,13 +86,13 @@ RSpec.describe UkrepeatersImporter do
       deleted = create(:repeater, :full, call_sign: "XX1XX", tx_frequency: 145_000_001, source: UkrepeatersImporter.source)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      changed = Repeater.find_by(call_sign: "GB3GS")
+      changed = Repeater.find_sole_by(call_sign: "GB3GS")
       changed_rx_frequency_was = changed.rx_frequency
       changed.rx_frequency = 420_000_123
       changed.save!
 
       # This repeater represents one where a secondary source imported first, and this importer will override it.
-      secondary_source = Repeater.find_by(call_sign: "GB7DC")
+      secondary_source = Repeater.find_sole_by(call_sign: "GB7DC")
       secondary_source_rx_frequency_was = secondary_source.rx_frequency
       secondary_source.rx_frequency = 420_000_234
       secondary_source.source = IrlpImporter.source
@@ -100,7 +100,7 @@ RSpec.describe UkrepeatersImporter do
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      independent = Repeater.find_by(call_sign: "2M0FPI")
+      independent = Repeater.find_sole_by(call_sign: "2M0FPI")
       independent_rx_frequency = independent.rx_frequency = 420_000_345
       independent.source = nil
       independent.save!

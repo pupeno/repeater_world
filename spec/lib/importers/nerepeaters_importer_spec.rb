@@ -66,7 +66,7 @@ RSpec.describe NerepeatersImporter do
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
       # It should update frequency and modes, without crashing.
-      changed = Repeater.find_by(call_sign: "AA1HD", tx_frequency: 145260000, fm: nil, dstar: true)
+      changed = Repeater.find_sole_by(call_sign: "AA1HD", tx_frequency: 145260000, fm: nil, dstar: true)
       changed_rx_frequency_was = changed.rx_frequency
       changed.fm = true
       changed.dstar = false
@@ -74,7 +74,7 @@ RSpec.describe NerepeatersImporter do
       changed.save!
 
       # This repeater represents one where a secondary source imported first, and this importer will override it.
-      secondary_source = Repeater.find_by(call_sign: "W1BST")
+      secondary_source = Repeater.find_sole_by(call_sign: "W1BST")
       secondary_source_rx_frequency_was = secondary_source.rx_frequency
       secondary_source.rx_frequency = 50_000_123
       secondary_source.source = IrlpImporter.source
@@ -82,7 +82,7 @@ RSpec.describe NerepeatersImporter do
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      independent = Repeater.find_by(call_sign: "W1AEC")
+      independent = Repeater.find_sole_by(call_sign: "W1AEC", tx_frequency: 147_000_000)
       independent_rx_freq = independent.rx_frequency = 144_000_321
       independent.source = nil
       independent.save!

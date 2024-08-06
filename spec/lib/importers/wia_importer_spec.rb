@@ -65,13 +65,13 @@ RSpec.describe WiaImporter do
       deleted = create(:repeater, :full, call_sign: "VK2RAG", tx_frequency: 145_000_001, source: WiaImporter.source)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      changed = Repeater.find_by(call_sign: "VK1RBH")
+      changed = Repeater.find_sole_by(call_sign: "VK1RBH")
       changed_rx_frequency_was = changed.rx_frequency
       changed.rx_frequency = 144_000_123
       changed.save!
 
       # This repeater represents one where a secondary source imported first, and this importer will override it.
-      secondary_source = Repeater.find_by(call_sign: "VK3RRC")
+      secondary_source = Repeater.find_sole_by(call_sign: "VK3RRC")
       secondary_source_rx_frequency_was = secondary_source.rx_frequency
       secondary_source.rx_frequency = 144_000_123
       secondary_source.source = IrlpImporter.source
@@ -79,7 +79,7 @@ RSpec.describe WiaImporter do
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      independent = Repeater.find_by(call_sign: "VK1RAC")
+      independent = Repeater.find_sole_by(call_sign: "VK1RAC")
       independent_rx_frequency = independent.rx_frequency = 144_000_123
       independent.source = nil
       independent.save!
