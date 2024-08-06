@@ -66,13 +66,13 @@ RSpec.describe SralfiImporter do
       deleted = create(:repeater, :full, call_sign: "OH3RNE", tx_frequency: 145_000_001, source: SralfiImporter.source)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      changed = Repeater.find_by(call_sign: "OH1RHU")
+      changed = Repeater.find_sole_by(call_sign: "OH1RHU")
       changed_rx_frequency_was = changed.rx_frequency
       changed.rx_frequency = 28_000_123
       changed.save!
 
       # This repeater represents one where a secondary source imported first, and this importer will override it.
-      secondary_source = Repeater.find_by(call_sign: "OH2RCH")
+      secondary_source = Repeater.find_sole_by(call_sign: "OH2RCH", tx_frequency: 29_670_000)
       secondary_source_rx_frequency_was = secondary_source.rx_frequency
       secondary_source.rx_frequency = 28_000_123
       secondary_source.source = IrlpImporter.source
@@ -80,7 +80,7 @@ RSpec.describe SralfiImporter do
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      independent = Repeater.find_by(call_sign: "OH3RTR")
+      independent = Repeater.find_sole_by(call_sign: "OH3RTR")
       independent_rx_frequency = independent.rx_frequency = 50_000_123
       independent.source = nil
       independent.save!

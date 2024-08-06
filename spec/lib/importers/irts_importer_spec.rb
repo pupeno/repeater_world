@@ -61,13 +61,13 @@ RSpec.describe IrtsImporter do
       deleted = create(:repeater, :full, call_sign: "EI2TRR", tx_frequency: 145_000_001, source: IrtsImporter.source)
 
       # This repeater represents one where the upstream data changed and should be updated by the importer.
-      changed = Repeater.find_by(call_sign: "EI0IPG")
+      changed = Repeater.find_sole_by(call_sign: "EI0IPG")
       changed_rx_frequency_was = changed.rx_frequency
       changed.rx_frequency = 28_000_123
       changed.save!
 
       # This repeater represents one where a secondary source imported first, and this importer will override it.
-      secondary_source = Repeater.find_by(call_sign: "EI2TRR")
+      secondary_source = Repeater.find_sole_by(call_sign: "EI2TRR", tx_frequency: 145_600_000)
       secondary_source_rx_frequency_was = secondary_source.rx_frequency
       secondary_source.rx_frequency = 144_000_123
       secondary_source.source = IrlpImporter.source
@@ -75,7 +75,7 @@ RSpec.describe IrtsImporter do
 
       # This repeater represents one that got taken over by the owner becoming a Repeater World user, that means the
       # source is now nil. This should never again be overwritten by the importer.
-      independent = Repeater.find_by(call_sign: "EI2CCR")
+      independent = Repeater.find_sole_by(call_sign: "EI2CCR")
       independent_rx_frequency = independent.rx_frequency = 144_000_234
       independent.source = nil
       independent.save!
