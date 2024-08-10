@@ -119,6 +119,7 @@ class RepeatersController < ApplicationController
       :grid_square,
       :input_address,
       :input_country_id,
+      :input_grid_square,
       :input_latitude,
       :input_locality,
       :input_longitude,
