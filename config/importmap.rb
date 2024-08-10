@@ -21,7 +21,7 @@ pin "@sentry/utils", to: "https://ga.jspm.io/npm:@sentry/utils@7.57.0/esm/index.
 pin "@sentry/utils/esm/buildPolyfills", to: "https://ga.jspm.io/npm:@sentry/utils@7.57.0/esm/buildPolyfills/index.js"
 pin "el-transition" # @0.0.7
 pin "fast-deep-equal" # @3.1.3
-pin "js-cookie", to: "https://ga.jspm.io/npm:js-cookie@3.0.5/dist/js.cookie.mjs"
+pin "js-cookie" # @3.0.5
 pin "kdbush" # @4.0.2
 pin "supercluster" # @8.0.1
 pin "tslib", to: "https://ga.jspm.io/npm:tslib@2.6.0/tslib.es6.mjs"
