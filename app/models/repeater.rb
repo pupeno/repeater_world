@@ -160,8 +160,8 @@ class Repeater < ApplicationRecord
   validates :fm_ctcss_tone, inclusion: CTCSS_TONES, allow_blank: true
   validates :m17_can, inclusion: M17_CANS, allow_blank: true
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
-  validates :input_region, inclusion: ISO3166::Country["us"].subdivisions.values.map(&:name), allow_blank: true, if: :in_usa?
-  validates :input_region, inclusion: ISO3166::Country["ca"].subdivisions.values.map(&:name), allow_blank: true, if: :in_canada?
+  validates :input_region, inclusion: Country.us_states, allow_blank: true, if: :in_usa?
+  validates :input_region, inclusion: Country.canadian_provinces, allow_blank: true, if: :in_canada?
 
   before_validation :compute_location_fields
 

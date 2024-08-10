@@ -50,7 +50,7 @@ module FormHelper
                help_text: help_text}
   end
 
-  def form_select_field(form, field_name, choices:, options: {}, label: nil, input_html_options: {}, help_text: nil)
+  def form_select_field(form, field_name, choices:, options: {}, label: nil, input_html_options: {}, help_text: nil, wrapper_html_options: {})
     render partial: "shared/forms/select_field",
       locals: {form: form,
                field_name: field_name,
@@ -58,7 +58,8 @@ module FormHelper
                choices: choices,
                options: options,
                input_html_options: input_html_options,
-               help_text: help_text}
+               help_text: help_text,
+               wrapper_html_options: wrapper_html_options}
   end
 
   def toggle_button(form, name, label, **kwargs)
