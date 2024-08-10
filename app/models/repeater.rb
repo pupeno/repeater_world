@@ -600,11 +600,11 @@ class Repeater < ApplicationRecord
   end
 
   def in_usa?
-    self.country_id == "us"
+    country_id == "us"
   end
 
   def in_canada?
-    self.country_id == "ca"
+    country_id == "ca"
   end
 end
 
