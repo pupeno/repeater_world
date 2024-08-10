@@ -133,6 +133,26 @@ RSpec.describe Repeater, type: :model do
       expect(@repeater.longitude).to eq(20)
     end
 
+    it "should validate US state" do
+      expect(@repeater).to be_valid
+      @repeater.input_country_id = "us"
+      expect(@repeater).to be_valid
+      @repeater.input_region = "California"
+      expect(@repeater).to be_valid
+      @repeater.input_region = "Not a state"
+      expect(@repeater).not_to be_valid
+    end
+
+    it "should validate Canadian provinces" do
+      expect(@repeater).to be_valid
+      @repeater.input_country_id = "ca"
+      expect(@repeater).to be_valid
+      @repeater.input_region = "Alberta"
+      expect(@repeater).to be_valid
+      @repeater.input_region = "Not a province"
+      expect(@repeater).not_to be_valid
+    end
+
     context "while geocoding" do
       before(:each) do
         Geocoder::Lookup::Test.reset
