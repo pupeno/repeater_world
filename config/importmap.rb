@@ -19,7 +19,7 @@ pin "@sentry/replay", to: "https://ga.jspm.io/npm:@sentry/replay@7.57.0/esm/inde
 pin "@sentry/tracing", to: "https://ga.jspm.io/npm:@sentry/tracing@7.57.0/esm/index.js"
 pin "@sentry/utils", to: "https://ga.jspm.io/npm:@sentry/utils@7.57.0/esm/index.js"
 pin "@sentry/utils/esm/buildPolyfills", to: "https://ga.jspm.io/npm:@sentry/utils@7.57.0/esm/buildPolyfills/index.js"
-pin "el-transition", to: "https://ga.jspm.io/npm:el-transition@0.0.7/index.js"
+pin "el-transition" # @0.0.7
 pin "fast-deep-equal" # @3.1.3
 pin "js-cookie", to: "https://ga.jspm.io/npm:js-cookie@3.0.5/dist/js.cookie.mjs"
 pin "kdbush" # @4.0.2
