@@ -16,13 +16,98 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["countrySelect", "regionsSelectForWorld", "regionsSelectForUsa", "regionsSelectForCanada"]
+  static targets = [
+    "fmCheckbox", "fmSection",
+    "m17Checkbox", "m17Section",
+    "dstarCheckbox", "dstarSection",
+    "fusionCheckbox", "fusionSection",
+    "dmrCheckbox", "dmrSection",
+    "echolinkCheckbox", "echolinkSection",
+    "countrySelect", "regionsSelectForWorld", "regionsSelectForUsa", "regionsSelectForCanada"]
 
   connect() {
+    this.updateFmSectionState();
+    this.updateM17SectionState();
+    this.updateDstarSectionState();
+    this.updateFusionSectionState();
+    this.updateDmrSectionState();
+    this.updateEcholinkSectionState();
     this.updateRegionSelectState();
   }
 
-  countryChange(event) {
+  fmChanged() {
+    this.updateFmSectionState();
+  }
+
+  updateFmSectionState() {
+    if (this.fmCheckboxTarget.checked) {
+      this.fmSectionTarget.classList.remove("hidden")
+    } else {
+      this.fmSectionTarget.classList.add("hidden")
+    }
+  }
+
+  m17Changed() {
+    this.updateM17SectionState();
+  }
+
+  updateM17SectionState() {
+    if (this.m17CheckboxTarget.checked) {
+      this.m17SectionTarget.classList.remove("hidden")
+    } else {
+      this.m17SectionTarget.classList.add("hidden")
+    }
+  }
+
+  dstarChanged() {
+    this.updateDstarSectionState();
+  }
+
+  updateDstarSectionState() {
+    if (this.dstarCheckboxTarget.checked) {
+      this.dstarSectionTarget.classList.remove("hidden")
+    } else {
+      this.dstarSectionTarget.classList.add("hidden")
+    }
+  }
+
+  fusionChanged() {
+    this.updateFusionSectionState();
+  }
+
+  updateFusionSectionState() {
+    if (this.fusionCheckboxTarget.checked) {
+      this.fusionSectionTarget.classList.remove("hidden")
+    } else {
+      this.fusionSectionTarget.classList.add("hidden")
+    }
+  }
+
+  dmrChanged() {
+    this.updateDmrSectionState();
+  }
+
+  updateDmrSectionState() {
+    if (this.dmrCheckboxTarget.checked) {
+      this.dmrSectionTarget.classList.remove("hidden")
+    } else {
+      this.dmrSectionTarget.classList.add("hidden")
+    }
+  }
+
+  echolinkChanged() {
+    this.updateEcholinkSectionState();
+  }
+
+  updateEcholinkSectionState() {
+    if (this.echolinkCheckboxTarget.checked) {
+      this.echolinkSectionTarget.classList.remove("hidden")
+    } else {
+      this.echolinkSectionTarget.classList.add("hidden")
+    }
+  }
+
+  countryChange() {
     this.updateRegionSelectState();
   }
 
