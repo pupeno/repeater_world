@@ -35,80 +35,36 @@ export default class extends Controller {
     this.updateRegionSelectState();
   }
 
-  fmChanged() {
-    this.updateFmSectionState();
-  }
-
   updateFmSectionState() {
-    if (this.fmCheckboxTarget.checked) {
-      this.fmSectionTarget.classList.remove("hidden")
-    } else {
-      this.fmSectionTarget.classList.add("hidden")
-    }
-  }
-
-  m17Changed() {
-    this.updateM17SectionState();
+    this.showHideSection(this.fmCheckboxTarget, this.fmSectionTarget);
   }
 
   updateM17SectionState() {
-    if (this.m17CheckboxTarget.checked) {
-      this.m17SectionTarget.classList.remove("hidden")
-    } else {
-      this.m17SectionTarget.classList.add("hidden")
-    }
-  }
-
-  dstarChanged() {
-    this.updateDstarSectionState();
+    this.showHideSection(this.m17CheckboxTarget, this.m17SectionTarget);
   }
 
   updateDstarSectionState() {
-    if (this.dstarCheckboxTarget.checked) {
-      this.dstarSectionTarget.classList.remove("hidden")
-    } else {
-      this.dstarSectionTarget.classList.add("hidden")
-    }
-  }
-
-  fusionChanged() {
-    this.updateFusionSectionState();
+    this.showHideSection(this.dstarCheckboxTarget, this.dstarSectionTarget);
   }
 
   updateFusionSectionState() {
-    if (this.fusionCheckboxTarget.checked) {
-      this.fusionSectionTarget.classList.remove("hidden")
-    } else {
-      this.fusionSectionTarget.classList.add("hidden")
-    }
-  }
-
-  dmrChanged() {
-    this.updateDmrSectionState();
+    this.showHideSection(this.fusionCheckboxTarget, this.fusionSectionTarget);
   }
 
   updateDmrSectionState() {
-    if (this.dmrCheckboxTarget.checked) {
-      this.dmrSectionTarget.classList.remove("hidden")
-    } else {
-      this.dmrSectionTarget.classList.add("hidden")
-    }
-  }
-
-  echolinkChanged() {
-    this.updateEcholinkSectionState();
+    this.showHideSection(this.dmrCheckboxTarget, this.dmrSectionTarget);
   }
 
   updateEcholinkSectionState() {
-    if (this.echolinkCheckboxTarget.checked) {
-      this.echolinkSectionTarget.classList.remove("hidden")
-    } else {
-      this.echolinkSectionTarget.classList.add("hidden")
-    }
+    this.showHideSection(this.echolinkCheckboxTarget, this.echolinkSectionTarget);
   }
 
-  countryChange() {
-    this.updateRegionSelectState();
+  showHideSection(checkbox, section) {
+    if (checkbox.checked) {
+      section.classList.remove("hidden")
+    } else {
+      section.classList.add("hidden")
+    }
   }
 
   updateRegionSelectState() {
