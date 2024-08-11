@@ -126,10 +126,10 @@ RSpec.describe Importer do
     expect(importer.send(:figure_out_us_state, "Wisconsin")).to eq("Wisconsin")
     expect(importer.send(:figure_out_us_state, "wy")).to eq("Wyoming")
     expect(importer.send(:figure_out_us_state, "Wyoming")).to eq("Wyoming")
-    expect(importer.send(:figure_out_us_state, "DC")).to eq(nil)
-    expect(importer.send(:figure_out_us_state, "District of Columbia")).to eq(nil)
+    expect(importer.send(:figure_out_us_state, "DC")).to eq("District of Columbia")
+    expect(importer.send(:figure_out_us_state, "District of Columbia")).to eq("District of Columbia")
     expect(importer.send(:figure_out_us_state, "na")).to eq(nil)
-    expect(importer.send(:figure_out_us_state, "vi")).to eq("US Virgin Islands")
+    expect(importer.send(:figure_out_us_state, "vi")).to eq("Virgin Islands, U.S.")
     expect(importer.send(:figure_out_us_state, "puerto rico")).to eq("Puerto Rico")
     expect { importer.send(:figure_out_us_state, "not a state") }.to raise_error("Invalid US state: not a state")
   end

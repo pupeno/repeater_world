@@ -105,115 +105,119 @@ class Importer
 
   def figure_out_us_state(state)
     state = state.downcase
-    if state.in? ["al", "alabama"]
-      "Alabama"
+    state = if state.in? ["al", "alabama"]
+      "AL"
     elsif state.in? ["ak", "alaska"]
-      "Alaska"
+      "AK"
     elsif state.in? ["az", "arizona"]
-      "Arizona"
+      "AZ"
     elsif state.in? ["ar", "arkansas"]
-      "Arkansas"
+      "AR"
     elsif state.in? ["ca", "california"]
-      "California"
+      "CA"
     elsif state.in? ["co", "colorado"]
-      "Colorado"
+      "CO"
     elsif state.in? ["ct", "connecticut"]
-      "Connecticut"
+      "CT"
     elsif state.in? ["de", "delaware"]
-      "Delaware"
+      "DE"
     elsif state.in? ["fl", "florida"]
-      "Florida"
+      "FL"
     elsif state.in? ["ga", "georgia"]
-      "Georgia"
+      "GA"
     elsif state.in? ["hi", "hawaii"]
-      "Hawaii"
+      "HI"
     elsif state.in? ["id", "idaho"]
-      "Idaho"
+      "ID"
     elsif state.in? ["il", "illinois"]
-      "Illinois"
+      "IL"
     elsif state.in? ["in", "indiana"]
-      "Indiana"
+      "IN"
     elsif state.in? ["ia", "iowa"]
-      "Iowa"
+      "IA"
     elsif state.in? ["ks", "kansas"]
-      "Kansas"
+      "KS"
     elsif state.in? ["ky", "kentucky"]
-      "Kentucky"
+      "KY"
     elsif state.in? ["la", "louisiana"]
-      "Louisiana"
+      "LA"
     elsif state.in? ["me", "maine"]
-      "Maine"
+      "ME"
     elsif state.in? ["md", "maryland"]
-      "Maryland"
+      "MD"
     elsif state.in? ["ma", "massachusetts"]
-      "Massachusetts"
+      "MA"
     elsif state.in? ["mi", "michigan"]
-      "Michigan"
+      "MI"
     elsif state.in? ["mn", "minnesota"]
-      "Minnesota"
+      "MN"
     elsif state.in? ["ms", "mississippi"]
-      "Mississippi"
+      "MS"
     elsif state.in? ["mo", "missouri"]
-      "Missouri"
+      "MO"
     elsif state.in? ["mt", "montana"]
-      "Montana"
+      "MT"
     elsif state.in? ["ne", "nebraska"]
-      "Nebraska"
+      "NE"
     elsif state.in? ["nv", "nevada"]
-      "Nevada"
+      "NV"
     elsif state.in? ["nh", "new hampshire"]
-      "New Hampshire"
+      "NH"
     elsif state.in? ["nj", "new jersey"]
-      "New Jersey"
+      "NJ"
     elsif state.in? ["nm", "new mexico"]
-      "New Mexico"
+      "NM"
     elsif state.in? ["ny", "new york"]
-      "New York"
+      "NY"
     elsif state.in? ["nc", "north carolina"]
-      "North Carolina"
+      "NC"
     elsif state.in? ["nd", "north dakota"]
-      "North Dakota"
+      "ND"
     elsif state.in? ["oh", "ohio"]
-      "Ohio"
+      "OH"
     elsif state.in? ["ok", "oklahoma"]
-      "Oklahoma"
+      "OK"
     elsif state.in? ["or", "oregon"]
-      "Oregon"
+      "OR"
     elsif state.in? ["pa", "pennsylvania"]
-      "Pennsylvania"
+      "PA"
     elsif state.in? ["ri", "rhode island"]
-      "Rhode Island"
+      "RI"
     elsif state.in? ["sc", "south carolina"]
-      "South Carolina"
+      "SC"
     elsif state.in? ["sd", "south dakota"]
-      "South Dakota"
+      "SD"
     elsif state.in? ["tn", "tennessee"]
-      "Tennessee"
+      "TN"
     elsif state.in? ["tx", "texas"]
-      "Texas"
+      "TX"
     elsif state.in? ["ut", "utah"]
-      "Utah"
+      "UT"
     elsif state.in? ["vt", "vermont"]
-      "Vermont"
+      "VT"
     elsif state.in? ["va", "virginia"]
-      "Virginia"
+      "VA"
     elsif state.in? ["wa", "washington"]
-      "Washington"
+      "WA"
     elsif state.in? ["wv", "west virginia"]
-      "West Virginia"
+      "WV"
     elsif state.in? ["wi", "wisconsin"]
-      "Wisconsin"
+      "WI"
     elsif state.in? ["wy", "wyoming"]
-      "Wyoming"
-    elsif state.in? ["dc", "district of columbia", "na"]
-      nil
+      "WY"
+    elsif state.in? ["dc", "district of columbia"]
+      "DC"
     elsif state.in? ["vi"] # this is not correct, having it here for simplicity's sake for now.
-      "US Virgin Islands"
+      "VI"
     elsif state.in? ["puerto rico"] # this is not correct, having it here for simplicity's sake for now.
-      "Puerto Rico"
+      "PR"
+    elsif state.in? ["na"]
+      nil
     else
       raise "Invalid US state: #{state}"
     end
+
+    ISO3166::Country["us"].subdivisions[state].name if state.present?
   end
 
   def figure_out_canadian_province(province)
