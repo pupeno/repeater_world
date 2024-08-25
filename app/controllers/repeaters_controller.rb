@@ -22,6 +22,11 @@ class RepeatersController < ApplicationController
   end
 
   def new
+    flash.now[:warn] = <<~MESSAGE
+      Please, don't add duplicated repeaters. Edit the one that is currently in the system. Even if that one is 
+      automatically imported from a third party, once edited, that import stops and we consider the version in Repeater
+      World to be the correct one.
+    MESSAGE
     @repeater = Repeater.new
     authorize @repeater
   rescue Pundit::NotAuthorizedError
