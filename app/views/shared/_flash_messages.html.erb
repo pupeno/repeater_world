@@ -19,6 +19,90 @@ You should have received a copy of the GNU Affero General Public License along w
     end up with flash messages show in the most specific location.%>
 
 <% if !@flash_messages_shown %>
+  <%# Alert message %>
+  <% if flash.key? :alert %>
+    <div class="w-full px-2
+                flex flex-row justify-center">
+      <div class="max-w-7xl grow p-3 my-2
+                  bg-red-100 dark:bg-red-950/30
+                  border-l-4 border-red-700 dark:border-red-500"
+           data-controller="flash-message"
+           data-flash-message-target="flashMessage">
+        <div class="flex">
+          <%# Icon %>
+          <div class="shrink-0">
+            <i class="fa-solid fa-burst text-3xl text-red-700 dark:text-red-600"></i>
+          </div>
+
+          <%# Message %>
+          <div class="ml-3 mt-1 grow">
+            <p class="text-red-800 dark:text-red-400">
+              <%= flash.alert %>
+            </p>
+          </div>
+
+          <%# Close button %>
+          <div class="shrink-0 ml-auto pl-3">
+            <button class="w-8 h-8
+                           inline-flex items-center justify-center
+                           rounded-md
+                           text-red-500 dark:text-red-600
+                           hover:text-red-700 hover:bg-red-200
+                           dark:hover:text-red-300 dark:hover:bg-red-900/50
+                           focus:outline focus:bg-red-200 focus:text-red-500 outline-2 outline-red-600
+                           dark:focus:text-red-300 dark:focus:bg-red-900/50"
+                    data-action="click->flash-message#close">
+              <span class="sr-only">Dismiss</span>
+              <i class="fa-solid fa-times text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Warn message %>
+  <% if flash.key? :warn %>
+    <div class="w-full px-2
+                flex flex-row justify-center">
+      <div class="max-w-7xl grow p-3 my-2
+                  bg-yellow-100 dark:bg-yellow-950/30
+                  border-l-4 border-yellow-700 dark:border-yellow-500"
+           data-controller="flash-message"
+           data-flash-message-target="flashMessage">
+        <div class="flex">
+          <%# Icon %>
+          <div class="shrink-0">
+            <i class="fa-solid fa-triangle-exclamation text-3xl text-yellow-700 dark:text-yellow-600"></i>
+          </div>
+
+          <%# Message %>
+          <div class="ml-3 mt-1 grow">
+            <p class="text-yellow-800 dark:text-yellow-400">
+              <%= flash[:warn] %>
+            </p>
+          </div>
+
+          <%# Close button %>
+          <div class="shrink-0 ml-auto pl-3">
+            <button class="w-8 h-8
+                           inline-flex items-center justify-center
+                           rounded-md
+                           text-yellow-500 dark:text-yellow-600
+                           hover:text-yellow-700 hover:bg-yellow-200
+                           dark:hover:text-yellow-300 dark:hover:bg-yellow-900/50
+                           focus:outline focus:bg-yellow-200 focus:text-yellow-500 outline-2 outline-yellow-600
+                           dark:focus:text-yellow-300 dark:focus:bg-yellow-900/50"
+                    data-action="click->flash-message#close">
+              <span class="sr-only">Dismiss</span>
+              <i class="fa-solid fa-times text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
 
   <%# Notice message %>
   <% if flash.key? :notice %>
@@ -52,48 +136,6 @@ You should have received a copy of the GNU Affero General Public License along w
                            dark:hover:text-green-300 dark:hover:bg-green-800
                            focus:outline focus:bg-green-200 focus:text-green-500 outline-2 outline-green-600
                            dark:focus:text-green-300 dark:focus:bg-green-800"
-                    data-action="click->flash-message#close">
-              <span class="sr-only">Dismiss</span>
-              <i class="fa-solid fa-times text-xl"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  <% end %>
-
-  <%# Alert message %>
-  <% if flash.key? :alert %>
-    <div class="w-full px-2
-                flex flex-row justify-center">
-      <div class="max-w-7xl grow p-3 my-2
-                  bg-red-100 dark:bg-red-950/30
-                  border-l-4 border-red-700 dark:border-red-500"
-           data-controller="flash-message"
-           data-flash-message-target="flashMessage">
-        <div class="flex">
-          <%# Icon %>
-          <div class="shrink-0">
-            <i class="fa-solid fa-circle-info text-3xl text-red-700 dark:text-red-600"></i>
-          </div>
-
-          <%# Message %>
-          <div class="ml-3 mt-1 grow">
-            <p class="text-red-800 dark:text-red-400">
-              <%= flash.alert %>
-            </p>
-          </div>
-
-          <%# Close button %>
-          <div class="shrink-0 ml-auto pl-3">
-            <button class="w-8 h-8
-                           inline-flex items-center justify-center
-                           rounded-md
-                           text-red-500 dark:text-red-600
-                           hover:text-red-700 hover:bg-red-200
-                           dark:hover:text-red-300 dark:hover:bg-red-900/50
-                           focus:outline focus:bg-red-200 focus:text-red-500 outline-2 outline-red-600
-                           dark:focus:text-red-300 dark:focus:bg-red-900/50"
                     data-action="click->flash-message#close">
               <span class="sr-only">Dismiss</span>
               <i class="fa-solid fa-times text-xl"></i>
