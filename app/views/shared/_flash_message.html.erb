@@ -1,0 +1,49 @@
+<%# Copyright 2023-2024, Pablo Fernandez
+
+This file is part of Repeater World.
+
+Repeater World is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+Public License as published by the Free Software Foundation, either version 3 of the License.
+
+Repeater World is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+details.
+
+You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
+<https://www.gnu.org/licenses/>.%>
+
+<div class="w-full px-2
+            flex flex-row justify-center">
+  <div class="max-w-7xl grow p-3 my-2
+              <%= wrapper_css %>
+              border-l-4"
+       data-controller="flash-message"
+       data-flash-message-target="flashMessage">
+    <div class="flex">
+      <%# Icon %>
+      <div class="shrink-0">
+        <i class="fa-solid <%= icon %> text-3xl <%= icon_css %>"></i>
+      </div>
+
+      <%# Message %>
+      <div class="ml-3 mt-1 grow">
+        <p class="<%= message_css %>">
+          <%= message %>
+        </p>
+      </div>
+
+      <%# Close button %>
+      <div class="shrink-0 ml-auto pl-3">
+        <button class="w-8 h-8
+                           inline-flex items-center justify-center
+                           rounded-md
+                           outline-2
+                           <%= dismiss_css %>"
+                data-action="click->flash-message#close">
+          <span class="sr-only">Dismiss</span>
+          <i class="fa-solid fa-times text-xl"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
