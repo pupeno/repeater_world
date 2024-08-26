@@ -16,14 +16,55 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["countrySelect", "regionsSelectForWorld", "regionsSelectForUsa", "regionsSelectForCanada"]
+  static targets = [
+    "fmCheckbox", "fmSection",
+    "m17Checkbox", "m17Section",
+    "dstarCheckbox", "dstarSection",
+    "fusionCheckbox", "fusionSection",
+    "dmrCheckbox", "dmrSection",
+    "echolinkCheckbox", "echolinkSection",
+    "countrySelect", "regionsSelectForWorld", "regionsSelectForUsa", "regionsSelectForCanada"]
 
   connect() {
+    this.updateFmSectionState();
+    this.updateM17SectionState();
+    this.updateDstarSectionState();
+    this.updateFusionSectionState();
+    this.updateDmrSectionState();
+    this.updateEcholinkSectionState();
     this.updateRegionSelectState();
   }
 
-  countryChange(event) {
-    this.updateRegionSelectState();
+  updateFmSectionState() {
+    this.showHideSection(this.fmCheckboxTarget, this.fmSectionTarget);
+  }
+
+  updateM17SectionState() {
+    this.showHideSection(this.m17CheckboxTarget, this.m17SectionTarget);
+  }
+
+  updateDstarSectionState() {
+    this.showHideSection(this.dstarCheckboxTarget, this.dstarSectionTarget);
+  }
+
+  updateFusionSectionState() {
+    this.showHideSection(this.fusionCheckboxTarget, this.fusionSectionTarget);
+  }
+
+  updateDmrSectionState() {
+    this.showHideSection(this.dmrCheckboxTarget, this.dmrSectionTarget);
+  }
+
+  updateEcholinkSectionState() {
+    this.showHideSection(this.echolinkCheckboxTarget, this.echolinkSectionTarget);
+  }
+
+  showHideSection(checkbox, section) {
+    if (checkbox.checked) {
+      section.classList.remove("hidden")
+    } else {
+      section.classList.add("hidden")
+    }
   }
 
   updateRegionSelectState() {

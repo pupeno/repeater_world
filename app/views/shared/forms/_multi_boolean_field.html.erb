@@ -21,7 +21,9 @@ You should have received a copy of the GNU Affero General Public License along w
       <% fields.each do |field| %>
         <div class="relative flex items-start">
           <div class="flex h-5 items-center">
-            <%= form.check_box field[:name], class: "h-6 w-6 rounded text-orange-500 dark:bg-gray-700 focus:ring-0 focus:ring-offset-0 focus:outline-2 focus:outline-offset-2 focus:outline-orange-500" %>
+            <%= form.check_box field[:name],
+                               class: "h-6 w-6 rounded text-orange-500 dark:bg-gray-700 focus:ring-0 focus:ring-offset-0 focus:outline-2 focus:outline-offset-2 focus:outline-orange-500",
+                               data: field[:data] %>
           </div>
           <div class="ml-3">
             <%= form.label field[:name], field[:label], class: "font-medium text-gray-700 dark:text-gray-300" %>
