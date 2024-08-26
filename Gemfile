@@ -46,7 +46,7 @@ gem "rails", "~> 7.1" # Bundle edge Rails instead: gem "rails", github: "rails/r
 gem "rails_admin", "~> 3.1"
 gem "rbzip2", "~> 0.3"
 gem "sassc-rails", "~> 2.1" # Asked by rails_admin... but it's not a dependency??? the world is complicated.
-gem "sentry-rails", "~> 5.18"
+gem "sentry-rails", "~> 5.19"
 gem "sentry-ruby", "~> 5.16"
 gem "sprockets-rails", "~> 3.5" # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "stimulus-rails", "~> 1.3" # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
@@ -62,10 +62,10 @@ gem "turbo-rails", "~> 1.4" # Hotwire's SPA-like page accelerator [https://turbo
 
 group :development, :test do
   gem "capybara", "~> 3.40"
-  gem "brakeman", "~> 6.1"
+  gem "brakeman", "~> 6.2"
   gem "debug", "~> 1.9", platforms: %i[mri mingw x64_mingw] # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "rspec-rails", "~> 6.1"
-  gem "standard", "~> 1.39"
+  gem "standard", "~> 1.40"
   gem "tzinfo-data", "~> 1.2022", platforms: %i[mingw mswin x64_mingw jruby] # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 end
 
