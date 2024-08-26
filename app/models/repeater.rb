@@ -100,7 +100,7 @@ class Repeater < ApplicationRecord
     fm_tone_squelch: "Tone squelch",
     grid_square: "Grid square",
     input_address: "Address",
-    input_country_id: "Country code",
+    input_country_id: "Country",
     input_grid_square: "Grid square",
     input_latitude: "Latitude",
     input_locality: "City or town",
