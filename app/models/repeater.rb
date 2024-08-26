@@ -160,6 +160,8 @@ class Repeater < ApplicationRecord
   validates :fm_ctcss_tone, inclusion: CTCSS_TONES, allow_blank: true
   validates :m17_can, inclusion: M17_CANS, allow_blank: true
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
+  validates :input_region, inclusion: Country.us_states, allow_blank: true, if: :in_usa?
+  validates :input_region, inclusion: Country.canadian_provinces, allow_blank: true, if: :in_canada?
 
   before_validation :compute_location_fields
 
@@ -595,6 +597,14 @@ class Repeater < ApplicationRecord
     self.coordinates = if @latitude.present? && @longitude.present? # Only create a point when both parts are present.
       Geo.point(@latitude, @longitude)
     end
+  end
+
+  def in_usa?
+    country_id == "us"
+  end
+
+  def in_canada?
+    country_id == "ca"
   end
 end
 

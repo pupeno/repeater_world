@@ -29,6 +29,14 @@ class Country < ApplicationRecord
     end
     Rails.logger.info "Created #{ISO3166::Country.codes.count} countries."
   end
+
+  def self.us_states
+    ISO3166::Country["us"].subdivisions.values.map(&:name).sort
+  end
+
+  def self.canadian_provinces
+    ISO3166::Country["ca"].subdivisions.values.map(&:name).sort
+  end
 end
 
 # == Schema Information

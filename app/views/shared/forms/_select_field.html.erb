@@ -12,7 +12,7 @@ details.
 You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
 <https://www.gnu.org/licenses/>.%>
 
-<div>
+<div <%= tag.attributes wrapper_html_options %>>
   <%= form.label field_name, label, class: "block font-medium" %>
   <div class="mt-2">
     <%= form.select field_name,
