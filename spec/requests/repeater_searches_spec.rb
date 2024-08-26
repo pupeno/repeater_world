@@ -201,7 +201,7 @@ RSpec.describe "/repeater_searches", type: :request do
           e: {format: "csv"})
         expect(response).to be_successful
         expect(response.body).to include(<<~HEAD)
-          Name,Call sign,Web site,Keeper,Band,Cross band,Operational,Transmit frequency,Receive frequency,FM,Tone burst,CTCSS tone,Tone squelch,M17,M17 channel access number,M17 reflector name,D-Star,D-Star port,Fusion,Wires-X Node Id,DMR,DMR color code,DMR network,NXDN,P25,Tetra,EchoLink,EchoLink node number,Bandwidth,Address,City or town,"Region, state, or province",Post code or ZIP,Country code,Grid square,Latitude,Longitude,Transmit power,Transmit antenna,Transmit antenna polarization,Receive antenna,Receive antenna polarization,Altitude above sea level,Altitude above ground level,Bearing,Irlp,Irlp node number,UTC offset,Channel,Notes,Source,Redistribution limitations,External id
+          Name,Call sign,Web site,Keeper,Band,Cross band,Operational,Transmit frequency,Receive frequency,FM,Tone burst,CTCSS tone,Tone squelch,M17,M17 channel access number,M17 reflector name,D-Star,D-Star port,Fusion,Wires-X Node Id,DMR,DMR color code,DMR network,NXDN,P25,Tetra,EchoLink,EchoLink node number,Bandwidth,Address,City or town,"Region, state, or province",Post code or ZIP,Country,Grid square,Latitude,Longitude,Transmit power,Transmit antenna,Transmit antenna polarization,Receive antenna,Receive antenna polarization,Altitude above sea level,Altitude above ground level,Bearing,Irlp,Irlp node number,UTC offset,Channel,Notes,Source,Redistribution limitations,External id
         HEAD
         expect(response.body).to include("2M FM,")
       end
@@ -343,7 +343,7 @@ RSpec.describe "/repeater_searches", type: :request do
         get export_repeater_search_url(repeater_search, e: {format: "csv"})
         expect(response).to be_successful
         expect(response.body).to include(<<~HEAD)
-          Name,Call sign,Web site,Keeper,Band,Cross band,Operational,Transmit frequency,Receive frequency,FM,Tone burst,CTCSS tone,Tone squelch,M17,M17 channel access number,M17 reflector name,D-Star,D-Star port,Fusion,Wires-X Node Id,DMR,DMR color code,DMR network,NXDN,P25,Tetra,EchoLink,EchoLink node number,Bandwidth,Address,City or town,"Region, state, or province",Post code or ZIP,Country code,Grid square,Latitude,Longitude,Transmit power,Transmit antenna,Transmit antenna polarization,Receive antenna,Receive antenna polarization,Altitude above sea level,Altitude above ground level,Bearing,Irlp,Irlp node number,UTC offset,Channel,Notes,Source,Redistribution limitations,External id
+          Name,Call sign,Web site,Keeper,Band,Cross band,Operational,Transmit frequency,Receive frequency,FM,Tone burst,CTCSS tone,Tone squelch,M17,M17 channel access number,M17 reflector name,D-Star,D-Star port,Fusion,Wires-X Node Id,DMR,DMR color code,DMR network,NXDN,P25,Tetra,EchoLink,EchoLink node number,Bandwidth,Address,City or town,"Region, state, or province",Post code or ZIP,Country,Grid square,Latitude,Longitude,Transmit power,Transmit antenna,Transmit antenna polarization,Receive antenna,Receive antenna polarization,Altitude above sea level,Altitude above ground level,Bearing,Irlp,Irlp node number,UTC offset,Channel,Notes,Source,Redistribution limitations,External id
         HEAD
         expect(response.body).to include("2M FM,")
       end

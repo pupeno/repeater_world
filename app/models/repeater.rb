@@ -85,7 +85,7 @@ class Repeater < ApplicationRecord
     address: "Address",
     altitude_agl: "Altitude above ground level",
     altitude_asl: "Altitude above sea level",
-    country_id: "Country code",
+    country_id: "Country",
     dmr: "DMR",
     dmr_color_code: "DMR color code",
     dmr_network: "DMR network",
