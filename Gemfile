@@ -41,7 +41,7 @@ gem "paper_trail-globalid", "~> 0.2"
 gem "pg", "~> 1.5" # Use postgresql as the database for Active Record
 gem "pg_search", "~> 2.3"
 gem "puma", "~> 6.4" # Use the Puma web server [https://github.com/puma/puma]
-gem "pundit", "~> 2.3"
+gem "pundit", "~> 2.4"
 gem "rails", "~> 7.1" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails_admin", "~> 3.1"
 gem "rbzip2", "~> 0.3"
