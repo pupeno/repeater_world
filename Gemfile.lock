@@ -224,7 +224,7 @@ GEM
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
-    paper_trail (15.1.0)
+    paper_trail (15.2.0)
       activerecord (>= 6.1)
       request_store (~> 1.4)
     paper_trail-globalid (0.2.0)
@@ -451,7 +451,7 @@ DEPENDENCIES
   kaminari (~> 1.2)
   mailgun-ruby (~> 1.2)
   net-pop!
-  paper_trail (~> 15.1)
+  paper_trail (~> 15.2)
   paper_trail-globalid (~> 0.2)
   pg (~> 1.5)
   pg_search (~> 2.3)
