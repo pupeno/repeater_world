@@ -23,6 +23,7 @@ task :import_all, [:stdout] => :environment do |_t, _args|
     IrtsImporter.new,
     NarccImporter.new,
     ScrrbaImporter.new,
+    FasmaImporter.new,
     IrlpImporter.new, # This enhances other importers, it's better to do it close to the end.
     ArtscipubImporter.new] # This one should always be the last, it takes long, it fails, and it's only enhancement.
   importers.each do |importer|
@@ -76,14 +77,20 @@ task :import_scrrba, [:stdout] => :environment do |_t, _args|
   ScrrbaImporter.new.import
 end
 
-desc "Import repeaters from http://www.artscipub.com"
-task :import_artscipub, [:stdout] => :environment do |_t, _args|
+desc "Import repeaters from https://fasma.org/"
+task :import_fasma, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
-  ArtscipubImporter.new.import
+  FasmaImporter.new.import
 end
 
 desc "Import repeaters from https://www.irlp.net"
 task :import_irlp, [:stdout] => :environment do |_t, _args|
   Rails.logger = Logger.new($stdout)
   IrlpImporter.new.import
+end
+
+desc "Import repeaters from http://www.artscipub.com"
+task :import_artscipub, [:stdout] => :environment do |_t, _args|
+  Rails.logger = Logger.new($stdout)
+  ArtscipubImporter.new.import
 end
