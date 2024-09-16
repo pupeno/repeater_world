@@ -33,7 +33,7 @@ gem "faker", "~> 3.4" # To be able to generate sample data in staging (which is 
 gem "friendly_id", "~> 5.5"
 gem "geocoder", "~> 1.8"
 gem "importmap-rails", "~> 2.0" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "jbuilder", "~> 2.11"
+gem "jbuilder", "~> 2.13"
 gem "kaminari", "~> 1.2"
 gem "mailgun-ruby", "~>1.2"
 gem "paper_trail", "~> 15.1"
