@@ -54,6 +54,7 @@ module RepeaterUtils
         return band
       end
     end
+    nil
   end
 
   def self.is_frequency_in_band?(frequency, band)
