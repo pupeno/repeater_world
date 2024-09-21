@@ -33,7 +33,7 @@ jobs:
       RAILS_ENV: test
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Ruby and Gems
         uses: ruby/setup-ruby@v1
@@ -51,10 +51,12 @@ jobs:
 
       - name: Upload Coverage
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: head-result
           path: coverage/.resultset.json
+          if-no-files-found: error
+          include-hidden-files: true
 
   test-base:
     name: Test Base Branch
@@ -73,7 +75,7 @@ jobs:
       RAILS_ENV: test
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ## Here we do not checkout the current branch, but we checkout the base branch.
           ref: ${{ github.base_ref }}
@@ -83,7 +85,7 @@ jobs:
 
       - name: simplecov resultset cache
         id: simplecov-resultset
-        uses:  actions/cache@v3
+        uses:  actions/cache@v4
         with:
           path: coverage/.resultset.json
           key: simplecov-resultset-${{ env.revision }}
@@ -108,10 +110,12 @@ jobs:
 
       - name: Upload Coverage
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: base-result
           path: coverage/.resultset.json
+          if-no-files-found: error
+          include-hidden-files: true
 
   compare-coverage:
     name: Compare Coverage
@@ -123,13 +127,17 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: base-result
+          path: ./base-result/
 
       - name: Download Current Coverage
         uses: actions/download-artifact@v4
         with:
           name: head-result
+          path: ./head-result/
 
-      - uses: pupeno/simplecov-resultset-diff-action@v1.2
+      - run: find .
+
+      - uses: pupeno/simplecov-resultset-diff-action@v1.3
         with:
           base-resultset-path: ./base-result/.resultset.json
           head-resultset-path: ./head-result/.resultset.json
