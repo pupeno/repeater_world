@@ -106,6 +106,10 @@ jobs:
         if: steps.simplecov-resultset.outputs.cache-hit != 'true'
         run: bundle exec rspec
 
+      - name: Show coverage
+        if: always()
+        run: find .
+
       - name: Upload Coverage
         if: always()
         uses: actions/upload-artifact@v4
