@@ -31,9 +31,9 @@ RSpec.describe FasmaImporter do
 
   it "should import" do
     Dir.mktmpdir("FasmaImporter") do |dir|
-      # expect do
+      expect do
         FasmaImporter.new(working_directory: dir).import
-      # end.to change { Repeater.count }.by(6)
+      end.to change { Repeater.count }.by(14)
 
       # Grab one repeater and verify it was imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "KC4JHS")
