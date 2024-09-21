@@ -44,7 +44,7 @@ class FasmaImporter < Importer
       csv_file = CSV.parse(file_contents, headers: true)
       csv_file.each do |row|
         row.each do |field, _value|
-          row[field] = row[field]&.strip if row[field].respond_to?(:strip)
+          row[field] = row[field].strip
           row[field] = nil if row[field] == "NULL"
         end
       end
@@ -87,7 +87,7 @@ class FasmaImporter < Importer
     repeater.notes = ""
 
     # TODO: What is emission 1 and 2? How do import them properly?
-    repeater.notes += "Emission1: #{raw_repeater["emission1"]}\n" if raw_repeater["emission1"].present?
+    repeater.notes += "Emission1: #{raw_repeater["emission1"]}\n"
     repeater.notes += "Emission2: #{raw_repeater["emission2"]}\n" if raw_repeater["emission2"].present?
 
     if raw_repeater["ctcssIn"].present?
@@ -107,7 +107,7 @@ class FasmaImporter < Importer
       repeater.dmr_color_code = raw_repeater["dmrCc1"].to_d
       # TODO: what are dmrGc1, dmrCc2, and dmrGc2?
       repeater.notes += "DMR GC1: #{raw_repeater["dmrGc1"]}\n" if raw_repeater["dmrGc1"].present?
-      repeater.notes += "DMR CC2: #{raw_repeater["dmrCc1"]}\n" if raw_repeater["dmrCc1"].present?
+      repeater.notes += "DMR CC2: #{raw_repeater["dmrCc2"]}\n" if raw_repeater["dmrCc2"].present?
       repeater.notes += "DMR GC2: #{raw_repeater["dmrGc2"]}\n" if raw_repeater["dmrGc2"].present?
     end
 
