@@ -127,11 +127,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: base-result
+          path: ./base-result/
 
       - name: Download Current Coverage
         uses: actions/download-artifact@v4
         with:
           name: head-result
+          path: ./head-result/
 
       - run: find .
 
