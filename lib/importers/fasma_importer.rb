@@ -42,6 +42,12 @@ class FasmaImporter < Importer
       file_contents = File.read(file_name)
       file_contents.gsub!("\"Robert \"Bob\" Schneider, W2HVL\"", "\"Robert \"\"Bob\"\" Schneider, W2HVL\"")
       csv_file = CSV.parse(file_contents, headers: true)
+      csv_file.each do |row|
+        row.each do |field, _value|
+          row[field] = row[field]&.strip if row[field].respond_to?(:strip)
+          row[field] = nil if row[field] == "NULL"
+        end
+      end
       csv_file.each_with_index do |raw_repeater, line_number|
         yield(raw_repeater, line_number)
       end
@@ -68,7 +74,7 @@ class FasmaImporter < Importer
       @ignored_due_to_invalid_count += 1
       return nil
     end
-    [raw_repeater["callsign"].strip.upcase, tx_freq]
+    [raw_repeater["callsign"]&.upcase, tx_freq]
   end
 
   def import_repeater(raw_repeater, repeater)
@@ -81,10 +87,10 @@ class FasmaImporter < Importer
     repeater.notes = ""
 
     # TODO: What is emission 1 and 2? How do import them properly?
-    repeater.notes += "Emission1: #{raw_repeater[:emission1]}\n"
-    repeater.notes += "Emission2: #{raw_repeater[:emission2]}\n"
+    repeater.notes += "Emission1: #{raw_repeater["emission1"]}\n" if raw_repeater["emission1"].present?
+    repeater.notes += "Emission2: #{raw_repeater["emission2"]}\n" if raw_repeater["emission2"].present?
 
-    if raw_repeater["ctcssIn"].present? && raw_repeater["ctcssIn"].strip != "NULL"
+    if raw_repeater["ctcssIn"].present?
       repeater.fm = true
       repeater.fm_ctcss_tone = raw_repeater["ctcssIn"].to_d
       if repeater.fm_ctcss_tone == "206.5".to_d # Invalid
@@ -96,13 +102,13 @@ class FasmaImporter < Importer
       end
     end
 
-    if raw_repeater[:dmrCc1].present? && raw_repeater[:dmrCc1].strip != "NULL"
+    if raw_repeater["dmrCc1"].present?
       repeater.dmr = true
-      repeater.dmr_color_code = raw_repeater[:dmrCc1].to_d
+      repeater.dmr_color_code = raw_repeater["dmrCc1"].to_d
       # TODO: what are dmrGc1, dmrCc2, and dmrGc2?
-      repeater.notes += "DMR GC1: #{raw_repeater[:dmrGc1]}\n" if raw_repeater[:dmrGc1].present?
-      repeater.notes += "DMR CC2: #{raw_repeater[:dmrCc1]}\n" if raw_repeater[:dmrCc1].present?
-      repeater.notes += "DMR GC2: #{raw_repeater[:dmrGc2]}\n" if raw_repeater[:dmrGc2].present?
+      repeater.notes += "DMR GC1: #{raw_repeater["dmrGc1"]}\n" if raw_repeater["dmrGc1"].present?
+      repeater.notes += "DMR CC2: #{raw_repeater["dmrCc1"]}\n" if raw_repeater["dmrCc1"].present?
+      repeater.notes += "DMR GC2: #{raw_repeater["dmrGc2"]}\n" if raw_repeater["dmrGc2"].present?
     end
 
     if raw_repeater["fusion"].present? && raw_repeater["fusion"] == "1"
@@ -111,20 +117,20 @@ class FasmaImporter < Importer
       repeater.notes += "Fusion DSQ: #{raw_repeater["fusion"]}\n"
     end
 
-    if raw_repeater["nxdnRan"].present? && raw_repeater["nxdnRan"].strip != "NULL"
+    if raw_repeater["nxdnRan"].present?
       repeater.nxdn = true
       # TODO: import nxdnRan
       repeater.notes += "NXDN Ran: #{raw_repeater["nxdnRan"]}\n"
     end
 
-    if raw_repeater[:p25NacOut].present? && raw_repeater[:p25NacOut].strip != "NULL"
+    if raw_repeater["p25NacOut"].present?
       repeater.p25 = true
       # TODO: import p25NacOut, p25NacIn, and p25Phase1
-      repeater.notes += "P25 NAC OUT: #{raw_repeater[:p25NacOut]}\nP25 NAC IN: #{raw_repeater[:p25NacIn]}\nP25 Phase 1: #{raw_repeater[:p25Phase1]}"
+      repeater.notes += "P25 NAC OUT: #{raw_repeater["p25NacOut"]}\nP25 NAC IN: #{raw_repeater["p25NacIn"]}\nP25 Phase 1: #{raw_repeater["p25Phase1"]}"
     end
 
     # Location
-    repeater.input_locality = raw_repeater["city"].strip
+    repeater.input_locality = raw_repeater["city"]
     repeater.input_region = "Florida"
     repeater.input_country_id = "us"
     repeater.input_latitude = raw_repeater["latitude"].to_d if raw_repeater["latitude"].present?
@@ -134,7 +140,7 @@ class FasmaImporter < Importer
     repeater.rx_antenna = raw_repeater["antenna"]
     repeater.tx_power = raw_repeater["erp"].to_d
     repeater.altitude_agl = raw_repeater["agl"].to_d if raw_repeater["agl"].present? # What's the actual unit here, meter or feet?
-    repeater.bandwidth = raw_repeater["chanSize"].to_d
+    repeater.bandwidth = raw_repeater["chanSize"].to_d * 1_000
 
     repeater.keeper = raw_repeater["holder"]
     repeater.web_site = raw_repeater["url"]
