@@ -51,7 +51,7 @@ jobs:
 
       - name: Show coverage
         if: always()
-        run: find .
+        run: find coverage
 
       - name: Upload Coverage
         if: always()
@@ -112,7 +112,7 @@ jobs:
 
       - name: Show coverage
         if: always()
-        run: find .
+        run: find coverage
 
       - name: Upload Coverage
         if: always()
