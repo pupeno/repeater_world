@@ -83,7 +83,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= card_entry(label: "Bearing", value: repeater.bearing, optional: true) %>
         <%= card_entry(label: "UTC Offset", value: repeater.utc_offset, optional: true) %>
         <%= card_entry(label: "Channel", value: repeater.channel, optional: true) %>
-        <%= card_entry(label: "Notes", value: repeater.notes, optional: true) %>
+        <%= card_entry(label: "Notes", value: h(repeater.notes).gsub("\n", "<br/>").html_safe, optional: true) %>
         <%= card_entry(label: "Source", value: repeater.source, optional: true) %>
       </dl>
     </div>
