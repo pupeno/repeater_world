@@ -171,7 +171,7 @@ GEM
       activesupport (>= 6.0.0)
       railties (>= 6.0.0)
     io-console (0.7.2)
-    irb (1.14.0)
+    irb (1.14.1)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jbuilder (2.13.0)
@@ -359,10 +359,10 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    sentry-rails (5.19.0)
+    sentry-rails (5.20.1)
       railties (>= 5.0)
-      sentry-ruby (~> 5.19.0)
-    sentry-ruby (5.19.0)
+      sentry-ruby (~> 5.20.1)
+    sentry-ruby (5.20.1)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
     simplecov (0.22.0)
@@ -461,7 +461,7 @@ DEPENDENCIES
   rbzip2 (~> 0.3)
   rspec-rails (~> 7.0)
   sassc-rails (~> 2.1)
-  sentry-rails (~> 5.19)
+  sentry-rails (~> 5.20)
   sentry-ruby (~> 5.16)
   simplecov (~> 0.22)
   simplecov-cobertura (~> 2.1)
