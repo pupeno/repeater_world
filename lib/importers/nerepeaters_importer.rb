@@ -107,7 +107,7 @@ class NerepeatersImporter < Importer
           elsif raw_repeater[RX_OFFSET] == "+" && offset[:pos_offset].present?
             return repeater.tx_frequency + offset[:pos_offset]
           else
-            raise "Unexpected offset #{raw_repeater[RX_OFFSET]} for frequency #{repeater.tx_frequency} in repeater #{raw_repeater}"
+            raise "Can't find offset #{raw_repeater[RX_OFFSET]} for frequency #{repeater.tx_frequency} in repeater #{raw_repeater}"
           end
         end
       end

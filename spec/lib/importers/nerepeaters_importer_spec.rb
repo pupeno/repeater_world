@@ -115,4 +115,64 @@ RSpec.describe NerepeatersImporter do
       end
     end
   end
+
+  it "should not import when offset can't be found" do
+    double_files(
+      ["spec", "lib", "importers", "nerepeaters_importer_data", "unfindable_offset"],
+      {"http://www.nerepeaters.com/NERepeaters.php" => "nerepeaters.csv"}
+    )
+    Dir.mktmpdir("NerepeatersImporter") do |dir|
+      expect do
+        NerepeatersImporter.new(working_directory: dir).import
+      end.to raise_error(RuntimeError, /Can't find offset/)
+    end
+  end
+
+  it "should not import when rx freq can't be figured out for custom offset" do
+    double_files(
+      ["spec", "lib", "importers", "nerepeaters_importer_data", "unfindable_custom_offset"],
+      {"http://www.nerepeaters.com/NERepeaters.php" => "nerepeaters.csv"}
+    )
+    Dir.mktmpdir("NerepeatersImporter") do |dir|
+      expect do
+        NerepeatersImporter.new(working_directory: dir).import
+      end.to raise_error(RuntimeError, /Can't figure out rx frequency for offset/)
+    end
+  end
+
+  it "should not import with an unknown offset symbol" do
+    double_files(
+      ["spec", "lib", "importers", "nerepeaters_importer_data", "unexpected_offset_symbol"],
+      {"http://www.nerepeaters.com/NERepeaters.php" => "nerepeaters.csv"}
+    )
+    Dir.mktmpdir("NerepeatersImporter") do |dir|
+      expect do
+        NerepeatersImporter.new(working_directory: dir).import
+      end.to raise_error(RuntimeError, /Unexpected offset/)
+    end
+  end
+
+  it "should not import with an unknown mode" do
+    double_files(
+      ["spec", "lib", "importers", "nerepeaters_importer_data", "unknown_mode"],
+      {"http://www.nerepeaters.com/NERepeaters.php" => "nerepeaters.csv"}
+    )
+    Dir.mktmpdir("NerepeatersImporter") do |dir|
+      expect do
+        NerepeatersImporter.new(working_directory: dir).import
+      end.to raise_error(RuntimeError, /Unknown mode /)
+    end
+  end
+
+  it "should not import with an unknown access code" do
+    double_files(
+      ["spec", "lib", "importers", "nerepeaters_importer_data", "unknown_access_code"],
+      {"http://www.nerepeaters.com/NERepeaters.php" => "nerepeaters.csv"}
+    )
+    Dir.mktmpdir("NerepeatersImporter") do |dir|
+      expect do
+        NerepeatersImporter.new(working_directory: dir).import
+      end.to raise_error(RuntimeError, /Unknown access code/)
+    end
+  end
 end
