@@ -208,73 +208,73 @@ class ArtscipubImporter < Importer
     if pl_tone.to_f.in?(Repeater::CTCSS_TONES)
       repeater.fm = true
       repeater.fm_ctcss_tone = pl_tone.to_f
-    elsif pl_tone == "71,9" # Likely a typo
+    elsif pl_tone == "71,9" 
       repeater.fm = true
       repeater.fm_ctcss_tone = 71.9
-    elsif pl_tone == "79.9" # Likely a typo
+    elsif pl_tone == "79.9" 
       repeater.fm = true
       repeater.fm_ctcss_tone = 79.7
-    elsif pl_tone == "88" # Likely a typo
+    elsif pl_tone == "88" 
       repeater.fm = true
       repeater.fm_ctcss_tone = 88.5
-    elsif pl_tone.in? ["98.4", "94.6"] # Likely a typo
+    elsif pl_tone.in? ["98.4", "94.6"] 
       repeater.fm = true
       repeater.fm_ctcss_tone = 94.8
-    elsif pl_tone.in? ["94.7", "tx pl 97.4"] # Likely a typo
+    elsif pl_tone.in? ["94.7", "tx pl 97.4"] 
       repeater.fm = true
       repeater.fm_ctcss_tone = 97.4
-    elsif pl_tone.in? ["[100.0]", "[100]"] # Likely a typo
+    elsif pl_tone.in? ["[100.0]", "[100]"] 
       repeater.fm = true
       repeater.fm_ctcss_tone = 100.0
-    elsif pl_tone.in? ["105.3", "[103.5]", "103.0", "102.3", "103..5", "103.6"] # Likely a typo
+    elsif pl_tone.in? ["105.3", "[103.5]", "103.0", "102.3", "103..5", "103.6"] 
       repeater.fm = true
       repeater.fm_ctcss_tone = 103.5
-    elsif pl_tone.in? ["107.9", "107.3", "102.7"] # Likely a typo
+    elsif pl_tone.in? ["107.9", "107.3", "102.7"] 
       repeater.fm = true
       repeater.fm_ctcss_tone = 107.2
-    elsif pl_tone.in? ["110", "110.5", "109.0"] # Likely a typo
+    elsif pl_tone.in? ["110", "110.5", "109.0"] 
       repeater.fm = true
       repeater.fm_ctcss_tone = 110.9
-    elsif pl_tone == "114.3" # Likely a typo
+    elsif pl_tone == "114.3" 
       repeater.fm = true
       repeater.fm_ctcss_tone = 114.8
-    elsif pl_tone == "118.0" # Likely a typo
+    elsif pl_tone == "118.0" 
       repeater.fm = true
       repeater.fm_ctcss_tone = 118.8
-    elsif pl_tone.in? ["023", "123.3", "123.5"] # Likely a typo
+    elsif pl_tone.in? ["023", "123.3", "123.5", "csq /123"] 
       repeater.fm = true
       repeater.fm_ctcss_tone = 123
-    elsif pl_tone == "[127.3]" # Likely a typo
+    elsif pl_tone == "[127.3]" 
       repeater.fm = true
       repeater.fm_ctcss_tone = 127.3
-    elsif pl_tone.in? ["131", "131,8"] # Likely a typo
+    elsif pl_tone.in? ["131", "131,8", "131.5"] 
       repeater.fm = true
       repeater.fm_ctcss_tone = 131.8
-    elsif pl_tone.in? ["136.6", "130.5"] # Likely a typo
+    elsif pl_tone.in? ["136.6", "130.5"] 
       repeater.fm = true
       repeater.fm_ctcss_tone = 136.5
-    elsif pl_tone == "141.0" # Likely a typo
+    elsif pl_tone == "141.0" 
       repeater.fm = true
       repeater.fm_ctcss_tone = 141.3
-    elsif pl_tone.in? ["[146.2]", "146.3"] # Likely a typo
+    elsif pl_tone.in? ["[146.2]", "146.3"] 
       repeater.fm = true
       repeater.fm_ctcss_tone = 146.2
-    elsif pl_tone == "161.1" # Likely a typo
+    elsif pl_tone == "161.1" 
       repeater.fm = true
       repeater.fm_ctcss_tone = 162.2
-    elsif pl_tone.in? ["173", "ctcs 173.8"] # Likely a typo
+    elsif pl_tone.in? ["173", "ctcs 173.8"] 
       repeater.fm = true
       repeater.fm_ctcss_tone = 173.8
-    elsif pl_tone == "203.7" # Likely a typo
+    elsif pl_tone == "203.7" 
       repeater.fm = true
       repeater.fm_ctcss_tone = 203.5
-    elsif pl_tone == "[pl 210.7]" # Likely a typo
+    elsif pl_tone == "[pl 210.7]" 
       repeater.fm = true
       repeater.fm_ctcss_tone = 210.7
-    elsif pl_tone == "248.8" # Likely a typo
+    elsif pl_tone == "248.8" 
       repeater.fm = true
       repeater.fm_ctcss_tone = 241.8
-    elsif pl_tone == "254.1" # Likely a typo
+    elsif pl_tone == "254.1" 
       repeater.fm = true
       repeater.fm_ctcss_tone = 250.3
     elsif pl_tone.in?(["none", "no", "open", "n/a", "no [no]"])
@@ -359,17 +359,25 @@ class ArtscipubImporter < Importer
           "d023n", "d172", "d311", "d411", "d432", "data", "dts", "lafayette", "pl 218.1", "0", "a", "c", "yes",
           "[dtmf]", "d051", "d732n", "[dtmf5]", "d263", "5z", "d174", "d245n", "[*]", "152d", "293", "[nac]", "dtmf",
           "047", "073", "video", "[311]", "244", "tg99", "rock hill", "[nac 293]", "csq", "d125n", "d455", "[dgid:00]",
-          "432", "d047", "[visit srg]", "600", "atikokan", "cochin", "d073", "[d031]", "[d 244n]", "365n", "[365n]", "[nac$293]"]) # No idea what this is...
+          "432", "d047", "[visit srg]", "600", "atikokan", "cochin", "d073", "[d031]", "[d 244n]", "365n", "[365n]",
+          "[nac$293]", "am atv", "ran 11"]) # No idea what this is...
       # ...so not doing anything here.
     else
       raise "Unknown mode and access code \"#{pl_tone}\" for #{raw_repeater}."
+    end
+
+    if repeater.fm_ctcss_tone.present? && repeater.fm_dcs_code.present?
+      # Making a guess that the DCS is likely to be more correct because it's a newer system, less common.
+      repeater.fm_ctcss_tone = nil # This still hurts.
     end
   end
 
   def import_address(repeater, raw_repeater)
     coordinates = raw_repeater[:coordinates].split(",").map(&:strip).reject(&:empty?)
 
-    if coordinates.last.start_with?(".") # This is how non US locations are formatted.
+    if coordinates.last.start_with?(".") || # This is how non US locations are formatted...
+      coordinates.first.start_with?(".") || # ...except when the dot got added to the other part...
+      coordinates.last == "Sonora" # ...or when it's just another place, _sigh_
       repeater.input_country_id = figure_out_country(coordinates)
 
       case repeater.input_country_id
@@ -443,7 +451,7 @@ class ArtscipubImporter < Importer
       "id"
     when ".Japan"
       "jp"
-    when ".Mexico", ".mexico", ".Baja California", ".Sinaloa", ".Sonora"
+    when ".Mexico", ".mexico", ".Baja California", ".Sinaloa", ".Sonora", "Mexico", "Sonora"
       "mx"
     when ".Netherlands"
       "nl"
