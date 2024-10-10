@@ -372,6 +372,7 @@ end
 #  echolink_node_number       :integer
 #  fm                         :boolean
 #  fm_ctcss_tone              :decimal(, )
+#  fm_dcs_code                :integer
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
 #  fusion                     :boolean

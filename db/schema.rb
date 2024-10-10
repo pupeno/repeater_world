@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_03_123215) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_10_104618) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -176,6 +176,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_03_123215) do
     t.boolean "irlp"
     t.integer "irlp_node_number"
     t.boolean "cross_band"
+    t.integer "fm_dcs_code"
     t.index ["call_sign"], name: "index_repeaters_on_call_sign"
     t.index ["coordinates"], name: "index_repeaters_on_coordinates", using: :gist
     t.index ["country_id"], name: "index_repeaters_on_country_id"

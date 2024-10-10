@@ -59,6 +59,7 @@ FactoryBot.define do
       channel { "channel" }
       fm { true }
       fm_ctcss_tone { Repeater::CTCSS_TONES.first }
+      fm_dcs_code { Repeater::DCS_CODES.first }
       fm_tone_burst { true }
       fm_tone_squelch { true }
       m17 { true }
@@ -126,6 +127,7 @@ end
 #  echolink_node_number       :integer
 #  fm                         :boolean
 #  fm_ctcss_tone              :decimal(, )
+#  fm_dcs_code                :integer
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
 #  fusion                     :boolean
