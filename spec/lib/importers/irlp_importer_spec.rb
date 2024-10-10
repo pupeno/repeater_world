@@ -24,7 +24,7 @@ RSpec.describe IrlpImporter do
     before do
       double_files(
         ["spec", "lib", "importers", "irlp_importer_data", "good"],
-        { "https://status.irlp.net/nohtmlstatus.txt.bz2" => "irlp.tsv.bz2" }
+        {"https://status.irlp.net/nohtmlstatus.txt.bz2" => "irlp.tsv.bz2"}
       )
     end
 
@@ -64,7 +64,7 @@ RSpec.describe IrlpImporter do
         # This repeater simulates a previously imported repeater that is no longer in the source files, so we should
         # delete it to avoid stale data.
         deleted = create(:repeater, :full, call_sign: "VE7RHS", tx_frequency: 145_000_001, source: IrlpImporter.source,
-                         irlp_node_number: 9999)
+          irlp_node_number: 9999)
 
         # This repeater represents one where the upstream data changed and should be updated by the importer.
         changed = Repeater.find_sole_by(call_sign: "VE7RHS", irlp_node_number: 1000)
@@ -83,7 +83,7 @@ RSpec.describe IrlpImporter do
         expect do
           IrlpImporter.new(working_directory: dir).import
         end.to change { Repeater.count }.by(-1)
-                                        .and change { Repeater.where(call_sign: deleted.call_sign, tx_frequency: deleted.tx_frequency).count }.by(-1)
+          .and change { Repeater.where(call_sign: deleted.call_sign, tx_frequency: deleted.tx_frequency).count }.by(-1)
 
         # This one got deleted
         expect { deleted.reload }.to raise_error(ActiveRecord::RecordNotFound)
@@ -102,7 +102,7 @@ RSpec.describe IrlpImporter do
   it "should not import with an unknown access code" do
     double_files(
       ["spec", "lib", "importers", "irlp_importer_data", "unknown_access_code"],
-      { "https://status.irlp.net/nohtmlstatus.txt.bz2" => "irlp.tsv.bz2" }
+      {"https://status.irlp.net/nohtmlstatus.txt.bz2" => "irlp.tsv.bz2"}
     )
 
     Dir.mktmpdir("IrlpImporter") do |dir|
@@ -115,7 +115,7 @@ RSpec.describe IrlpImporter do
   it "should not import with a country that doesn't exist" do
     double_files(
       ["spec", "lib", "importers", "irlp_importer_data", "country_does_not_exist"],
-      { "https://status.irlp.net/nohtmlstatus.txt.bz2" => "irlp.tsv.bz2" }
+      {"https://status.irlp.net/nohtmlstatus.txt.bz2" => "irlp.tsv.bz2"}
     )
 
     Dir.mktmpdir("IrlpImporter") do |dir|
