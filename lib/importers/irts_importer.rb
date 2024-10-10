@@ -71,15 +71,15 @@ class IrtsImporter < Importer
 
     access_codes = access.split("/")
     access_codes.each do |access_code|
-      if access_code.to_d == BigDecimal("1750.0")
+      if access_code.to_d == "1750.0".to_d
         repeater.fm = true
         repeater.fm_tone_burst = true
-      elsif access_code.to_f.in? Repeater::CTCSS_TONES
+      elsif access_code.to_d.in? Repeater::CTCSS_TONES
         repeater.fm = true
-        repeater.fm_ctcss_tone = access_code.to_f
+        repeater.fm_ctcss_tone = access_code.to_d
       elsif access_code.to_d == 110 # Assuming it's a typo and should be 110.9.
         repeater.fm = true
-        repeater.fm_ctcss_tone = 110.9
+        repeater.fm_ctcss_tone = "110.9".to_d
       elsif access_code.strip == "Wires X"
         repeater.fusion = true # Assuming Wires X means System Fusion.
       elsif access_code.strip == "C4FM"

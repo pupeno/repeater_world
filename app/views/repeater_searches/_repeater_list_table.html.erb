@@ -51,7 +51,7 @@ You should have received a copy of the GNU Affero General Public License along w
           </div>
         </th>
         <th scope="col" class="<%= TableHelper::TH_CLASSES %> text-right">
-          CTCSS
+          CTCSS / DCS
         </th>
         <th scope="col" class="<%= TableHelper::TH_CLASSES %>">
           <div data-action="click->repeater#changeLocationFormat"
@@ -99,7 +99,14 @@ You should have received a copy of the GNU Affero General Public License along w
             <%= render "shared/repeater/rx_frequency", repeater: repeater %>
           </td>
           <td class="<%= TableHelper::TD_CLASSES %> text-right">
-            <%= repeater.fm_ctcss_tone if repeater.fm? %>
+            <% if repeater.fm? %>
+              <% if repeater.fm_ctcss_tone.present? %>
+                CTCSS: <%= repeater.fm_ctcss_tone %>
+              <% end %>
+              <% if repeater.fm_dcs_code.present? %>
+                DCS: <%= repeater.fm_dcs_code %>
+              <% end %>
+            <% end %>
           </td>
           <td class="<%= TableHelper::TD_CLASSES %>">
             <%= render "shared/repeater/location", repeater: repeater %>

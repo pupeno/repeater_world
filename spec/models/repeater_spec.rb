@@ -71,6 +71,29 @@ RSpec.describe Repeater, type: :model do
       expect(@repeater).to be_valid
     end
 
+    it "should validate ctcss and dcs" do
+      @repeater.fm = true
+      expect(@repeater).to be_valid
+
+      @repeater.fm_ctcss_tone = Repeater::CTCSS_TONES.first
+      expect(@repeater).to be_valid
+      @repeater.fm_ctcss_tone = Repeater::CTCSS_TONES.first + 1
+      expect(@repeater).not_to be_valid
+      @repeater.fm_ctcss_tone = nil
+      expect(@repeater).to be_valid
+
+      @repeater.fm_dcs_code = Repeater::DCS_CODES.first
+      expect(@repeater).to be_valid
+      @repeater.fm_dcs_code = Repeater::DCS_CODES.first + 1
+      expect(@repeater).not_to be_valid
+      @repeater.fm_dcs_code = nil
+      expect(@repeater).to be_valid
+
+      @repeater.fm_ctcss_tone = Repeater::CTCSS_TONES.first
+      @repeater.fm_dcs_code = Repeater::DCS_CODES.first
+      expect(@repeater).not_to be_valid
+    end
+
     it "fixes web site" do
       @repeater.web_site = "example.com"
       expect(@repeater.web_site).to eq("http://example.com")
@@ -372,6 +395,7 @@ end
 #  echolink_node_number       :integer
 #  fm                         :boolean
 #  fm_ctcss_tone              :decimal(, )
+#  fm_dcs_code                :integer
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
 #  fusion                     :boolean

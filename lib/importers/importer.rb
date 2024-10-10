@@ -18,7 +18,11 @@ class Importer
   include Rails.application.routes.url_helpers
 
   def initialize(working_directory: nil, logger: nil)
-    @working_directory = working_directory || Rails.root.join("tmp", (self.class.name || SecureRandom.alphanumeric).downcase).to_s # Stable working directory to avoid re-downloading when developing.
+    @working_directory = if working_directory.present?
+      working_directory
+    else
+      Rails.root.join("tmp", "importer", (self.class.name || SecureRandom.alphanumeric).underscore + "_data").to_s # Stable working directory to avoid re-downloading when developing.
+    end
     @logger = logger || Rails.logger
     @created_or_updated_ids = []
     @created_repeaters_count = 0
