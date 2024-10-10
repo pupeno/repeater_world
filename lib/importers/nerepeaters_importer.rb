@@ -242,8 +242,8 @@ class NerepeatersImporter < Importer
 
     if repeater.fm? && access_code.to_d.in?(Repeater::CTCSS_TONES)
       repeater.fm_ctcss_tone = access_code.to_d
-    elsif repeater.fm? && access_code.strip[0] == "D" && access_code[1..-1].to_i.in?(Repeater::DCS_CODES)
-      repeater.fm_dcs_code = access_code[1..-1].to_i
+    elsif repeater.fm? && access_code.strip[0] == "D" && access_code[1..].to_i.in?(Repeater::DCS_CODES)
+      repeater.fm_dcs_code = access_code[1..].to_i
     elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :p25] && access_code.split("/").second.to_d.in?(Repeater::CTCSS_TONES)
       # TODO: import the first part correctly, it's likely for P25.
       repeater.fm_ctcss_tone = access_code.split("/").second.to_d
