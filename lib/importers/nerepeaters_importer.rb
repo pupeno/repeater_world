@@ -151,10 +151,11 @@ class NerepeatersImporter < Importer
         WB1GOF N1KIM]
         # No idea what's going on here, we just don't have the rx frequency.
         return repeater.tx_frequency
+      else
+        raise "Can't figure out rx frequency for offset #{raw_repeater[RX_OFFSET].inspect} and tx frequency #{repeater.tx_frequency} for #{raw_repeater}."
       end
-    end
-    if repeater.rx_frequency.blank?
-      raise "Unknown rx frequency for tx frequency #{repeater.tx_frequency} with symbol \"#{raw_repeater[RX_OFFSET]}\"."
+    else
+      raise "Unexpected offset #{raw_repeater[RX_OFFSET].inspect} for #{raw_repeater}."
     end
   end
 
