@@ -18,9 +18,7 @@ require_relative "importer_helper"
 RSpec.describe WiaImporter do
   include ImporterHelper
 
-  before do
-    Repeater.destroy_all
-  end
+  before { Repeater.destroy_all }
 
   context "With a good source" do
     before do
