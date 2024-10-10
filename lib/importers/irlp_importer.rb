@@ -78,7 +78,11 @@ class IrlpImporter < Importer
     repeater.input_region = if repeater.input_country_id == "us"
       figure_out_us_state(raw_repeater["Prov./St"])
     elsif repeater.input_country_id == "ca"
-      figure_out_canadian_province(raw_repeater["Prov./St"])
+      if repeater.call_sign == "VA6MEX" && raw_repeater["Prov./St"] == "ED"
+        "Alberta" # ED is not a province, but Edmonton is the capital of Alberta.
+      else
+        figure_out_canadian_province(raw_repeater["Prov./St"])
+      end
     else
       raw_repeater["Prov./St"]
     end

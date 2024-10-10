@@ -43,7 +43,7 @@ class NerepeatersImporter < Importer
   end
 
   def call_sign_and_tx_frequency(raw_repeater)
-    [raw_repeater[CALL_SIGN].upcase, raw_repeater[TX_FREQUENCY].to_f * 10 ** 6]
+    [raw_repeater[CALL_SIGN].upcase, raw_repeater[TX_FREQUENCY].to_f * 10**6]
   end
 
   def import_repeater(raw_repeater, repeater)
@@ -81,21 +81,21 @@ class NerepeatersImporter < Importer
   def import_rx_frequency(repeater, raw_repeater)
     # https://rptr.amateur-radio.net/offset.html
     # TODO: make this generic if there are generic rules.
-    offsets = [{ min: 28_000_000, max: 29_700_000, neg_offset: -100_000 }, # TODO: find the exact ones, I just guessed here.
-               { min: 51_000_000, max: 52_000_000, neg_offset: -500_000 },
-               { min: 52_000_000, max: 54_000_000, neg_offset: -1_000_000 },
-               { min: 144_510_000, max: 144_890_000, pos_offset: +600_000 },
-               { min: 145_110_000, max: 145_490_000, neg_offset: -600_000 },
-               { min: 146_000_000, max: 146_390_000, pos_offset: +600_000 },
-               { min: 146_400_000, max: 146_500_000, pos_offset: +1_000_000, neg_offset: -1_500_000 },
-               { min: 146_610_000, max: 147_390_000, pos_offset: +600_000, neg_offset: -600_000 }, # This one is modified because the data wasn't consistent.
-               { min: 147_400_000, max: 147_600_000, neg_offset: -1_000_000 },
-               { min: 147_600_000, max: 147_990_000, neg_offset: -600_000 },
-               { min: 223_000_000, max: 225_000_000, neg_offset: -1_600_000 },
-               { min: 440_000_000, max: 450_000_000, pos_offset: 5_000_000, neg_offset: -5_000_000 },
-               { min: 902_000_000, max: 928_000_000, neg_offset: -12_000_000 },
-               { min: 927_000_000, max: 928_000_000, neg_offset: -25_000_000 },
-               { min: 1240_000_000, max: 1300_000_000, neg_offset: -20_000_000 }] # TODO: find the exact ones, I just guessed here.
+    offsets = [{min: 28_000_000, max: 29_700_000, neg_offset: -100_000}, # TODO: find the exact ones, I just guessed here.
+      {min: 51_000_000, max: 52_000_000, neg_offset: -500_000},
+      {min: 52_000_000, max: 54_000_000, neg_offset: -1_000_000},
+      {min: 144_510_000, max: 144_890_000, pos_offset: +600_000},
+      {min: 145_110_000, max: 145_490_000, neg_offset: -600_000},
+      {min: 146_000_000, max: 146_390_000, pos_offset: +600_000},
+      {min: 146_400_000, max: 146_500_000, pos_offset: +1_000_000, neg_offset: -1_500_000},
+      {min: 146_610_000, max: 147_390_000, pos_offset: +600_000, neg_offset: -600_000}, # This one is modified because the data wasn't consistent.
+      {min: 147_400_000, max: 147_600_000, neg_offset: -1_000_000},
+      {min: 147_600_000, max: 147_990_000, neg_offset: -600_000},
+      {min: 223_000_000, max: 225_000_000, neg_offset: -1_600_000},
+      {min: 440_000_000, max: 450_000_000, pos_offset: 5_000_000, neg_offset: -5_000_000},
+      {min: 902_000_000, max: 928_000_000, neg_offset: -12_000_000},
+      {min: 927_000_000, max: 928_000_000, neg_offset: -25_000_000},
+      {min: 1240_000_000, max: 1300_000_000, neg_offset: -20_000_000}] # TODO: find the exact ones, I just guessed here.
     if repeater.call_sign == "KI1P" && repeater.tx_frequency == 445_075_000
       return 440_075_000 # Data is wrong, should be -, not + https://nedecn.org/home/repeaters/vermont-repeaters/bolton-ricker-mountain-ki1p/
     end
@@ -252,8 +252,8 @@ class NerepeatersImporter < Importer
       # TODO: import the first part correctly, it's likely for P25.
       # TODO: what's the second part? What are these D numbers?
     elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :dstar] &&
-      access_code.split("/").first.in?(%w[A B C]) &&
-      access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
+        access_code.split("/").first.in?(%w[A B C]) &&
+        access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
       repeater.fm_ctcss_tone = access_code.split("/").second.to_f
       repeater.dstar_port = access_code.split("/").first.in?(%w[A B C])
     elsif repeater.dmr? && (access_code =~ /CC[0-9]/ || access_code =~ /CC1[0-5]/)
