@@ -23,7 +23,7 @@ RSpec.describe SralfiImporter do
   context "With a good source" do
     before do
       double_files(
-        ["spec", "lib", "importers", "sralfi_importer_data"],
+        ["spec", "lib", "importers", "sralfi_importer_data", "good"],
         { "https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json" })
     end
 
@@ -108,6 +108,54 @@ RSpec.describe SralfiImporter do
         independent.reload
         expect(independent.rx_frequency).to eq(independent_rx_frequency)
       end
+    end
+  end
+
+  it "should not import with an unknown rep access" do
+    double_files(
+      ["spec", "lib", "importers", "sralfi_importer_data", "unknown_rep_access"],
+      { "https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json" })
+
+    Dir.mktmpdir("SralfiImporter") do |dir|
+      expect do
+        SralfiImporter.new(working_directory: dir).import
+      end.to raise_error(RuntimeError, /Unknown rep_access/)
+    end
+  end
+
+  it "should not import with an unknown rep access" do
+    double_files(
+      ["spec", "lib", "importers", "sralfi_importer_data", "unknown_rep_access"],
+      { "https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json" })
+
+    Dir.mktmpdir("SralfiImporter") do |dir|
+      expect do
+        SralfiImporter.new(working_directory: dir).import
+      end.to raise_error(RuntimeError, /Unknown rep_access/)
+    end
+  end
+
+  it "should not import with an unknown rep access" do
+    double_files(
+      ["spec", "lib", "importers", "sralfi_importer_data", "unknown_mode"],
+      { "https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json" })
+
+    Dir.mktmpdir("SralfiImporter") do |dir|
+      expect do
+        SralfiImporter.new(working_directory: dir).import
+      end.to raise_error(RuntimeError, /Unknown mode/)
+    end
+  end
+
+  it "should not import with an unknown rep access" do
+    double_files(
+      ["spec", "lib", "importers", "sralfi_importer_data", "unknown_status"],
+      { "https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json" })
+
+    Dir.mktmpdir("SralfiImporter") do |dir|
+      expect do
+        SralfiImporter.new(working_directory: dir).import
+      end.to raise_error(RuntimeError, /Unknown status/)
     end
   end
 end
