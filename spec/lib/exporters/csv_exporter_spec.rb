@@ -40,7 +40,7 @@ RSpec.describe CsvExporter do
       Cleobury North,GB3BX,,G4VZO,2m,,true,145675000,145075000,false,false,,,false,false,,,false,,false,,true,13,SALOP DMR,false,false,false,,,,,Cleobury North,Wales & Marches,SY7,gb,IO82QL,52.5,-2.6,,,,,,,,,,,0:00,RV54,,ukrepeater.net,,
       Derby,GB7DC,,G7NPW,70cm,,,430875000,438475000,true,false,71.9,,false,false,,,true,,true,,true,1,BRANDMEISTER,true,false,false,,,,,Derby,"Midlands, England",DE21,gb,IO92GW,52.9,-1.4,,,,,,,,,,,,RU70,Reduced output.,ukrepeater.net,,
       Hawick,GB3AI,,GM8SJP,2m,,false,145737500,145137500,true,false,103.5,,false,false,,,true,,true,,true,3,DV Scotland Phoenix,false,false,false,,,,,Hawick,Scotland,TD9,gb,IO85PK,55.4,-2.7,,,,,,,,,,,0:00,RV59,,ukrepeater.net,,
-      Herne Bay,GB7IC-C,,G4TKR,2m,,true,145662500,145062500,true,false,,,false,false,,,true,,false,,false,,,false,false,false,,,,,Herne Bay,"South East, England",CT6,gb,JO01NI,51.36,1.15,,,,,,,,,,,0:00,RV53,,ukrepeater.net,,
+      Herne Bay,GB7IC-C,,G4TKR,2m,,true,145662500,145062500,true,false,,23,false,false,,,true,,false,,false,,,false,false,false,,,,,Herne Bay,"South East, England",CT6,gb,JO01NI,51.36,1.15,,,,,,,,,,,0:00,RV53,,ukrepeater.net,,
       Made up,JP0AA,,JP0ZZ,70cm,,true,439420000,430420000,false,false,,,false,false,,,true,,false,,false,,,false,false,false,,,,,,,,jp,FN20xr,40.7143528,-74.0059731,,,,,,,,,,,,,,,,
       Made up,JP0AA,,JP0ZZ,23cm,,true,1297900000,1297900000,false,false,,,false,false,,,true,,false,,false,,,false,false,false,,,,,,,,jp,FN20xr,40.7143528,-74.0059731,,,,,,,,,,,,,,,,
       Marlborough,GB7AE,,M1CJE,70cm,,true,439425000,430425000,false,false,,,false,false,,,true,,false,,false,,,false,false,false,,,,,Marlborough,"South West, England",SN8,gb,IO91CJ,51.42,-1.76,,,,,,,,,,,0:00,DVU34,,ukrepeater.net,,
@@ -48,7 +48,7 @@ RSpec.describe CsvExporter do
       Perth,GB3SF,,GM3NFO,2m,,true,145625000,145025000,false,false,,,false,false,,,false,,true,,false,,,false,false,false,,,,,Perth,Scotland,PH2,gb,IO86HK,56.5,-3.4,,,,,,,,,,,0:00,RV50,,ukrepeater.net,,
       Repeater BL4NK,BL4NK,,,2m,,,144962500,144362500,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
       Repeater BL4NK,BL4NK,,,2m,,,144970000,144370000,true,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-      Repeater FU11,FU11,https://website,K3EPR,2m,,true,144962500,144362500,true,true,67.0,23,true,true,5,m17 reflector,true,C,true,,true,1,Brandmeister,true,true,true,,,25000,address,city,region,PC,gb,IO81HR,51.74,-3.42,50,tx_antenna,V,rx_antenna,V,200,150,bearing,,,05:00,channel,Notes,source,redistribution_limitations,external id
+      Repeater FU11,FU11,https://website,K3EPR,2m,,true,144962500,144362500,true,true,67.0,,true,true,5,m17 reflector,true,C,true,,true,1,Brandmeister,true,true,true,,,25000,address,city,region,PC,gb,IO81HR,51.74,-3.42,50,tx_antenna,V,rx_antenna,V,200,150,bearing,,,05:00,channel,Notes,source,redistribution_limitations,external id
       Weymouth,GB3DR,,G3VPF,2m,,,145737500,145137500,true,true,,,false,false,,,false,,true,,false,,,false,false,false,,,,,Weymouth,"South West, England",DT5,gb,IO80SN,50.55,-2.44,,,,,,,,,,,0:00,RV59,,ukrepeater.net,,
     CSV
   end
