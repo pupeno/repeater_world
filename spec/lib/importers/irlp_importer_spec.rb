@@ -98,4 +98,30 @@ RSpec.describe IrlpImporter do
       end
     end
   end
+
+  it "should not import with an unknown access code" do
+    double_files(
+      ["spec", "lib", "importers", "irlp_importer_data", "unknown_access_code"],
+      { "https://status.irlp.net/nohtmlstatus.txt.bz2" => "irlp.tsv.bz2" }
+    )
+
+    Dir.mktmpdir("IrlpImporter") do |dir|
+      expect do
+        IrlpImporter.new(working_directory: dir).import
+      end.to raise_error(RuntimeError, /Unknown access code:/)
+    end
+  end
+
+  it "should not import with a country that doesn't exist" do
+    double_files(
+      ["spec", "lib", "importers", "irlp_importer_data", "country_does_not_exist"],
+      { "https://status.irlp.net/nohtmlstatus.txt.bz2" => "irlp.tsv.bz2" }
+    )
+
+    Dir.mktmpdir("IrlpImporter") do |dir|
+      expect do
+        IrlpImporter.new(working_directory: dir).import
+      end.to raise_error(RuntimeError, "The country Netherlands Antilles doesn't exist anymore.")
+    end
+  end
 end
