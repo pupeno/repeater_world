@@ -113,44 +113,44 @@ class NerepeatersImporter < Importer
       end
     elsif raw_repeater[RX_OFFSET].in? ["*", "S"] # Some exceptions.
       if repeater.call_sign == "W1BST" && raw_repeater[COMMENT].include?(" 51.140 ")
-        return 51_140_000
+        51_140_000
       elsif repeater.call_sign == "W1DSR" && raw_repeater[COMMENT].include?(" 147.975 ")
-        return 147_975_000
+        147_975_000
       elsif repeater.call_sign == "KB1MMR" && raw_repeater[COMMENT].include?(" 147.415 ")
-        return 147_415_000
+        147_415_000
       elsif repeater.call_sign == "WA1RJI" && raw_repeater[COMMENT].include?(" 147.445 ")
-        return 147_445_000
+        147_445_000
       elsif repeater.call_sign == "W1NLK" && raw_repeater[COMMENT].include?(" 147.475 ")
-        return 147_475_000
+        147_475_000
       elsif repeater.call_sign == "N1NTP" && raw_repeater[COMMENT].include?(" 147.885 ")
-        return 147_885_000
+        147_885_000
       elsif repeater.call_sign == "NW1P" && raw_repeater[COMMENT].include?(" 441.700 ")
-        return 441_700_000
+        441_700_000
       elsif repeater.call_sign == "W1ATD" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "N1JBC" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "W1DMR" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "WA1ABC" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "W1KK" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "W1SGL" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "W1AEC" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "K1RK" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "W1EHT" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "K1GHZ" && raw_repeater[COMMENT].include?(" 1270.1000 ")
-        return 1_270_100_000
+        1_270_100_000
       elsif repeater.call_sign.in? %w[W1AFD W2FCC NO1A K1GAS KB1ISZ KB1ISZ NN1PA N1PA N1MYY KX1X KC1EGN NB1RI W1MLL K1IR
         K1KZP WE1CT KB1KVD W1STT KX1X WA1REQ W1AW AB1EX N1DOT WA3ITR W1SPC KB1VKY WX1PBD AA1TT KB1FX AA1PR WW1VT W1KK
         WB1GOF N1KIM]
         # No idea what's going on here, we just don't have the rx frequency.
-        return repeater.tx_frequency
+        repeater.tx_frequency
       else
         raise "Can't figure out rx frequency for offset #{raw_repeater[RX_OFFSET].inspect} and tx frequency #{repeater.tx_frequency} for #{raw_repeater}."
       end
