@@ -118,6 +118,7 @@ class RepeatersController < ApplicationController
       :echolink_node_number,
       :fm,
       :fm_ctcss_tone,
+      :fm_dcs_code,
       :fm_tone_burst,
       :fm_tone_squelch,
       :fusion,
