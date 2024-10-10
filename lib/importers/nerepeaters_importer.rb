@@ -106,6 +106,8 @@ class NerepeatersImporter < Importer
             return repeater.tx_frequency + offset[:neg_offset]
           elsif raw_repeater[RX_OFFSET] == "+" && offset[:pos_offset].present?
             return repeater.tx_frequency + offset[:pos_offset]
+          else
+            raise "Unexpected offset #{raw_repeater[RX_OFFSET]} for frequency #{repeater.tx_frequency} in repeater #{raw_repeater}"
           end
         end
       end
@@ -114,8 +116,6 @@ class NerepeatersImporter < Importer
         return 51_140_000
       elsif repeater.call_sign == "W1DSR" && raw_repeater[COMMENT].include?(" 147.975 ")
         return 147_975_000
-      elsif repeater.call_sign == "K1BEP" # it seems to be just a D-Star gateway, not a repeater
-        return repeater.tx_frequency
       elsif repeater.call_sign == "KB1MMR" && raw_repeater[COMMENT].include?(" 147.415 ")
         return 147_415_000
       elsif repeater.call_sign == "WA1RJI" && raw_repeater[COMMENT].include?(" 147.445 ")
