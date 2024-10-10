@@ -24,7 +24,8 @@ RSpec.describe SralfiImporter do
     before do
       double_files(
         ["spec", "lib", "importers", "sralfi_importer_data", "good"],
-        { "https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json" })
+        {"https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json"}
+      )
     end
 
     it "should import" do
@@ -90,7 +91,7 @@ RSpec.describe SralfiImporter do
         expect do
           SralfiImporter.new(working_directory: dir).import
         end.to change { Repeater.count }.by(-1)
-                                        .and change { Repeater.where(call_sign: deleted.call_sign, tx_frequency: deleted.tx_frequency).count }.by(-1)
+          .and change { Repeater.where(call_sign: deleted.call_sign, tx_frequency: deleted.tx_frequency).count }.by(-1)
 
         # This one got deleted
         expect { deleted.reload }.to raise_error(ActiveRecord::RecordNotFound)
@@ -114,7 +115,8 @@ RSpec.describe SralfiImporter do
   it "should not import with an unknown rep access" do
     double_files(
       ["spec", "lib", "importers", "sralfi_importer_data", "unknown_rep_access"],
-      { "https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json" })
+      {"https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json"}
+    )
 
     Dir.mktmpdir("SralfiImporter") do |dir|
       expect do
@@ -126,7 +128,8 @@ RSpec.describe SralfiImporter do
   it "should not import with an unknown rep access" do
     double_files(
       ["spec", "lib", "importers", "sralfi_importer_data", "unknown_rep_access"],
-      { "https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json" })
+      {"https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json"}
+    )
 
     Dir.mktmpdir("SralfiImporter") do |dir|
       expect do
@@ -138,7 +141,8 @@ RSpec.describe SralfiImporter do
   it "should not import with an unknown rep access" do
     double_files(
       ["spec", "lib", "importers", "sralfi_importer_data", "unknown_mode"],
-      { "https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json" })
+      {"https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json"}
+    )
 
     Dir.mktmpdir("SralfiImporter") do |dir|
       expect do
@@ -150,7 +154,8 @@ RSpec.describe SralfiImporter do
   it "should not import with an unknown rep access" do
     double_files(
       ["spec", "lib", "importers", "sralfi_importer_data", "unknown_status"],
-      { "https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json" })
+      {"https://automatic.sral.fi/api-v1.php?query=list" => "sralfi_export.json"}
+    )
 
     Dir.mktmpdir("SralfiImporter") do |dir|
       expect do
