@@ -36,6 +36,7 @@ You should have received a copy of the GNU Affero General Public License along w
         <% if repeater.fm? %>
           <%= card_entry(label: "Tone Burst", value: repeater.fm_tone_burst?, optional: true) %>
           <%= card_entry(label: "CTCSS Tone", value: repeater.fm_ctcss_tone, optional: true) %>
+          <%= card_entry(label: "DCS Code", value: repeater.fm_dcs_code, optional: true) %>
           <%= card_entry(label: "Tone Squelch", value: repeater.fm_tone_squelch, optional: true) %>
         <% end %>
         <%= card_entry(label: "M17", value: repeater.m17?, optional: true) %>

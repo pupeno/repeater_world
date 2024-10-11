@@ -72,6 +72,13 @@ class Repeater < ApplicationRecord
     225.7, 233.6, 241.8, 250.3
   ]
 
+  DCS_CODES = [
+    23, 25, 26, 31, 32, 43, 47, 51, 54, 65, 71, 72, 73, 74, 114, 115, 116, 125, 131, 132, 134, 143, 152, 155, 156, 162,
+    165, 172, 174, 205, 223, 226, 243, 244, 245, 251, 261, 263, 265, 271, 306, 311, 315, 331, 343, 346, 351, 364, 365,
+    371, 411, 412, 413, 423, 431, 432, 445, 464, 465, 466, 503, 506, 516, 532, 546, 565, 606, 612, 624, 627, 631, 632,
+    654, 662, 664, 703, 712, 723, 731, 732, 734, 743, 754
+  ]
+
   M17_CANS = (0..15).to_a
 
   DMR_COLOR_CODES = (0..15).to_a
@@ -96,6 +103,7 @@ class Repeater < ApplicationRecord
     external_id: "External id",
     fm: "FM",
     fm_ctcss_tone: "CTCSS tone",
+    fm_dcs_code: "DCS code",
     fm_tone_burst: "Tone burst",
     fm_tone_squelch: "Tone squelch",
     grid_square: "Grid square",
@@ -130,7 +138,7 @@ class Repeater < ApplicationRecord
 
   EXPORTABLE_ATTRIBUTES = [
     :name, :call_sign, :web_site, :keeper, :band, :cross_band, :operational, :tx_frequency, :rx_frequency,
-    :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_tone_squelch,
+    :fm, :fm_tone_burst, :fm_ctcss_tone, :fm_dcs_code, :fm_tone_squelch,
     :m17, :m17_can, :m17_reflector_name,
     :dstar, :dstar_port,
     :fusion, :wires_x_node_id,
@@ -158,6 +166,8 @@ class Repeater < ApplicationRecord
   validates :rx_frequency, numericality: true
   validate :ensure_frequencies_are_within_band
   validates :fm_ctcss_tone, inclusion: CTCSS_TONES, allow_blank: true
+  validates :fm_dcs_code, inclusion: DCS_CODES, allow_blank: true
+  validate :ensure_ctcss_or_dcs_but_not_both
   validates :m17_can, inclusion: M17_CANS, allow_blank: true
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
   validates :input_region, inclusion: Country.us_states, allow_blank: true, if: :in_usa?
@@ -169,7 +179,7 @@ class Repeater < ApplicationRecord
   multisearchable(
     against: [
       :address, :band, :call_sign, :channel, :dmr_network, :dmr_color_code, :dstar_port,
-      :fm_ctcss_tone, :grid_square, :keeper, :locality, :name, :notes, :post_code, :region,
+      :fm_ctcss_tone, :fm_dcs_code, :grid_square, :keeper, :locality, :name, :notes, :post_code, :region,
       :rx_antenna, :rx_antenna_polarization, :rx_frequency, :source, :tx_antenna,
       :tx_antenna_polarization, :tx_frequency, :web_site, :country_name, :m17_can, :m17_reflector_name
     ],
@@ -273,6 +283,12 @@ class Repeater < ApplicationRecord
           errors.add(:rx_frequency, "is not within band #{band}. It should be between #{RepeaterUtils.frequency_in_mhz(BAND_FREQUENCIES[band][:min])} and #{RepeaterUtils.frequency_in_mhz(BAND_FREQUENCIES[band][:max])}.")
         end
       end
+    end
+  end
+
+  def ensure_ctcss_or_dcs_but_not_both
+    if fm_ctcss_tone.present? && fm_dcs_code.present?
+      errors.add(:fm_dcs_code, "can't be set at the same time as CTCSS tone.")
     end
   end
 
@@ -387,6 +403,7 @@ class Repeater < ApplicationRecord
       group "FM" do
         field :fm_tone_burst
         field :fm_ctcss_tone
+        field :fm_dcs_code
         field :fm_tone_squelch
       end
 
@@ -493,6 +510,7 @@ class Repeater < ApplicationRecord
       group "FM" do
         field :fm_tone_burst
         field :fm_ctcss_tone
+        field :fm_dcs_code
         field :fm_tone_squelch
       end
 
@@ -632,6 +650,7 @@ end
 #  echolink_node_number       :integer
 #  fm                         :boolean
 #  fm_ctcss_tone              :decimal(, )
+#  fm_dcs_code                :integer
 #  fm_tone_burst              :boolean
 #  fm_tone_squelch            :boolean
 #  fusion                     :boolean

@@ -41,14 +41,14 @@ class ArtscipubImporter < Importer
   end
 
   def import_repeater(raw_repeater, repeater)
-    if raw_repeater[:comments]&.downcase&.include?("noaa") || # Not importing NOAA weather stations. Should we?
-        raw_repeater[:web_site]&.downcase&.include?("noaa") || # Not importing NOAA weather stations. Should we?
-        raw_repeater[:web_site]&.downcase&.include?("weather.gov") || # Not importing NOAA weather stations. Should we?
+    if raw_repeater[:comments].downcase.include?("noaa") || # Not importing NOAA weather stations. Should we?
+        raw_repeater[:web_site].downcase.include?("noaa") || # Not importing NOAA weather stations. Should we?
+        raw_repeater[:web_site].downcase.include?("weather.gov") || # Not importing NOAA weather stations. Should we?
         raw_repeater[:call_sign].blank? || # Can't import a repeater without a call sign.
         raw_repeater[:frequency].blank? || raw_repeater[:frequency].to_f < 1 || # Can't import a repeater without a frequency.
         raw_repeater[:call_sign] =~ /[a-zA-Z]{3,4}[-\s]?\d{3,4}/ || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
-        raw_repeater[:comments]&.downcase&.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
-        raw_repeater[:web_site]&.downcase&.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
+        raw_repeater[:comments].downcase.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
+        raw_repeater[:web_site].downcase.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
         raw_repeater[:call_sign] == "k6yo" || # Frequency out of band plan, comment is Private Repeater. DMR
         # raw_repeater[:call_sign] == "kan654" || # Frequency out of band plan, odd call sign.
         # raw_repeater[:call_sign] == "KAA 494" || # Frequency out of band plan, odd call sign.
@@ -65,7 +65,7 @@ class ArtscipubImporter < Importer
         raw_repeater[:call_sign] == "WXL-51" || # What is this even?
         raw_repeater[:call_sign] == "unknown" || # Frequency out of band plan, not a call sign.
         raw_repeater[:call_sign] == "private" || # Frequency out of band plan, not a call sign..
-        raw_repeater[:pl_tone]&.downcase&.in?(["gone", "closed", "private"]) || # Closed repeaters.
+        raw_repeater[:pl_tone].downcase.in?(["gone", "closed", "private"]) || # Closed repeaters.
         raw_repeater[:call_sign] == "General" || # Frequency out of band plan, not a call sign.
         raw_repeater[:call_sign] == "154.445" # Not a valid call sign, data entry error.
       @ignored_due_to_invalid_count += 1
@@ -158,19 +158,19 @@ class ArtscipubImporter < Importer
     table = repeater_file.at_xpath("//td[normalize-space() = 'Repeater ID #']/ancestor::*[name()='table'][position() = 1]")
 
     raw_repeater[:external_id] = table.at_xpath("tr[td[normalize-space() = 'Repeater ID #']]/td[2]").text.match(/(\d+)/)[1] # There's other text in the external_id cell that we don't want.
-    raw_repeater[:call_sign] = table.at_xpath("tr[td[normalize-space() = 'Call Sign']]/td[2]").text&.strip
-    raw_repeater[:coordinates] = table.at_xpath("tr[td[normalize-space() = 'Location']]/td[2]").text&.strip
-    raw_repeater[:frequency] = table.at_xpath("tr[td[normalize-space() = 'Frequency']]/td[2]").text&.strip
-    raw_repeater[:input] = table.at_xpath("tr[td[normalize-space() = 'Input']]/td[2]").text&.strip
-    raw_repeater[:pl_tone] = table.at_xpath("tr[td[normalize-space() = 'PL Tone']]/td[2]").text&.strip
-    raw_repeater[:rating] = table.at_xpath("tr[td[normalize-space() = 'Rating']]/td[2]").text&.strip
-    raw_repeater[:auto_patch] = table.at_xpath("tr[td[normalize-space() = 'Auto Patch']]/td[2]").text&.strip
-    raw_repeater[:web_site] = table.at_xpath("tr[td[normalize-space() = 'Web Site']]/td[2]").text&.strip
-    raw_repeater[:grid_square] = table.at_xpath("tr[td[normalize-space() = 'Grid Square']]/td[2]").text&.strip
-    raw_repeater[:zip_code] = table.at_xpath("tr[td[normalize-space() = 'Zip Code.']]/td[2]//b").text&.strip # This one is different, because there's some cruft in this cell.
-    raw_repeater[:latitude] = table.at_xpath("tr[td[normalize-space() = 'Latitude']]/td[2]").text&.strip
-    raw_repeater[:longitude] = table.at_xpath("tr[td[normalize-space() = 'Longitude']]/td[2]").text&.strip
-    raw_repeater[:comments] = table.at_xpath("tr[td[normalize-space() = 'Comments']]/td[2]").text&.strip
+    raw_repeater[:call_sign] = table.at_xpath("tr[td[normalize-space() = 'Call Sign']]/td[2]").text.strip
+    raw_repeater[:coordinates] = table.at_xpath("tr[td[normalize-space() = 'Location']]/td[2]").text.strip
+    raw_repeater[:frequency] = table.at_xpath("tr[td[normalize-space() = 'Frequency']]/td[2]").text.strip
+    raw_repeater[:input] = table.at_xpath("tr[td[normalize-space() = 'Input']]/td[2]").text.strip
+    raw_repeater[:pl_tone] = table.at_xpath("tr[td[normalize-space() = 'PL Tone']]/td[2]").text.strip
+    raw_repeater[:rating] = table.at_xpath("tr[td[normalize-space() = 'Rating']]/td[2]").text.strip
+    raw_repeater[:auto_patch] = table.at_xpath("tr[td[normalize-space() = 'Auto Patch']]/td[2]").text.strip
+    raw_repeater[:web_site] = table.at_xpath("tr[td[normalize-space() = 'Web Site']]/td[2]").text.strip
+    raw_repeater[:grid_square] = table.at_xpath("tr[td[normalize-space() = 'Grid Square']]/td[2]").text.strip
+    raw_repeater[:zip_code] = table.at_xpath("tr[td[normalize-space() = 'Zip Code.']]/td[2]//b").text.strip # This one is different, because there's some cruft in this cell.
+    raw_repeater[:latitude] = table.at_xpath("tr[td[normalize-space() = 'Latitude']]/td[2]").text.strip
+    raw_repeater[:longitude] = table.at_xpath("tr[td[normalize-space() = 'Longitude']]/td[2]").text.strip
+    raw_repeater[:comments] = table.at_xpath("tr[td[normalize-space() = 'Comments']]/td[2]").text.strip
 
     raw_repeater
   end
@@ -178,8 +178,6 @@ class ArtscipubImporter < Importer
   def parse_rx_frequency(repeater, raw_repeater)
     if raw_repeater[:input].present?
       raw_repeater[:input].to_f * 10**6
-    elsif repeater.band == Repeater::BAND_10M && raw_repeater[:frequency].last == "+"
-      repeater.tx_frequency + 100_000
     elsif repeater.band == Repeater::BAND_10M && raw_repeater[:frequency].last == "-"
       repeater.tx_frequency - 100_000
     elsif repeater.band == Repeater::BAND_2M && raw_repeater[:frequency].last == "+"
@@ -204,86 +202,188 @@ class ArtscipubImporter < Importer
     # When a repeater changes mode, the old modes that are no longer there shouldn't remain set to true.
     repeater.disable_all_modes
 
-    pl_tone = raw_repeater[:pl_tone]&.downcase
+    pl_tone = raw_repeater[:pl_tone].downcase
     if pl_tone.to_f.in?(Repeater::CTCSS_TONES)
       repeater.fm = true
       repeater.fm_ctcss_tone = pl_tone.to_f
-    elsif pl_tone == "71,9" # Likely a typo
+    elsif pl_tone.in? ["79.9", "71,9"]
       repeater.fm = true
       repeater.fm_ctcss_tone = 71.9
-    elsif pl_tone == "79.9" # Likely a typo
+    elsif pl_tone == "79.9"
       repeater.fm = true
       repeater.fm_ctcss_tone = 79.7
-    elsif pl_tone == "88" # Likely a typo
+    elsif pl_tone == "88"
       repeater.fm = true
       repeater.fm_ctcss_tone = 88.5
-    elsif pl_tone.in? ["98.4", "94.6"] # Likely a typo
+    elsif pl_tone.in? ["98.4", "94.6"]
       repeater.fm = true
       repeater.fm_ctcss_tone = 94.8
-    elsif pl_tone.in? ["94.7", "tx pl 97.4"] # Likely a typo
+    elsif pl_tone.in? ["94.7", "tx pl 97.4"]
       repeater.fm = true
       repeater.fm_ctcss_tone = 97.4
-    elsif pl_tone.in? ["[100.0]", "[100]"] # Likely a typo
+    elsif pl_tone.in? ["[100.0]", "[100]"]
       repeater.fm = true
       repeater.fm_ctcss_tone = 100.0
-    elsif pl_tone.in? ["105.3", "[103.5]", "103.0", "102.3", "103..5", "103.6"] # Likely a typo
+    elsif pl_tone.in? ["105.3", "[103.5]", "103.0", "102.3", "103..5", "103.6"]
       repeater.fm = true
       repeater.fm_ctcss_tone = 103.5
-    elsif pl_tone.in? ["107.9", "107.3", "102.7"] # Likely a typo
+    elsif pl_tone.in? ["107.9", "107.3", "102.7"]
       repeater.fm = true
       repeater.fm_ctcss_tone = 107.2
-    elsif pl_tone.in? ["110", "110.5", "109.0"] # Likely a typo
+    elsif pl_tone.in? ["110", "110.5", "109.0"]
       repeater.fm = true
       repeater.fm_ctcss_tone = 110.9
-    elsif pl_tone == "114.3" # Likely a typo
+    elsif pl_tone == "114.3"
       repeater.fm = true
       repeater.fm_ctcss_tone = 114.8
-    elsif pl_tone == "118.0" # Likely a typo
+    elsif pl_tone == "118.0"
       repeater.fm = true
       repeater.fm_ctcss_tone = 118.8
-    elsif pl_tone.in? ["023", "123.3", "123.5"] # Likely a typo
+    elsif pl_tone.in? ["123.3", "123.5", "csq /123"]
       repeater.fm = true
       repeater.fm_ctcss_tone = 123
-    elsif pl_tone == "[127.3]" # Likely a typo
+    elsif pl_tone == "[127.3]"
       repeater.fm = true
       repeater.fm_ctcss_tone = 127.3
-    elsif pl_tone.in? ["131", "131,8"] # Likely a typo
+    elsif pl_tone.in? ["131", "131,8", "131.5"]
       repeater.fm = true
       repeater.fm_ctcss_tone = 131.8
-    elsif pl_tone.in? ["136.6", "130.5"] # Likely a typo
+    elsif pl_tone.in? ["136.6", "130.5"]
       repeater.fm = true
       repeater.fm_ctcss_tone = 136.5
-    elsif pl_tone == "141.0" # Likely a typo
+    elsif pl_tone == "141.0"
       repeater.fm = true
       repeater.fm_ctcss_tone = 141.3
-    elsif pl_tone.in? ["[146.2]", "146.3"] # Likely a typo
+    elsif pl_tone.in? ["[146.2]", "146.3"]
       repeater.fm = true
       repeater.fm_ctcss_tone = 146.2
-    elsif pl_tone == "161.1" # Likely a typo
+    elsif pl_tone == "161.1"
       repeater.fm = true
       repeater.fm_ctcss_tone = 162.2
-    elsif pl_tone.in? ["173", "ctcs 173.8"] # Likely a typo
+    elsif pl_tone.in? ["173", "ctcs 173.8"]
       repeater.fm = true
       repeater.fm_ctcss_tone = 173.8
-    elsif pl_tone == "203.7" # Likely a typo
+    elsif pl_tone == "203.7"
       repeater.fm = true
       repeater.fm_ctcss_tone = 203.5
-    elsif pl_tone == "[pl 210.7]" # Likely a typo
+    elsif pl_tone == "[pl 210.7]"
       repeater.fm = true
       repeater.fm_ctcss_tone = 210.7
-    elsif pl_tone == "248.8" # Likely a typo
+    elsif pl_tone == "pl 218.1"
+      repeater.fm = true
+      repeater.fm_ctcss_tone = 218.1
+    elsif pl_tone == "248.8"
       repeater.fm = true
       repeater.fm_ctcss_tone = 241.8
-    elsif pl_tone == "254.1" # Likely a typo
+    elsif pl_tone == "254.1"
       repeater.fm = true
       repeater.fm_ctcss_tone = 250.3
+    elsif pl_tone.in? ["023", "23", "d023n", "dcs 023", "dcs023"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 23
+    elsif pl_tone.in? ["[026]", "[dcs 26]"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 26
+    elsif pl_tone.in? ["[d031]"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 31
+    elsif pl_tone.in? ["dcs32"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 32
+    elsif pl_tone.in? ["047", "d047"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 47
+    elsif pl_tone.in? ["d051"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 51
+    elsif pl_tone.in? ["dpl-071", "dpl 071"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 71
+    elsif pl_tone.in? ["073", "d073", "dpl-073", "dcs - 073"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 73
+    elsif pl_tone.in? ["dcs 115"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 115
+    elsif pl_tone.in? ["d125n", "dpl125"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 125
+    elsif pl_tone.in? ["dpl134"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 134
+    elsif pl_tone.in? ["152d"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 152
+    elsif pl_tone.in? ["dpl156"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 156
+    elsif pl_tone.in? ["d172"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 172
+    elsif pl_tone.in? ["d174"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 174
+    elsif pl_tone.in? ["dcs 205"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 205
+    elsif pl_tone.in? ["244", "[d 244n]", "dpl244"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 244
+    elsif pl_tone.in? ["d245n"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 245
+    elsif pl_tone.in? ["d263"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 263
+    elsif pl_tone.in? ["d311", "[311]", "dpl 311", "dcs 311"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 311
+    elsif pl_tone.in? ["dpl343"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 343
+    elsif pl_tone.in? ["[dpl 351]"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 351
+    elsif pl_tone.in? ["365n", "[365n]"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 365
+    elsif pl_tone.in? ["d411", "dpl 411", "411 [dpl]"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 411
+    elsif pl_tone.in? ["d432", "432", "dcs 432", "dpl 432"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 432
+    elsif pl_tone.in? ["d455", "dpl 455"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 445
+    elsif pl_tone.in? ["dpl 503"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 503
+    elsif pl_tone.in? ["dpl532"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 532
+    elsif pl_tone.in? ["d 606", "dpl606"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 606
+    elsif pl_tone.in? ["654"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 654
+    elsif pl_tone.in? ["d732n"]
+      repeater.fm = true
+      repeater.fm_dcs_code = 732
     elsif pl_tone.in?(["none", "no", "open", "n/a", "no [no]"])
       repeater.fm = true
       repeater.fm_tone_burst = true # Just guessing here.
+    elsif pl_tone.in? ["a"]
+      repeater.dstar = true
+      repeater.dstar_port = "A"
+    elsif pl_tone.in? ["c"]
+      repeater.dstar = true
+      repeater.dstar_port = "C"
     elsif pl_tone.in?(["d-star", "dstar", "dv", "na [dstar]", "d star"]) ||
         (pl_tone.blank? && raw_repeater[:comments].include?("D-STAR"))
       repeater.dstar = true
-    elsif raw_repeater[:comments]&.include?("D-STAR GATEWAY DATA PORT A")
+    elsif raw_repeater[:comments].include?("D-STAR GATEWAY DATA PORT A")
       repeater.dstar = true
       repeater.dstar_port = "A"
     elsif pl_tone == "fusion" ||
@@ -352,24 +452,27 @@ class ArtscipubImporter < Importer
       repeater.dmr = true
       repeater.dmr_color_code = 1
       repeater.p25 = true
-    elsif pl_tone.include?("dpl") || # No idea what this is...
-        pl_tone.include?("dcs") || # No idea what this is...
-        pl_tone.blank? || # Can't do much here.
-        pl_tone.downcase.in?(["23", "yes", "29.54", "448.35", "449.275", "52.35", "654", "[026]", "atv", "d 606",
-          "d023n", "d172", "d311", "d411", "d432", "data", "dts", "lafayette", "pl 218.1", "0", "a", "c", "yes",
-          "[dtmf]", "d051", "d732n", "[dtmf5]", "d263", "5z", "d174", "d245n", "[*]", "152d", "293", "[nac]", "dtmf",
-          "047", "073", "video", "[311]", "244", "tg99", "rock hill", "[nac 293]", "csq", "d125n", "d455", "[dgid:00]",
-          "432", "d047", "[visit srg]", "600", "atikokan", "cochin", "d073", "[d031]", "[d 244n]", "365n", "[365n]", "[nac$293]"]) # No idea what this is...
+    elsif pl_tone.blank? || # Can't do much here.
+        pl_tone.downcase.in?(["yes", "29.54", "448.35", "449.275", "52.35", "atv", "data", "dts", "lafayette", "0",
+          "yes", "[dtmf]", "[dtmf5]", "5z", "[*]", "[nac]", "dtmf", "video", "tg99", "rock hill", "[nac 293]", "csq",
+          "[dgid:00]", "[visit srg]", "600", "atikokan", "cochin", "[nac$293]", "am atv", "ran 11", "293"]) # No idea what this is...
       # ...so not doing anything here.
     else
       raise "Unknown mode and access code \"#{pl_tone}\" for #{raw_repeater}."
+    end
+
+    if repeater.fm_ctcss_tone.present? && repeater.fm_dcs_code.present?
+      # Making a guess that the DCS is likely to be more correct because it's a newer system, less common.
+      repeater.fm_ctcss_tone = nil # This still hurts.
     end
   end
 
   def import_address(repeater, raw_repeater)
     coordinates = raw_repeater[:coordinates].split(",").map(&:strip).reject(&:empty?)
 
-    if coordinates.last.start_with?(".") # This is how non US locations are formatted.
+    if coordinates.last.start_with?(".") || # This is how non US locations are formatted...
+        coordinates.first.start_with?(".") || # ...except when the dot got added to the other part...
+        coordinates.last == "Sonora" # ...or when it's just another place, _sigh_
       repeater.input_country_id = figure_out_country(coordinates)
 
       case repeater.input_country_id
@@ -443,7 +546,7 @@ class ArtscipubImporter < Importer
       "id"
     when ".Japan"
       "jp"
-    when ".Mexico", ".mexico", ".Baja California", ".Sinaloa", ".Sonora"
+    when ".Mexico", ".mexico", ".Baja California", ".Sinaloa", ".Sonora", "Mexico", "Sonora"
       "mx"
     when ".Netherlands"
       "nl"

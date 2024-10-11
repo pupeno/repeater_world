@@ -50,7 +50,8 @@ You should have received a copy of the GNU Affero General Public License along w
         <%= card_entry(label: "RX Frequency", value: repeater.rx_frequency) do %>
           <%= render "shared/repeater/rx_frequency", repeater: repeater %>
         <% end %>
-        <%= card_entry(label: "CTCSS", value: repeater.fm_ctcss_tone, optional: true) if repeater.fm? %>
+        <%= card_entry(label: "CTCSS tone", value: repeater.fm_ctcss_tone, optional: true) if repeater.fm? %>
+        <%= card_entry(label: "DCS code", value: repeater.fm_dcs_code, optional: true) if repeater.fm? %>
         <%= card_entry(label: "Location") do %>
           <%= render "shared/repeater/location", repeater: repeater %>
         <% end %>

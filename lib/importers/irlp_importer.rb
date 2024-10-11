@@ -71,14 +71,49 @@ class IrlpImporter < Importer
     if !RepeaterUtils.is_frequency_in_band?(repeater.rx_frequency, repeater.band)
       repeater.cross_band = true
     end
-    repeater.fm = true # Just making an assumption here, we don't have access code, so this is actually a bit useless.
+    repeater.fm = true # Making a guess here.
+    repeater.dmr = true if raw_repeater["PL"] == "DMR"
+    possible_access_code = BigDecimal(raw_repeater["PL"], exception: false)
+    if possible_access_code.in?(Repeater::CTCSS_TONES)
+      repeater.fm_ctcss_tone = possible_access_code
+    elsif raw_repeater["PL"].in? ["85.2"]
+      repeater.fm_ctcss_tone = 82.5
+    elsif raw_repeater["PL"].in? ["100."]
+      repeater.fm_ctcss_tone = 100
+    elsif raw_repeater["PL"].in? ["151.7"]
+      repeater.fm_ctcss_tone = 151.4
+    elsif raw_repeater["PL"].in? ["D023"]
+      repeater.fm_dcs_code = 23
+    elsif raw_repeater["PL"].in? ["DCS 043"]
+      repeater.fm_dcs_code = 43
+    elsif raw_repeater["PL"].in? ["D051"]
+      repeater.fm_dcs_code = 51
+    elsif raw_repeater["PL"].in? ["D244"]
+      repeater.fm_dcs_code = 244
+    elsif raw_repeater["PL"].in? ["D411", "DCS 411"]
+      repeater.fm_dcs_code = 411
+    elsif raw_repeater["PL"].in? ["D631"]
+      repeater.fm_dcs_code = 631
+    elsif raw_repeater["PL"].in? ["DCS 740"]
+      repeater.fm_dcs_code = 743
+    elsif possible_access_code == 0 ||
+        raw_repeater["PL"].blank? ||
+        raw_repeater["PL"].in?(["0000.", "COS", "DMR", "D100"])
+      # No idea what to do with these ones, leaving them blank.
+    else
+      raise "Unknown access code: #{raw_repeater["PL"].inspect}"
+    end
 
     repeater.input_locality = raw_repeater["City"]
     repeater.input_country_id = parse_country(raw_repeater)
     repeater.input_region = if repeater.input_country_id == "us"
       figure_out_us_state(raw_repeater["Prov./St"])
     elsif repeater.input_country_id == "ca"
-      figure_out_canadian_province(raw_repeater["Prov./St"])
+      if repeater.call_sign == "VA6MEX" && raw_repeater["Prov./St"] == "ED"
+        "Alberta" # ED is not a province, but Edmonton is the capital of Alberta.
+      else
+        figure_out_canadian_province(raw_repeater["Prov./St"])
+      end
     else
       raw_repeater["Prov./St"]
     end

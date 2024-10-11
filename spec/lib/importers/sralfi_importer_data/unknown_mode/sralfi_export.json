@@ -1,0 +1,37 @@
+{
+  "stations": [
+    {
+      "id": "215",
+      "type": "1",
+      "status": "QRV",
+      "mode": "unknown",
+      "name": "Turku (RX) Lieto (TX)",
+      "station_url": null,
+      "stdesc": null,
+      "cwid": null,
+      "qth_city": "",
+      "callsign": "OH1RHU",
+      "locator": "KP10DL",
+      "wgs84lat": "60.4700",
+      "wgs84lon": "22.2900",
+      "site_desc": null,
+      "alt_asl": "100",
+      "alt_agl": "40",
+      "tx_freq": "29.68000",
+      "tx_power": "30.00",
+      "tx_ant": null,
+      "tx_antpol": "V",
+      "qtf": null,
+      "rx_antenna": null,
+      "rx_antpol": null,
+      "rep_access": "Tone 1750",
+      "rep_shift": "-0.1",
+      "band_name": "28MHz\/10m",
+      "band_shortname": "28M",
+      "responsible_club": "",
+      "responsible_club_url": null,
+      "remarks": null,
+      "last_modified": "01\/2023"
+    }
+  ]
+}

@@ -53,7 +53,7 @@ RSpec.shared_context "repeaters" do
       name: "Herne Bay", call_sign: "GB7IC-C", band: "2m", channel: "RV53", keeper: "G4TKR", operational: true,
       tx_frequency: 145_662_500,
       rx_frequency: 145_062_500,
-      fm: true, dstar: true,
+      fm: true, fm_dcs_code: 23, dstar: true,
       grid_square: "JO01NI", latitude: 51.36, longitude: 1.15,
       locality: "Herne Bay", region: "South East, England", post_code: "CT6", country_id: "gb",
       utc_offset: "0:00", source: "ukrepeater.net")

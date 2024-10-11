@@ -297,7 +297,17 @@ RSpec.describe ArtscipubImporter do
              "http://www.artscipub.com/repeaters/detail.asp?rid=21965&ln=W4AP_repeater_information_on_444.500_in_Wetumpka,_Alabama" => "21965.html",
              "http://www.artscipub.com/repeaters/detail.asp?rid=4708&ln=KT4JW_repeater_information_on_147.04_in_WINFIELD,_Alabama" => "4708.html",
              "http://www.artscipub.com/repeaters/detail.asp?rid=24816&ln=WWF53_repeater_information_on_162.525_in_Winfield,_ALABAMA" => "24816.html",
-             "http://www.artscipub.com/repeaters/detail.asp?rid=21583&ln=K4QXT_repeater_information_on_147.000_in_York,_Alabama" => "21583.html"}
+             "http://www.artscipub.com/repeaters/detail.asp?rid=21583&ln=K4QXT_repeater_information_on_147.000_in_York,_Alabama" => "21583.html",
+             "http://www.artscipub.com/repeaters/search/index.asp?state=Alaska" => "Alaska_1.html",
+             "http://www.artscipub.com/repeaters/detail.asp?rid=24761&ln=KZZ86_repeater_information_on_162.425_in_Althorp_Peak,_ALASKA" => "26626.html",
+             "http://www.artscipub.com/repeaters/detail.asp?rid=27726&ln=KL7AIR_repeater_information_on_146.67_in_Anchorage,_Alaska" => "1493.html",
+             "http://www.artscipub.com/repeaters/detail.asp?rid=24172&ln=KL7AX_repeater_information_on_146.79_in_Anchorage,_Alaska" => "28841.html",
+             "http://www.artscipub.com/repeaters/detail.asp?rid=23542&ln=KL7AA_repeater_information_on_146.940_in_Anchorage,_Alaska" => "63909.html",
+             "http://www.artscipub.com/repeaters/detail.asp?rid=10776&ln=KL7CC_repeater_information_on_146.97_in_Anchorage,_Alaska" => "19457.html",
+             "http://www.artscipub.com/repeaters/detail.asp?rid=10777&ln=_repeater_information_on_147.21_in_Anchorage,_Alaska" => "14754.html",
+             "http://www.artscipub.com/repeaters/detail.asp?rid=22389&ln=WL7CVG_repeater_information_on_147.270_in_Anchorage,_Alaska" => "2683.html",
+             "http://www.artscipub.com/repeaters/detail.asp?rid=23543&ln=KL7ION_repeater_information_on_147.300_in_Anchorage,_Alaska" => "16448.html",
+             "http://www.artscipub.com/repeaters/detail.asp?rid=23540&ln=KL7AA_repeater_information_on_147.330_in_Anchorage,_Alaska" => "21138.html"}
     files.each do |url, local_file|
       file = double("file")
       local_file = Rails.root.join("spec", "lib", "importers", "artscipub_importer_data", local_file)
@@ -310,7 +320,7 @@ RSpec.describe ArtscipubImporter do
     Dir.mktmpdir("ArtscipubImporter") do |dir|
       expect do
         ArtscipubImporter.new(working_directory: dir).import
-      end.to change { Repeater.count }.by(252)
+      end.to change { Repeater.count }.by(261)
 
       # Grab some repeaters and verify they were imported correctly.
       repeater = Repeater.find_sole_by(call_sign: "N4PHP")

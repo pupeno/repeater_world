@@ -106,54 +106,56 @@ class NerepeatersImporter < Importer
             return repeater.tx_frequency + offset[:neg_offset]
           elsif raw_repeater[RX_OFFSET] == "+" && offset[:pos_offset].present?
             return repeater.tx_frequency + offset[:pos_offset]
+          else
+            raise "Can't find offset #{raw_repeater[RX_OFFSET]} for frequency #{repeater.tx_frequency} in repeater #{raw_repeater}"
           end
         end
       end
     elsif raw_repeater[RX_OFFSET].in? ["*", "S"] # Some exceptions.
       if repeater.call_sign == "W1BST" && raw_repeater[COMMENT].include?(" 51.140 ")
-        return 51_140_000
+        51_140_000
       elsif repeater.call_sign == "W1DSR" && raw_repeater[COMMENT].include?(" 147.975 ")
-        return 147_975_000
-      elsif repeater.call_sign == "K1BEP" # it seems to be just a D-Star gateway, not a repeater
-        return repeater.tx_frequency
+        147_975_000
       elsif repeater.call_sign == "KB1MMR" && raw_repeater[COMMENT].include?(" 147.415 ")
-        return 147_415_000
+        147_415_000
       elsif repeater.call_sign == "WA1RJI" && raw_repeater[COMMENT].include?(" 147.445 ")
-        return 147_445_000
+        147_445_000
       elsif repeater.call_sign == "W1NLK" && raw_repeater[COMMENT].include?(" 147.475 ")
-        return 147_475_000
+        147_475_000
       elsif repeater.call_sign == "N1NTP" && raw_repeater[COMMENT].include?(" 147.885 ")
-        return 147_885_000
+        147_885_000
       elsif repeater.call_sign == "NW1P" && raw_repeater[COMMENT].include?(" 441.700 ")
-        return 441_700_000
+        441_700_000
       elsif repeater.call_sign == "W1ATD" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "N1JBC" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "W1DMR" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "WA1ABC" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "W1KK" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "W1SGL" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "W1AEC" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "K1RK" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "W1EHT" && raw_repeater[COMMENT].include?(" 902.0625 ")
-        return 902_062_500
+        902_062_500
       elsif repeater.call_sign == "K1GHZ" && raw_repeater[COMMENT].include?(" 1270.1000 ")
-        return 1_270_100_000
+        1_270_100_000
       elsif repeater.call_sign.in? %w[W1AFD W2FCC NO1A K1GAS KB1ISZ KB1ISZ NN1PA N1PA N1MYY KX1X KC1EGN NB1RI W1MLL K1IR
         K1KZP WE1CT KB1KVD W1STT KX1X WA1REQ W1AW AB1EX N1DOT WA3ITR W1SPC KB1VKY WX1PBD AA1TT KB1FX AA1PR WW1VT W1KK
-        WB1GOF]
-        return repeater.tx_frequency # No idea what's going on here, we just don't have the rx frequency.
+        WB1GOF N1KIM]
+        # No idea what's going on here, we just don't have the rx frequency.
+        repeater.tx_frequency
+      else
+        raise "Can't figure out rx frequency for offset #{raw_repeater[RX_OFFSET].inspect} and tx frequency #{repeater.tx_frequency} for #{raw_repeater}."
       end
-    end
-    if repeater.rx_frequency.blank?
-      raise "Unknown rx frequency for tx frequency #{repeater.tx_frequency} with symbol \"#{raw_repeater[RX_OFFSET]}\"."
+    else
+      raise "Unexpected offset #{raw_repeater[RX_OFFSET].inspect} for #{raw_repeater}."
     end
   end
 
@@ -206,6 +208,10 @@ class NerepeatersImporter < Importer
       repeater.fm = true
       repeater.dmr = true
       repeater.p25 = true
+    elsif raw_repeater[MODE].strip == "P25YSFD-STAR"
+      repeater.dstar = true
+      repeater.fusion = true
+      repeater.p25 = true
     elsif raw_repeater[MODE].strip == "YSFD-STAR/FM"
       repeater.fm = true
       repeater.dstar = true
@@ -235,22 +241,27 @@ class NerepeatersImporter < Importer
     end
     access_code = access_code.to_s.strip
 
-    if repeater.fm? && access_code.to_f.in?(Repeater::CTCSS_TONES)
-      repeater.fm_ctcss_tone = access_code.to_f
-    elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :p25] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
+    if repeater.fm? && access_code.to_d.in?(Repeater::CTCSS_TONES)
+      repeater.fm_ctcss_tone = access_code.to_d
+    elsif repeater.fm? && access_code.strip[0] == "D" && access_code[1..].to_i.in?(Repeater::DCS_CODES)
+      repeater.fm_dcs_code = access_code[1..].to_i
+    elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :p25] && access_code.split("/").second.to_d.in?(Repeater::CTCSS_TONES)
       # TODO: import the first part correctly, it's likely for P25.
-      repeater.fm_ctcss_tone = access_code.split("/").second.to_f
-    elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :nxdn] && access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
+      repeater.fm_ctcss_tone = access_code.split("/").second.to_d
+    elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :nxdn] && access_code.split("/").second.to_d.in?(Repeater::CTCSS_TONES)
       # TODO: import the first part correctly, it's likely for NXDN.
-      repeater.fm_ctcss_tone = access_code.split("/").second.to_f
-    elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :p25] && access_code.in?(%w[NAC353/D244 NAC250/D244 NAC671/D411])
+      repeater.fm_ctcss_tone = access_code.split("/").second.to_d
+    elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :p25] && access_code.in?(%w[NAC353/D244 NAC250/D244])
       # TODO: import the first part correctly, it's likely for P25.
-      # TODO: what's the second part? What are these D numbers?
+      repeater.fm_dcs_code = 244
+    elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :p25] && access_code.in?(%w[NAC671/D411])
+      # TODO: import the first part correctly, it's likely for P25.
+      repeater.fm_dcs_code = 411
     elsif RepeaterUtils.modes_as_sym(repeater) == Set[:fm, :dstar] &&
         access_code.split("/").first.in?(%w[A B C]) &&
-        access_code.split("/").second.to_f.in?(Repeater::CTCSS_TONES)
-      repeater.fm_ctcss_tone = access_code.split("/").second.to_f
-      repeater.dstar_port = access_code.split("/").first.in?(%w[A B C])
+        access_code.split("/").second.to_d.in?(Repeater::CTCSS_TONES)
+      repeater.fm_ctcss_tone = access_code.split("/").second.to_d
+      repeater.dstar_port = access_code.split("/").first
     elsif repeater.dmr? && (access_code =~ /CC[0-9]/ || access_code =~ /CC1[0-5]/)
       repeater.dmr_color_code = access_code.gsub("CC", "").to_i
     elsif repeater.dmr? && access_code.to_i.in?(Repeater::DMR_COLOR_CODES)
@@ -259,10 +270,8 @@ class NerepeatersImporter < Importer
       repeater.dstar_port = access_code
     elsif repeater.nxdn? && access_code.in?(%w[RAN1 RAN11 RAN2])
       # TODO: import these correctly.
-    elsif repeater.p25? && access_code.in?(["NAC223"])
+    elsif repeater.p25? && access_code.in?(%w[NAC223 NAC401])
       # TODO: import these correctly.
-    elsif repeater.fm? && access_code.in?(%w[D244 D432 D023 D073 D411 D031 D051 D245 D271])
-      # TODO: what is this?
     elsif access_code.blank?
       # Nothing we can do here really, we have no idea.
     else
