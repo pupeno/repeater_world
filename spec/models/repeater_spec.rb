@@ -88,10 +88,6 @@ RSpec.describe Repeater, type: :model do
       expect(@repeater).not_to be_valid
       @repeater.fm_dcs_code = nil
       expect(@repeater).to be_valid
-
-      @repeater.fm_ctcss_tone = Repeater::CTCSS_TONES.first
-      @repeater.fm_dcs_code = Repeater::DCS_CODES.first
-      expect(@repeater).not_to be_valid
     end
 
     it "fixes web site" do

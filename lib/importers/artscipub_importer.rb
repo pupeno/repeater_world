@@ -460,11 +460,6 @@ class ArtscipubImporter < Importer
     else
       raise "Unknown mode and access code \"#{pl_tone}\" for #{raw_repeater}."
     end
-
-    if repeater.fm_ctcss_tone.present? && repeater.fm_dcs_code.present?
-      # Making a guess that the DCS is likely to be more correct because it's a newer system, less common.
-      repeater.fm_ctcss_tone = nil # This still hurts.
-    end
   end
 
   def import_address(repeater, raw_repeater)
