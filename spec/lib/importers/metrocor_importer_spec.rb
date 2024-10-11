@@ -31,7 +31,7 @@ RSpec.describe MetrocorImporter do
     it "should import" do
       Dir.mktmpdir("MetrocorImporter") do |dir|
         # expect do
-          MetrocorImporter.new(working_directory: dir).import
+        MetrocorImporter.new(working_directory: dir).import
         # end.to change { Repeater.count }.by(21)
 
         # Grab some repeaters and verify they were imported correctly.
@@ -79,7 +79,7 @@ RSpec.describe MetrocorImporter do
         expect do
           MetrocorImporter.new(working_directory: dir).import
         end.to change { Repeater.count }.by(-1)
-                                        .and change { Repeater.where(call_sign: deleted.call_sign, tx_frequency: deleted.tx_frequency).count }.by(-1)
+          .and change { Repeater.where(call_sign: deleted.call_sign, tx_frequency: deleted.tx_frequency).count }.by(-1)
 
         # This one got deleted
         expect { deleted.reload }.to raise_error(ActiveRecord::RecordNotFound)

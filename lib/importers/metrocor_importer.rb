@@ -50,7 +50,7 @@ class MetrocorImporter < Importer
 
   def call_sign_and_tx_frequency(raw_repeater)
     call_sign = raw_repeater[CALL_SIGN].text.strip.upcase
-    tx_frequency = raw_repeater[TX_FREQUENCY].text.to_d * 10 ** 6
+    tx_frequency = raw_repeater[TX_FREQUENCY].text.to_d * 10**6
     if call_sign == "KD2TM" && tx_frequency == 233_900_000 # Assuming it's a typo, otherwise it's outside the band.
       tx_frequency = 223_900_000
     elsif call_sign == "N2QJI" && tx_frequency == 282_400_000 # Assuming it's a typo, otherwise it's outside the band.
@@ -60,7 +60,7 @@ class MetrocorImporter < Importer
   end
 
   def import_repeater(raw_repeater, repeater)
-    repeater.rx_frequency = raw_repeater[RX_FREQUENCY].text.to_d * 10 ** 6
+    repeater.rx_frequency = raw_repeater[RX_FREQUENCY].text.to_d * 10**6
     if repeater.call_sign == "K2DIG" && repeater.tx_frequency == 1_253_000_000 # Assuming it's a typo, otherwise it's outside the band...
       repeater.rx_frequency = 1_253_000_000 # ...but can't figure out what the exact frequency is.
     end
