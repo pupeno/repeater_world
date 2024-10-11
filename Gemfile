@@ -43,7 +43,7 @@ gem "pg_search", "~> 2.3"
 gem "puma", "~> 6.4" # Use the Puma web server [https://github.com/puma/puma]
 gem "pundit", "~> 2.3"
 gem "rails", "~> 7.1" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails_admin", "~> 3.1"
+gem "rails_admin", "~> 3.2"
 gem "rbzip2", "~> 0.3"
 gem "sassc-rails", "~> 2.1" # Asked by rails_admin... but it's not a dependency??? the world is complicated.
 gem "sentry-rails", "~> 5.19"
