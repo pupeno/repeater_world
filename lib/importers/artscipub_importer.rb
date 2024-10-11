@@ -41,14 +41,14 @@ class ArtscipubImporter < Importer
   end
 
   def import_repeater(raw_repeater, repeater)
-    if raw_repeater[:comments]&.downcase&.include?("noaa") || # Not importing NOAA weather stations. Should we?
-        raw_repeater[:web_site]&.downcase&.include?("noaa") || # Not importing NOAA weather stations. Should we?
-        raw_repeater[:web_site]&.downcase&.include?("weather.gov") || # Not importing NOAA weather stations. Should we?
+    if raw_repeater[:comments].downcase.include?("noaa") || # Not importing NOAA weather stations. Should we?
+        raw_repeater[:web_site].downcase.include?("noaa") || # Not importing NOAA weather stations. Should we?
+        raw_repeater[:web_site].downcase.include?("weather.gov") || # Not importing NOAA weather stations. Should we?
         raw_repeater[:call_sign].blank? || # Can't import a repeater without a call sign.
         raw_repeater[:frequency].blank? || raw_repeater[:frequency].to_f < 1 || # Can't import a repeater without a frequency.
         raw_repeater[:call_sign] =~ /[a-zA-Z]{3,4}[-\s]?\d{3,4}/ || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
-        raw_repeater[:comments]&.downcase&.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
-        raw_repeater[:web_site]&.downcase&.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
+        raw_repeater[:comments].downcase.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
+        raw_repeater[:web_site].downcase.include?("gmrs") || # Only interested in ham radio, not GMRS: https://github.com/pupeno/repeater_world/issues/264
         raw_repeater[:call_sign] == "k6yo" || # Frequency out of band plan, comment is Private Repeater. DMR
         # raw_repeater[:call_sign] == "kan654" || # Frequency out of band plan, odd call sign.
         # raw_repeater[:call_sign] == "KAA 494" || # Frequency out of band plan, odd call sign.
@@ -65,7 +65,7 @@ class ArtscipubImporter < Importer
         raw_repeater[:call_sign] == "WXL-51" || # What is this even?
         raw_repeater[:call_sign] == "unknown" || # Frequency out of band plan, not a call sign.
         raw_repeater[:call_sign] == "private" || # Frequency out of band plan, not a call sign..
-        raw_repeater[:pl_tone]&.downcase&.in?(["gone", "closed", "private"]) || # Closed repeaters.
+        raw_repeater[:pl_tone].downcase.in?(["gone", "closed", "private"]) || # Closed repeaters.
         raw_repeater[:call_sign] == "General" || # Frequency out of band plan, not a call sign.
         raw_repeater[:call_sign] == "154.445" # Not a valid call sign, data entry error.
       @ignored_due_to_invalid_count += 1
@@ -158,19 +158,19 @@ class ArtscipubImporter < Importer
     table = repeater_file.at_xpath("//td[normalize-space() = 'Repeater ID #']/ancestor::*[name()='table'][position() = 1]")
 
     raw_repeater[:external_id] = table.at_xpath("tr[td[normalize-space() = 'Repeater ID #']]/td[2]").text.match(/(\d+)/)[1] # There's other text in the external_id cell that we don't want.
-    raw_repeater[:call_sign] = table.at_xpath("tr[td[normalize-space() = 'Call Sign']]/td[2]").text&.strip
-    raw_repeater[:coordinates] = table.at_xpath("tr[td[normalize-space() = 'Location']]/td[2]").text&.strip
-    raw_repeater[:frequency] = table.at_xpath("tr[td[normalize-space() = 'Frequency']]/td[2]").text&.strip
-    raw_repeater[:input] = table.at_xpath("tr[td[normalize-space() = 'Input']]/td[2]").text&.strip
-    raw_repeater[:pl_tone] = table.at_xpath("tr[td[normalize-space() = 'PL Tone']]/td[2]").text&.strip
-    raw_repeater[:rating] = table.at_xpath("tr[td[normalize-space() = 'Rating']]/td[2]").text&.strip
-    raw_repeater[:auto_patch] = table.at_xpath("tr[td[normalize-space() = 'Auto Patch']]/td[2]").text&.strip
-    raw_repeater[:web_site] = table.at_xpath("tr[td[normalize-space() = 'Web Site']]/td[2]").text&.strip
-    raw_repeater[:grid_square] = table.at_xpath("tr[td[normalize-space() = 'Grid Square']]/td[2]").text&.strip
-    raw_repeater[:zip_code] = table.at_xpath("tr[td[normalize-space() = 'Zip Code.']]/td[2]//b").text&.strip # This one is different, because there's some cruft in this cell.
-    raw_repeater[:latitude] = table.at_xpath("tr[td[normalize-space() = 'Latitude']]/td[2]").text&.strip
-    raw_repeater[:longitude] = table.at_xpath("tr[td[normalize-space() = 'Longitude']]/td[2]").text&.strip
-    raw_repeater[:comments] = table.at_xpath("tr[td[normalize-space() = 'Comments']]/td[2]").text&.strip
+    raw_repeater[:call_sign] = table.at_xpath("tr[td[normalize-space() = 'Call Sign']]/td[2]").text.strip
+    raw_repeater[:coordinates] = table.at_xpath("tr[td[normalize-space() = 'Location']]/td[2]").text.strip
+    raw_repeater[:frequency] = table.at_xpath("tr[td[normalize-space() = 'Frequency']]/td[2]").text.strip
+    raw_repeater[:input] = table.at_xpath("tr[td[normalize-space() = 'Input']]/td[2]").text.strip
+    raw_repeater[:pl_tone] = table.at_xpath("tr[td[normalize-space() = 'PL Tone']]/td[2]").text.strip
+    raw_repeater[:rating] = table.at_xpath("tr[td[normalize-space() = 'Rating']]/td[2]").text.strip
+    raw_repeater[:auto_patch] = table.at_xpath("tr[td[normalize-space() = 'Auto Patch']]/td[2]").text.strip
+    raw_repeater[:web_site] = table.at_xpath("tr[td[normalize-space() = 'Web Site']]/td[2]").text.strip
+    raw_repeater[:grid_square] = table.at_xpath("tr[td[normalize-space() = 'Grid Square']]/td[2]").text.strip
+    raw_repeater[:zip_code] = table.at_xpath("tr[td[normalize-space() = 'Zip Code.']]/td[2]//b").text.strip # This one is different, because there's some cruft in this cell.
+    raw_repeater[:latitude] = table.at_xpath("tr[td[normalize-space() = 'Latitude']]/td[2]").text.strip
+    raw_repeater[:longitude] = table.at_xpath("tr[td[normalize-space() = 'Longitude']]/td[2]").text.strip
+    raw_repeater[:comments] = table.at_xpath("tr[td[normalize-space() = 'Comments']]/td[2]").text.strip
 
     raw_repeater
   end
@@ -204,7 +204,7 @@ class ArtscipubImporter < Importer
     # When a repeater changes mode, the old modes that are no longer there shouldn't remain set to true.
     repeater.disable_all_modes
 
-    pl_tone = raw_repeater[:pl_tone]&.downcase
+    pl_tone = raw_repeater[:pl_tone].downcase
     if pl_tone.to_f.in?(Repeater::CTCSS_TONES)
       repeater.fm = true
       repeater.fm_ctcss_tone = pl_tone.to_f
@@ -385,7 +385,7 @@ class ArtscipubImporter < Importer
     elsif pl_tone.in?(["d-star", "dstar", "dv", "na [dstar]", "d star"]) ||
         (pl_tone.blank? && raw_repeater[:comments].include?("D-STAR"))
       repeater.dstar = true
-    elsif raw_repeater[:comments]&.include?("D-STAR GATEWAY DATA PORT A")
+    elsif raw_repeater[:comments].include?("D-STAR GATEWAY DATA PORT A")
       repeater.dstar = true
       repeater.dstar_port = "A"
     elsif pl_tone == "fusion" ||
