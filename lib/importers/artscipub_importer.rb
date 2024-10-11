@@ -178,8 +178,6 @@ class ArtscipubImporter < Importer
   def parse_rx_frequency(repeater, raw_repeater)
     if raw_repeater[:input].present?
       raw_repeater[:input].to_f * 10**6
-    elsif repeater.band == Repeater::BAND_10M && raw_repeater[:frequency].last == "+"
-      repeater.tx_frequency + 100_000
     elsif repeater.band == Repeater::BAND_10M && raw_repeater[:frequency].last == "-"
       repeater.tx_frequency - 100_000
     elsif repeater.band == Repeater::BAND_2M && raw_repeater[:frequency].last == "+"
