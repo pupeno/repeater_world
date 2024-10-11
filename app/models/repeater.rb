@@ -167,7 +167,6 @@ class Repeater < ApplicationRecord
   validate :ensure_frequencies_are_within_band
   validates :fm_ctcss_tone, inclusion: CTCSS_TONES, allow_blank: true
   validates :fm_dcs_code, inclusion: DCS_CODES, allow_blank: true
-  validate :ensure_ctcss_or_dcs_but_not_both
   validates :m17_can, inclusion: M17_CANS, allow_blank: true
   validates :dmr_color_code, inclusion: DMR_COLOR_CODES, allow_blank: true
   validates :input_region, inclusion: Country.us_states, allow_blank: true, if: :in_usa?
@@ -283,12 +282,6 @@ class Repeater < ApplicationRecord
           errors.add(:rx_frequency, "is not within band #{band}. It should be between #{RepeaterUtils.frequency_in_mhz(BAND_FREQUENCIES[band][:min])} and #{RepeaterUtils.frequency_in_mhz(BAND_FREQUENCIES[band][:max])}.")
         end
       end
-    end
-  end
-
-  def ensure_ctcss_or_dcs_but_not_both
-    if fm_ctcss_tone.present? && fm_dcs_code.present?
-      errors.add(:fm_dcs_code, "can't be set at the same time as CTCSS tone.")
     end
   end
 
