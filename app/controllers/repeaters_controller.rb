@@ -52,6 +52,7 @@ class RepeatersController < ApplicationController
   end
 
   def edit
+    @noindex = true
     authorize @repeater
     if request.path != edit_repeater_path(@repeater)
       redirect_to edit_repeater_url(@repeater), status: :moved_permanently
