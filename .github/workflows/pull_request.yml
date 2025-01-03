@@ -13,7 +13,7 @@
 # <https://www.gnu.org/licenses/>.
 
 
-name: Pull Request
+name: Code Coverage Comparison
 on: pull_request
 jobs:
   test-head:
