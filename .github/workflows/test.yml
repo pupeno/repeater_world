@@ -1,0 +1,50 @@
+# Copyright 2023-2024, Pablo Fernandez
+#
+# This file is part of Repeater World.
+#
+# Repeater World is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+# Public License as published by the Free Software Foundation, either version 3 of the License.
+#
+# Repeater World is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Affero General Public License along with Repeater World. If not, see
+# <https://www.gnu.org/licenses/>.
+
+
+name: Test
+on: push
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgis/postgis:15-3.3
+        ports:
+          - "5001:5432"
+        env:
+          POSTGRES_USER: repeater_world
+          POSTGRES_PASSWORD: te6ahng1phi1uizaeGhahMof1
+          POSTGRES_DB: repeater_world_test
+    env:
+      RAILS_ENV: test
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Ruby and Gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set Up Database Schema
+        run: bin/rails db:migrate
+
+      - name: Precompile assets
+        run: bundle exec rake assets:precompile
+
+      - name: Run Tests
+        run: bundle exec rspec

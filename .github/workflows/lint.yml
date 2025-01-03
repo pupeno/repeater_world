@@ -13,42 +13,9 @@
 # <https://www.gnu.org/licenses/>.
 
 
-name: Push
+name: Lint
 on: push
 jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    services:
-      postgres:
-        image: postgis/postgis:15-3.3
-        ports:
-          - "5001:5432"
-        env:
-          POSTGRES_USER: repeater_world
-          POSTGRES_PASSWORD: te6ahng1phi1uizaeGhahMof1
-          POSTGRES_DB: repeater_world_test
-    env:
-      RAILS_ENV: test
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Install Ruby and Gems
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-      - name: Set Up Database Schema
-        run: bin/rails db:migrate
-
-      - name: Precompile assets
-        run: bundle exec rake assets:precompile
-
-      - name: Run Tests
-        run: bundle exec rspec
-
   lint:
     name: Lint
     runs-on: ubuntu-latest
