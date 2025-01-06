@@ -109,7 +109,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
-    brakeman (6.2.2)
+    brakeman (7.0.0)
       racc
     builder (3.3.0)
     capybara (3.40.0)
@@ -439,7 +439,7 @@ DEPENDENCIES
   annotate (~> 3.2)
   babosa (~> 2.0)
   bootsnap (~> 1.18)
-  brakeman (~> 6.2)
+  brakeman (~> 7.0)
   capybara (~> 3.40)
   countries (~> 7.0)
   debug (~> 1.9)
