@@ -50,7 +50,7 @@ gem "sentry-rails", "~> 5.19"
 gem "sentry-ruby", "~> 5.16"
 gem "sprockets-rails", "~> 3.5" # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "stimulus-rails", "~> 1.3" # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
-gem "tailwindcss-rails", "~> 2.7" # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
+gem "tailwindcss-rails", "~> 3.3" # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
 gem "turbo-rails", "~> 2.0" # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 # gem "bcrypt", "~> 3.1.7" # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "image_processing", "~> 1.2" # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
