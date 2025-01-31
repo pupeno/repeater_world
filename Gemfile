@@ -35,7 +35,7 @@ gem "geocoder", "~> 1.8"
 gem "importmap-rails", "~> 2.0" # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "jbuilder", "~> 2.11"
 gem "kaminari", "~> 1.2"
-gem "mailgun-ruby", "~>1.2"
+gem "mailgun-ruby", "~>1.3"
 gem "paper_trail", "~> 15.1"
 gem "paper_trail-globalid", "~> 0.2"
 gem "pg", "~> 1.5" # Use postgresql as the database for Active Record
