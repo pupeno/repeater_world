@@ -68,7 +68,6 @@ group :development, :test do
 end
 
 group :development do
-  gem "annotate", "~> 3.2"
   gem "web-console", "~> 4.2" # Use console on exceptions pages [https://github.com/rails/web-console]
   # gem "rack-mini-profiler" # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "spring" # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
