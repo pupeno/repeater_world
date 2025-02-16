@@ -45,6 +45,7 @@ coverage
 
 # RBS
 .gem_rbs_collection
+*rbs_collection.*yaml
 
 # Temporary files created while working
 spec/factories/irlp_importer_data/*.tsv
