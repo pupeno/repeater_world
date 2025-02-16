@@ -18,7 +18,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 gem "net-pop", github: "ruby/net-pop" # Remove once bug is fixed upstream: https://stackoverflow.com/questions/78617432/strange-bundle-update-issue-disappearing-net-pop-0-1-2-dependency
 
 gem "active_link_to", "~> 1.0"
-gem "activerecord-postgis-adapter", "~> 9.0"
+gem "activerecord-postgis-adapter", "~> 10.0"
 gem "babosa", "~> 2.0"
 gem "bootsnap", "~> 1.18", require: false # Reduces boot times through caching; required in config/boot.rb
 gem "countries", "~> 7.0"
@@ -40,7 +40,7 @@ gem "pg", "~> 1.5" # Use postgresql as the database for Active Record
 gem "pg_search", "~> 2.3"
 gem "puma", "~> 6.4" # Use the Puma web server [https://github.com/puma/puma]
 gem "pundit", "~> 2.3"
-gem "rails", "~> 7.1" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
+gem "rails", "~> 7.2" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails_admin", "~> 3.1"
 gem "rbzip2", "~> 0.3"
 gem "sassc-rails", "~> 2.1" # Asked by rails_admin... but it's not a dependency??? the world is complicated.

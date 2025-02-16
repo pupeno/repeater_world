@@ -53,7 +53,7 @@ module RepeaterWorld
     config.generators.system_tests = nil
 
     # https://guides.rubyonrails.org/action_mailer_basics.html#previewing-emails
-    config.action_mailer.preview_path = "#{Rails.root}/spec/mailers/previews/"
+    config.action_mailer.preview_paths << "#{Rails.root}/spec/mailers/previews/"
 
     # Necessary for handling 404 errors, so that /404 gets called as a catch-all
     config.exceptions_app = routes

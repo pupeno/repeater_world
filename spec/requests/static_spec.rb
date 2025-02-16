@@ -77,7 +77,9 @@ RSpec.describe "Statics", type: :request do
   end
 
   it "shows a backend failure" do
-    expect { get "/fail" }.to raise_error(/Bogus/)
+    get "/fail"
+    expect(response).not_to be_successful
+    expect(response).to have_http_status(:internal_server_error)
   end
 
   it "shows a frontend failure" do

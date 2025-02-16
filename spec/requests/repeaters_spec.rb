@@ -44,9 +44,9 @@ RSpec.describe "/repeaters", type: :request do
     end
 
     it "shows a 404 when a repeater is not found" do
-      expect do
-        get repeater_url("not-an-existing-repeater")
-      end.to raise_exception(ActiveRecord::RecordNotFound)
+      get repeater_url("not-an-existing-repeater")
+      expect(response).not_to be_successful
+      expect(response).to have_http_status(:not_found)
     end
 
     it "denies creating repeaters" do

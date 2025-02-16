@@ -207,9 +207,9 @@ RSpec.describe "/repeater_searches", type: :request do
       end
 
       it "exports with no parameters of any kind" do
-        expect do
-          get export_url # I'm not sure what made it happen, the URL was export.php, so probably some crawling searching for exploits.
-        end.to raise_exception(ActionController::BadRequest)
+        get export_url # I'm not sure what made it happen, the URL was export.php, so probably some crawling searching for exploits.
+        expect(response).not_to be_successful
+        expect(response).to have_http_status(:bad_request)
       end
     end
 
@@ -317,9 +317,9 @@ RSpec.describe "/repeater_searches", type: :request do
 
       it "doesn't run someone else's search" do
         repeater_search = create(:repeater_search, user: create(:user))
-        expect do
-          get repeater_search_url(repeater_search)
-        end.to raise_exception(ActiveRecord::RecordNotFound)
+        get repeater_search_url(repeater_search)
+        expect(response).not_to be_successful
+        expect(response).to have_http_status(:not_found)
       end
 
       it "shows an unsaved search over a saved search" do
@@ -386,9 +386,9 @@ RSpec.describe "/repeater_searches", type: :request do
 
       it "fails to update due search belonging to someone else" do
         repeater_search = create(:repeater_search, user: create(:user))
-        expect do
-          patch repeater_search_url(repeater_search), params: {s: {dmr: true}}
-        end.to raise_exception(ActiveRecord::RecordNotFound)
+        patch repeater_search_url(repeater_search), params: {s: {dmr: true}}
+        expect(response).not_to be_successful
+        expect(response).to have_http_status(:not_found)
       end
 
       it "deletes a repeater search" do
@@ -401,9 +401,9 @@ RSpec.describe "/repeater_searches", type: :request do
 
       it "fails to delete a repeater search belonging to someone else" do
         repeater_search = create(:repeater_search, user: create(:user))
-        expect do
-          delete repeater_search_url(repeater_search)
-        end.to raise_exception(ActiveRecord::RecordNotFound)
+        delete repeater_search_url(repeater_search)
+        expect(response).not_to be_successful
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
