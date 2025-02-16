@@ -15,8 +15,6 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.5"
-
 gem "net-pop", github: "ruby/net-pop" # Remove once bug is fixed upstream: https://stackoverflow.com/questions/78617432/strange-bundle-update-issue-disappearing-net-pop-0-1-2-dependency
 
 gem "active_link_to", "~> 1.0"
