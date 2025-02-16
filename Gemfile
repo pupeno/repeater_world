@@ -15,12 +15,10 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.5"
-
 gem "net-pop", github: "ruby/net-pop" # Remove once bug is fixed upstream: https://stackoverflow.com/questions/78617432/strange-bundle-update-issue-disappearing-net-pop-0-1-2-dependency
 
 gem "active_link_to", "~> 1.0"
-gem "activerecord-postgis-adapter", "~> 9.0"
+gem "activerecord-postgis-adapter", "~> 11.0"
 gem "babosa", "~> 2.0"
 gem "bootsnap", "~> 1.18", require: false # Reduces boot times through caching; required in config/boot.rb
 gem "countries", "~> 7.0"
@@ -36,13 +34,13 @@ gem "importmap-rails", "~> 2.0" # Use JavaScript with ESM import maps [https://g
 gem "jbuilder", "~> 2.11"
 gem "kaminari", "~> 1.2"
 gem "mailgun-ruby", "~>1.2"
-gem "paper_trail", "~> 15.1"
+gem "paper_trail", "~> 16.0"
 gem "paper_trail-globalid", "~> 0.2"
 gem "pg", "~> 1.5" # Use postgresql as the database for Active Record
 gem "pg_search", "~> 2.3"
 gem "puma", "~> 6.4" # Use the Puma web server [https://github.com/puma/puma]
 gem "pundit", "~> 2.3"
-gem "rails", "~> 7.1" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
+gem "rails", "~> 8.0" # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails_admin", "~> 3.1"
 gem "rbzip2", "~> 0.3"
 gem "sassc-rails", "~> 2.1" # Asked by rails_admin... but it's not a dependency??? the world is complicated.
@@ -70,7 +68,6 @@ group :development, :test do
 end
 
 group :development do
-  gem "annotate", "~> 3.2"
   gem "web-console", "~> 4.2" # Use console on exceptions pages [https://github.com/rails/web-console]
   # gem "rack-mini-profiler" # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "spring" # Speed up commands on slow machines / big apps [https://github.com/rails/spring]

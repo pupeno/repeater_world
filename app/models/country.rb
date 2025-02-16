@@ -38,17 +38,3 @@ class Country < ApplicationRecord
     ISO3166::Country["ca"].subdivisions.values.map(&:name).sort
   end
 end
-
-# == Schema Information
-#
-# Table name: countries
-#
-#  id         :string           not null, primary key
-#  name       :string           not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_countries_on_name  (name) UNIQUE
-#

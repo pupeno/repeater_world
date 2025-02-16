@@ -33,6 +33,11 @@ RSpec.describe RepeaterUtils do
     expect(RepeaterUtils.distance_in_unit(2500, "miles")).to eq("1.55 miles")
   end
 
+  it "should convert frequencies to bands" do
+    expect(RepeaterUtils.band_for_frequency(1)).to be(nil)
+    expect(RepeaterUtils.band_for_frequency(144_100_000)).to eq(Repeater::BAND_2M)
+  end
+
   context "with a repeater" do
     before do
       @repeater = create(:repeater)
