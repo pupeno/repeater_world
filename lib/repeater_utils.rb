@@ -50,7 +50,7 @@ module RepeaterUtils
 
   def self.band_for_frequency(frequency)
     Repeater::BAND_FREQUENCIES.each do |band, freqs|
-      if frequency >= freqs[:min] && frequency <= freqs[:max]
+      if frequency.between?(freqs[:min], freqs[:max])
         return band
       end
     end
@@ -58,6 +58,6 @@ module RepeaterUtils
   end
 
   def self.is_frequency_in_band?(frequency, band)
-    frequency >= Repeater::BAND_FREQUENCIES[band][:min] && frequency <= Repeater::BAND_FREQUENCIES[band][:max]
+    frequency.between?(Repeater::BAND_FREQUENCIES[band][:min], Repeater::BAND_FREQUENCIES[band][:max])
   end
 end

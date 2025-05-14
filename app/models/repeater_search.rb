@@ -207,7 +207,7 @@ class RepeaterSearch < ApplicationRecord
   end
 
   def saving
-    @saving.nil? ? true : @saving
+    @saving.nil? || @saving
   end
 
   def generate_name
