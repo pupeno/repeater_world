@@ -101,7 +101,7 @@ class NerepeatersImporter < Importer
     end
     if raw_repeater[RX_OFFSET].in? %w[- +] # Standard offsets.
       offsets.each do |offset|
-        if repeater.tx_frequency >= offset[:min] && repeater.tx_frequency <= offset[:max]
+        if repeater.tx_frequency.between?(offset[:min], offset[:max])
           if raw_repeater[RX_OFFSET] == "-" && offset[:neg_offset].present?
             return repeater.tx_frequency + offset[:neg_offset]
           elsif raw_repeater[RX_OFFSET] == "+" && offset[:pos_offset].present?

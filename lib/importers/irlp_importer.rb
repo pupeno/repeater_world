@@ -122,7 +122,7 @@ class IrlpImporter < Importer
     longitude = to_f_or_nil(raw_repeater["long"])
     if latitude.present? && longitude.present? &&
         (latitude != 0 || longitude != 0) && # One should be different to 0, since 0,0 is used to represent lack of data and there are no repeaters in null island
-        (latitude <= 90 && latitude >= -90) # There can't be latitudes above 90 or below -90, those are typos.
+        latitude.between?(-90, 90) # There can't be latitudes above 90 or below -90, those are typos.
       repeater.input_latitude = latitude
       repeater.input_longitude = longitude
     end
